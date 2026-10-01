@@ -1,0 +1,28 @@
+# data, caches and large artefacts are not versioned
+data/beyondarena/
+data/external/
+data/controlled/
+data/ckpt/
+**/_parts/
+**/cache/
+**/mco/
+*.npz
+*.parquet
+*.zip
+*.rar
+*.tar.gz
+*.ckpt
+*.safetensors
+__pycache__/
+*.pyc
+# reference PDFs
+refs/
+# LaTeX build files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz
+overleaf/**/main.log
