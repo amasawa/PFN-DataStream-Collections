@@ -26,3 +26,5 @@ refs/
 *.out
 *.synctex.gz
 overleaf/**/main.log
+# local tool settings
+.claude/settings.local.json
