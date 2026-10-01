@@ -1,8 +1,8 @@
 # data, caches and large artefacts are not versioned
-data/beyondarena/
-data/external/
-data/controlled/
-data/ckpt/
+GOR/data/beyondarena/
+GOR/data/external/
+GOR/data/controlled/
+GOR/data/ckpt/
 **/_parts/
 **/cache/
 **/mco/
@@ -25,6 +25,6 @@ refs/
 *.fls
 *.out
 *.synctex.gz
-overleaf/**/main.log
+**/overleaf/**/main.log
 # local tool settings
 .claude/settings.local.json

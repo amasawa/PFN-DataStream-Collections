@@ -1,5 +1,20 @@
 # PFN × Zhilin OOD under Beyond-IID splits — project root
 
+## Layout since 2026-10-02 (two isolated projects, named after their methods)
+
+| folder | content | start here |
+|---|---|---|
+| `AgDR/` | the ICML paper (evaluation protocol + AgDR baseline): `code/`, `data/`, `overleaf/icml2026/`, `logs/`, `env/`; frozen copy of the state of 2026-09-29 | [`AgDR/README.md`](AgDR/README.md) |
+| `GOR/` | the AISTATS paper (I-Div framework, group-out reference): `exp/` (code and results), `data/`, `overleaf/aistats2026/`, `logs/` (shared research and session logs), `env/` | [`GOR/logs/EXPERIMENT_LOG.md`](GOR/logs/EXPERIMENT_LOG.md), last entries |
+| `pdfs/` | `refs/` (reference PDFs, not versioned), `reports/`, `research_notes/` | — |
+
+Scripts in `GOR/exp/` are run from `GOR/exp/` and reach data and the paper through `../data`, `../overleaf`;
+the launch scripts in `GOR/exp/run_scripts/` derive the project root from their own location.
+The sections below were written before the move: read `exp/`, `data/`, `logs/`, `env/`, `overleaf/aistats2026/` as
+`GOR/...`, `overleaf/icml2026/` as `AgDR/overleaf/icml2026/`, and `refs/` as `pdfs/refs/`.
+
+## Before 2026-10-02
+
 | folder | content | start here |
 |---|---|---|
 | `refs/` | reference PDFs, original categories kept: `zhilinpapers/` (Zhao & Cao OOD papers), `noiidpapers/` (TabArena, Beyond IID), `baseline/` (TabDPT) | — |
