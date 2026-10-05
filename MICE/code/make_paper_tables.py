@@ -11,7 +11,7 @@ OUT, TEX = "../results_paper", "../overleaf/icml"
 DIRS = {"grid10": "../results_grid_test", "grid20": "../results_grid_test3", "fam": "../results_test",
         "realC": "../results_heldout", "realG": "../results_heldout2", "realH": "../results_heldout3", "realI": "../results_heldout4",
         "tabicl": "../results_heldout_tabicl"}
-EXTRA = ["../results_river", "../results_trained", "../results_heldout2", "../results_heldout"]
+EXTRA = ["../results_river", "../results_trained", "../results_heldout2", "../results_heldout", "../results_heldout34_trained"]
 TRAINED = ["arf", "srp", "hat", "levbag", "adwinbag", "nse", "mooe_rff2000_100_2_0.01", "mooe_rff4000_100_2_0.01"]
 m = lambda a: float(np.mean(list(a.values())))
 

@@ -4,44 +4,44 @@ acc
 method    ddm   fast   fifo    ltm   mice  mice10  winens
 set                                                      
 fam       NaN  95.32  87.62    NaN  94.96   95.23   94.62
-grid      NaN  86.76  61.91    NaN  86.36   86.60   81.58
+grid    84.10  86.76  61.91  62.19  86.36   86.60   81.58
 real    81.45  83.35  83.25  82.61  83.82   83.80   83.02
 f1
 method    ddm   fast   fifo    ltm   mice  mice10  winens
 set                                                      
 fam       NaN  95.25  87.46    NaN  94.88   95.16   94.54
-grid      NaN  86.46  60.87    NaN  85.99   86.26   80.99
+grid    83.75  86.46  60.87  61.45  85.99   86.26   80.99
 real    71.35  73.44  73.49  72.07  74.28   74.22   73.04
 auc
 method    ddm   fast   fifo    ltm   mice  mice10  winens
 set                                                      
 fam       NaN  97.13  94.27    NaN  96.72   97.04   96.87
-grid      NaN  93.65  83.68    NaN  92.33   93.55   90.84
+grid    91.43  93.65  83.68  84.83  92.33   93.55   90.84
 real    88.54  90.26  89.88  91.02  90.49   90.47   89.54
 ece
-method   ddm  fast   fifo   ltm   mice  mice10  winens
-set                                                   
-fam      NaN  2.93   5.31   NaN   5.00    2.88    3.27
-grid     NaN  7.05  16.71   NaN  10.06    7.01    8.66
-real    2.59  1.45   1.73  1.52   1.29    1.08    1.22
+method   ddm  fast   fifo    ltm   mice  mice10  winens
+set                                                    
+fam      NaN  2.93   5.31    NaN   5.00    2.88    3.27
+grid    7.32  7.05  16.71  15.97  10.06    7.01    8.66
+real    2.59  1.45   1.73   1.52   1.29    1.08    1.22
 brier
 method    ddm   fast   fifo    ltm   mice  mice10  winens
 set                                                      
 fam       NaN   4.14   9.06    NaN   4.99    4.22    4.66
-grid      NaN  11.35  25.14    NaN  12.68   11.48   14.90
+grid    13.12  11.35  25.14  24.47  12.68   11.48   14.90
 real    12.93  11.47  11.57  11.88  11.20   11.18   11.71
 nll
-method    ddm   fast    fifo    ltm   mice  mice10  winens
-set                                                       
-fam       NaN  22.32   41.35    NaN  26.14   22.55   23.19
-grid      NaN  72.51  112.08    NaN  72.02   73.20   75.77
-real    52.39  40.30   42.81  42.32  39.34   39.31   42.23
+method    ddm   fast    fifo     ltm   mice  mice10  winens
+set                                                        
+fam       NaN  22.32   41.35     NaN  26.14   22.55   23.19
+grid    87.33  72.51  112.08  101.88  72.02   73.20   75.77
+real    52.39  40.30   42.81   42.32  39.34   39.31   42.23
 entropy
-method   ddm   fast   fifo    ltm   mice  mice10  winens
-set                                                     
-fam      NaN  12.95  17.55    NaN  17.97   13.02   16.62
-grid     NaN  22.22  47.67    NaN  42.55   22.44   46.29
-real    36.2  40.04  34.22  37.69  38.44   37.50   39.62
+method    ddm   fast   fifo    ltm   mice  mice10  winens
+set                                                      
+fam       NaN  12.95  17.55    NaN  17.97   13.02   16.62
+grid    27.47  22.22  47.67  49.60  42.55   22.44   46.29
+real    36.20  40.04  34.22  37.69  38.44   37.50   39.62
 real streams, f1: mice better than fifo on 24 of 29; worst -1.22, mean +0.79 (positive = mice better)
 real streams, auc: mice better than fifo on 25 of 29; worst -0.06, mean +0.61 (positive = mice better)
 real streams, ece: mice better than fifo on 22 of 29; worst -3.81, mean +0.44 (positive = mice better)

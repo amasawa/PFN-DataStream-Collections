@@ -558,7 +558,8 @@ points), where its class-balanced long-term buffer keeps rows of the rare classe
 same segments its accuracy is 2.5 to 3.8 points below \method{}, and on the other 24 streams the AUC of \method{}
 is 0.2 points higher in the median. On the grid the step $\eta_2=\tfrac12$ has a price in the quality of the probabilities:
 \method{} is 0.2 points below the step of 10 in accuracy but 3.1 points in ECE and 1.2 in the Brier score, because a
-small step keeps weight on the default window, which is poorly calibrated under conflicting concepts (ECE 16.7).
+small step keeps weight on the default window, which is poorly calibrated under conflicting concepts (ECE 16.7);
+its ECE is also above that of reset (7.3), while its Brier score is lower (12.7 against 13.1).
 The step that \cref{prop:outer} covers is thus the conservative choice: it buys the guarantee with calibration in the
 recall regime.
 
@@ -581,9 +582,10 @@ recall regime.
   \end{tabular}
 \end{table*}
 
-\textbf{Other learners and a second backbone.} On the 15 streams of the first three stages, the best trained
-stream learner per stream (seven learners, MOOE in two configurations) is below \method{} on all 15, by at least 0.2
-points, and below FIFO on 11. With TabICL as the backbone and no constant changed, \method{} is the most accurate policy on all four streams of the
+\textbf{Other learners and a second backbone.} On all 29 streams, the best trained
+stream learner per stream (seven learners, MOOE in two configurations) is below \method{} on 28 and below FIFO on
+23; the exception is one Airlines segment, where Streaming Random Patches is 0.3 points above \method{}. On
+CoverType and PokerHand the trained learners are 4 to 19 points behind. With TabICL as the backbone and no constant changed, \method{} is the most accurate policy on all four streams of the
 first held-out set (84.0 on average against 83.4 for FIFO and 83.5 for the window ensemble), and in registered
 tests on four segments of the third held-out set and on all six of the fourth, the four hypotheses of the kind
 above hold: on the fourth set \method{} is the most accurate policy on six of six segments (85.2 on average against
@@ -858,7 +860,7 @@ $\eta_2=2$ for $\gamma\ge0.9$, and reaches 4.4 at $\eta_2=10$, $\gamma=0.9$.
 \begin{table}[h]
   \centering
   \caption{Real streams: accuracy (\%) per stream. Fast only: the fast level without the slow level; $\eta_2=10$: the
-  pre-registered step; Trained: the best trained stream learner (not run on the last two sets);
+  pre-registered step; Trained: the best trained stream learner per stream;
   $\Delta$: \method{} minus FIFO in points.}
   \label{tab:realfull}
   \small

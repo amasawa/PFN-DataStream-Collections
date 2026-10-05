@@ -1,0 +1,92 @@
+covertype 0 done
+covertype 1 done
+covertype 2 done
+covertype 3 done
+covertype 4 done
+insects_abrupt_balanced 0 done
+insects_abrupt_balanced 1 done
+insects_abrupt_balanced 2 done
+insects_abrupt_balanced 3 done
+insects_abrupt_balanced 4 done
+h2_poker 0 done
+h2_poker 1 done
+h2_poker 2 done
+h2_poker 3 done
+h2_poker 4 done
+h2_airlines 0 done
+h2_airlines 1 done
+h2_airlines 2 done
+h2_airlines 3 done
+h2_airlines 4 done
+elec2 0 done
+elec2 1 done
+elec2 2 done
+elec2 3 done
+elec2 4 done
+h2_spam 0 done
+h2_spam 1 done
+h2_spam 2 done
+h2_spam 3 done
+h2_spam 4 done
+h2_phishing 0 done
+h2_phishing 1 done
+h2_phishing 2 done
+h2_phishing 3 done
+h2_phishing 4 done
+h2_rialto 0 done
+h2_rialto 1 done
+h2_rialto 2 done
+h2_rialto 3 done
+h2_rialto 4 done
+h2_weather 0 done
+h2_weather 1 done
+h2_weather 2 done
+h2_weather 3 done
+h2_weather 4 done
+clean accuracy (%)
+model                     hgb   knn  logreg    rf  tabpfn
+data                                                     
+covertype                82.2  73.2    79.8  81.7    85.4
+elec2                    80.6  75.0    75.0  79.9    81.3
+h2_airlines              64.4  62.2    63.3  66.0    68.2
+h2_phishing              93.6  91.3    92.9  93.6    93.6
+h2_poker                 82.8  60.1    54.6  79.9    97.0
+h2_rialto                72.0  43.5    38.2  71.8    76.3
+h2_spam                  95.6  78.6    95.9  95.5    97.1
+h2_weather               77.2  75.0    77.4  77.7    80.7
+insects_abrupt_balanced  57.3  55.2    58.7  58.9    60.8
+drop in points, mean over data sets
+cond    asym_0.2  sym_0.1  sym_0.2  sym_0.4
+model                                      
+hgb       -12.37    -2.80    -6.92   -20.48
+knn        -8.36    -0.68    -2.01   -10.17
+logreg    -11.80    -2.14    -3.80   -10.00
+rf        -11.26    -1.34    -4.07   -14.94
+tabpfn    -10.99    -1.54    -3.36   -10.51
+drop at 20% symmetric noise per data set
+model                     hgb   knn  logreg    rf  tabpfn
+data                                                     
+covertype               -4.11 -0.20   -0.97 -1.76   -3.29
+elec2                   -7.86 -2.35   -1.08 -4.51   -3.98
+h2_airlines             -5.22 -3.34   -1.37 -4.03   -1.97
+h2_phishing             -8.71 -2.70   -2.52 -7.16   -2.11
+h2_poker                -8.65 -0.58    0.04 -3.56   -5.42
+h2_rialto               -7.85 -2.16   -6.00 -5.43   -7.09
+h2_spam                 -8.59 -1.75  -20.33 -4.43   -3.01
+h2_weather              -6.88 -3.19    0.03 -3.63   -1.93
+insects_abrupt_balanced -4.45 -1.84   -2.03 -2.16   -1.44
+rule 1: TabPFN mean drop -3.36 (need <= -3) and 6 of 9 data sets with a drop of 2 points or more (need 6)
+rule 2: TabPFN mean drop -3.36 against the most robust classical learner knn -2.01 (TabPFN must not be more robust)
+TabPFN at 20% symmetric noise: detection of flipped rows and accuracy after dropping the 20% least plausible rows
+                           acc  detect_auc  flipped  clean  noisy  recovered
+data                                                                        
+covertype                0.832       0.977    0.033  0.854  0.821      0.328
+elec2                    0.780       0.843    0.105  0.813  0.774      0.153
+h2_airlines              0.659       0.690    0.158  0.682  0.662     -0.147
+h2_phishing              0.917       0.975    0.039  0.936  0.915      0.128
+h2_poker                 0.945       0.991    0.019  0.970  0.916      0.535
+h2_rialto                0.710       0.938    0.060  0.763  0.692      0.254
+h2_spam                  0.953       0.979    0.030  0.971  0.941      0.389
+h2_weather               0.788       0.879    0.095  0.807  0.788     -0.005
+insects_abrupt_balanced  0.584       0.904    0.072  0.608  0.594     -0.646
+mean detection AUROC 0.908; mean share of the loss recovered 0.22

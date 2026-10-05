@@ -1,0 +1,167 @@
+grid_c5_b500_s10 ddm1000 acc=0.8739 time=10s
+grid_c5_b500_s10 ltm1000_75 acc=0.4800 time=11s
+grid_c5_b2000_s10 ddm1000 acc=0.9697 time=43s
+grid_c5_b2000_s10 ltm1000_75 acc=0.8494 time=42s
+grid_c30_b500_s10 ddm1000 acc=0.8266 time=10s
+grid_c30_b500_s10 ltm1000_75 acc=0.5161 time=10s
+grid_c30_b2000_s10 ddm1000 acc=0.9440 time=40s
+grid_c30_b2000_s10 ltm1000_75 acc=0.8302 time=40s
+grid_c100_b500_s10 ddm1000 acc=0.6486 time=9s
+grid_c100_b500_s10 ltm1000_75 acc=0.4434 time=10s
+grid_c100_b2000_s10 ddm1000 acc=0.8504 time=68s
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/run_probs.py", line 33, in <module>
+    REC.clear(); run.run(s, meth, a.B, a.out)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/run.py", line 266, in run
+    P = f.predict(*pol.context(), Xq)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/run_probs.py", line 15, in predict
+    P = super().predict(Xc, yc, Xq); REC.append(P.astype(np.float32)); return P
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/run.py", line 52, in predict
+    P[:, self.m.classes_.astype(int)] = self.m.predict_proba(Xq)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 74, in __next__
+    torch.cuda.synchronize(self._device)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1281, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY grid_c100_b2000_s10 01:25:23
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/run_probs.py", line 33, in <module>
+    REC.clear(); run.run(s, meth, a.B, a.out)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/run.py", line 266, in run
+    P = f.predict(*pol.context(), Xq)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/run_probs.py", line 15, in predict
+    P = super().predict(Xc, yc, Xq); REC.append(P.astype(np.float32)); return P
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/run.py", line 52, in predict
+    P[:, self.m.classes_.astype(int)] = self.m.predict_proba(Xq)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 71, in __next__
+    value = next(self._inner)
+            ^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/parallel_execute.py", line 86, in parallel_execute
+    yield from _execute_in_current_thread(devices[0], functions)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/parallel_execute.py", line 97, in _execute_in_current_thread
+    yield function(device=device)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 812, in _call_model
+    return model(
+           ^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/architectures/tabpfn_v2.py", line 888, in forward
+    embedded_y_BRY, y_feature_means, unique_ys = self._embed_targets(
+                                                 ^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/architectures/tabpfn_v2.py", line 745, in _embed_targets
+    torch.unique(y_RB1[:num_train_labels, b]) for b in range(batch_size)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/_jit_internal.py", line 637, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/_jit_internal.py", line 637, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/functional.py", line 1102, in _return_output
+    output, _, _ = _unique_impl(input, sorted, return_inverse, return_counts, dim)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/functional.py", line 973, in _unique_impl
+    output, inverse_indices, counts = torch._unique2(
+                                      ^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY grid_c100_b2000_s10 01:27:28
+grid_c100_b2000_s10 ltm1000_75 acc=0.7552 time=41s
+grid_c5_b500_s11 ddm1000 acc=0.8036 time=10s
+grid_c5_b500_s11 ltm1000_75 acc=0.4086 time=9s
+grid_c5_b2000_s11 ddm1000 acc=0.9580 time=37s
+grid_c5_b2000_s11 ltm1000_75 acc=0.8368 time=39s
+grid_c30_b500_s11 ddm1000 acc=0.7845 time=9s
+grid_c30_b500_s11 ltm1000_75 acc=0.3745 time=10s
+grid_c30_b2000_s11 ddm1000 acc=0.9355 time=37s
+grid_c30_b2000_s11 ltm1000_75 acc=0.7869 time=38s
+grid_c100_b500_s11 ddm1000 acc=0.6334 time=9s
+grid_c100_b500_s11 ltm1000_75 acc=0.3995 time=9s
+grid_c100_b2000_s11 ddm1000 acc=0.8447 time=37s
+grid_c100_b2000_s11 ltm1000_75 acc=0.7453 time=41s
+grid_c5_b500_s20 ddm1000 acc=0.8536 time=10s
+grid_c5_b500_s20 ltm1000_75 acc=0.4509 time=10s
+grid_c5_b2000_s20 ddm1000 acc=0.9610 time=40s
+grid_c5_b2000_s20 ltm1000_75 acc=0.8458 time=42s
+grid_c30_b500_s20 ddm1000 acc=0.8064 time=10s
+grid_c30_b500_s20 ltm1000_75 acc=0.4132 time=10s
+grid_c30_b2000_s20 ddm1000 acc=0.9292 time=40s
+grid_c30_b2000_s20 ltm1000_75 acc=0.7874 time=42s
+grid_c100_b500_s20 ddm1000 acc=0.6477 time=9s
+grid_c100_b500_s20 ltm1000_75 acc=0.4661 time=10s
+grid_c100_b2000_s20 ddm1000 acc=0.8339 time=41s
+grid_c100_b2000_s20 ltm1000_75 acc=0.7582 time=40s
+grid_c5_b500_s21 ddm1000 acc=0.8930 time=10s
+grid_c5_b500_s21 ltm1000_75 acc=0.5855 time=11s
+grid_c5_b2000_s21 ddm1000 acc=0.9746 time=41s
+grid_c5_b2000_s21 ltm1000_75 acc=0.8837 time=44s
+grid_c30_b500_s21 ddm1000 acc=0.8175 time=10s
+grid_c30_b500_s21 ltm1000_75 acc=0.3936 time=10s
+grid_c30_b2000_s21 ddm1000 acc=0.9420 time=39s
+grid_c30_b2000_s21 ltm1000_75 acc=0.7953 time=39s
+grid_c100_b500_s21 ddm1000 acc=0.6214 time=10s
+grid_c100_b500_s21 ltm1000_75 acc=0.3914 time=10s
+grid_c100_b2000_s21 ddm1000 acc=0.8303 time=43s
+grid_c100_b2000_s21 ltm1000_75 acc=0.7298 time=45s
+CHAIN_DONE 01:45:31

@@ -8,7 +8,7 @@ import reweight
 
 pd.set_option("display.width", 250)
 which = sys.argv[1]
-D = {"I": "../results_heldout4", "J": "../results_heldout3_tabicl", "K": "../results_heldout3_seed1", "L": "../results_heldout4_seed1", "M": "../results_heldout4_tabicl", "M2": "../results_heldout4_tabicl_e"}[which]   # K added 2026-10-05, before its run
+D = {"I": "../results_heldout4", "J": "../results_heldout3_tabicl", "K": "../results_heldout3_seed1", "L": "../results_heldout4_seed1", "M": "../results_heldout4_tabicl", "M2": "../results_heldout4_tabicl_e", "K2": "../results_heldout3_seed2"}[which]   # K added 2026-10-05, before its run
 m = lambda a: float(np.mean(list(a.values())))
 kw = dict(outer="brier", scale=0.5, temper=True)
 rows = []
