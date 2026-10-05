@@ -1,0 +1,65 @@
+h3_poker_b fifo1000 acc=0.9327 time=255s
+h3_poker_b ddm1000 acc=0.8431 time=226s
+h3_poker_b winens1000 acc=0.9236 time=675s
+h3_poker_b micev1000_500 acc=0.9328 time=3257s
+STREAM_DONE h3_poker_b 17:35:46
+h3_insects_b fifo1000 acc=0.8145 time=442s
+h3_insects_b ddm1000 acc=0.8143 time=288s
+h3_insects_b winens1000 acc=0.8118 time=930s
+h3_insects_b micev1000_500 acc=0.8166 time=2239s
+STREAM_DONE h3_insects_b 18:40:52
+h3_covertype_b fifo1000 acc=0.9661 time=351s
+h3_covertype_b ddm1000 acc=0.9563 time=346s
+h3_covertype_b winens1000 acc=0.9661 time=808s
+h3_covertype_b micev1000_500 acc=0.9648 time=4758s
+STREAM_DONE h3_covertype_b 20:25:26
+h3_airlines_b fifo1000 acc=0.7064 time=253s
+h3_airlines_b ddm1000 acc=0.7063 time=230s
+h3_airlines_b winens1000 acc=0.6992 time=677s
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/run_seed.py", line 17, in <module>
+    run.run(s, meth, a.B, a.out)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/run.py", line 272, in run
+    P, _ = pol.step(X, y, t, B)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/run.py", line 213, in step
+    preds = {-w: self.f.predict(*fifo(X, y, t, B, w), Xq) for w in self.windows}
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/run.py", line 52, in predict
+    P[:, self.m.classes_.astype(int)] = self.m.predict_proba(Xq)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 74, in __next__
+    torch.cuda.synchronize(self._device)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1281, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY h3_airlines_b 20:49:22
+h3_airlines_b micev1000_500 resumed at batch 201
+h3_airlines_b micev1000_500 acc=0.7023 time=1453s
+STREAM_DONE h3_airlines_b 21:10:29
+CHAIN_DONE 21:10:29

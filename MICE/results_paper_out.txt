@@ -1,0 +1,29 @@
+  a["trained_best"] = a[[c for c in TRAINED if c in a]].max(1)
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/make_paper_tables.py", line 58, in <module>
+    a = collect(); a.to_csv(f"{OUT}/all.csv", index=False)
+        ^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MICE/code/make_paper_tables.py", line 45, in collect
+    a["trained_best_name"] = a[[c for c in TRAINED if c in a]].idxmax(1) if a[[c for c in TRAINED if c in a]].notna().any().any() else ""
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/pandas/core/frame.py", line 15876, in idxmax
+    res = data._reduce(
+          ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/pandas/core/frame.py", line 13635, in _reduce
+    res = df._mgr.reduce(blk_func)
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/pandas/core/internals/managers.py", line 1694, in reduce
+    res_blocks = [blk.reduce(func) for blk in self.blocks]
+                  ^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/pandas/core/internals/blocks.py", line 358, in reduce
+    result = func(self.values)
+             ^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/pandas/core/frame.py", line 13565, in blk_func
+    return op(values, axis=axis, skipna=skipna, **kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/pandas/core/nanops.py", line 1170, in nanargmax
+    result = _maybe_arg_null_out(result, axis, mask, skipna)  # type: ignore[arg-type]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/pandas/core/nanops.py", line 1489, in _maybe_arg_null_out
+    raise ValueError("Encountered all NA values")
+ValueError: Encountered all NA values

@@ -1,0 +1,14 @@
+stream                                                                    
+h4_airlines_d   66.15   66.16  66.04    65.68  65.85  65.10  65.82   64.65
+h4_airlines_e   65.78   65.78  65.77    65.31  65.47  65.02  65.42   64.39
+h4_covertype_d  96.23   96.24  96.15    96.18  96.20  96.27  92.02   96.16
+h4_covertype_e  97.21   97.21  97.13    97.18  97.20  97.15  96.76   97.18
+h4_poker_d      94.44   94.21  92.43    94.21  94.25  92.39  85.09   93.25
+h4_poker_e      92.53   92.25  90.17    91.62  91.70  89.18  83.68   90.88
+mean {'mice': 85.39, 'mice10': 85.31, 'fast': 84.61, 'windows': 85.03, 'fifo': 85.11, 'ltm': 84.18, 'ddm': 81.46, 'winens': 84.42}
+L1 non-inferiority, mice - max(fifo, ddm) >= -0.5 on every segment: True {'h4_airlines_d': 0.3, 'h4_airlines_e': 0.31, 'h4_covertype_d': 0.04, 'h4_covertype_e': 0.01, 'h4_poker_d': 0.19, 'h4_poker_e': 0.83}
+L2a mice above all of ['fifo', 'ltm', 'ddm', 'winens'] on 5 of 6 (majority = 4): True {'h4_airlines_d': 0.3, 'h4_airlines_e': 0.31, 'h4_covertype_d': -0.04, 'h4_covertype_e': 0.01, 'h4_poker_d': 0.19, 'h4_poker_e': 0.83}
+L2b highest mean: True mean margin +0.27
+L3 safety, mice - fifo >= -0.3 on every segment: True {'h4_airlines_d': 0.3, 'h4_airlines_e': 0.31, 'h4_covertype_d': 0.04, 'h4_covertype_e': 0.01, 'h4_poker_d': 0.19, 'h4_poker_e': 0.83} mean +0.28
+L4 memory, mice above the windows-only variant on 6 of 6 (majority?): True {'h4_airlines_d': 0.47, 'h4_airlines_e': 0.47, 'h4_covertype_d': 0.05, 'h4_covertype_e': 0.03, 'h4_poker_d': 0.23, 'h4_poker_e': 0.91}
+report only: step 10 minus step 1/2 {'h4_airlines_d': 0.02, 'h4_airlines_e': -0.0, 'h4_covertype_d': 0.0, 'h4_covertype_e': 0.0, 'h4_poker_d': -0.23, 'h4_poker_e': -0.28} ; fast level alone minus fifo {'h4_airlines_d': 0.19, 'h4_airlines_e': 0.3, 'h4_covertype_d': -0.05, 'h4_covertype_e': -0.07, 'h4_poker_d': -1.82, 'h4_poker_e': -1.53} ; ddm minus fifo {'h4_airlines_d': -0.03, 'h4_airlines_e': -0.05, 'h4_covertype_d': -4.18, 'h4_covertype_e': -0.44, 'h4_poker_d': -9.16, 'h4_poker_e': -8.02}

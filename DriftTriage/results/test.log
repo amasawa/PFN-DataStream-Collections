@@ -1,0 +1,127 @@
+seed 10 done
+seed 11 done
+seed 12 done
+seed 13 done
+seed 14 done
+seed 10
+seed 11
+seed 12
+seed 13
+seed 14
+family      type               magnitude
+hyperplane  virtual_tilt       0              1.00
+                               1              1.00
+                               2              1.01
+                               4              1.03
+                               8              1.03
+sea         virtual_tilt       0              1.00
+                               1              1.01
+                               2              1.02
+                               4              1.07
+                               8              1.05
+sine2d      virtual_translate  0              1.00
+                               1              3.68
+                               2             11.80
+                               4             44.27
+                               8            132.17
+sine2d 10 fifo acc=0.9709 resets=0 time=58s
+sine2d 10 ltm acc=0.9707 resets=0 time=56s
+sine2d 10 ddm acc=0.9785 resets=5 time=58s
+sine2d 10 pxreset acc=0.9695 resets=3 time=63s
+sine2d 10 triage acc=0.9794 resets=3 time=59s
+sine2d 11 fifo acc=0.9648 resets=0 time=56s
+sine2d 11 ltm acc=0.9655 resets=0 time=64s
+sine2d 11 ddm acc=0.9759 resets=5 time=64s
+sine2d 11 pxreset acc=0.9631 resets=4 time=65s
+sine2d 11 triage acc=0.9778 resets=2 time=64s
+sine2d 12 fifo acc=0.9629 resets=0 time=61s
+sine2d 12 ltm acc=0.9644 resets=0 time=59s
+sine2d 12 ddm acc=0.9752 resets=9 time=57s
+sine2d 12 pxreset acc=0.9621 resets=3 time=65s
+sine2d 12 triage acc=0.9772 resets=7 time=64s
+sine2d 13 fifo acc=0.9728 resets=0 time=60s
+sine2d 13 ltm acc=0.9729 resets=0 time=59s
+sine2d 13 ddm acc=0.9797 resets=4 time=49s
+sine2d 13 pxreset acc=0.9725 resets=4 time=51s
+sine2d 13 triage acc=0.9802 resets=5 time=50s
+sine2d 14 fifo acc=0.9678 resets=0 time=48s
+sine2d 14 ltm acc=0.9684 resets=0 time=49s
+sine2d 14 ddm acc=0.9785 resets=7 time=47s
+sine2d 14 pxreset acc=0.9671 resets=3 time=48s
+sine2d 14 triage acc=0.9810 resets=2 time=49s
+sine2d 15 fifo acc=0.9653 resets=0 time=49s
+sine2d 15 ltm acc=0.9663 resets=0 time=48s
+sine2d 15 ddm acc=0.9774 resets=6 time=49s
+sine2d 15 pxreset acc=0.9623 resets=4 time=51s
+sine2d 15 triage acc=0.9790 resets=4 time=50s
+sine2d 16 fifo acc=0.9737 resets=0 time=51s
+sine2d 16 ltm acc=0.9730 resets=0 time=51s
+sine2d 16 ddm acc=0.9804 resets=13 time=48s
+sine2d 16 pxreset acc=0.9715 resets=4 time=50s
+sine2d 16 triage acc=0.9833 resets=3 time=51s
+sine2d 17 fifo acc=0.9716 resets=0 time=51s
+sine2d 17 ltm acc=0.9710 resets=0 time=51s
+sine2d 17 ddm acc=0.9788 resets=6 time=50s
+sine2d 17 pxreset acc=0.9695 resets=6 time=52s
+sine2d 17 triage acc=0.9801 resets=4 time=52s
+sine2d 18 fifo acc=0.9655 resets=0 time=49s
+sine2d 18 ltm acc=0.9664 resets=0 time=50s
+sine2d 18 ddm acc=0.9780 resets=6 time=50s
+sine2d 18 pxreset acc=0.9645 resets=4 time=49s
+sine2d 18 triage acc=0.9800 resets=2 time=50s
+sine2d 19 fifo acc=0.9685 resets=0 time=48s
+sine2d 19 ltm acc=0.9699 resets=0 time=51s
+sine2d 19 ddm acc=0.9792 resets=8 time=47s
+sine2d 19 pxreset acc=0.9667 resets=5 time=50s
+sine2d 19 triage acc=0.9809 resets=4 time=48s
+lin 10 fifo acc=0.9598 resets=0 time=53s
+lin 10 ltm acc=0.9581 resets=0 time=53s
+lin 10 ddm acc=0.9696 resets=3 time=54s
+lin 10 pxreset acc=0.9587 resets=2 time=56s
+lin 10 triage acc=0.9694 resets=3 time=50s
+lin 11 fifo acc=0.9451 resets=0 time=45s
+lin 11 ltm acc=0.9445 resets=0 time=44s
+lin 11 ddm acc=0.9674 resets=4 time=45s
+lin 11 pxreset acc=0.9441 resets=3 time=45s
+lin 11 triage acc=0.9668 resets=5 time=46s
+lin 12 fifo acc=0.9500 resets=0 time=45s
+lin 12 ltm acc=0.9457 resets=0 time=45s
+lin 12 ddm acc=0.9689 resets=10 time=45s
+lin 12 pxreset acc=0.9474 resets=3 time=46s
+lin 12 triage acc=0.9696 resets=9 time=45s
+lin 13 fifo acc=0.9493 resets=0 time=44s
+lin 13 ltm acc=0.9361 resets=0 time=45s
+lin 13 ddm acc=0.9694 resets=9 time=44s
+lin 13 pxreset acc=0.9482 resets=3 time=45s
+lin 13 triage acc=0.9684 resets=9 time=45s
+lin 14 fifo acc=0.9580 resets=0 time=44s
+lin 14 ltm acc=0.9505 resets=0 time=44s
+lin 14 ddm acc=0.9754 resets=5 time=43s
+lin 14 pxreset acc=0.9567 resets=4 time=46s
+lin 14 triage acc=0.9738 resets=5 time=45s
+lin 15 fifo acc=0.9436 resets=0 time=45s
+lin 15 ltm acc=0.9420 resets=0 time=45s
+lin 15 ddm acc=0.9654 resets=4 time=45s
+lin 15 pxreset acc=0.9405 resets=4 time=46s
+lin 15 triage acc=0.9641 resets=4 time=45s
+lin 16 fifo acc=0.9441 resets=0 time=44s
+lin 16 ltm acc=0.9392 resets=0 time=45s
+lin 16 ddm acc=0.9673 resets=3 time=44s
+lin 16 pxreset acc=0.9420 resets=4 time=46s
+lin 16 triage acc=0.9675 resets=3 time=44s
+lin 17 fifo acc=0.9553 resets=0 time=44s
+lin 17 ltm acc=0.9516 resets=0 time=45s
+lin 17 ddm acc=0.9699 resets=3 time=45s
+lin 17 pxreset acc=0.9541 resets=4 time=47s
+lin 17 triage acc=0.9687 resets=5 time=46s
+lin 18 fifo acc=0.9571 resets=0 time=44s
+lin 18 ltm acc=0.9575 resets=0 time=43s
+lin 18 ddm acc=0.9700 resets=3 time=44s
+lin 18 pxreset acc=0.9548 resets=4 time=48s
+lin 18 triage acc=0.9704 resets=3 time=45s
+lin 19 fifo acc=0.9530 resets=0 time=41s
+lin 19 ltm acc=0.9554 resets=0 time=42s
+lin 19 ddm acc=0.9684 resets=4 time=42s
+lin 19 pxreset acc=0.9520 resets=4 time=43s
+lin 19 triage acc=0.9673 resets=4 time=43s
+TEST_DONE 04:06:53

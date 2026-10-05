@@ -1,0 +1,15 @@
+h3_covertype_c fifo1000 acc=0.9570 time=353s
+h3_covertype_c ltm1000_75 acc=0.9578 time=352s
+h3_covertype_c ddm1000 acc=0.9187 time=318s
+h3_covertype_c winens1000 acc=0.9570 time=750s
+RESUME after WSL restart 2026-10-05 10:16:29
+h3_covertype_c micev1000_500 resumed at batch 801
+h3_covertype_c micev1000_500 acc=0.9574 time=1280s
+STREAM_DONE h3_covertype_c 10:20:38
+h3_poker_c fifo1000 acc=0.9087 time=198s
+h3_poker_c ltm1000_75 acc=0.8834 time=210s
+h3_poker_c ddm1000 acc=0.8343 time=186s
+h3_poker_c winens1000 acc=0.8978 time=647s
+h3_poker_c micev1000_500 acc=0.9080 time=3280s
+STREAM_DONE h3_poker_c 11:36:12
+CHAIN_DONE 11:36:12

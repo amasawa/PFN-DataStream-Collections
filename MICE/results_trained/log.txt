@@ -1,0 +1,53 @@
+FROZEN mooe_rff_100_1_0.01
+grid_c30_b500_s10 mooe_rff_100_1_0.01grid_c30_b500_s11  acc=0.7205mooe_rff_100_1_0.01  time=1sacc=0.6566 
+time=1s
+grid_c5_b500_s11 mooe_rff_100_1_0.01 acc=0.8511 time=1s
+grid_c5_b500_s10 mooe_rff_100_1_0.01 acc=0.8591 time=1s
+grid_c100_b500_s10 mooe_rff_100_1_0.01 acc=0.5611 time=1s
+grid_c100_b500_s11 mooe_rff_100_1_0.01 acc=0.5241 time=1s
+grid_c30_b2000_s10 mooe_rff_100_1_0.01 acc=0.8645 time=4s
+grid_c5_b2000_s10 mooe_rff_100_1_0.01 acc=0.9597 time=4s
+grid_c5_b2000_s11 mooe_rff_100_1_0.01 acc=0.9572 time=4s
+grid_c30_b2000_s11 mooe_rff_100_1_0.01 acc=0.8366 time=4s
+grid_c100_b2000_s10 mooe_rff_100_1_0.01 acc=0.6817 time=4s
+grid_c100_b2000_s11 mooe_rff_100_1_0.01 acc=0.6657 time=3s
+insects_incremental_abrupt_balanced mooe_rff_100_1_0.01 acc=0.7633 time=13s
+insects_gradual_imbalanced mooe_rff_100_1_0.01 acc=0.8088 time=21s
+insects_abrupt_imbalanced mooe_rff_100_1_0.01 acc=0.7871 time=22s
+covertype mooe_rff_100_1_0.01 acc=0.8206 time=23s
+MOOE_DONE 20:58:26
+grid_c5_b500_s11 mooe_rff2000_100_2_0.01 acc=0.8566 time=15s
+grid_c5_b500_s10 mooe_rff2000_100_2_0.01 acc=0.8673 time=17s
+grid_c5_b2000_s10 mooe_rff2000_100_2_0.01 acc=0.9669 time=46s
+grid_c5_b2000_s11 mooe_rff2000_100_2_0.01 acc=0.9612 time=46s
+grid_c30_b500_s10 mooe_rff2000_100_2_0.01 acc=0.7550 time=11s
+grid_c30_b500_s11 mooe_rff2000_100_2_0.01 acc=0.6916 time=11s
+grid_c30_b2000_s10 mooe_rff2000_100_2_0.01 acc=0.8883 time=46s
+grid_c30_b2000_s11 mooe_rff2000_100_2_0.01 acc=0.8663 time=46s
+grid_c100_b500_s10 mooe_rff2000_100_2_0.01 acc=0.5605 time=11s
+grid_c100_b500_s11 mooe_rff2000_100_2_0.01 acc=0.5345 time=11s
+grid_c100_b2000_s10 mooe_rff2000_100_2_0.01 acc=0.7118 time=46s
+grid_c100_b2000_s11 mooe_rff2000_100_2_0.01 acc=0.6910 time=47s
+insects_incremental_abrupt_balanced mooe_rff2000_100_2_0.01 acc=0.7686 time=213s
+insects_gradual_imbalanced mooe_rff2000_100_2_0.01 acc=0.8135 time=362s
+insects_abrupt_imbalanced mooe_rff2000_100_2_0.01 acc=0.7929 time=375s
+covertype mooe_rff2000_100_2_0.01 acc=0.8107 time=379s
+MOOE_EXT_DONE 21:20:46
+TRAINED_DONE 21:33:05
+grid_c5_b500_s11 mooe_rff4000_100_2_0.01 acc=0.8577 time=40s
+grid_c5_b500_s10 mooe_rff4000_100_2_0.01 acc=0.8673 time=41s
+grid_c5_b2000_s11 mooe_rff4000_100_2_0.01 acc=0.9612 time=147s
+grid_c5_b2000_s10 mooe_rff4000_100_2_0.01 acc=0.9670 time=148s
+grid_c30_b500_s10 mooe_rff4000_100_2_0.01 acc=0.7514 time=37s
+grid_c30_b500_s11 mooe_rff4000_100_2_0.01 acc=0.6966 time=36s
+grid_c30_b2000_s11 mooe_rff4000_100_2_0.01 acc=0.8697 time=148s
+grid_c30_b2000_s10 mooe_rff4000_100_2_0.01 acc=0.8902 time=149s
+grid_c100_b500_s10 mooe_rff4000_100_2_0.01 acc=0.5723 time=37s
+grid_c100_b500_s11 mooe_rff4000_100_2_0.01 acc=0.5302 time=37s
+grid_c100_b2000_s10 mooe_rff4000_100_2_0.01 acc=0.7130 time=149s
+grid_c100_b2000_s11 mooe_rff4000_100_2_0.01 acc=0.6953 time=149s
+insects_incremental_abrupt_balanced mooe_rff4000_100_2_0.01 acc=0.7691 time=683s
+insects_gradual_imbalanced mooe_rff4000_100_2_0.01 acc=0.8143 time=1124s
+insects_abrupt_imbalanced mooe_rff4000_100_2_0.01 acc=0.7934 time=1169s
+covertype mooe_rff4000_100_2_0.01 acc=0.8121 time=1177s
+MOOE_EXT3_DONE 21:54:28

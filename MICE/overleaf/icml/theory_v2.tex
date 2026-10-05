@@ -1,0 +1,169 @@
+%%%% Draft of 2026-10-04 (evening). NOT \input into main.tex yet. Replaces Sec. "When Recall Beats Relearning" and the
+%%%% \todo in Definition 1. Chain: R-divergence for an in-context learner -> its blind spot -> excess-risk form
+%%%% (= conditional Jensen-Shannon) -> merge rule = estimate of the recall regret -> meta expert under a margin
+%%%% (MOOE decomposition) -> recall versus relearn. Numbers quoted here are from DEV seeds only (see the log).
+
+\section{Theory: From Model-Oriented Discrepancy to Recall versus Relearn}
+\label{sec:theory}
+
+\textbf{Setting.} $f_\Theta(\cdot\mid\vx;\cC)$ is the predictive distribution of the frozen TFM given a context $\cC$.
+For a concept $P$ over $(\vx,y)$ and a loss $\ell$, the risk of a context is
+$\epsilon_P(\cC)=\E_{(\vx,y)\sim P}\,\ell\bigl(f_\Theta(\cdot\mid\vx;\cC),y\bigr)$, and the \emph{learning curve} of $P$ is
+$R_P(n)=\E_{\cC\sim P^n}\,\epsilon_P(\cC)$. We write $p_\vx=P(\cdot\mid\vx)$, $P_X$ for the marginal, and
+$\mathrm{JS}$ for the Jensen--Shannon divergence. Unless stated otherwise $\ell$ is the log-loss.
+
+\subsection{A Model-Oriented Discrepancy for In-Context Learners}
+
+R-divergence \citep{zhao2023rdiv} declares two distributions identical \emph{for a model} when the hypothesis learned
+on their mixture has the same risk on both. For an in-context learner the hypothesis learned on the mixture is the
+TFM conditioned on the union of the two contexts:
+\begin{equation}\label{eq:rdiv}
+  \Div_R(P\|Q)=\bigl|\epsilon_P(\cC_P\cup\cC_Q)-\epsilon_Q(\cC_P\cup\cC_Q)\bigr| .
+\end{equation}
+To study its population behaviour we use the idealisation behind prior-fitted networks
+\citep{muller2022pfn,nagler2023statistical}: with contexts of equal size from $P$ and $Q$, the predictive distribution
+tends to the conditional of the mixture $U=\tfrac12(P+Q)$,
+$u_\vx=\alpha(\vx)p_\vx+(1-\alpha(\vx))q_\vx$ with $\alpha=P_X/(P_X+Q_X)$, and with a context from $P$ alone to
+$p_\vx$. We denote these limits by $h_U$ and $h_P$.
+
+\begin{definition}[Excess-risk discrepancy]\label{def:excess}
+The \emph{recall regret} of $P$ on $Q$ and the \emph{excess-risk discrepancy} are
+\begin{align}
+  \Div_T(Q\,|\,P) &= \epsilon_Q(h_P)-\epsilon_Q(h_Q), \label{eq:transfer}\\
+  \Div_E(P,Q) &= \tfrac12\bigl[\epsilon_P(h_U)-\epsilon_P(h_P)\bigr]+\tfrac12\bigl[\epsilon_Q(h_U)-\epsilon_Q(h_Q)\bigr].
+  \label{eq:excess}
+\end{align}
+\end{definition}
+$\Div_T$ is what recalling the stored context of $P$ costs while concept $Q$ is active; $\Div_E$ is what pooling the
+two contexts costs each of them.
+
+\begin{proposition}[Blind spot of R-divergence and its repair]\label{prop:blind}
+Under the log-loss and the idealisation above,
+\begin{enumerate}
+  \item $\Div_E(P,Q)=\mathrm{JS}(P,Q)-\mathrm{JS}(P_X,Q_X)\ge0$, the part of the Jensen--Shannon divergence between
+        the joints that covariate shift does not explain. If $P_X=Q_X$ then
+        $\Div_E(P,Q)=\E_{\vx}\,\mathrm{JS}(p_\vx,q_\vx)$, which is zero if and only if $p_\vx=q_\vx$ almost surely,
+        and $\Div_T(Q\,|\,P)=\E_{\vx}\KL(q_\vx\|p_\vx)$.
+  \item $\Div_R(P\|Q)=\bigl|\E_{P_X}[H(p_\vx)+\KL(p_\vx\|u_\vx)]-\E_{Q_X}[H(q_\vx)+\KL(q_\vx\|u_\vx)]\bigr|$, with $H$
+        the entropy.
+  \item (Blind spot.) Let $P_X=Q_X$ and let both concepts be deterministic, $y=g_P(\vx)$ and $y=g_Q(\vx)$, with
+        disagreement mass $\rho=\Pr_{\vx}[g_P(\vx)\neq g_Q(\vx)]$. Then $\Div_R(P\|Q)=0$ for every $\rho\in[0,1]$,
+        whereas $\Div_E(P,Q)=\rho\ln2$. Under the 0-1 loss with ties of $u_\vx$ broken independently of the source
+        of the query, $\epsilon_P(h_U)=\epsilon_Q(h_U)=\rho/2$, so again $\Div_R=0$, while
+        $\Div_T(Q\,|\,P)=\rho=2\,\Div_E(P,Q)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+For the log-loss, $\epsilon_P(h)=\E_{P_X}\bigl[H(p_\vx)+\KL(p_\vx\|h_\vx)\bigr]$ for any conditional $h$, hence
+$\epsilon_P(h_P)=\E_{P_X}H(p_\vx)$ and $\epsilon_P(h_U)-\epsilon_P(h_P)=\E_{P_X}\KL(p_\vx\|u_\vx)$, and likewise for $Q$;
+this gives (2) and $\Div_T(Q\,|\,P)=\E_{Q_X}\KL(q_\vx\|p_\vx)$. By the chain rule,
+$\KL(P\|U)=\KL(P_X\|U_X)+\E_{P_X}\KL(p_\vx\|u_\vx)$ and the same for $Q$; averaging the two identities gives
+$\mathrm{JS}(P,Q)=\mathrm{JS}(P_X,Q_X)+\Div_E(P,Q)$, and $\Div_E\ge0$ as a mean of KL terms. If $P_X=Q_X$ then
+$\alpha\equiv\tfrac12$, $u_\vx=\tfrac12(p_\vx+q_\vx)$ and $\Div_E=\E_\vx\mathrm{JS}(p_\vx,q_\vx)$, which vanishes iff
+$p_\vx=q_\vx$ a.s. This proves (1). For (3), deterministic concepts have $H(p_\vx)=H(q_\vx)=0$, and
+$u_\vx$ puts mass $\tfrac12$ on each of $g_P(\vx)$ and $g_Q(\vx)$ where they differ and mass $1$ where they agree, so
+$\KL(p_\vx\|u_\vx)=\KL(q_\vx\|u_\vx)=\ln2\cdot\mathbf 1[g_P(\vx)\neq g_Q(\vx)]$; the two terms in (2) cancel and
+$\Div_E=\rho\ln2$. Under the 0-1 loss the prediction at a disagreeing $\vx$ is $g_P(\vx)$ or $g_Q(\vx)$ with probability
+$\tfrac12$ each, whichever distribution the query comes from, so each risk is $\rho/2$; $h_P$ errs on $Q$ exactly where
+the concepts disagree, so $\Div_T(Q\,|\,P)=\rho$.
+\end{proof}
+
+\textbf{Reading.} R-divergence asks whether the mixture hypothesis treats the two sets \emph{equally}; two concepts
+that contradict each other on the same inputs are treated equally badly, so the answer is yes although no context
+of one helps the other. The excess-risk form asks whether pooling \emph{costs} anything, and for the log-loss it is
+exactly the concept-shift part of the Jensen--Shannon divergence. This is the case that matters for recurring
+concepts: on the controlled grid (shared $P_X$, labels reassigned per concept) the estimate of $\Div_R$ on pairs of
+different concepts averages 0.05 while $\rho$ ranges from 0.13 to 1.00, and the estimates of $\Div_T$ and of
+$2\Div_E$ track $\rho$.\todo{Dev seeds 0, 1: mean $\widehat{\Div}_T$ 0.695, mean $2\widehat{\Div}_E$ 0.657, correlation
+0.99 over 72 pairs; AUROC for ``different concept'' 0.86--0.89 for $\Div_R$ and 1.00 for the other two. Replicate on
+test seeds before quoting.}
+
+\textbf{Finite contexts: pooling against interference.} With $n$ rows per set the empirical counterpart of
+\eqref{eq:excess} contains a second term. If $P=Q$, pooling doubles the context, and
+\begin{equation}\label{eq:pool}
+  \E\bigl[\epsilon_P(\cC_P\cup\cC_Q)-\epsilon_P(\cC_P)\bigr]=R_P(2n)-R_P(n)\le0
+\end{equation}
+whenever the learning curve is non-increasing in risk: the excess is minus the learning-curve increment. In general
+the empirical excess is interference (\cref{prop:blind}) minus pooling gain \eqref{eq:pool}, so the rule ``merge a
+segment into a stored expert when the estimated excess is at most $\delta$'' merges exactly when pooling helps more
+than the concepts interfere. \method{} applies the directed form: a closed segment $\cC_Q$ joins the stored expert
+$\cC_P$ that minimises $\widehat{\Div}_T(Q\,|\,P)=\hat\epsilon_{Q}(\cC_P)-\hat\epsilon_{Q}(\cC_Q)$ if this is at most
+$\delta$, with $\hat\epsilon_Q(\cC_Q)$ cross-fitted because an in-context learner memorises its context (the
+overfitting argument of \citet{zhao2023rdiv} against evaluating on the training set). Thus the merge statistic is an
+estimate of the regret that recalling this expert would incur on the segment, which is the quantity the next two
+results are about.
+
+\subsection{The Meta Expert Under a Margin}
+
+Following \citet{zhao2025mooe}, the regret of the mixture against the per-batch best predictor splits into the regret of
+the meta expert against the best expert $k^\star$ and the regret of that expert,
+$\Regret_{\method}=\Regret_{\mathrm{ME}}+\Regret_{\mathrm{KE}}$. MOOE bounds $\Regret_{\mathrm{ME}}\le\sqrt{T\ln K}$ for
+cumulative losses over an interval of $T$ rounds. After a recurrence the cumulative loss still carries the previous
+concept, so \method{} restarts the meta expert every batch (weights from the last labelled batch only). The
+worst-case bound is then vacuous, and the guarantee comes from a margin instead.
+
+\begin{lemma}[Margin]\label{lem:margin}
+Let $w_k\propto\exp(-\eta\,\ell_k)$ over $K$ experts and suppose $\ell_{k^\star}\le\ell_k-g$ for all $k\ne k^\star$. With
+$\kappa=\ln\bigl(1+(K-1)e^{-\eta g}\bigr)$: (i) $w_{k^\star}\ge e^{-\kappa}$; (ii) for every row, the log-loss of the
+mixture is at most that of expert $k^\star$ plus $\kappa$; (iii) the mixture predicts the same class as expert
+$k^\star$ on every row where the top two probabilities of $k^\star$ differ by more than $e^{\kappa}-1$.
+\end{lemma}
+\begin{proof}
+(i) $w_{k^\star}=\bigl(1+\sum_{k\ne k^\star}e^{-\eta(\ell_k-\ell_{k^\star})}\bigr)^{-1}\ge(1+(K-1)e^{-\eta g})^{-1}$.
+(ii) $-\ln\sum_kw_kp_k(y)\le-\ln\bigl(w_{k^\star}p_{k^\star}(y)\bigr)\le-\ln p_{k^\star}(y)+\kappa$.
+(iii) For classes $y_1,y_2$, $\sum_kw_k\bigl(p_k(y_1)-p_k(y_2)\bigr)\ge w_{k^\star}\bigl(p_{k^\star}(y_1)-p_{k^\star}(y_2)\bigr)
+-(1-w_{k^\star})$, which is positive when the gap of $k^\star$ exceeds $(1-w_{k^\star})/w_{k^\star}\le e^{\kappa}-1$.
+\end{proof}
+
+\begin{proposition}[Regret of the meta expert on a block]\label{prop:block}
+Consider a block of $J$ batches of one concept and log-losses clipped at $c$. Let $\mathcal G$ be the set of batches
+$j\ge2$ of the block before which expert $k^\star$ led the last labelled batch by a margin of at least $g$. Then,
+per row,
+\[
+  \Regret_{\mathrm{ME}}\;\le\;c\,(J-|\mathcal G|)+|\mathcal G|\,\ln\bigl(1+(K-1)e^{-\eta g}\bigr).
+\]
+If the margin holds from the second batch on, $\Regret_{\mathrm{ME}}\le c+(J-1)(K-1)e^{-\eta g}$: one batch of
+identification, independent of the block length up to an exponentially small term, against $\sqrt{JB\ln K}$ for the
+cumulative rule.
+\end{proposition}
+\begin{proof}
+On a batch in $\mathcal G$ apply \cref{lem:margin}(ii) with the losses of the last labelled batch; on the other
+batches the per-row regret is at most $c$. The special case uses $|\mathcal G|=J-1$ and $\ln(1+x)\le x$.
+\end{proof}
+\todo[inline]{Dev grid (12 streams): from the second batch of a recurring block the leader has weight 1.000 in all six
+cells and the gap between the best and second-best expert is 0.8--8.0 nats, so with $\eta=10$, $K\le15$:
+$(K-1)e^{-\eta g}\le 14e^{-8}<0.005$. Replaying the MOOE meta expert with intervals of one batch and its own step size
+changes accuracy by 0.04 points; intervals of 500 rows lose 9.5 points on the hardest cell.}
+
+\subsection{When Recall Beats Relearning}
+
+Let concepts recur in blocks of $L$ rows ($J=L/B$ batches), labels arrive one batch late, the budget is $M$ rows, and
+$a_k(n)$ is the accuracy learning curve of concept $k$, non-decreasing in $n$. On the $c$-th visit of concept $k$
+($c\ge2$) its stored expert holds $n_c=\min(M,(c-1)L)$ rows. The \emph{relearning} learner resets its context at the
+block boundary; in MOOE's terms it is the online expert, and the stored context is an offline expert that needs no
+training.
+
+\begin{proposition}[Recall versus relearn]\label{prop:recall}
+Assume the margin of \cref{prop:block} holds from the second batch of the block for the better of the stored expert
+and the window, with $e^\kappa-1$ below the top-two gap of that expert. Then on the $c$-th visit the expected
+accuracy of \method{} minus that of relearning, averaged over the block, is
+\begin{equation}\label{eq:area}
+  \Delta_{k,c}(L)=\frac1J\sum_{j=1}^{J-1}\Bigl[a_k(n_c)-a_k\bigl(\min(jB,M)\bigr)\Bigr]_+ ,
+\end{equation}
+the area by which the learning curve lies below the accuracy of the stored expert. It is zero when
+$a_k(B)=a_k(M)$, at most $\tfrac{M}{L}\bigl(a_k(M)-a_k(B)\bigr)$, and zero on the first visit.
+\end{proposition}
+\begin{proof}
+Both learners lose the first batch, whose labels have not arrived. Before batch $j+1$ the relearning context holds
+$\min(jB,M)$ rows of the block, so its expected accuracy is $a_k(\min(jB,M))$; the stored expert has expected accuracy
+$a_k(n_c)$. By \cref{lem:margin}(iii) the mixture predicts as the better of the two, which gives the positive part.
+Each term is at most $a_k(M)-a_k(B)$ and vanishes for $jB\ge M$, so at most $M/B$ of the $J$ terms are non-zero.
+\end{proof}
+
+\textbf{Reading.} \Cref{eq:area} is $\Regret_{\mathrm{OE}}-\Regret_{\mathrm{KE}}$ in the decomposition of
+\citet{zhao2025mooe}: memory helps when the area between the learning curve and the stored accuracy exceeds what the
+meta expert costs, and \cref{prop:block} makes that cost one batch, which the relearning learner loses as well. The
+value of memory is therefore a property of the backbone and the concept that can be measured before deployment. Two
+caveats: the stored expert keeps growing during the block, so \eqref{eq:area} is a lower bound once $n_c<M$; and the
+relearning learner is given the block boundary, so a real detector does worse.

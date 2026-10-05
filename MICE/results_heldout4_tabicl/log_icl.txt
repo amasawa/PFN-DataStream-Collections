@@ -1,0 +1,13 @@
+h4_poker_d fifo1000 acc=0.9238 time=245s
+h4_poker_d ddm1000 acc=0.8286 time=180s
+h4_poker_d winens1000 acc=0.9188 time=533s
+h4_poker_d micev1000_500 acc=0.9263 time=2687s
+STREAM_DONE h4_poker_d 21:23:33
+h4_airlines_d fifo1000 acc=0.6656 time=240s
+h4_airlines_d ddm1000 acc=0.6646 time=242s
+h4_airlines_d winens1000 acc=0.6541 time=664s
+h4_airlines_d micev1000_500 acc=0.6657 time=1928s
+STREAM_DONE h4_airlines_d 22:14:51
+h4_covertype_d fifo1000 acc=0.9599 time=708s
+h4_covertype_d ddm1000 acc=0.9390 time=687s
+h4_covertype_d winens1000 acc=0.9596 time=1249s

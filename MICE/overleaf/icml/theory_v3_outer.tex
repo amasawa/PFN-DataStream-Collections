@@ -1,0 +1,63 @@
+%%%% DRAFT (2026-10-05), NOT \input into main.tex. A subsection to follow "The Meta Expert Under a Margin" in
+%%%% theory_v2.tex. It covers the outer level of the two-timescale meta expert in the variant whose constants lie
+%%%% inside the range of the bound (mice3t: half Brier score, step 1/2, tempered weights, discount 0.9). The frozen
+%%%% mice3 uses step 10 and is NOT covered. The derivation has not been checked by a second person. Numbers quoted
+%%%% here are from DEVELOPMENT caches only (log, 2026-10-05 10:41 and 10:50).
+
+\subsection{A Safeguard on the Slow Time Scale}
+\label{sec:outer}
+
+\Cref{lem:margin} is a statement about streams on which one expert leads by a margin. On streams without such a
+margin the batch-wise restart follows noise: the expert that was best on the last batch need not be best on the
+next. \method{} therefore places a second meta expert above the first. It has two experts, the \emph{default}
+(the TFM on the window of the last $M$ rows, $k=0$) and the \emph{inner mixture} of \cref{lem:margin} ($k=1$), and it
+weights them on a slow time scale. Let $\ell_{t,k}\in[0,1]$ be the mean half Brier score
+$\tfrac12\lVert p-e_y\rVert_2^2$ of expert $k$ on batch $t$, and let
+\begin{equation}\label{eq:outer}
+\begin{aligned}
+  L_{t,k}&=\gamma L_{t-1,k}+\ell_{t,k},\qquad v_{t,k}\propto\exp\bigl(-\eta\gamma L_{t-1,k}\bigr),\\
+  p_t&=v_{t,0}\,p_{t,0}+v_{t,1}\,p_{t,1},
+\end{aligned}
+\end{equation}
+with discount $\gamma\in(0,1]$ and $L_{0,k}=0$. For $\gamma=1$ this is the cumulative meta expert of MOOE with a
+mixable loss; $\gamma<1$ forgets losses older than about $1/(1-\gamma)$ batches.
+
+\begin{proposition}[Discounted regret of the outer level]\label{prop:outer}
+Let $K$ experts be combined by \cref{eq:outer} with $\eta\le\tfrac12$. For every sequence of labels and expert
+predictions, every time $T$ and every expert $k$,
+\[
+  \sum_{t=1}^{T}\gamma^{\,T-t}\bigl(\ell_t(p_t)-\ell_{t,k}\bigr)\;\le\;\frac{\ln K}{\eta}.
+\]
+\end{proposition}
+\begin{proof}
+The half Brier score $\ell(p)=\tfrac12\lVert p-e_y\rVert^2$ has gradient $p-e_y$ and Hessian $I$, and
+$\lVert p-e_y\rVert^2\le2$ on the simplex, so $\nabla^2\ell\succeq\eta\,\nabla\ell\nabla\ell^{\top}$ for
+$\eta\le\tfrac12$: $\ell$ is $\eta$-exp-concave, and so is its mean over the rows of a batch. Hence
+$e^{-\eta\ell_t(p_t)}\ge\sum_kv_{t,k}e^{-\eta\ell_{t,k}}$. Let $W_t=\sum_ke^{-\eta L_{t,k}}$, $W_0=K$. Then
+$W_t=\bigl(\sum_ke^{-\eta\gamma L_{t-1,k}}\bigr)\sum_kv_{t,k}e^{-\eta\ell_{t,k}}$, and by the power-mean inequality
+$\sum_kx_k^{\gamma}\le K^{1-\gamma}\bigl(\sum_kx_k\bigr)^{\gamma}$ for $x_k\ge0$,
+\[
+  \ln W_t\;\le\;(1-\gamma)\ln K+\gamma\ln W_{t-1}-\eta\,\ell_t(p_t).
+\]
+Unrolling, $\ln W_T\le\ln K-\eta\sum_{t\le T}\gamma^{T-t}\ell_t(p_t)$, because
+$(1-\gamma)\sum_{t\le T}\gamma^{T-t}+\gamma^{T}=1$. On the other hand
+$\ln W_T\ge-\eta L_{T,k}=-\eta\sum_{t\le T}\gamma^{T-t}\ell_{t,k}$.
+\end{proof}
+
+\textbf{Reading.} With $K=2$, $\eta=\tfrac12$ and $\gamma=0.9$ the bound is $2\ln2\approx1.39$ against a discounted
+horizon of $1/(1-\gamma)=10$ batches: at every time, over the recent past, \method{} loses at most $0.14$ per batch
+in half Brier score to the plain window \emph{and} to the inner mixture, whichever is better, with no assumption on
+the stream. The discount is what makes this an any-time statement: after a change of regime the outer level needs
+about $1/(1-\gamma)$ batches, not the length of the stream, to follow the better of the two. The two levels divide
+the work: the inner level restarts every batch and identifies a recurring concept within one batch when the margin
+holds (\cref{prop:block}); the outer level decides, on a slower scale, whether identification is worth following
+at all.
+
+\textbf{Limits.} (i) The bound is in half Brier score, not in accuracy. (ii) The step is restricted to
+$\eta\le\tfrac12$. Beyond it only Hoeffding's lemma applies, which gives $\ln K/\eta+\eta/(8(1-\gamma))$; for
+$\eta=10$, $\gamma=0.9$ this exceeds the horizon. On adversarial sequences the discounted regret at $\eta=2$ and
+$\eta=10$ exceeds $\ln K/\eta$ (simulation, see the log). (iii) The log-loss is unbounded and not covered: one
+confidently wrong batch of the inner mixture after a switch biases an outer level run on log-loss for about ten
+batches, which is the failure we observed with it on the easiest cell of the grid.
+% Development caches (33 streams): the largest discounted regret is 0.145 against the default and 0.350 against the
+% inner mixture, a quarter of the bound at most.

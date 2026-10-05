@@ -1,0 +1,3 @@
+covertype arf acc=0.8262 time=123s
+covertype srp acc=0.9190 time=715s
+covertype hat acc=0.8143 time=37s

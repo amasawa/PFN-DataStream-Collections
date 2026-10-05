@@ -1,0 +1,11 @@
+insects_incremental_abrupt_balanced fifo1000 acc=0.7687 time=488s
+insects_incremental_abrupt_balanced ddm1000 acc=0.7799 time=335s
+insects_incremental_abrupt_balanced winens1000 acc=0.7795 time=844s
+insects_incremental_abrupt_balanced micev1000_500 acc=0.7848 time=4423s
+STREAM_DONE insects_incremental_abrupt_balanced 22:52:59
+insects_gradual_imbalanced fifo1000 acc=0.8194 time=794s
+insects_gradual_imbalanced ddm1000 acc=0.8194 time=764s
+insects_gradual_imbalanced winens1000 acc=0.8156 time=1612s
+insects_gradual_imbalanced micev1000_500 acc=0.8199 time=5828s
+STREAM_DONE insects_gradual_imbalanced 01:23:11
+CHAIN_DONE 01:23:11

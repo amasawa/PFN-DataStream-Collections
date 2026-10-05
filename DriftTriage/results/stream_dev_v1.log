@@ -1,0 +1,10 @@
+sine2d 0 fifo acc=0.9732 resets=0 time=49s
+sine2d 0 ltm acc=0.9737 resets=0 time=48s
+sine2d 0 ddm acc=0.9800 resets=7 time=48s
+sine2d 0 pxreset acc=0.9720 resets=4 time=51s
+sine2d 0 triage acc=0.9688 resets=0 time=168s
+sine2d 1 fifo acc=0.9672 resets=0 time=60s
+sine2d 1 ltm acc=0.9673 resets=0 time=65s
+sine2d 1 ddm acc=0.9764 resets=13 time=66s
+sine2d 1 pxreset acc=0.9657 resets=3 time=65s
+sine2d 1 triage acc=0.9729 resets=2 time=175s

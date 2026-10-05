@@ -1,0 +1,41 @@
+  d = acc.lref - acc[["fifo", "ddm"]].max(1)
+                                               ddm   fifo   lref  lref_min  triage_np
+covertype_s0                                 94.34  94.79  93.92     84.07      93.34
+elec2_s0                                     79.89  80.96  80.53     79.51      79.80
+h2_airlines_s0                               69.00  69.01  69.00     69.01        NaN
+h2_phishing_s0                               94.57  94.57  94.57     94.57        NaN
+h2_poker_s0                                  84.41  92.56  89.52     85.04        NaN
+h2_rialto_s0                                 77.93  77.46  77.80     77.57        NaN
+h2_spam_s0                                   94.13  94.49  94.03     93.39        NaN
+h2_weather_s0                                81.08  81.08  80.91     80.01        NaN
+insects_abrupt_balanced_s0                   76.53  76.53  78.22     77.01      76.53
+insects_abrupt_imbalanced_s0                 79.62  79.40  79.73     79.48      79.61
+insects_gradual_balanced_s0                  79.93  78.83  80.03     79.32      79.95
+insects_gradual_imbalanced_s0                81.66  81.64  81.69     81.65      81.66
+insects_incremental_abrupt_balanced_s0       77.73  76.70  78.34     77.03      77.74
+insects_incremental_balanced_s0              67.47  67.46  67.32     67.37      67.46
+insects_incremental_reoccurring_balanced_s0  80.13  79.15  80.69     79.81      80.16
+resets
+                                                ddm  lref  lref_min
+covertype_s0                                  50.0  25.0     447.0
+elec2_s0                                     225.0  47.0     245.0
+h2_airlines_s0                                 3.0   2.0       0.0
+h2_phishing_s0                                 0.0   0.0       0.0
+h2_poker_s0                                  465.0  90.0     421.0
+h2_rialto_s0                                 173.0  51.0     148.0
+h2_spam_s0                                     3.0   4.0       7.0
+h2_weather_s0                                  0.0   2.0      12.0
+insects_abrupt_balanced_s0                     0.0   9.0       4.0
+insects_abrupt_imbalanced_s0                   5.0   9.0       6.0
+insects_gradual_balanced_s0                    5.0   3.0       4.0
+insects_gradual_imbalanced_s0                  5.0  10.0       3.0
+insects_incremental_abrupt_balanced_s0        22.0  18.0      12.0
+insects_incremental_balanced_s0                2.0   5.0       2.0
+insects_incremental_reoccurring_balanced_s0   13.0  16.0      12.0
+mean {'ddm': 81.23, 'fifo': 81.64, 'lref': 81.75, 'lref_min': 80.32, 'triage_np': 79.58} n = 15
+rule 1a: mean lref > mean fifo and > mean ddm: True
+rule 1b: lref >= max(fifo, ddm) - 0.005 on every stream: False ; violations: {'covertype_s0': -0.86, 'h2_poker_s0': -3.03}
+rule 2a: where ddm is harmful, lref - fifo: {'elec2_s0': -0.43, 'h2_poker_s0': -3.03} all >= -0.3: False
+rule 2b: where ddm helps, lref - ddm: {'insects_gradual_balanced_s0': 0.1, 'insects_incremental_abrupt_balanced_s0': 0.62, 'insects_incremental_reoccurring_balanced_s0': 0.56} all >= -0.3: True
+lref - ddm: wins 8 of 15, mean +0.53, min -0.42; lref - fifo: wins 7, mean +0.11, min -3.03
+rule 3: per family, lref - ddm overall {'lin': 0.13, 'sine2d': 0.08} (>= -0.3), after real drift {'lin': 0.61, 'sine2d': 0.41} (>= -1.0)

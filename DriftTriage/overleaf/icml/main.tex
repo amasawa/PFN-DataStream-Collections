@@ -1,0 +1,289 @@
+%%%%%%%% DriftTriage: concept-drift triage for in-context tabular learners. ICML template (icml2026.sty until the
+%%%%%%%% 2027 style is released). Skeleton of 2026-10-03: no experiment has been run; every number is a TODO.
+\documentclass{article}
+
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+\usepackage{icml2026}          % blind review
+% \usepackage[accepted]{icml2026}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage[capitalize,noabbrev]{cleveref}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage[textsize=tiny]{todonotes}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{observation}{Observation}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\input{math.tex}
+\crefname{assumption}{Assumption}{Assumptions}
+\crefname{observation}{Observation}{Observations}
+\newcommand{\method}{\textsc{DriftTriage}}   % working name
+
+\begin{document}
+
+\twocolumn[
+  \icmltitle{Benign, Harmful or Novel? Triaging Concept Drift for In-Context Tabular Learners}
+  \icmlsetsymbol{equal}{*}
+  \begin{icmlauthorlist}
+    \icmlauthor{Anonymous Author(s)}{anon}
+  \end{icmlauthorlist}
+  \icmlaffiliation{anon}{Anonymous Institution}
+  \icmlcorrespondingauthor{Anonymous Author(s)}{anon@anon.org}
+  \icmlkeywords{concept drift, tabular foundation models, in-context learning, data streams}
+  \vskip 0.3in
+]
+\printAffiliationsAndNotice{}
+
+\begin{abstract}
+Tabular foundation models (TFMs) adapt to a data stream by changing their context rather than their weights. We ask
+which concept drifts actually harm an in-context learner and which of them it can see. On controlled streams with
+TabPFN, a shift of the input distribution inside the support of the context costs no accuracy even when a two-sample
+test separates old from new rows with AUROC 0.95, a shift outside the support costs as much as a change of the
+labelling function, and a change of the labelling function leaves the model's confidence untouched. We prove that no
+label-free statistic can detect such a real drift, that covered drift is benign, and we propose \method{}, which
+triages the error stream of a standard drift detector by coverage and class novelty. In a pre-registered held-out
+evaluation it matches the accuracy of a detector-triggered reset, cuts needless resets from 47 to 9 and keeps the
+detection of new classes outside the support (AUROC 0.79 versus 0.61), while unsupervised drift detectors fire on
+benign drift and miss harmful drift.
+\end{abstract}
+
+% =====================================================================================================
+\section{Introduction}
+\label{sec:intro}
+
+\textbf{Momentum.} Prior-data fitted networks approximate Bayesian posterior prediction in one forward pass
+\citep{muller2022pfn,nagler2023statistical}, and TFMs such as TabPFN \citep{hollmann2025tabpfn} and TabICL
+\citep{qu2025tabicl} now classify tables without gradient updates. Because they learn from the context, they are a
+natural fit for data streams, where the context is a sketch of recent data \citep{lourenco2026streams}, and for
+temporal shift \citep{helli2024drift}.
+
+\textbf{Problem.} Streams are non-stationary: their joint distribution changes over time
+\citep{gama2014survey,lu2019learning}. Concept drift theory separates \emph{virtual} drift of $P(\vx)$ from
+\emph{real} drift of $P(y\mid\vx)$ and treats the appearance of an unseen class as a sudden drift. For an in-context
+learner these types have different consequences, but existing TFM work treats drift as one phenomenon and measures
+only accuracy after adaptation.
+
+\begin{observation}\label{obs:types}
+The type of a drift, not the size of the input shift, decides whether a TFM fails. When $P(\vx)$ is tilted inside the
+support of the context, a domain classifier separates old from new rows with AUROC up to 0.95, yet the stale context
+loses at most 0.006 accuracy, within seed noise. When the labelling function changes on the same inputs, the loss
+equals the fraction of rows whose label changed, within 0.021 (hyperplane rotated by $90^\circ$: 0.51 versus 0.98).
+When $P(\vx)$ moves outside the support, the stale context fails as well (periodic boundary translated by twice its
+range: 0.52 versus 0.99). (Held-out seeds; the pre-registered bound of 0.005 for the tilt was missed by 0.0006.)
+\todo{Figure.}
+\end{observation}
+
+\begin{observation}\label{obs:confidence}
+Label-free signals see the wrong drifts. Under real drift the TFM's confidence does not move (it changes by at most
+0.004; 0.974 at $90^\circ$, where accuracy is 0.51) and the input distribution is unchanged, so neither confidence nor a $P(\vx)$
+detector can see it; a $P(\vx)$ detector instead fires on the benign in-support tilt. Uncovered inputs, in contrast,
+lower the confidence (0.66) and are far from the context: a nearest-neighbour coverage ratio is $\le$1.07 for every
+in-support tilt and $\ge$3.6 for every translation.
+\end{observation}
+
+Together these observations split concept drift for in-context learners along two axes: whether the drift harms
+the in-context predictor, and whether it is visible without labels. This raises the question: \emph{how should an
+in-context learner use the signals it has, label-free coverage and delayed labels, to keep its context when drift is
+benign and change it only when drift is harmful?}
+
+\textbf{Approach.} We formalise concept drift for in-context learners (\cref{sec:def}) and decompose the
+discrepancy between the context and an incoming window into a density ratio $r(\vx)$ and a likelihood ratio
+$v(\vx,y)$, following the sampling-transfer view of I-Div \citep{zhao2024idiv}. In practice the two
+signals an in-context learner has are label-free coverage, which reveals uncovered drift, and delayed labels, which
+alone can reveal real drift (\cref{prop:ident}). \method{} therefore triages the error stream: errors on uncovered rows
+extend the context, errors on rows of a new class are rejected, and only the remaining errors can trigger a reset.
+
+\textbf{Contributions.}
+(1) A definition of concept drift for in-context learners that separates benign, harmful and novel drift
+(\cref{def:icdrift}).
+(2) Observations showing that the drift type, not its magnitude, decides whether a TFM fails, and that TFM
+confidence cannot tell the types apart.
+(3) \method{}, a training-free triage of the error stream, non-inferior in accuracy to the strongest detector while
+avoiding needless resets and preserving novelty detection, with propositions on what is and is not identifiable.
+(4) A benchmark of tabular streams with typed drift events and pre-registered held-out evaluation.
+
+% =====================================================================================================
+\section{Concept Drift for In-Context Learners}
+\label{sec:def}
+
+Let a stream $\cS_{0,t}=\{(\vx_i,y_i)\}$ arrive in windows $W_1,W_2,\dots$ and let $\cC_t$ be the context of a frozen
+TFM $f_{\Theta}(\cdot\,;\cC_t)$ at time $t$, a subset of the labelled rows seen so far. Following
+\citet{lu2019learning}, concept drift occurs at $t$ if $P_t(\vx,y)\neq P_{t+1}(\vx,y)$, with
+$P_t(\vx,y)=P_t(\vx)\,P_t(y\mid\vx)$.
+
+\begin{definition}[In-context concept drift]\label{def:icdrift}
+Let $P_{\cC}$ be the distribution of the context and $P_{W}$ that of an incoming window, with label sets $\cY_{\cC}$
+and $\cY_W$. Write $r(\vx)=P_W(\vx)/P_{\cC}(\vx)$ and $v(\vx,y)=P_W(y\mid\vx)/P_{\cC}(y\mid\vx)$ for
+$y\in\cY_{\cC}$. The drift from $\cC$ to $W$ is
+\begin{itemize}
+  \item \emph{covered} (benign virtual) if $v\equiv1$ and $r$ is bounded on the support of $P_W$;
+  \item \emph{uncovered} (coverage drift) if $v\equiv1$ but $P_W$ puts mass where $P_{\cC}$ has none ($r$ unbounded);
+  \item \emph{real} if $v\not\equiv1$ on a set of positive $P_W$-measure;
+  \item \emph{novel} if $P_W(y\notin\cY_{\cC})>0$.
+\end{itemize}
+\end{definition}
+
+Covered drift is harmless to an in-context learner and uncovered drift is visible without labels; real drift is
+harmful and invisible without labels; novel rows must be rejected rather than used to change the context
+(Observations~\ref{obs:types},~\ref{obs:confidence}).
+
+\begin{remark}[Identifiability]
+Real drift with an unchanged $P(\vx)$ cannot be detected from unlabelled rows alone. We therefore work in the standard
+prequential setting with delayed labels \citep{gama2014survey}: the labels of window $W_t$ become available after its
+rows are predicted, and $v$ is estimated on the most recent labelled window, while $r$ and novelty are estimated on
+the current, unlabelled one. \todo{Check whether I-Div's likelihood-ratio step gives a label-free proxy under an
+extra assumption (e.g.\ label shift).}
+\end{remark}
+
+% =====================================================================================================
+\section{Method}
+\label{sec:method}
+
+\method{} runs on a frozen TFM with a context of at most $M$ rows, batches of $B$ rows and labels one batch late.
+
+\textbf{Coverage.} For each incoming (unlabelled) row, the coverage ratio is its nearest-neighbour distance to the
+context divided by the mean leave-one-out nearest-neighbour distance within the context; a row is \emph{uncovered} if
+the ratio exceeds $\tau=3$. Uncovered rows, once labelled, enter the context with priority: when the context is full,
+covered rows are evicted first.
+
+\textbf{Filtered detection.} The DDM rule \citep{gama2014survey} runs only on the errors of rows that were covered and
+whose class is already in the context. Errors on uncovered rows signal coverage drift and errors on rows of a new
+class signal novelty; neither resets the context. A detection resets the context to the newly labelled rows.
+
+\textbf{Rejection.} Every incoming row gets a rejection score, the larger of one minus the TFM confidence and the
+excess coverage ratio $\max(0,\text{ratio}/\tau-1)$.
+
+The only constant chosen on development streams is $\tau$; the DDM rule keeps its standard thresholds. The design
+history (two rejected variants based on context-swap tests, and two rejected refinements) is reported in the appendix.
+(\cref{app:history}).
+
+\section{Theory}
+\label{sec:theory}
+
+Let $\cC$ be the context, $W$ an incoming window, $h=f_{\Theta}(\cdot\,;\cC)$ the in-context predictor and
+$R_P(h)=\Prob_{(\vx,y)\sim P}(h(\vx)\neq y)$ its error under $P$.
+
+\begin{proposition}[Real drift is invisible without labels]\label{prop:ident}
+Let $T$ be any statistic of the context and the unlabelled rows of $W$. If two window distributions $P_W$ and $P'_W$
+have the same input marginal, $P_W(\vx)=P'_W(\vx)$, then $T$ has the same law under both. In particular, no label-free
+detector, including the confidence of $h$ and any test of $P(\vx)$, has power above its level against a real drift that
+leaves $P(\vx)$ unchanged.
+\end{proposition}
+
+\begin{proof}
+$T$ is a measurable function of $(\cC,\vX_W)$, and the law of $\vX_W$ is the product of the input marginal, which is
+the same under $P_W$ and $P'_W$; $\cC$ is fixed. Hence the laws of $T$ coincide.
+\end{proof}
+
+\begin{proposition}[Covered drift is benign]\label{prop:covered}
+If the drift from $P_{\cC}$ to $P_W$ is covered in the sense of \cref{def:icdrift}, with $v\equiv1$ and
+$r\le\bar r$ on the support of $P_W$, then $R_{P_W}(h)\le\bar r\,R_{P_{\cC}}(h)$.
+\end{proposition}
+
+\begin{proof}
+With $v\equiv1$ the conditional label law is the same, so the error of $h$ at $\vx$ is the same function
+$e(\vx)=\Prob(h(\vx)\neq y\mid\vx)$ under both, and $R_{P_W}(h)=\E_{P_{\cC}}[r(\vx)e(\vx)]\le\bar r\,R_{P_{\cC}}(h)$.
+\end{proof}
+
+\Cref{prop:covered} explains the first half of \cref{obs:types}: a TFM that is accurate on its context stays accurate
+under any tilt with a bounded density ratio, however large the shift measured by a two-sample test. When $P_W$ puts mass
+where $P_{\cC}$ has none, $\bar r=\infty$ and nothing is guaranteed; under a kernel posterior predictive the confidence
+then reverts to the prior far from the context, which makes uncovered drift visible without labels.
+\Cref{prop:ident} explains the second half of \cref{obs:confidence}, and it is why \method{} detects real drift from
+delayed labels only.
+
+\begin{proposition}[Filtered detection]\label{prop:filter}
+Suppose that between two resets there is no real drift on covered rows of known classes. Then the errors of $h$ on
+the rows that \method{} passes to the detector (covered rows of known classes) are independent with mean at most
+$\bar r\,R_{P_{\cC}}(h)$, whatever coverage drift or novel classes occur meanwhile, so the false-alarm guarantee of
+the detector \citep{gama2014survey} applies to them.\todo{State the DDM false-alarm property precisely.}
+\end{proposition}
+
+% =====================================================================================================
+\section{Experiments}
+\label{sec:exp}
+
+\textbf{Setup.} Streams of two families with typed drift events every 3000 rows, two cycles over \{tilt, translate,
+real, novel\} in random order: \emph{sine2d} (periodic boundary; the novel class is a band outside the support) and
+\emph{lin} (four linear classes; the novel class takes over part of the support). Batches of 100 rows, labels one
+batch late, a context of 1000 rows, TabPFN v2. Baselines: a FIFO context, the dual memory of
+\citet{lourenco2026streams}, a context reset by DDM \citep{gama2014survey} on the error stream, and a reset by an
+unsupervised $P(\vx)$ detector (two-sample classifier). All design choices were made on development seeds 0--4; the
+hypotheses below were written down before the single run on seeds 10--19.
+
+\begin{table}[t]
+  \centering
+  \caption{Held-out streams (seeds 10--19). Acc: prequential accuracy; Real: accuracy in the 10 batches after a real
+  drift; Needless: resets in the 10 batches after a tilt, a translation or a novel class (sum over 20 streams); Nov:
+  AUROC for rows of a new class before their labels arrive (sine2d).}
+  \label{tab:stream}
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{lccccc}
+    \toprule
+    Policy & Acc sine2d & Acc lin & Real & Needless & Nov \\
+    \midrule
+    FIFO            & 0.968 & 0.952 & 0.731 & 0  & 0.762 \\
+    Dual memory     & 0.969 & 0.948 & 0.738 & 0  & 0.763 \\
+    $P(\vx)$ reset  & 0.967 & 0.950 & 0.731 & 69 & 0.729 \\
+    DDM reset       & 0.978 & 0.969 & 0.913 & 47 & 0.606 \\
+    \method{}       & 0.980 & 0.969 & 0.912 & 9  & 0.786 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Results} (\cref{tab:stream}). Detection-driven resets dominate: after a real drift, FIFO and the dual memory
+recover to 0.73--0.74 within ten batches, a DDM reset to 0.91, because a TFM relearns a concept from a few hundred
+rows. The unsupervised $P(\vx)$ detector resets 68 times after benign tilts and translations and never after a real
+drift, as \cref{prop:ident} predicts. \method{} is non-inferior to the DDM reset in accuracy (sine2d $+0.17$ points,
+better on 10 of 10 streams; lin $-0.06$ points), never resets after a coverage drift, makes 9 instead of 47 needless
+resets, and keeps the confidence-based detection of a new class outside the support (AUROC 0.786 versus 0.606,
+Wilcoxon $p=0.001$). It does not improve on DDM in accuracy, and when a new class appears inside the support (lin), the
+new class is also a real drift for the region it takes over; both reset policies then lose novelty detection (0.66 and
+0.64 versus 0.87 for FIFO). All four pre-registered stream hypotheses held; of the observation checks, the bound on the
+accuracy loss under in-support tilt was missed by 0.0006 (\cref{obs:types}).
+
+\section{Related Work}
+Concept drift \citep{gama2014survey,lu2019learning}; concept drift for new model families, e.g.\ multi-modal LLMs
+\citep{yang2025adapting,yang2025walking,yang2026turning}; TFMs under shift \citep{helli2024drift,lourenco2026streams}.
+\textbf{Difference to the competitors.} Drift-Resilient TabPFN retrains the prior to extrapolate temporal shift and
+\citet{lourenco2026streams} manage the context with a fixed FIFO memory; both target accuracy after adaptation and
+treat drift as one phenomenon. \method{} is training-free and decides the drift type before acting, including the
+rejection of unseen classes.
+
+
+\appendix
+\section{Design History and Pre-Registration}
+\label{app:history}
+All choices were made on development seeds 0--4 and frozen before the single run on held-out seeds 10--19.
+\textbf{v0} compared the current context with a context of the two previous batches on the newest labelled batch
+(context-swap test); it detected real drift about three batches late, because the comparison context still held
+pre-drift rows. \textbf{v1} cross-fitted the newest batch instead; with 50 rows per fold it could not learn complex
+boundaries and missed real drift (0 resets on one stream). \textbf{v2} (the evaluated method) filters the error stream
+of a standard DDM detector. Two refinements were rejected on development streams: counting a class as known only after
+30 context rows (cascades of resets after every reset) and a refractory period with local pruning of rows taken over by
+a new class (lower accuracy; the refractory period also made DDM worse). The hypotheses of \cref{sec:exp}, including
+the observation checks, were written down before the held-out run; all four stream hypotheses held and one observation
+bound was missed by 0.0006.
+
+\bibliography{refs}
+\bibliographystyle{icml2026}
+
+\end{document}

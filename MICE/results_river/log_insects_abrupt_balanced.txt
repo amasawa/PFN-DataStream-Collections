@@ -1,0 +1,3 @@
+insects_abrupt_balanced arf acc=0.7339 time=57s
+insects_abrupt_balanced srp acc=0.7370 time=349s
+insects_abrupt_balanced hat acc=0.6216 time=15s

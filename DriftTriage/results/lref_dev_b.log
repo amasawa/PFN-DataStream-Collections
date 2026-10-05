@@ -1,0 +1,25 @@
+real:h2_poker 0 fifo acc=0.9256 resets=0 time=197s
+real:h2_poker 0 ddm acc=0.8441 resets=465 time=215s
+real:h2_poker 0 lref acc=0.8952 resets=90 time=225s
+real:h2_poker 0 lref_min acc=0.8504 resets=421 time=221s
+real:h2_rialto 0 fifo acc=0.7746 resets=0 time=248s
+real:h2_rialto 0 ddm acc=0.7793 resets=173 time=187s
+real:h2_rialto 0 lref acc=0.7780 resets=51 time=187s
+real:h2_rialto 0 lref_min acc=0.7757 resets=148 time=185s
+real:h2_weather 0 fifo acc=0.8108 resets=0 time=36s
+real:h2_weather 0 ddm acc=0.8108 resets=0 time=34s
+real:h2_weather 0 lref acc=0.8091 resets=2 time=35s
+real:h2_weather 0 lref_min acc=0.8001 resets=12 time=34s
+real:h2_airlines 0 fifo acc=0.6901 resets=0 time=190s
+real:h2_airlines 0 ddm acc=0.6900 resets=3 time=194s
+real:h2_airlines 0 lref acc=0.6900 resets=2 time=197s
+real:h2_airlines 0 lref_min acc=0.6901 resets=0 time=192s
+real:h2_spam 0 fifo acc=0.9449 resets=0 time=179s
+real:h2_spam 0 ddm acc=0.9413 resets=3 time=157s
+real:h2_spam 0 lref acc=0.9403 resets=4 time=146s
+real:h2_spam 0 lref_min acc=0.9339 resets=7 time=144s
+real:h2_phishing 0 fifo acc=0.9457 resets=0 time=43s
+real:h2_phishing 0 ddm acc=0.9457 resets=0 time=42s
+real:h2_phishing 0 lref acc=0.9457 resets=0 time=41s
+real:h2_phishing 0 lref_min acc=0.9457 resets=0 time=42s
+CHAIN_DONE 14:41:01

@@ -1,0 +1,30 @@
+real:elec2 0 fifo acc=0.8096 resets=0 time=109s
+real:elec2 0 ltm acc=0.8080 resets=0 time=104s
+real:elec2 0 ddm acc=0.7989 resets=225 time=96s
+real:elec2 0 pxreset acc=0.8096 resets=0 time=106s
+real:elec2 0 triage acc=0.7944 resets=97 time=98s
+real:insects_abrupt_balanced 0 fifo acc=0.2916 resets=0 time=213s
+real:insects_abrupt_balanced 0 ltm acc=0.2972 resets=0 time=212s
+real:insects_abrupt_balanced 0 ddm acc=0.2957 resets=6 time=194s
+# ---- 07:21:32: every insects line above this marker was computed on invalid (hashed) features and must be ignored ----
+real:insects_abrupt_balanced 0 fifo acc=0.7653 resets=0 time=221s
+real:insects_abrupt_balanced 0 ltm acc=0.7625 resets=0 time=259s
+real:insects_abrupt_balanced 0 ddm acc=0.7653 resets=0 time=213s
+real:insects_abrupt_balanced 0 pxreset acc=0.7687 resets=3 time=219s
+real:insects_abrupt_balanced 0 triage acc=0.7584 resets=0 time=218s
+real:insects_gradual_balanced 0 fifo acc=0.7883 resets=0 time=90s
+real:insects_gradual_balanced 0 ltm acc=0.7925 resets=0 time=93s
+real:insects_gradual_balanced 0 ddm acc=0.7993 resets=5 time=88s
+real:insects_gradual_balanced 0 pxreset acc=0.7927 resets=2 time=108s
+real:insects_gradual_balanced 0 triage acc=0.7997 resets=4 time=109s
+real:insects_incremental_balanced 0 fifo acc=0.6746 resets=0 time=277s
+real:insects_incremental_balanced 0 ltm acc=0.6742 resets=0 time=278s
+real:insects_incremental_balanced 0 ddm acc=0.6747 resets=2 time=268s
+real:insects_incremental_balanced 0 pxreset acc=0.6746 resets=0 time=263s
+real:insects_incremental_balanced 0 triage acc=0.6506 resets=0 time=263s
+real:insects_incremental_reoccurring_balanced 0 fifo acc=0.7915 resets=0 time=358s
+real:insects_incremental_reoccurring_balanced 0 ltm acc=0.7875 resets=0 time=390s
+real:insects_incremental_reoccurring_balanced 0 ddm acc=0.8013 resets=13 time=350s
+real:insects_incremental_reoccurring_balanced 0 pxreset acc=0.7923 resets=3 time=366s
+real:insects_incremental_reoccurring_balanced 0 triage acc=0.7981 resets=17 time=379s
+DONE 08:39:02

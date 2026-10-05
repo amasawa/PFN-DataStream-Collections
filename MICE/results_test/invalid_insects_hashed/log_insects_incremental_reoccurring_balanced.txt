@@ -1,0 +1,3 @@
+insects_incremental_reoccurring_balanced fifo1000 acc=0.4459 time=264s
+insects_incremental_reoccurring_balanced ltm1000_75 acc=0.4583 time=304s
+insects_incremental_reoccurring_balanced ddm1000 acc=0.4536 time=293s

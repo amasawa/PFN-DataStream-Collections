@@ -1,0 +1,19 @@
+real:elec2 0 lref acc=0.8053 resets=47 time=84s
+real:elec2 0 lref_min acc=0.7951 resets=245 time=79s
+real:insects_abrupt_balanced 0 lref acc=0.7822 resets=9 time=168s
+real:insects_abrupt_balanced 0 lref_min acc=0.7701 resets=4 time=178s
+real:insects_gradual_balanced 0 lref acc=0.8003 resets=3 time=79s
+real:insects_gradual_balanced 0 lref_min acc=0.7932 resets=4 time=78s
+real:insects_incremental_balanced 0 lref acc=0.6732 resets=5 time=198s
+real:insects_incremental_balanced 0 lref_min acc=0.6737 resets=2 time=228s
+real:insects_incremental_reoccurring_balanced 0 lref acc=0.8069 resets=16 time=229s
+real:insects_incremental_reoccurring_balanced 0 lref_min acc=0.7981 resets=12 time=223s
+real:insects_incremental_abrupt_balanced 0 lref acc=0.7834 resets=18 time=211s
+real:insects_incremental_abrupt_balanced 0 lref_min acc=0.7703 resets=12 time=206s
+real:insects_gradual_imbalanced 0 lref acc=0.8169 resets=10 time=423s
+real:insects_gradual_imbalanced 0 lref_min acc=0.8165 resets=3 time=466s
+real:insects_abrupt_imbalanced 0 lref acc=0.7973 resets=9 time=498s
+real:insects_abrupt_imbalanced 0 lref_min acc=0.7948 resets=6 time=366s
+real:covertype 0 lref acc=0.9392 resets=25 time=355s
+real:covertype 0 lref_min acc=0.8407 resets=447 time=353s
+CHAIN_DONE 14:58:49

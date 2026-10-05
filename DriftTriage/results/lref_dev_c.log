@@ -1,0 +1,21 @@
+sine2d 0 lref acc=0.9806 resets=5 time=50s
+sine2d 0 lref_min acc=0.9746 resets=8 time=48s
+sine2d 1 lref acc=0.9778 resets=5 time=49s
+sine2d 1 lref_min acc=0.9742 resets=18 time=54s
+sine2d 2 lref acc=0.9791 resets=4 time=58s
+sine2d 2 lref_min acc=0.9770 resets=6 time=57s
+sine2d 3 lref acc=0.9799 resets=3 time=57s
+sine2d 3 lref_min acc=0.9773 resets=10 time=56s
+sine2d 4 lref acc=0.9787 resets=4 time=58s
+sine2d 4 lref_min acc=0.9667 resets=2 time=56s
+lin 0 lref acc=0.9712 resets=3 time=61s
+lin 0 lref_min acc=0.9662 resets=8 time=59s
+lin 1 lref acc=0.9709 resets=3 time=58s
+lin 1 lref_min acc=0.9677 resets=12 time=58s
+lin 2 lref acc=0.9684 resets=3 time=61s
+lin 2 lref_min acc=0.9655 resets=12 time=63s
+lin 3 lref acc=0.9672 resets=3 time=68s
+lin 3 lref_min acc=0.9634 resets=8 time=67s
+lin 4 lref acc=0.9666 resets=3 time=66s
+lin 4 lref_min acc=0.9635 resets=11 time=62s
+CHAIN_DONE 14:04:01

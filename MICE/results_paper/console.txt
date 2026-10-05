@@ -1,0 +1,61 @@
+group                                                                  
+fam     87.62  87.64  94.82   94.62  95.32   95.23  94.96           NaN
+grid10  61.40    NaN  83.94   81.34  86.62   86.46  86.20         78.17
+grid20  62.43    NaN  84.25   81.81  86.89   86.75  86.52           NaN
+realC   83.13  82.80  83.34   83.34  83.78   83.90  83.83         82.40
+realD   76.59  76.49  76.79   77.09  77.61   77.66  77.61         76.14
+realG   84.86  84.27  83.52   84.76  85.10   85.66  85.69         80.08
+realH   84.89  84.08  82.30   84.37  84.56   85.10  85.18           NaN
+realI   85.10  83.95  80.89   84.22  84.48   85.25  85.31           NaN
+tabicl  83.36    NaN  83.34   83.48  83.92   84.07  84.00           NaN
+Spearman predicted vs observed gain: seeds 10-11 single level 0.943; seeds 20-21 two-level 0.829
+grid20: mice > ddm on hard streams: 8 of 8 ; mice > winens: 8 ; mean mice - mice1 -0.0037; mice10 - mice1 -0.0014
+mice (eta2 = 1/2): real streams best on 23/29; vs best TFM baseline min -0.46 mean +0.27; vs fifo min -0.25 mean +0.57 wins 24/29; per group vs fifo: {'realC': 0.7, 'realD': 1.03, 'realG': 0.83, 'realH': 0.3, 'realI': 0.2} worst per group vs fifo {'realC': 0.25, 'realD': 0.27, 'realG': -0.25, 'realH': -0.08, 'realI': -0.0}
+mice10 (eta2 = 10): real streams best on 23/29; vs best TFM baseline min -0.16 mean +0.25; vs fifo min -0.08 mean +0.54 wins 25/29; per group vs fifo: {'realC': 0.77, 'realD': 1.07, 'realG': 0.8, 'realH': 0.21, 'realI': 0.14} worst per group vs fifo {'realC': 0.26, 'realD': 0.21, 'realG': -0.08, 'realH': -0.08, 'realI': -0.06}
+mice1 (single level): real streams best on 13/29; vs best TFM baseline min -2.32 mean -0.20; vs fifo min -2.32 mean +0.10 wins 13/29; per group vs fifo: {'realC': 0.65, 'realD': 1.02, 'realG': 0.24, 'realH': -0.33, 'realI': -0.63} worst per group vs fifo {'realC': -0.24, 'realD': -0.37, 'realG': -2.32, 'realH': -1.74, 'realI': -2.01}
+ddm - fifo on real streams: min -9.57, mean -1.80; winens - fifo: min -1.43 mean -0.23; mice1 - fifo min -2.32
+trained best below fifo on 11 of 15 streams with trained baselines
+29  realD                                     elec2  0.8096  0.7989  0.8071  0.8058  0.8117  0.8122        0.8006  mooe_rff4000_100_2_0.01
+35  realD                   insects_abrupt_balanced  0.7653  0.7653  0.7739  0.7803  0.7786  0.7785        0.7674  mooe_rff2000_100_2_0.01
+36  realD                  insects_gradual_balanced  0.7883  0.7993  0.7992  0.8067  0.8060  0.8042        0.7930  mooe_rff2000_100_2_0.01
+37  realD              insects_incremental_balanced  0.6746  0.6747  0.6680  0.6776  0.6779  0.6777        0.6545  mooe_rff4000_100_2_0.01
+38  realD  insects_incremental_reoccurring_balanced  0.7915  0.8013  0.8062  0.8101  0.8085  0.8080        0.7916  mooe_rff4000_100_2_0.01
+59  realC                                 covertype  0.9479  0.9434  0.9487  0.9454  0.9504  0.9505        0.9190                      srp
+60  realC                 insects_abrupt_imbalanced  0.7940  0.7962  0.7924  0.7984  0.7985  0.7981        0.7934  mooe_rff4000_100_2_0.01
+61  realC                insects_gradual_imbalanced  0.8164  0.8166  0.8136  0.8191  0.8193  0.8189        0.8143  mooe_rff4000_100_2_0.01
+62  realC       insects_incremental_abrupt_balanced  0.7670  0.7773  0.7789  0.7882  0.7877  0.7856        0.7691  mooe_rff4000_100_2_0.01
+63  realG                               h2_airlines  0.6901  0.6900  0.6805  0.6885  0.6905  0.6906        0.6822                   levbag
+64  realG                               h2_phishing  0.9457  0.9457  0.9411  0.9455  0.9460  0.9460        0.9439  mooe_rff4000_100_2_0.01
+65  realG                                  h2_poker  0.9256  0.8441  0.9113  0.9024  0.9248  0.9297        0.8284  mooe_rff4000_100_2_0.01
+66  realG                                 h2_rialto  0.7746  0.7793  0.8079  0.8199  0.8223  0.8219        0.6427  mooe_rff4000_100_2_0.01
+67  realG                                   h2_spam  0.9449  0.9413  0.9421  0.9425  0.9454  0.9425        0.9146  mooe_rff4000_100_2_0.01
+68  realG                                h2_weather  0.8108  0.8108  0.8024  0.8073  0.8109  0.8107        0.7933  mooe_rff4000_100_2_0.01
+69  realH                             h3_airlines_b  0.7056  0.7055  0.6986  0.7019  0.7048  0.7048           NaN                         
+70  realH                             h3_airlines_c  0.6511  0.6498  0.6431  0.6502  0.6523  0.6523           NaN                         
+71  realH                            h3_covertype_b  0.9662  0.9567  0.9656  0.9640  0.9660  0.9658           NaN                         
+72  realH                            h3_covertype_c  0.9570  0.9187  0.9570  0.9566  0.9572  0.9572           NaN                         
+73  realH                              h3_insects_b  0.8142  0.8138  0.8121  0.8168  0.8168  0.8167           NaN                         
+74  realH                              h3_insects_c  0.8543  0.8545  0.8528  0.8569  0.8567  0.8566           NaN                         
+75  realH                                h3_poker_b  0.9340  0.8504  0.9223  0.9166  0.9370  0.9398           NaN                         
+76  realH                                h3_poker_c  0.9087  0.8343  0.8978  0.9018  0.9170  0.9216           NaN                         
+77  realI                             h4_airlines_d  0.6581  0.6577  0.6449  0.6592  0.6600  0.6599           NaN                         
+78  realI                             h4_airlines_e  0.6546  0.6535  0.6415  0.6554  0.6558  0.6559           NaN                         
+79  realI                            h4_covertype_d  0.9619  0.8969  0.9616  0.9621  0.9625  0.9624           NaN                         
+80  realI                            h4_covertype_e  0.9720  0.9673  0.9718  0.9713  0.9720  0.9719           NaN                         
+81  realI                                h4_poker_d  0.9414  0.8457  0.9288  0.9214  0.9408  0.9449           NaN                         
+82  realI                                h4_poker_e  0.9183  0.8323  0.9047  0.8992  0.9238  0.9234           NaN                         
+fam                                                                  
+agrawal     86.34  86.36  96.40   95.70  96.78   96.73  96.49   98.62
+hyperplane  89.51  89.47  90.95   90.85  92.33   92.05  91.32   93.06
+rbf         89.87  89.85  90.57   90.68  91.38   91.33  91.09   93.60
+sea         97.05  97.04  98.76   98.68  99.05   98.93  98.54   99.49
+sine        77.45  77.40  94.89   94.47  95.02   95.00  94.98   98.14
+stagger     85.51  85.73  97.35   97.35  97.35   97.34  97.34   99.37
+family streams: mean mice - ddm +0.0014, positive on 18 of 30
+TabICL:
+stream                                                                         
+covertype                            94.91  93.50   94.95  94.67   95.15  95.19
+insects_abrupt_imbalanced            79.70  79.92   79.46  80.15   80.14  80.07
+insects_gradual_imbalanced           81.94  81.94   81.56  82.07   82.16  82.14
+insects_incremental_abrupt_balanced  76.87  77.99   77.95  78.79   78.82  78.60
+grid10 means: {'fifo': 61.4, 'winens': 81.34, 'ddm': 83.94, 'mice1': 86.62, 'mice10': 86.46, 'mice': 86.2, 'oracle': 93.06, 'arf': 68.04, 'srp': 69.67, 'mooe_rff4000_100_2_0.01': 78.1}

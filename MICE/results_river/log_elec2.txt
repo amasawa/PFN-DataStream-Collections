@@ -1,0 +1,3 @@
+elec2 arf acc=0.7944 time=31s
+elec2 srp acc=0.7838 time=105s
+elec2 hat acc=0.7717 time=4s

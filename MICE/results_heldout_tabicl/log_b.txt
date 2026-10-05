@@ -1,0 +1,11 @@
+insects_abrupt_imbalanced fifo1000 acc=0.7970 time=865s
+insects_abrupt_imbalanced ddm1000 acc=0.7992 time=718s
+insects_abrupt_imbalanced winens1000 acc=0.7946 time=1833s
+insects_abrupt_imbalanced micev1000_500 acc=0.8004 time=5103s
+STREAM_DONE insects_abrupt_imbalanced 23:33:35
+covertype fifo1000 acc=0.9491 time=571s
+covertype ddm1000 acc=0.9350 time=538s
+covertype winens1000 acc=0.9495 time=1467s
+covertype micev1000_500 acc=0.9467 time=10127s
+STREAM_DONE covertype 03:05:45
+CHAIN_DONE 03:05:45

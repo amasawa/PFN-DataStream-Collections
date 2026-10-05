@@ -1,0 +1,21 @@
+sine2d 0 triage4 acc=0.9814 resets=3 time=57s
+sine2d 0 ddmr acc=0.9785 resets=10 time=55s
+sine2d 1 triage4 acc=0.9764 resets=10 time=55s
+sine2d 1 ddmr acc=0.9719 resets=22 time=58s
+sine2d 2 triage4 acc=0.9775 resets=9 time=57s
+sine2d 2 ddmr acc=0.9757 resets=16 time=58s
+sine2d 3 triage4 acc=0.9808 resets=2 time=59s
+sine2d 3 ddmr acc=0.9784 resets=7 time=58s
+sine2d 4 triage4 acc=0.9771 resets=9 time=59s
+sine2d 4 ddmr acc=0.9726 resets=18 time=48s
+lin 0 triage4 acc=0.9670 resets=6 time=64s
+lin 0 ddmr acc=0.9668 resets=13 time=67s
+lin 1 triage4 acc=0.9612 resets=8 time=62s
+lin 1 ddmr acc=0.9683 resets=10 time=63s
+lin 2 triage4 acc=0.9599 resets=9 time=64s
+lin 2 ddmr acc=0.9648 resets=9 time=66s
+lin 3 triage4 acc=0.9674 resets=2 time=59s
+lin 3 ddmr acc=0.9668 resets=3 time=57s
+lin 4 triage4 acc=0.9616 resets=6 time=60s
+lin 4 ddmr acc=0.9650 resets=5 time=58s
+DONE 01:41:11

@@ -7,6 +7,8 @@ GOR/data/ckpt/
 **/cache/
 **/mco/
 *.npz
+*.pkl
+*.ckpt.tmp
 *.parquet
 *.zip
 *.rar
@@ -15,6 +17,9 @@ GOR/data/ckpt/
 *.safetensors
 __pycache__/
 *.pyc
+# third-party stream data sets (downloaded; see the stream scripts)
+MICE/data/
+DriftTriage/data/
 # reference PDFs
 refs/
 # LaTeX build files

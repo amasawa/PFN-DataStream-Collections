@@ -1,0 +1,3 @@
+h4_poker_e fifo1000 acc=0.8945 time=312s
+h4_poker_e ddm1000 acc=0.8131 time=207s
+h4_poker_e winens1000 acc=0.8940 time=620s

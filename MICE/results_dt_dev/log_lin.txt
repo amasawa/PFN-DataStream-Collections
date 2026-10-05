@@ -1,0 +1,16 @@
+dt_lin_s0 fifo1000 acc=0.9513 time=51s
+dt_lin_s0 ddm1000 acc=0.9700 time=53s
+dt_lin_s0 micev1000_500 acc=0.9695 time=319s
+dt_lin_s1 fifo1000 acc=0.9367 time=50s
+dt_lin_s1 ddm1000 acc=0.9701 time=48s
+dt_lin_s1 micev1000_500 acc=0.9644 time=316s
+dt_lin_s2 fifo1000 acc=0.9344 time=52s
+dt_lin_s2 ddm1000 acc=0.9663 time=49s
+dt_lin_s2 micev1000_500 acc=0.9648 time=329s
+dt_lin_s3 fifo1000 acc=0.9506 time=53s
+dt_lin_s3 ddm1000 acc=0.9654 time=51s
+dt_lin_s3 micev1000_500 acc=0.9658 time=298s
+dt_lin_s4 fifo1000 acc=0.9525 time=53s
+dt_lin_s4 ddm1000 acc=0.9665 time=51s
+dt_lin_s4 micev1000_500 acc=0.9647 time=428s
+DONE 12:48:48

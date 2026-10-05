@@ -1,0 +1,16 @@
+insects_gradual_balanced d=10 fifo acc=0.7065 time=111s
+elec2 d=10 fifo acc=0.7397 time=143s
+insects_gradual_balanced d=10 ddm acc=0.7175 time=101s
+elec2 d=10 ddm acc=0.7312 time=132s
+insects_incremental_reoccurring_balanced d=10 fifo acc=0.7062 time=365s
+insects_incremental_reoccurring_balanced d=10 ddm acc=0.7115 time=361s
+insects_gradual_balanced d=10 mice cache experts=6 time=821s
+insects_abrupt_balanced d=10 fifo acc=0.6591 time=248s
+insects_abrupt_balanced d=10 ddm acc=0.6654 time=237s
+elec2 d=10 mice cache experts=12 time=1781s
+insects_incremental_balanced d=10 fifo acc=0.6602 time=314s
+insects_incremental_balanced d=10 ddm acc=0.6602 time=325s
+insects_abrupt_balanced d=10 mice cache experts=10 time=2476s
+insects_incremental_balanced d=10 mice cache experts=6 time=2095s
+insects_incremental_reoccurring_balanced d=10 mice cache experts=12 time=4765s
+DONE 12:03:29

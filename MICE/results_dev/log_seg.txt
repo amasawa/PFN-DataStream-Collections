@@ -1,0 +1,6 @@
+sea_s0 micev1000_500 acc=0.9880 time=190s
+stagger_s0 micev1000_500 acc=0.9723 time=199s
+agrawal_s0 micev1000_500 acc=0.9632 time=302s
+sine_s0 micev1000_500 acc=0.9483 time=293s
+rbf_s0 micev1000_500 acc=0.9239 time=206s
+hyperplane_s0 micev1000_500 acc=0.9183 time=194s

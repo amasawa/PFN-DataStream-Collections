@@ -1,0 +1,6 @@
+insects_gradual_balanced batches 240 pool mismatches 0
+insects_incremental_balanced batches 569 pool mismatches 0
+elec2 batches 452 pool mismatches 0
+insects_abrupt_balanced batches 527 pool mismatches 0
+insects_incremental_reoccurring_balanced batches 798 pool mismatches 0
+DONE 10:27:31

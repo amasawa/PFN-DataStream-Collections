@@ -1,0 +1,21 @@
+h3_airlines_b fifo1000 acc=0.7098 time=177s
+h3_airlines_b ddm1000 acc=0.7090 time=176s
+h3_airlines_b winens1000 acc=0.7036 time=427s
+h3_airlines_b micev1000_500 acc=0.7076 time=1786s
+STREAM_DONE h3_airlines_b 15:42:19
+h3_poker_b fifo1000 acc=0.9147 time=226s
+h3_poker_b ddm1000 acc=0.8280 time=164s
+h3_poker_b winens1000 acc=0.9155 time=490s
+h3_poker_b micev1000_500 acc=0.9247 time=3033s
+STREAM_DONE h3_poker_b 16:47:43
+h3_covertype_b fifo1000 acc=0.9672 time=468s
+h3_covertype_b ddm1000 acc=0.9567 time=455s
+h3_covertype_b winens1000 acc=0.9667 time=947s
+h3_covertype_b micev1000_500 acc=0.9655 time=5928s
+STREAM_DONE h3_covertype_b 18:57:52
+h3_insects_b fifo1000 acc=0.8183 time=548s
+h3_insects_b ddm1000 acc=0.8182 time=522s
+h3_insects_b winens1000 acc=0.8146 time=1176s
+h3_insects_b micev1000_500 acc=0.8185 time=2785s
+STREAM_DONE h3_insects_b 20:21:49
+CHAIN_DONE 20:21:49

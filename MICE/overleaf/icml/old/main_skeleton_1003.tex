@@ -1,0 +1,275 @@
+%%%%%%%% MICE: Mixture of In-Context Experts for recurring concept drift. ICML template (icml2026.sty until the
+%%%%%%%% 2027 style is released). Skeleton of 2026-10-03: no experiment has been run; every number is a TODO.
+\documentclass{article}
+
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+\usepackage{icml2026}          % blind review
+% \usepackage[accepted]{icml2026}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage[capitalize,noabbrev]{cleveref}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage[textsize=tiny]{todonotes}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{observation}{Observation}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\input{math.tex}
+\crefname{assumption}{Assumption}{Assumptions}
+\crefname{observation}{Observation}{Observations}
+\newcommand{\method}{\textsc{MICE}}   % working name: Mixture of In-Context Experts
+
+\begin{document}
+
+\twocolumn[
+  \icmltitle{Recall or Relearn? A Mixture of In-Context Experts for Recurring Concept Drift}
+  \icmlsetsymbol{equal}{*}
+  \begin{icmlauthorlist}
+    \icmlauthor{Anonymous Author(s)}{anon}
+  \end{icmlauthorlist}
+  \icmlaffiliation{anon}{Anonymous Institution}
+  \icmlcorrespondingauthor{Anonymous Author(s)}{anon@anon.org}
+  \icmlkeywords{concept drift, recurring concepts, tabular foundation models, in-context learning, online learning}
+  \vskip 0.3in
+]
+\printAffiliationsAndNotice{}
+
+\begin{abstract}
+Tabular foundation models (TFMs) learn a data stream through their context, so a past concept can be recalled by
+putting its rows back into the context, at no training cost. We ask when recalling a concept is worth more than
+relearning it. Context-only stream learners forget recurring concepts, but a TFM also relearns a concept from a few
+hundred rows, so a reset-on-drift detector already recovers most of the loss. We show that the value of memory is set
+by the TFM's learning curve: the gain of recall over relearning equals the area between the learning curve and its
+value at the context budget over the recurrence, minus one batch of identification. We propose \method{}, a mixture of
+in-context experts that combines fast windows with stored concepts through exponential weights. On a controlled grid,
+the gain predicted from learning curves measured beforehand ranks the observed gains with Spearman 0.94 on held-out
+seeds, memory beats resetting on every stream with hard concepts (up to 8.8 points), and a window ensemble without
+memory does not; on the standard drift generators, which a TFM relearns within 200 rows, the predicted and observed
+gains are both near zero.
+\todo{Add the real-stream results.}
+\end{abstract}
+
+% =====================================================================================================
+\section{Introduction}
+\label{sec:intro}
+
+\textbf{Momentum.} TFMs such as TabPFN \citep{hollmann2025tabpfn} and TabICL \citep{qu2025tabicl} approximate
+posterior prediction in one forward pass \citep{muller2022pfn,nagler2023statistical}. In stream mining they replace
+incremental trees: a TFM with a sliding memory outperforms adaptive tree ensembles on non-stationary benchmarks
+\citep{lourenco2026streams}, and a prior with drifting causal models improves TFMs under temporal shift
+\citep{helli2024drift}.
+
+\textbf{Problem.} Real streams are non-stationary \citep{gama2014survey,lu2019learning}, and many of their concepts
+\emph{recur}: seasons, weekdays, market regimes, sensor modes. For a trained model a recurring concept means
+retraining or keeping a pool of models; for an in-context learner it only means putting the right rows back into the
+context. Existing in-context stream learners do not exploit this. A FIFO memory forgets a concept once it leaves the
+window, and a drift-extrapolating prior assumes a trend rather than a return.
+
+\begin{observation}\label{obs:forget}
+FIFO contexts forget recurring concepts. In the five batches after a concept recurs, a TFM with a FIFO context or
+with the dual memory of \citet{lourenco2026streams} reaches 0.16--0.52 accuracy on Sine, Stagger and Agrawal streams,
+whereas the same TFM with the context of the matching past concept reaches 0.99--1.00; in steady state all contexts
+are equally accurate. \todo{Dev seeds; replicate on test seeds.}
+\end{observation}
+
+\begin{observation}\label{obs:relearn}
+Relearning in context is cheap for simple concepts. Resetting the context when a drift detector fires
+\citep{gama2014survey} closes most of this gap: on Stagger it reaches the ceiling set by the one-batch label delay,
+and no memory can improve on it. Memory pays only when a concept needs many rows to be relearned: on mixtures with
+100 centroids, a TFM needs more than 1000 rows to approach its asymptote, and recalling the past context beats
+resetting by 8.6 points with blocks of 500 rows and by 2.6 points with blocks of 2000 rows on held-out seeds, while the
+gain is about zero for the standard drift generators, whose concepts a TFM relearns within about 200 rows.
+\end{observation}
+
+This raises the question: \emph{when should an in-context learner recall a past concept rather than relearn it, and
+how can it do both without knowing which concept is active?}
+
+\textbf{Approach.} We treat the context of every past interval as an offline expert and the context of the current
+interval as an online expert, and combine them with a meta expert, following the mixture of online and offline
+experts (MOOE) of \citet{zhao2025mooe}. Unlike MOOE, an in-context expert costs no training: it is a stored context.
+The experts are weighted by their losses on the most recent labelled batch; fast windows
+next to the stored experts cover concepts that are new or cheap to relearn.
+
+\textbf{Contributions.}
+(1) A definition of recurring concept drift for in-context learners, in which past contexts are free experts
+(\cref{def:recur}).
+(2) Observations that FIFO contexts forget recurring concepts, that in-context relearning is cheap for simple
+concepts, and that the value of memory is set by the learning curve.
+(3) A recall-versus-relearn proposition that predicts the value of memory from the learning curve, confirmed
+quantitatively on held-out streams.
+(4) \method{}, a training-free mixture of window and stored in-context experts, and the finding that the standard
+drift generators are too easy for TFMs to evaluate memory.
+
+% =====================================================================================================
+\section{Recurring Concept Drift for In-Context Learners}
+\label{sec:def}
+
+A stream $\cS_{0,T}$ is split into offline intervals $I_1,\dots,I_K$ with distributions $P_1,\dots,P_K$ and an
+online interval $I_{K+1}$ that keeps receiving rows. Concept drift occurs between intervals in the sense of
+\citet{lu2019learning}.
+
+\begin{definition}[Recurring in-context concept drift]\label{def:recur}
+Let $\cC_k$ be a context sampled from interval $I_k$ and $f_{\Theta}(\cdot\,;\cC_k)$ the frozen TFM conditioned on it
+(the $k$-th \emph{in-context expert}). The drift into the online interval is \emph{recurring} if
+$\min_{k\le K}\Div(P_{K+1},P_k)\le\epsilon$ for a discrepancy $\Div$ and tolerance $\epsilon$, and \emph{new} otherwise.
+\end{definition}
+
+\todo[inline]{Choose $\Div$: I-Div (label-free, current window) and R-divergence (model-oriented, labelled windows)
+\citep{zhao2024idiv,zhao2023rdiv}.}
+
+% =====================================================================================================
+\section{Method}
+\label{sec:method}
+
+\method{} runs a frozen TFM with batches of $B$ rows, labels one batch late and contexts of at most $M$ rows.
+
+\textbf{Experts.} Two kinds of in-context experts predict every batch: \emph{windows}, FIFO contexts of the last 100,
+300 and $M$ labelled rows (fast relearning), and \emph{stored concepts}, contexts kept in a pool (memory). Every 500
+labelled rows close a segment. The segment is merged into the stored expert whose context predicts it at least as well
+as the segment predicts itself by 2-fold cross-fitting, minus a tolerance of 0.02, in the spirit of the
+model-oriented discrepancy of R-divergence \citep{zhao2023rdiv}; otherwise it becomes a new stored expert. A stored
+expert keeps its last $M$ rows; the pool holds at most 12 experts (least recently used out).
+
+\textbf{Meta expert.} The prediction is the mixture of the experts' predictive distributions with weights
+$w_k\propto\exp(-\eta\,\ell_k)$, where $\ell_k$ is the log-loss of expert $k$ on the most recent labelled batch
+(exponential weights over in-context experts, as the meta expert of MOOE \citep{zhao2025mooe}). The constants
+($\eta=10$, segment length 500) were chosen on development streams.
+
+No expert is trained: storing a concept means storing rows, and recalling it means conditioning on them.
+\todo{Label-free prior weights from a two-sample discrepancy (I-Div) were planned but are not part of the evaluated
+method; the evaluated streams with recurrence have identical $P(\vx)$ across concepts, where no label-free signal
+exists.}
+
+\section{When Recall Beats Relearning}
+\label{sec:theory}
+
+Consider a stream whose concepts recur in blocks of $L$ rows, batches of $B$ rows, labels one batch late, and a
+context budget of $M$ rows. For a concept $k$ let $a_k(n)$ be the accuracy of the frozen TFM with a context of $n$ rows
+of that concept on fresh rows of it (its \emph{learning curve}), non-decreasing in $n$.
+
+\begin{assumption}\label{ass:id}
+After the first labelled batch of a block, the meta expert puts its weight on the stored expert of the active
+concept (identification takes one batch), and a reset learner (drift detection) starts its context at the block
+boundary.
+\end{assumption}
+
+\begin{proposition}[Recall versus relearn]\label{prop:recall}
+Under \cref{ass:id}, on every recurrence of concept $k$ after its first visit, the expected accuracy of recall minus
+that of relearning, averaged over the $J=L/B$ batches of the block, is
+\[
+  \Delta_k(L)=\frac1J\sum_{j=1}^{J-1}\Bigl[a_k(M)-a_k\bigl(\min(jB,M)\bigr)\Bigr]\;\ge\;0,
+\]
+the area between the learning curve and its value at the budget. It vanishes when $a_k(B)=a_k(M)$, satisfies
+$\Delta_k(L)\le\frac{M}{L}\bigl(a_k(M)-a_k(B)\bigr)$, so it decays as $O(M/L)$ for long blocks, and with $C$ cycles
+over the concepts the overall gain is $\frac{C-1}{C}\Delta_k(L)$.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Both learners lose the first batch of the block, since its labels have not arrived. In batch $j+1$ of the block
+($j=1,\dots,J-1$), the reset learner has the $\min(jB,M)$ labelled rows of the block in its context, and the recalling
+learner has the stored context of $M$ rows of concept $k$ (\cref{ass:id}); taking expectations over fresh rows gives
+the bracket. Monotonicity of $a_k$ gives $\Delta_k\ge0$. Every bracket is at most $a_k(M)-a_k(B)$ and vanishes for
+$jB\ge M$, so at most $M/B$ of the $J=L/B$ terms are non-zero, which gives the $O(M/L)$ bound. The first visit has
+no stored context, which gives the factor $(C-1)/C$.
+\end{proof}
+
+\Cref{prop:recall} makes the value of memory a property of the backbone and the concept, measurable before deployment
+from a learning curve. The identification assumption is optimistic; the exponential-weights regret of the meta
+expert, $O(\sqrt{T\ln K})$ \citep{zhao2025mooe}, bounds what it costs when the active expert is not identified at
+once.\todo{Replace the assumption by the regret bound; prove the per-row monotonicity in $L$.}
+
+% =====================================================================================================
+\section{Experiments}
+\label{sec:exp}
+
+\textbf{RQ: does the learning curve predict the value of memory?} On a controlled grid of recurring concepts (RBF
+mixtures with 5, 30 or 100 centroids whose class assignment is permuted between three concepts, so that $P(\vx)$ is
+fixed; blocks of 500 or 2000 rows; three cycles), we measured the TFM's learning curves on held-out seeds, wrote down
+the gain predicted by \cref{prop:recall}, and only then ran the streams once (\cref{tab:grid}). Memory beats a
+reset-and-relearn detector on all eight streams with 30 or 100 centroids, more for shorter blocks and more complex
+concepts, as predicted; the rank correlation between predicted and observed gain over the six cells is 0.94. A
+window ensemble without memory does not reach \method{} on any of these streams, so the gain is due to recall rather
+than faster adaptation. With 5 centroids the prediction is zero; one of four streams shows a gain of 5.3 points that
+comes from a slow detection of the reset baseline, not from memory.
+
+\begin{table}[t]
+  \centering
+  \caption{Recall versus relearn on the controlled grid (held-out seeds 10 and 11, mean). Gain = accuracy of \method{}
+  minus that of a DDM-triggered reset; predicted = \cref{prop:recall} from learning curves measured before the run.}
+  \label{tab:grid}
+  \small
+  \begin{tabular}{lcccc}
+    \toprule
+    Centroids & Block & Predicted & Gain & Oracle \\
+    \midrule
+    5   & 500  & 0.001 & 0.022 & 0.964 \\
+    5   & 2000 & 0.000 & $-$0.000 & 0.992 \\
+    30  & 500  & 0.019 & 0.023 & 0.937 \\
+    30  & 2000 & 0.006 & 0.005 & 0.971 \\
+    100 & 500  & 0.104 & 0.086 & 0.823 \\
+    100 & 2000 & 0.030 & 0.026 & 0.897 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{itemize}
+  \item \textbf{RQ1}: Do FIFO contexts forget recurring concepts (Observations~\ref{obs:forget},~\ref{obs:relearn})?
+  \item \textbf{RQ2}: Does \method{} improve prequential accuracy, in particular right after a recurrence?
+  \item \textbf{RQ3}: Do label-free prior weights recall the right expert before labels arrive?
+  \item \textbf{RQ4}: Are new concepts detected (delay, false alarms)?
+  \item \textbf{RQ5}: Cost: memory of the expert pool and time per instance.
+  \item \textbf{RQ6}: Ablation of the prior weights, the meta expert and expert merging.
+\end{itemize}
+\textbf{Data.} Synthetic streams with recurring concepts (SEA, Agrawal, STAGGER, RBF with periodic switching); real
+streams used by \citet{lourenco2026streams} (Electricity, NOAA weather, Forest CoverType, PokerHand, Posture, METER).
+\textbf{Baselines.} TabPFN with a sliding window and with the dual memory of \citet{lourenco2026streams};
+Drift-Resilient TabPFN \citep{helli2024drift}; MOOE with trained experts \citep{zhao2025mooe}; Adaptive Random Forest,
+Streaming Random Patches and recurring-concept methods from stream mining.\todo{Pick recurring-concept baselines
+(e.g.\ RCD, ensemble pools) after a literature check.} \textbf{Backbones.} TabPFN v2, TabICL.
+
+\section{Related Work}
+Concept drift \citep{gama2014survey,lu2019learning}. Recurring concepts have been handled by storing past models and
+reusing them, selected by statistical tests \citep{goncalves2013rcd} or by a meta-learner of each model's domain of
+applicability that can detect recurrence from unlabelled rows \citep{gama2014recurrent}; \method{} stores contexts
+instead of trained models, so storing a concept costs no training, and the value of storing it is predicted by the
+learning curve; concept drift for new model families,
+e.g.\ multi-modal LLMs \citep{yang2025adapting,yang2026turning}; online and offline experts
+\citep{zhao2025mooe}; TFMs on streams and under temporal shift \citep{lourenco2026streams,helli2024drift}.
+\textbf{Difference to the competitors.} \citet{lourenco2026streams} keep one FIFO short- and long-term memory and do
+not model recurrence; Drift-Resilient TabPFN retrains the prior to extrapolate temporal trends. \method{} stores past
+contexts as experts, recalls them before labels arrive, and has regret guarantees.
+
+
+\appendix
+\section{Design History and Pre-Registration}
+\label{app:history}
+Development used synthetic streams with seeds 0--2 and the grid with seeds 0--1. The first version weighted experts
+with $\eta=2$ and a discounted loss ($\gamma=0.5$) and had a single window; it improved on FIFO but not on a
+reset-on-drift detector or on a window ensemble without memory, which reach the label-delay ceiling on simple concepts.
+This led to the recall-versus-relearn question, to adding windows of 100 and 300 rows, and to choosing $\eta=10$ on
+the last labelled batch on development streams. Expert predictions are cached, and the frozen weighting is replayed
+causally (it only uses losses of batches whose labels have arrived), which equals running the method online. Learning
+curves and predicted gains on the held-out grid seeds were written down before the grid was run; the grid hypotheses
+held except an incidental expectation of no gain with 5 centroids, missed on one stream because of the baseline.
+
+\bibliography{refs}
+\bibliographystyle{icml2026}
+
+\end{document}

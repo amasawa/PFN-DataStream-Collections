@@ -1,0 +1,145 @@
+% Venue strings (same convention as the AgDR bibliography)
+@string{ICLR = "Proc. ICLR"}
+@string{ICML = "Proc. ICML"}
+@string{NeurIPS = "Proc. NeurIPS"}
+@string{AAAI = "Proc. AAAI"}
+@string{KDD = "Proc. ACM SIGKDD"}
+@string{TKDE = "IEEE Trans. Knowl. Data Eng."}
+@string{CSUR = "ACM Comput. Surv."}
+@string{TMLR = "Trans. Mach. Learn. Res."}
+@string{MLJ = "Mach. Learn."}
+@string{Nature = "Nature"}
+@string{CORR = "CoRR"}
+
+% ---- concept drift
+@article{lu2019learning,
+  author    = {Jie Lu and Anjin Liu and Fan Dong and Feng Gu and Jo{\~{a}}o Gama and Guangquan Zhang},
+  title     = {Learning under Concept Drift: {A} Review},
+  journal   = TKDE,
+  volume    = {31},
+  number    = {12},
+  pages     = {2346--2363},
+  year      = {2019}
+}
+
+@article{gama2014survey,
+  author    = {Jo{\~{a}}o Gama and Indr{\.{e}} {\v{Z}}liobait{\.{e}} and Albert Bifet and Mykola Pechenizkiy and Abdelhamid Bouchachia},
+  title     = {A Survey on Concept Drift Adaptation},
+  journal   = CSUR,
+  volume    = {46},
+  number    = {4},
+  pages     = {44:1--44:37},
+  year      = {2014}
+}
+
+% ---- concept drift for new model families (research template we follow; cite where an idea is taken)
+@inproceedings{yang2025adapting,
+  author    = {Xiaoyu Yang and Jie Lu and En Yu},
+  title     = {Adapting Multi-Modal Large Language Model to Concept Drift from Pre-Training Onwards},
+  booktitle = ICLR,
+  year      = {2025}
+}
+
+@article{yang2025walking,
+  author    = {Xiaoyu Yang and Jie Lu and En Yu},
+  title     = {Walking the Tightrope: Disentangling Beneficial and Detrimental Drifts in Non-Stationary Custom-Tuning},
+  journal   = CORR,
+  volume    = {abs/2505.13081},
+  year      = {2025}
+}
+
+@inproceedings{yang2026turning,
+  author    = {Xiaoyu Yang and En Yu and Wei Duan and Jie Lu},
+  title     = {Turning Drift into Constraint: Robust Reasoning Alignment in Non-Stationary Multi-Stream Environments},
+  booktitle = ICML,
+  year      = {2026}
+}
+
+% ---- competitors (TFMs under drift)
+@inproceedings{helli2024drift,
+  author    = {Kai Helli and David Schnurr and Noah Hollmann and Samuel M{\"{u}}ller and Frank Hutter},
+  title     = {Drift-Resilient {TabPFN}: In-Context Learning Temporal Distribution Shifts on Tabular Data},
+  booktitle = NeurIPS,
+  pages     = {98742--98781},
+  year      = {2024}
+}
+
+@inproceedings{lourenco2026streams,
+  author    = {Afonso Louren{\c{c}}o and Jo{\~{a}}o Gama and Eric P. Xing and Goreti Marreiros},
+  title     = {In-Context Learning of Evolving Data Streams with Tabular Foundational Models},
+  booktitle = KDD,
+  year      = {2026}
+}
+
+% ---- tabular foundation models
+@inproceedings{muller2022pfn,
+  author    = {Samuel M{\"{u}}ller and Noah Hollmann and Sebastian Pineda{-}Arango and Josif Grabocka and Frank Hutter},
+  title     = {Transformers Can Do {Bayesian} Inference},
+  booktitle = ICLR,
+  year      = {2022}
+}
+
+@inproceedings{nagler2023statistical,
+  author    = {Thomas Nagler},
+  title     = {Statistical Foundations of Prior-Data Fitted Networks},
+  booktitle = ICML,
+  pages     = {25660--25676},
+  year      = {2023}
+}
+
+@article{hollmann2025tabpfn,
+  author    = {Noah Hollmann and Samuel M{\"{u}}ller and Lennart Purucker and Arjun Krishnakumar and Max K{\"{o}}rfer and Shi Bin Hoo and Robin Tibor Schirrmeister and Frank Hutter},
+  title     = {Accurate Predictions on Small Data with a Tabular Foundation Model},
+  journal   = Nature,
+  volume    = {637},
+  number    = {8045},
+  pages     = {319--326},
+  year      = {2025}
+}
+
+@inproceedings{qu2025tabicl,
+  author    = {Jingang Qu and David Holzm{\"{u}}ller and Ga{\"{e}}l Varoquaux and Marine Le Morvan},
+  title     = {{TabICL}: {A} Tabular Foundation Model for In-Context Learning on Large Data},
+  booktitle = ICML,
+  pages     = {50817--50847},
+  year      = {2025}
+}
+
+% ---- theory we build on (Zhao, Cao and colleagues)
+@inproceedings{zhao2024idiv,
+  author    = {Zhilin Zhao and Longbing Cao and Xuhui Fan and Wei-Shi Zheng},
+  title     = {Revealing Distribution Discrepancy by Sampling Transfer in Unlabeled Data},
+  booktitle = NeurIPS,
+  year      = {2024}
+}
+
+@inproceedings{zhao2023rdiv,
+  author    = {Zhilin Zhao and Longbing Cao},
+  title     = {{R}-Divergence for Estimating Model-Oriented Distribution Discrepancy},
+  booktitle = NeurIPS,
+  year      = {2023}
+}
+
+@inproceedings{zhao2025mooe,
+  author    = {Zhilin Zhao and Longbing Cao and Yuanyu Wan},
+  title     = {Mixture of Online and Offline Experts for Non-Stationary Time Series},
+  booktitle = AAAI,
+  year      = {2025}
+}
+
+@article{zhao2023drl,
+  author    = {Zhilin Zhao and Longbing Cao},
+  title     = {Dual Representation Learning for Out-of-Distribution Detection},
+  journal   = TMLR,
+  year      = {2023}
+}
+
+@article{zhao2024wnb,
+  author    = {Zhilin Zhao and Longbing Cao},
+  title     = {Weighting Non-{IID} Batches for Out-of-Distribution Detection},
+  journal   = MLJ,
+  volume    = {113},
+  number    = {10},
+  pages     = {7371--7391},
+  year      = {2024}
+}

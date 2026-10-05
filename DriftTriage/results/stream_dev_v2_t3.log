@@ -1,0 +1,11 @@
+sine2d 0 triage3 acc=0.9808 resets=4 time=52s
+sine2d 1 triage3 acc=0.9780 resets=7 time=53s
+sine2d 2 triage3 acc=0.9797 resets=5 time=55s
+sine2d 3 triage3 acc=0.9812 resets=2 time=53s
+sine2d 4 triage3 acc=0.9803 resets=3 time=49s
+lin 0 triage3 acc=0.9663 resets=14 time=60s
+lin 1 triage3 acc=0.9630 resets=6 time=59s
+lin 2 triage3 acc=0.9600 resets=21 time=60s
+lin 3 triage3 acc=0.9643 resets=7 time=61s
+lin 4 triage3 acc=0.9617 resets=11 time=61s
+DONE 01:19:39

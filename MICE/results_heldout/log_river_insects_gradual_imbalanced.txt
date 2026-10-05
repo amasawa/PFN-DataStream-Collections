@@ -1,0 +1,3 @@
+insects_gradual_imbalanced arf acc=0.7871 time=171s
+insects_gradual_imbalanced srp acc=0.7889 time=951s
+insects_gradual_imbalanced hat acc=0.6102 time=37s

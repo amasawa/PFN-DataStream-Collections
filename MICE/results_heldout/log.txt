@@ -1,0 +1,28 @@
+insects_incremental_abrupt_balanced fifo1000 acc=0.7670 time=206s
+insects_incremental_abrupt_balanced ltm1000_75 acc=0.7616 time=226s
+insects_incremental_abrupt_balanced ddm1000 acc=0.7773 time=192s
+insects_incremental_abrupt_balanced winens1000 acc=0.7789 time=439s
+insects_incremental_abrupt_balanced micev1000_500 acc=0.7857 time=2759s
+STREAM_DONE insects_incremental_abrupt_balanced 14:56:53
+covertype fifo1000 acc=0.9479 time=383s
+covertype ltm1000_75 acc=0.9468 time=511s
+covertype ddm1000 acc=0.9434 time=387s
+covertype winens1000 acc=0.9487 time=913s
+STREAM_DONE insects_incremental_abrupt_balanced 17:04:04
+HELPER_START 18:26:04
+covertype micev1000_500 acc=0.9454 time=6723s
+STREAM_DONE covertype 18:56:31
+insects_gradual_imbalanced fifo1000 acc=0.8164 time=479s
+insects_abrupt_imbalanced micev1000_500 acc=0.7975 time=2674s
+insects_gradual_imbalanced ltm1000_75 acc=0.8133 time=471s
+insects_gradual_imbalanced ddm1000 acc=0.8166 time=448s
+insects_abrupt_imbalanced winens1000 acc=0.7924 time=1062s
+insects_abrupt_imbalanced ddm1000 acc=0.7962 time=475s
+insects_gradual_imbalanced winens1000 acc=0.8136 time=1000s
+insects_abrupt_imbalanced ltm1000_75 acc=0.7902 time=500s
+insects_abrupt_imbalanced fifo1000 acc=0.7940 time=498s
+insects_gradual_imbalanced micev1000_500 acc=0.8183 time=3295s
+STREAM_DONE insects_gradual_imbalanced 20:31:45
+MAIN_STOPPED 20:31:47
+STREAM_DONE insects_abrupt_imbalanced 20:31:53
+HELDOUT_DONE 20:31:53
