@@ -228,3 +228,6 @@ h3_airlines_b ddm1000 acc=0.7055 time=328s
 h3_airlines_b ltm1000_75 acc=0.6999 time=336s
 h3_airlines_c ddm1000 acc=0.6498 time=322s
 h3_airlines_c ltm1000_75 acc=0.6445 time=293s
+h3_covertype_c ddm1000 acc=0.9187 time=561s
+h3_covertype_c ltm1000_75 acc=0.9578 time=609s
+CHAIN_DONE 23:34:24

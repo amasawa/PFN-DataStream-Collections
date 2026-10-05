@@ -11,3 +11,5 @@ STREAM_DONE h4_airlines_d 22:14:51
 h4_covertype_d fifo1000 acc=0.9599 time=708s
 h4_covertype_d ddm1000 acc=0.9390 time=687s
 h4_covertype_d winens1000 acc=0.9596 time=1249s
+STREAM_DONE h4_covertype_d 23:37:13
+CHAIN_DONE 23:37:13

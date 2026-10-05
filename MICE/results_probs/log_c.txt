@@ -225,3 +225,16 @@ CUDA kernel errors might be asynchronously reported at some other API call, so t
 For debugging consider passing CUDA_LAUNCH_BLOCKING=1
 
 RETRY h3_poker_c 22:57:33
+h4_airlines_d ddm1000 acc=0.6577 time=358s
+h4_airlines_d ltm1000_75 acc=0.6474 time=363s
+h4_airlines_e ddm1000 acc=0.6535 time=364s
+h4_airlines_e ltm1000_75 acc=0.6482 time=350s
+h4_covertype_d ddm1000 acc=0.8969 time=493s
+h4_covertype_d ltm1000_75 acc=0.9621 time=390s
+h4_covertype_e ddm1000 acc=0.9673 time=359s
+h4_covertype_e ltm1000_75 acc=0.9718 time=362s
+h4_poker_d ddm1000 acc=0.8457 time=228s
+h4_poker_d ltm1000_75 acc=0.9164 time=213s
+h4_poker_e ddm1000 acc=0.8323 time=197s
+h4_poker_e ltm1000_75 acc=0.8911 time=235s
+CHAIN_DONE 00:10:23

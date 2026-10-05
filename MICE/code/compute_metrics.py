@@ -60,7 +60,7 @@ def one(g, d, f):
 if __name__ == "__main__":
     from joblib import Parallel, delayed
     jobs = [(g, d, f) for g, d in DIRS.items() if g != "tabicl" for f in sorted(glob.glob(f"{d}/*__micev1000_500.pkl"))]
-    rows = sum(Parallel(n_jobs=10)(delayed(one)(*j) for j in jobs), [])
+    rows = sum(Parallel(n_jobs=4)(delayed(one)(*j) for j in jobs), [])
     a = pd.DataFrame(rows); a.to_csv("../results_paper/metrics.csv", index=False)
     pd.set_option("display.width", 250)
     chk = a.pivot_table(index="stream", columns="method", values="acc")

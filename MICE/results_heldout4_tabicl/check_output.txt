@@ -1,0 +1,11 @@
+stream                                                                  
+h4_airlines_d   66.78   66.77  66.63    66.40  66.56  NaN  66.46   65.41
+h4_covertype_d  96.03   96.04  96.01    95.99  95.99  NaN  93.90   95.96
+h4_poker_d      93.07   92.83  91.60    92.37  92.38  NaN  82.86   91.88
+mean {'mice': 85.29, 'mice10': 85.22, 'fast': 84.75, 'windows': 84.92, 'fifo': 84.98, 'ltm': nan, 'ddm': 81.07, 'winens': 84.42}
+M1 non-inferiority, mice - max(fifo, ddm) >= -0.5 on every segment: True {'h4_airlines_d': 0.22, 'h4_covertype_d': 0.04, 'h4_poker_d': 0.69}
+M2a mice above all of ['fifo', 'ddm', 'winens'] on 3 of 3 (majority = 2): True {'h4_airlines_d': 0.22, 'h4_covertype_d': 0.04, 'h4_poker_d': 0.69}
+M2b highest mean: True mean margin +0.32
+M3 safety, mice - fifo >= -0.3 on every segment: True {'h4_airlines_d': 0.22, 'h4_covertype_d': 0.04, 'h4_poker_d': 0.69} mean +0.32
+M4 memory, mice above the windows-only variant on 3 of 3 (majority?): True {'h4_airlines_d': 0.38, 'h4_covertype_d': 0.05, 'h4_poker_d': 0.7}
+report only: step 10 minus step 1/2 {'h4_airlines_d': -0.0, 'h4_covertype_d': 0.01, 'h4_poker_d': -0.24} ; fast level alone minus fifo {'h4_airlines_d': 0.07, 'h4_covertype_d': 0.02, 'h4_poker_d': -0.78} ; ddm minus fifo {'h4_airlines_d': -0.09, 'h4_covertype_d': -2.09, 'h4_poker_d': -9.52}

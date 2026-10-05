@@ -9,3 +9,9 @@ h3_airlines_c mooe_rff2000_100_2_0.01 acc=0.5887 time=145s
 h3_airlines_c hat acc=0.6052 time=9s
 h3_airlines_c nse acc=0.5773 time=172s
 h3_airlines_c arf acc=0.6355 time=134s
+h3_airlines_c adwinbag acc=0.6148 time=50s
+h3_covertype_b nse acc=0.6845 time=150s
+h3_covertype_b mooe_rff2000_100_2_0.01 acc=0.7303 time=151s
+h3_covertype_b arf acc=0.8151 time=105s
+h3_airlines_c levbag acc=0.6438 time=193s
+h3_covertype_b hat acc=0.7347 time=46s

@@ -550,9 +550,13 @@ is $-0.08$ points.
 
 \textbf{Beyond accuracy.} \Cref{tab:metrics} adds the macro-F1 score, the one-vs-rest ROC AUC, the expected
 calibration error (ECE) and the half Brier score, computed from the stored predictions of every method. On the real
-streams the picture of the accuracy carries over: \method{} has the highest F1 and AUC and a lower Brier score than
-every baseline; against FIFO its F1 is higher on 24 of 29 streams ($+0.8$ points on average), its AUC on 25 and its
-Brier score lower on 26. On the grid the step $\eta_2=\tfrac12$ has a price in the quality of the probabilities:
+streams the picture of the accuracy carries over for F1 and the Brier score: \method{} has the highest F1 and a lower
+Brier score than every baseline; against FIFO its F1 is higher on 24 of 29 streams ($+0.8$ points on average), its
+AUC on 25 and its Brier score lower on 26, and against reset on 25, 28 and 28. The exception is the AUC of the dual
+memory: LTM has the highest mean AUC (91.0 against 90.5), all of it from the five PokerHand segments (up to 7.3
+points), where its class-balanced long-term buffer keeps rows of the rare classes that a window loses; on the
+same segments its accuracy is 2.5 to 3.8 points below \method{}, and on the other 24 streams the AUC of \method{}
+is 0.2 points higher in the median. On the grid the step $\eta_2=\tfrac12$ has a price in the quality of the probabilities:
 \method{} is 0.2 points below the step of 10 in accuracy but 3.1 points in ECE and 1.2 in the Brier score, because a
 small step keeps weight on the default window, which is poorly calibrated under conflicting concepts (ECE 16.7).
 The step that \cref{prop:outer} covers is thus the conservative choice: it buys the guarantee with calibration in the
@@ -580,10 +584,11 @@ recall regime.
 \textbf{Other learners and a second backbone.} On the 15 streams of the first three stages, the best trained
 stream learner per stream (seven learners, MOOE in two configurations) is below \method{} on all 15, by at least 0.2
 points, and below FIFO on 11. With TabICL as the backbone and no constant changed, \method{} is the most accurate policy on all four streams of the
-first held-out set (84.0 on average against 83.4 for FIFO and 83.5 for the window ensemble), and in a registered
-test on four segments of the third held-out set all four hypotheses of the kind above hold: 85.7 on average
-against 85.3 for FIFO, 85.0 for the window ensemble and 82.8 for reset, most accurate on three of four segments,
-and at most 0.02 points below FIFO.
+first held-out set (84.0 on average against 83.4 for FIFO and 83.5 for the window ensemble), and in registered
+tests on four segments of the third held-out set and on all six of the fourth, the four hypotheses of the kind
+above hold: on the fourth set \method{} is the most accurate policy on six of six segments (85.2 on average against
+84.7 for FIFO, 84.2 for the window ensemble and 81.3 for reset), and over the ten segments it is at most 0.02 points
+below FIFO.
 
 \subsection{RQ4: Components and Conditions}
 \label{sec:ablation}
@@ -823,8 +828,8 @@ All held (five of six segments; worst difference to FIFO $-0.01$ points; six of 
 pool).
 
 \textbf{Second backbone and second seed.} With the method of \cref{sec:method} frozen and the same four hypotheses
-(``at least three of four'' for sets of four segments): TabICL on four segments of the third held-out set, all
-held; a second seed of TabPFN on the same four segments, three held and ``most accurate on at least three of four
+(``at least three of four'' for sets of four segments): TabICL on four segments of the third held-out set and on the
+six segments of the fourth, all held; a second seed of TabPFN on the same four segments, three held and ``most accurate on at least three of four
 segments'' did not (two); a second seed on the six segments of the fourth held-out set, all held.
 
 \textbf{Grid, seeds 20 and 21} (half Brier score, step 10). Mean difference to the fast level alone at least $-0.5$

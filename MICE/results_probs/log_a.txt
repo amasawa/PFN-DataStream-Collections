@@ -425,3 +425,12 @@ CUDA kernel errors might be asynchronously reported at some other API call, so t
 For debugging consider passing CUDA_LAUNCH_BLOCKING=1
 
 RETRY insects_incremental_abrupt_balanced 22:57:36
+RETRY insects_incremental_abrupt_balanced 23:02:56
+insects_incremental_abrupt_balanced ltm1000_75 acc=0.7616 time=491s
+insects_gradual_imbalanced ddm1000 acc=0.8166 time=870s
+insects_gradual_imbalanced ltm1000_75 acc=0.8133 time=773s
+insects_abrupt_imbalanced ddm1000 acc=0.7962 time=616s
+insects_abrupt_imbalanced ltm1000_75 acc=0.7902 time=592s
+covertype ddm1000 acc=0.9434 time=400s
+covertype ltm1000_75 acc=0.9468 time=497s
+CHAIN_DONE 00:14:53
