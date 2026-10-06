@@ -17,7 +17,7 @@ Policies (name):
 Detectors <det> (river 0.26.1, default parameters; input = per-row 0/1 error of the policy's own prediction):
   ddm eddm fhddm hddma hddmw adwin ph kswin
 At most one detection per labelled batch (the rest of the batch is not fed after a detection), as in MICE.
-Environment: RESET_BACKBONE=tabpfn|tabicl, RESET_M (default 1000), RESET_DATA (stream directory, default MICE/data),
+Environment: RESET_BACKBONE=tabpfn|tabicl|tabdpt (tabdpt: run with ~/pfn-venvs/venv-tabdpt), RESET_M (default 1000), RESET_DATA (stream directory, default MICE/data),
 RESET_SEED (backbone random_state, default 0; seed s > 0 writes to <backbone>_s<s>_M<M> and cache_<backbone>_s<s>),
 RESET_POLSET (std = the policies above, default; hsens = the +hedge sensitivity variants <det>+hedge@e<eta>g<gamma>).
 Usage: python reset_eval.py <stream> [...] [--pols none ddm ...] -> ../results/<backbone>_M<M>/<stream>__<pol>.npz"""
@@ -51,7 +51,11 @@ class TFM:
 
     def __init__(self, n_classes, seed=0):
         self.K = n_classes
-        if BB == "tabicl":
+        self.seed = seed
+        if BB == "tabdpt":                                 # venv-tabdpt; full context, 4 ensemble members (as AgDR)
+            from tabdpt import TabDPTClassifier
+            self.m = TabDPTClassifier(compile=False, verbose=False, device=os.environ.get("RESET_DEVICE", "cuda"))
+        elif BB == "tabicl":
             from tabicl import TabICLClassifier
             self.m = TabICLClassifier(device="cuda", random_state=seed, n_estimators=4)
         else:
@@ -65,6 +69,10 @@ class TFM:
         labs = np.unique(yc)
         if len(labs) == 1:
             P[:, labs[0]] = 1.0
+            return P
+        if BB == "tabdpt":                                 # labels remapped to 0..k-1; columns follow labs
+            self.m.fit(Xc, np.searchsorted(labs, yc))
+            P[:, labs] = self.m.ensemble_predict_proba(Xq, n_ensembles=4, seed=self.seed)
             return P
         self.m.fit(Xc, yc)
         if self.m.__class__.__name__ == "TabICLClassifier":

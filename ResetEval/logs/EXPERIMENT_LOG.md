@@ -283,3 +283,13 @@
 - T1 worst source: +hedge - full = 15.03 (need >= 10) -> holds
 - T2 best source: +hedge 3.35 vs half of full 2.18 -> holds
 - 完整输出：`results/console_queue_M500.txt`。
+- **10:40 人工核对（queue_M500，10:21 完成）**：81 条流都齐。H1'–H4'、T1、T2 全部成立（H2' 为 7/8）。与 M = 1000 相比（检测器平均）：完全重置的最差来源从 −26.2 变为 −17.6，合成流收益从 +8.0 变为 +3.5，真实流上净亏的重置从 88% 变为 80%；+hedge 的真实流平均为 −0.03，最差来源 −2.56，T1 = 15.0。也就是说，窗口越短，重置的害处和好处都越小，这和 10-07 09:40 的解读一致：FIFO 窗口本身就是一种遗忘，窗口越短，重置能多做的事越少。按这个解读，M = 2000 的两个方向都应该更大。
+- **10:40 资源**：10:23 显存峰值 20.6 GB，超过了 20 GB 的限制，原因是"连续两次 > 19.5 GB"的规则反应太慢（M = 2000 的链更占显存）。supervisor 改成从环境变量读阈值，以 GKILL=19000、GHITS=1（一次超过就停链）、GADMIT=15000、GCAP=8 重启。
+
+## 2026-10-07 10:42：追加 TabDPT 作为第三个 backbone（RQ2；设计与判定在运行前写定）
+- **代码**：`reset_eval.py` 加了 `RESET_BACKBONE=tabdpt`，用 `~/pfn-venvs/venv-tabdpt` 里的 TabDPT 1.3.1，配置与 AgDR 相同：`compile=False`，全上下文，`ensemble_predict_proba(n_ensembles=4, seed)`；标签先映射到 0..k−1。核对：同一上下文重复预测、新建模型再预测，概率都完全相同（最大差 0.0），所以按 (lo, t) 缓存是成立的。eeg 上 1000 行上下文的预测准确率为 0.87（CPU 上每次 2.8 秒）。
+- **队列** `results/queue_tabdpt.txt`：81 条流（真实流在前，从长到短），26 个策略，M = 1000，种子 0，排在 GPU 队列最后（M2000 之后）。链脚本换成 `code/run_queue4.sh`（在 run_queue3 的基础上加了 tabdpt 类型）；supervisor 10:42 重启，参数不变。
+- **判定**：与 TabICL 阶段相同，H1'–H4'、T1、T2（`analyse_backbone.py tabdpt`）。另外在这里事先写定，用来检验 FIFO 吸收的解读：
+  - D1：T1、T2 都成立（在三个 backbone 上都成立，才写成"不依赖 backbone"）；
+  - D2：真实流上，完全重置的来源加权平均（检测器平均）为负，且净亏的单次重置 > 70%。
+- **预期**：H1'、H3'、T1 成立；TabDPT 自带检索式上下文的处理，在长上下文上的表现可能与 TabPFN 不同，H2' 和 H4' 不确定。

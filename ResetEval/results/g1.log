@@ -268,3 +268,9 @@ grid_c100_b500_s10 kswin acc=0.6443 resets=9 new_calls=95 time=2s
 grid_c100_b500_s10 kswin+half acc=0.5761 resets=10 new_calls=95 time=1s
 grid_c100_b500_s10 kswin+hedge acc=0.6325 resets=11 new_calls=95 time=1s
 STREAM_DONE 10:13:54 grid_c100_b500_s10_M500
+kdd none acc=0.9901 resets=0 new_calls=989 time=1076s
+kdd ddmM acc=0.9865 resets=59 new_calls=1125 time=157s
+kdd ddm acc=0.9865 resets=58 new_calls=1125 time=0s
+kdd ddm+half acc=0.9898 resets=55 new_calls=1340 time=313s
+kdd ddm+hedge acc=0.9893 resets=54 new_calls=1375 time=51s
+kdd eddm acc=0.9874 resets=24 new_calls=1449 time=113s

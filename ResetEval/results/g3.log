@@ -241,3 +241,9 @@ grid_c5_b2000_s10 kswin acc=0.9698 resets=8 new_calls=252 time=9s
 grid_c5_b2000_s10 kswin+half acc=0.9399 resets=14 new_calls=261 time=16s
 grid_c5_b2000_s10 kswin+hedge acc=0.9698 resets=8 new_calls=261 time=9s
 STREAM_DONE 10:14:28 grid_c5_b2000_s10_M500
+h4_poker_e none acc=0.9348 resets=0 new_calls=989 time=1064s
+h4_poker_e ddmM acc=0.8365 resets=386 new_calls=1105 time=94s
+h4_poker_e ddm acc=0.8369 resets=374 new_calls=1105 time=0s
+h4_poker_e ddm+half acc=0.9249 resets=231 new_calls=1676 time=421s
+h4_poker_e ddm+hedge acc=0.9290 resets=216 new_calls=1810 time=105s
+h4_poker_e eddm acc=0.8073 resets=361 new_calls=1819 time=7s

@@ -89,3 +89,13 @@
 2026-10-07_10:20:20 stopped g10 (pane 74921)
 2026-10-07_10:21:37 util5 100% gmem 19192 ram 13952 gpu_chains 9/9 cpu_chains 4/4 unclaimed gpu 30 cpu 61 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 0 30 queue_seeds3b 0 0 0 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 16 61 
 2026-10-07_10:21:37 queue queue_M500 complete -> stage_done.sh
+2026-10-07_10:23:51 GPU memory 20622 MiB twice > 19500 -> stop newest GPU chain, cap 8
+2026-10-07_10:23:58 released /home/zhwu9808/.reset_locks/queue_M2000/h4_covertype_e_M2000
+2026-10-07_10:23:58 stopped g9 (pane 71459)
+2026-10-07_10:27:17 util5 100% gmem 18356 ram 12553 gpu_chains 8/8 cpu_chains 4/4 unclaimed gpu 31 cpu 57 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 0 31 queue_seeds3b 0 0 0 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 20 57 
+2026-10-07_10:32:29 util5 100% gmem 18356 ram 12811 gpu_chains 8/8 cpu_chains 4/4 unclaimed gpu 31 cpu 55 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 0 31 queue_seeds3b 0 0 0 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 22 55 
+2026-10-07_10:37:39 util5 99% gmem 18464 ram 12603 gpu_chains 8/8 cpu_chains 4/4 unclaimed gpu 30 cpu 52 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 1 30 queue_seeds3b 0 0 0 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 25 52 
+2026-10-07_10:40:22 start NCPU=4 GCAP=8
+2026-10-07_10:40:23 manual: restarted with GKILL=19000 GHITS=1 GADMIT=15000 GCAP=8 (10:23 peak 20622 MiB exceeded the 20 GB limit before the two-sample rule fired; M2000 chains are heavier)
+2026-10-07_10:42:21 manual: restarted with queue_tabdpt appended to GPU_Q, chains now run_queue4.sh (same flags)
+2026-10-07_10:42:21 start NCPU=4 GCAP=8

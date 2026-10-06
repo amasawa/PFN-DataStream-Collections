@@ -7,11 +7,12 @@
 #    unclaimed line, start one GPU chain (two if < 70%); keep up to NCPU CPU chains while CPU queues have work.
 #  - a queue whose lines are all complete is analysed once by stage_done.sh (append to the log, commit, push).
 #  - every hour: commit and push the logs.
+# Environment: NCPU, GCAP, GKILL (MiB, default 19500), GHITS (samples in a row, default 2), GADMIT (default 16500).
 # Chains: tmux g<N> (run_queue3.sh over GPU_Q, in order), c<N> (over CPU_Q); the earlier seedR1-9 (run_queue2.sh) count
 # as GPU chains. Decisions go to results/supervisor.txt.
 cd "$(dirname "$0")"; C=$PWD; R=$(cd ../results && pwd); PY=~/pfn-venvs/venv/bin/python
-GPU_Q="$R/queue_seeds.txt $R/queue_M500.txt $R/queue_M2000.txt $R/queue_seeds3b.txt"
-CPU_Q="$R/queue_hsens.txt $R/queue_trained_ht.txt $R/queue_trained_nb.txt"
+GPU_Q="$R/queue_seeds.txt $R/queue_M500.txt $R/queue_M2000.txt $R/queue_seeds3b.txt $R/queue_tabdpt.txt"; NGQ=$(echo $GPU_Q | wc -w)
+CPU_Q="$R/queue_hsens.txt $R/queue_trained_ht.txt $R/queue_trained_nb.txt"; NCQ=$(echo $CPU_Q | wc -w)
 NCPU=${NCPU:-6}; GCAP=${GCAP:-12}; ng_new=$(ls $R/g*.log 2>/dev/null | wc -l); nc_new=$(ls $R/c*.log 2>/dev/null | wc -l); hi=0; cool=0; tick=0; lastc=$(date +%s); utils=()
 log() { echo "$(date +%F_%T) $*" >> $R/supervisor.txt; }
 chains() { tmux ls -F '#{session_name} #{session_created}' 2>/dev/null | awk -v p="$1" '$1 ~ p' | sort -k2n | awk '{print $1}'; }
@@ -41,9 +42,9 @@ while true; do
   u=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits); gm=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits)
   ram=$(free -m | awk '/^Mem/{print $2 - $7}'); utils+=($u); [ ${#utils[@]} -gt 5 ] && utils=("${utils[@]:1}")
   G=($(chains '^(g[0-9]+|seedR[0-9])$')); Cc=($(chains '^c[0-9]+$'))
-  if [ "$gm" -gt 19500 ]; then hi=$((hi + 1)); else hi=0; fi
-  if [ $hi -ge 2 ] && [ ${#G[@]} -gt 1 ]; then
-    GCAP=$(( ${#G[@]} - 1 )); log "GPU memory $gm MiB twice > 19500 -> stop newest GPU chain, cap $GCAP"
+  if [ "$gm" -gt ${GKILL:-19500} ]; then hi=$((hi + 1)); else hi=0; fi
+  if [ $hi -ge ${GHITS:-2} ] && [ ${#G[@]} -gt 1 ]; then
+    GCAP=$(( ${#G[@]} - 1 )); log "GPU memory $gm MiB > ${GKILL:-19500} x${GHITS:-2} -> stop newest GPU chain, cap $GCAP"
     stop_chain ${G[-1]}; release_seedR_orphans; hi=0; cool=10
   elif [ "$ram" -gt 19500 ]; then
     log "RAM $ram MiB > 19500 -> stop newest chain"
@@ -54,18 +55,18 @@ while true; do
   tick=$((tick + 1))
   if [ $((tick % 5)) = 0 ]; then
     mean=$(( ($(IFS=+; echo "${utils[*]}")) / ${#utils[@]} ))
-    ST=$($PY queue_status.py $GPU_Q $CPU_Q); gun=$(echo "$ST" | head -4 | awk '{s+=$4} END {print s}'); cun=$(echo "$ST" | tail -3 | awk '{s+=$4} END {print s}')
+    ST=$($PY queue_status.py $GPU_Q $CPU_Q); gun=$(echo "$ST" | head -$NGQ | awk '{s+=$4} END {print s}'); cun=$(echo "$ST" | tail -$NCQ | awk '{s+=$4} END {print s}')
     log "util5 $mean% gmem $gm ram $ram gpu_chains ${#G[@]}/$GCAP cpu_chains ${#Cc[@]}/$NCPU unclaimed gpu $gun cpu $cun | $(echo $ST | tr '\n' ' ')"
-    if [ $cool = 0 ] && [ $mean -lt 90 ] && [ $gm -lt 16500 ] && [ $ram -lt 17000 ] && [ $gun -gt 0 ]; then
+    if [ $cool = 0 ] && [ $mean -lt 90 ] && [ $gm -lt ${GADMIT:-16500} ] && [ $ram -lt 17000 ] && [ $gun -gt 0 ]; then
       n=1; [ $mean -lt 70 ] && n=2
       for i in $(seq $n); do
         [ $(( ${#G[@]} + i - 1 )) -ge $GCAP ] && break
-        ng_new=$((ng_new + 1)); tmux new-session -d -s g$ng_new "bash $C/run_queue3.sh $R/g$ng_new.log $GPU_Q"; log "started g$ng_new"
+        ng_new=$((ng_new + 1)); tmux new-session -d -s g$ng_new "bash $C/run_queue4.sh $R/g$ng_new.log $GPU_Q"; log "started g$ng_new"
         sleep 2
       done
     fi
     while [ ${#Cc[@]} -lt $NCPU ] && [ $cun -gt 0 ] && [ $ram -lt 17000 ]; do
-      nc_new=$((nc_new + 1)); tmux new-session -d -s c$nc_new "bash $C/run_queue3.sh $R/c$nc_new.log $CPU_Q"; log "started c$nc_new"
+      nc_new=$((nc_new + 1)); tmux new-session -d -s c$nc_new "bash $C/run_queue4.sh $R/c$nc_new.log $CPU_Q"; log "started c$nc_new"
       Cc+=(c$nc_new); sleep 2
     done
     echo "$ST" | while read q n done un; do

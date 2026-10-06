@@ -17,8 +17,9 @@ def line_status(q, line):
     s, seed, m, ps, kind = f[0], f[2] or "0", f[3] or "1000", f[4] or "std", f[5] or "tfm"
     key = s + (f"_s{seed}" if seed != "0" else "") + (f"_M{m}" if m != "1000" else "") + \
         (f"_{ps}" if ps != "std" else "") + (f"_{kind}" if kind != "tfm" else "")
-    if kind == "tfm":
-        d, pols = f"{RES}/tabpfn{'' if seed == '0' else '_s' + seed}_M{m}", POLSETS[ps]
+    if kind in ("tfm", "tabdpt"):
+        bb = "tabpfn" if kind == "tfm" else kind
+        d, pols = f"{RES}/{bb}{'' if seed == '0' else '_s' + seed}_M{m}", POLSETS[ps]
     else:
         d, pols = f"{RES}/trained_{kind}", TRAINED
     done = all(os.path.exists(f"{d}/{s}__{p}.npz") for p in pols)

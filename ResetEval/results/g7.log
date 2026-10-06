@@ -214,3 +214,30 @@ grid_c100_b500_s11 kswin acc=0.6239 resets=9 new_calls=92 time=2s
 grid_c100_b500_s11 kswin+half acc=0.5691 resets=9 new_calls=94 time=3s
 grid_c100_b500_s11 kswin+hedge acc=0.5998 resets=12 new_calls=94 time=1s
 STREAM_DONE 10:13:56 grid_c100_b500_s11_M500
+home none acc=0.9646 resets=0 new_calls=989 time=564s
+home ddmM acc=0.9843 resets=33 new_calls=1166 time=74s
+home ddm acc=0.9843 resets=33 new_calls=1166 time=0s
+home ddm+half acc=0.9693 resets=59 new_calls=1385 time=209s
+home ddm+hedge acc=0.9816 resets=36 new_calls=1481 time=7s
+home eddm acc=0.9832 resets=23 new_calls=1515 time=6s
+home eddm+half acc=0.9679 resets=44 new_calls=1565 time=47s
+home eddm+hedge acc=0.9822 resets=25 new_calls=1565 time=0s
+home fhddm acc=0.9762 resets=20 new_calls=1752 time=7s
+home fhddm+half acc=0.9676 resets=31 new_calls=1934 time=175s
+home fhddm+hedge acc=0.9756 resets=20 new_calls=1944 time=1s
+home hddma acc=0.9838 resets=27 new_calls=1944 time=2s
+home hddma+half acc=0.9680 resets=57 new_calls=1944 time=2s
+home hddma+hedge acc=0.9826 resets=31 new_calls=1944 time=2s
+home hddmw acc=0.9839 resets=25 new_calls=1953 time=9s
+home hddmw+half acc=0.9675 resets=51 new_calls=1963 time=10s
+home hddmw+hedge acc=0.9825 resets=28 new_calls=1963 time=1s
+home adwin acc=0.9839 resets=26 new_calls=1972 time=0s
+home adwin+half acc=0.9678 resets=48 new_calls=1981 time=0s
+home adwin+hedge acc=0.9820 resets=28 new_calls=1998 time=0s
+home ph acc=0.9808 resets=20 new_calls=2017 time=1s
+home ph+half acc=0.9676 resets=35 new_calls=2106 time=75s
+home ph+hedge acc=0.9792 resets=22 new_calls=2136 time=0s
+home kswin acc=0.9833 resets=25 new_calls=2145 time=50s
+home kswin+half acc=0.9674 resets=46 new_calls=2147 time=48s
+home kswin+hedge acc=0.9813 resets=27 new_calls=2147 time=49s
+STREAM_DONE 10:36:19 home_M2000

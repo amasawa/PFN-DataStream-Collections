@@ -7,6 +7,7 @@ case $q in
   queue_seeds3b) { $PY seed_compare.py 1 2 3; $PY analyse_backbone.py tabpfn_s3; } > $out 2>&1 ;;
   queue_M500)    $PY analyse_backbone.py tabpfn_M500 > $out 2>&1 ;;
   queue_M2000)   $PY analyse_backbone.py tabpfn_M2000 > $out 2>&1 ;;
+  queue_tabdpt)  $PY analyse_backbone.py tabdpt > $out 2>&1 ;;
   queue_hsens)   $PY analyse_variants.py hsens > $out 2>&1 ;;
   queue_trained_ht) $PY analyse_variants.py trained ht > $out 2>&1 ;;
   queue_trained_nb) $PY analyse_variants.py trained nb > $out 2>&1 ;;
