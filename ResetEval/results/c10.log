@@ -4,3 +4,8 @@ home ph+hedge@e8g0.5 acc=0.9804 resets=22 new_calls=14 time=0s
 home ph+hedge@e2g0.25 acc=0.9805 resets=21 new_calls=14 time=0s
 home ph+hedge@e2g0.75 acc=0.9807 resets=21 new_calls=14 time=0s
 home ph+hedge@e2g0.9 acc=0.9807 resets=21 new_calls=14 time=0s
+home kswin+hedge@e0.5g0.5 acc=0.9809 resets=27 new_calls=14 time=54s
+home kswin+hedge@e1g0.5 acc=0.9809 resets=27 new_calls=14 time=53s
+home kswin+hedge@e4g0.5 acc=0.9809 resets=28 new_calls=14 time=54s
+home kswin+hedge@e8g0.5 acc=0.9815 resets=28 new_calls=14 time=51s
+home kswin+hedge@e2g0.25 acc=0.9807 resets=28 new_calls=14 time=54s

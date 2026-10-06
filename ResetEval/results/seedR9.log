@@ -6,3 +6,78 @@ h4_poker_e ddm+half acc=0.8961 resets=313 new_calls=2533 time=331s
 h4_poker_e ddm+hedge acc=0.9089 resets=303 new_calls=2948 time=174s
 h4_poker_e eddm acc=0.8154 resets=351 new_calls=3430 time=179s
 h4_poker_e eddm+half acc=0.9011 resets=176 new_calls=3752 time=111s
+h4_poker_e eddm+hedge acc=0.9125 resets=160 new_calls=4016 time=131s
+h4_poker_e fhddm acc=0.8377 resets=195 new_calls=4577 time=299s
+h4_poker_e fhddm+half acc=0.9044 resets=113 new_calls=4929 time=156s
+h4_poker_e fhddm+hedge acc=0.9106 resets=109 new_calls=5103 time=66s
+h4_poker_e hddma acc=0.8156 resets=487 new_calls=5205 time=41s
+h4_poker_e hddma+half acc=0.8931 resets=274 new_calls=5304 time=36s
+h4_poker_e hddma+hedge acc=0.9090 resets=255 new_calls=5344 time=16s
+h4_poker_e hddmw acc=0.8222 resets=320 new_calls=5438 time=34s
+h4_poker_e hddmw+half acc=0.9060 resets=165 new_calls=5488 time=19s
+h4_poker_e hddmw+hedge acc=0.9115 resets=164 new_calls=5519 time=13s
+h4_poker_e adwin acc=0.8256 resets=249 new_calls=5815 time=110s
+h4_poker_e adwin+half acc=0.9017 resets=173 new_calls=5912 time=39s
+h4_poker_e adwin+hedge acc=0.9106 resets=157 new_calls=6060 time=52s
+h4_poker_e ph acc=0.8565 resets=136 new_calls=6317 time=100s
+h4_poker_e ph+half acc=0.9046 resets=104 new_calls=6451 time=63s
+h4_poker_e ph+hedge acc=0.9117 resets=95 new_calls=6558 time=63s
+h4_poker_e kswin acc=0.8394 resets=245 new_calls=6622 time=70s
+h4_poker_e kswin+half acc=0.9060 resets=149 new_calls=6647 time=57s
+h4_poker_e kswin+hedge acc=0.9125 resets=139 new_calls=6674 time=58s
+STREAM_DONE 07:11:02 h4_poker_e_s2
+h3_covertype_b none acc=0.9656 resets=0 new_calls=999 time=734s
+h3_covertype_b ddmM acc=0.9489 resets=34 new_calls=1063 time=34s
+h3_covertype_b ddm acc=0.9489 resets=34 new_calls=1063 time=0s
+h3_covertype_b ddm+half acc=0.9652 resets=160 new_calls=1394 time=181s
+h3_covertype_b ddm+hedge acc=0.9654 resets=17 new_calls=1453 time=30s
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 178, in <module>
+    run(s, p, cache, X, y)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 157, in run
+    P = cache.get(lo, t)
+        ^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 87, in get
+    self.d[key] = self.f.predict(self.X[lo:t * B], self.y[lo:t * B], self.X[t * B:(t + 1) * B]).astype(np.float16)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 72, in predict
+    P[:, self.m.classes_.astype(int)] = self.m.predict_proba(Xq)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 74, in __next__
+    torch.cuda.synchronize(self._device)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1281, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 07:28:09 h3_covertype_b_s2
+h3_covertype_b eddm acc=0.7914 resets=318 new_calls=384 time=166s
+h3_covertype_b eddm+half acc=0.9650 resets=52 new_calls=601 time=95s
+h3_covertype_b eddm+hedge acc=0.9655 resets=46 new_calls=896 time=124s
+h3_covertype_b fhddm acc=0.9242 resets=48 new_calls=989 time=38s
+h3_covertype_b fhddm+half acc=0.9655 resets=3 new_calls=999 time=5s
+h3_covertype_b fhddm+hedge acc=0.9656 resets=3 new_calls=1017 time=8s
+h3_covertype_b hddma acc=0.7129 resets=497 new_calls=1523 time=171s
