@@ -39,10 +39,15 @@ def soft_copies(yn, P, R=4):
     return np.array(idx), np.array(lab)
 
 
-rows = []
+import os
+rows = pd.read_csv("../results/repair.csv").to_dict("records") if os.path.exists("../results/repair.csv") else []
+done = {(r["data"], int(r["seed"])) for r in rows if r["kind"] == "asym"}   # resume after a CUDA failure (added 2026-10-06)
+rows = [r for r in rows if (r["data"], int(r["seed"])) in done]
 for name in SETS:
     z = np.load(f"{DATA}/{name}.npz"); X, y = np.nan_to_num(z["X"][:100_000].astype(np.float32)), z["y"][:100_000].astype(int)
     for seed in SEEDS:
+        if (name, seed) in done:
+            continue
         rng = np.random.default_rng(1000 + seed)
         pool = rng.choice(len(y), min(len(y), 20_000), replace=False)
         keep = [k for k in np.unique(y[pool]) if (y[pool] == k).sum() >= 20]

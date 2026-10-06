@@ -1,0 +1,25 @@
+insects_abrupt_balanced clean fifo acc=0.7693 resets=0 dropped=0 changed=0 time=198s
+insects_abrupt_balanced clean ddm acc=0.7693 resets=0 dropped=0 changed=0 time=362s
+insects_abrupt_balanced clean pf acc=0.5899 resets=0 dropped=11353 changed=0 time=148s
+insects_abrupt_balanced clean pr acc=0.5040 resets=0 dropped=0 changed=14082 time=147s
+insects_abrupt_balanced sym20 fifo acc=0.7583 resets=0 dropped=0 changed=0 time=145s
+insects_abrupt_balanced sym20 ddm acc=0.7650 resets=5 dropped=0 changed=0 time=135s
+insects_abrupt_balanced sym20 pf acc=0.5795 resets=0 dropped=14449 changed=0 time=143s
+insects_abrupt_balanced sym20 pr acc=0.4637 resets=0 dropped=0 changed=17597 time=141s
+insects_abrupt_balanced burst fifo acc=0.7533 resets=0 dropped=0 changed=0 time=129s
+insects_abrupt_balanced burst ddm acc=0.7533 resets=0 dropped=0 changed=0 time=120s
+insects_abrupt_balanced burst pf acc=0.5854 resets=0 dropped=11675 changed=0 time=144s
+insects_abrupt_balanced burst pr acc=0.4846 resets=0 dropped=0 changed=14735 time=124s
+h2_rialto clean fifo acc=0.7551 resets=0 dropped=0 changed=0 time=53s
+h2_rialto clean ddm acc=0.7639 resets=59 dropped=0 changed=0 time=50s
+h2_rialto clean pf acc=0.3558 resets=0 dropped=18341 changed=0 time=55s
+h2_rialto clean pr acc=0.1129 resets=0 dropped=0 changed=26269 time=12s
+h2_rialto sym20 fifo acc=0.6980 resets=0 dropped=0 changed=0 time=52s
+h2_rialto sym20 ddm acc=0.6938 resets=16 dropped=0 changed=0 time=50s
+h2_rialto sym20 pf acc=0.3602 resets=0 dropped=19377 changed=0 time=54s
+h2_rialto sym20 pr acc=0.1179 resets=0 dropped=0 changed=26364 time=12s
+h2_rialto burst fifo acc=0.7448 resets=0 dropped=0 changed=0 time=51s
+h2_rialto burst ddm acc=0.7521 resets=59 dropped=0 changed=0 time=50s
+h2_rialto burst pf acc=0.3606 resets=0 dropped=18538 changed=0 time=55s
+h2_rialto burst pr acc=0.1129 resets=0 dropped=0 changed=26576 time=12s
+STREAM_DONE 12:40:46

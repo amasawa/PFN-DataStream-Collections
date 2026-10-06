@@ -145,3 +145,77 @@ Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime
 CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
 For debugging consider passing CUDA_LAUNCH_BLOCKING=1
 
+h2_airlines 3 done
+h2_airlines 4 done
+elec2 0 done
+elec2 1 done
+elec2 2 done
+elec2 3 done
+elec2 4 done
+h2_spam 0 done
+h2_spam 1 done
+h2_spam 2 done
+h2_spam 3 done
+h2_spam 4 done
+h2_phishing 0 done
+h2_phishing 1 done
+h2_phishing 2 done
+h2_phishing 3 done
+h2_phishing 4 done
+h2_rialto 0 done
+h2_rialto 1 done
+h2_rialto 2 done
+h2_rialto 3 done
+h2_rialto 4 done
+h2_weather 0 done
+h2_weather 1 done
+h2_weather 2 done
+h2_weather 3 done
+h2_weather 4 done
+== sym 20%: accuracy (%), mean over data sets
+clean          82.27
+noisy          78.91
+oracle_drop    81.63
+drop_dis       79.04
+relabel        78.53
+relabel2       78.56
+soft4          75.12
+rep4           71.79
+share of the loss recovered per data set
+                         oracle_drop  drop_dis  relabel  relabel2  soft4  rep4
+data                                                                          
+covertype                       0.81      0.30     0.02     -0.08  -0.75 -1.18
+elec2                           0.83      0.01    -0.04      0.05  -0.46 -1.96
+h2_airlines                     1.03      0.00     0.00      0.00  -2.91 -5.41
+h2_phishing                     0.88      0.07     0.09      0.19  -0.45 -2.17
+h2_poker                        0.85      0.34     0.14      0.06  -1.25 -3.21
+h2_rialto                       0.69     -0.21    -0.55     -0.57  -1.69 -0.52
+h2_spam                         0.95     -0.18    -0.20      0.16  -0.37 -0.37
+h2_weather                      0.81      0.04    -0.07     -0.01  -0.61 -5.68
+insects_abrupt_balanced         0.53      0.13     0.30     -0.12  -1.43 -2.76
+overall share recovered: {'oracle_drop': 0.81, 'drop_dis': 0.04, 'relabel': -0.11, 'relabel2': -0.1, 'soft4': -1.13, 'rep4': -2.12} | data sets not worse than noisy: {'oracle_drop': 9, 'drop_dis': 7, 'relabel': 5, 'relabel2': 5, 'soft4': 0, 'rep4': 0}
+flags: share flagged 0.150, precision 0.801, recall 0.516, relabelled to the true class 0.733; wrong labels 20% -> 16.2% -> 15.4%
+== asym 20%: accuracy (%), mean over data sets
+clean          82.27
+noisy          71.27
+oracle_drop    80.51
+drop_dis       70.49
+relabel        70.19
+relabel2       69.36
+soft4          67.42
+rep4           67.45
+share of the loss recovered per data set
+                         oracle_drop  drop_dis  relabel  relabel2  soft4  rep4
+data                                                                          
+covertype                       0.96     -0.02    -0.10     -0.25  -0.25 -2.00
+elec2                           0.93     -0.06    -0.05     -0.05  -0.34 -0.03
+h2_airlines                     0.92      0.01     0.01      0.01   0.11  0.33
+h2_phishing                     0.97     -0.09    -0.07     -0.10  -0.35 -1.69
+h2_poker                        0.96     -0.06    -0.10     -0.22  -0.82 -0.40
+h2_rialto                       0.23     -0.33    -0.47     -0.71  -1.16 -0.09
+h2_spam                         1.01     -0.24    -0.36     -0.79  -0.13 -0.28
+h2_weather                      0.92     -0.00    -0.02     -0.04  -0.25 -1.61
+insects_abrupt_balanced         0.45     -0.12    -0.09     -0.14  -0.09 -0.22
+overall share recovered: {'oracle_drop': 0.84, 'drop_dis': -0.07, 'relabel': -0.1, 'relabel2': -0.17, 'soft4': -0.35, 'rep4': -0.35} | data sets not worse than noisy: {'oracle_drop': 9, 'drop_dis': 1, 'relabel': 1, 'relabel2': 1, 'soft4': 1, 'rep4': 1}
+flags: share flagged 0.045, precision 0.147, recall 0.037, relabelled to the true class 0.122; wrong labels 20% -> 22.4% -> 23.4%
+PROBE_DONE 12:27:18

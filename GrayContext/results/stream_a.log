@@ -1,0 +1,95 @@
+grid_c30_b2000_s0 clean fifo acc=0.8210 resets=0 dropped=0 changed=0 time=75s
+grid_c30_b2000_s0 clean ddm acc=0.9375 resets=8 dropped=0 changed=0 time=76s
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/GrayContext/code/stream_obs.py", line 79, in <module>
+    run(s, c, p)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/GrayContext/code/stream_obs.py", line 68, in run
+    P_prev = f.predict(cx, cy, X[q]) if len(cy) else np.full((B, K), 1 / K)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/GrayContext/code/stream_obs.py", line 28, in predict
+    self.m.fit(Xc, yc); P[:, self.m.classes_.astype(int)] = self.m.predict_proba(Xq); return P
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 71, in __next__
+    value = next(self._inner)
+            ^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/parallel_execute.py", line 86, in parallel_execute
+    yield from _execute_in_current_thread(devices[0], functions)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/parallel_execute.py", line 97, in _execute_in_current_thread
+    yield function(device=device)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 812, in _call_model
+    return model(
+           ^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/architectures/tabpfn_v2.py", line 888, in forward
+    embedded_y_BRY, y_feature_means, unique_ys = self._embed_targets(
+                                                 ^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/architectures/tabpfn_v2.py", line 745, in _embed_targets
+    torch.unique(y_RB1[:num_train_labels, b]) for b in range(batch_size)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/_jit_internal.py", line 637, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/_jit_internal.py", line 637, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/functional.py", line 1102, in _return_output
+    output, _, _ = _unique_impl(input, sorted, return_inverse, return_counts, dim)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/functional.py", line 973, in _unique_impl
+    output, inverse_indices, counts = torch._unique2(
+                                      ^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 02:28:38
+grid_c30_b2000_s0 clean pf acc=0.5802 resets=0 dropped=7150 changed=0 time=138s
+grid_c30_b2000_s0 clean pr acc=0.5582 resets=0 dropped=0 changed=7618 time=140s
+grid_c30_b2000_s0 sym20 fifo acc=0.8049 resets=0 dropped=0 changed=0 time=137s
+grid_c30_b2000_s0 sym20 ddm acc=0.8980 resets=8 dropped=0 changed=0 time=156s
+grid_c30_b2000_s0 sym20 pf acc=0.5611 resets=0 dropped=9000 changed=0 time=55s
+grid_c30_b2000_s0 sym20 pr acc=0.5587 resets=0 dropped=0 changed=9021 time=56s
+grid_c30_b2000_s0 burst fifo acc=0.7978 resets=0 dropped=0 changed=0 time=57s
+grid_c30_b2000_s0 burst ddm acc=0.8984 resets=9 dropped=0 changed=0 time=52s
+grid_c30_b2000_s0 burst pf acc=0.5684 resets=0 dropped=7510 changed=0 time=59s
+grid_c30_b2000_s0 burst pr acc=0.5575 resets=0 dropped=0 changed=7816 time=54s
+elec2 clean fifo acc=0.8105 resets=0 dropped=0 changed=0 time=86s
+elec2 clean ddm acc=0.7973 resets=175 dropped=0 changed=0 time=84s
+elec2 clean pf acc=0.8035 resets=0 dropped=3289 changed=0 time=80s
+elec2 clean pr acc=0.7687 resets=0 dropped=0 changed=6627 time=87s
+elec2 sym20 fifo acc=0.8095 resets=0 dropped=0 changed=0 time=88s
+elec2 sym20 ddm acc=0.8094 resets=3 dropped=0 changed=0 time=80s
+elec2 sym20 pf acc=0.7879 resets=0 dropped=7848 changed=0 time=79s
+elec2 sym20 pr acc=0.7445 resets=0 dropped=0 changed=9821 time=80s
+elec2 burst fifo acc=0.7558 resets=0 dropped=0 changed=0 time=74s
+elec2 burst ddm acc=0.7485 resets=142 dropped=0 changed=0 time=79s
+elec2 burst pf acc=0.7678 resets=0 dropped=4229 changed=0 time=88s
+elec2 burst pr acc=0.7661 resets=0 dropped=0 changed=6854 time=84s
+STREAM_DONE 12:31:26

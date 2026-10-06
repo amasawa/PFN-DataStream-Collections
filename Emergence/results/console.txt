@@ -1,0 +1,84 @@
+covertype 0 done
+covertype 1 done
+covertype 2 done
+covertype 3 done
+covertype 4 done
+insects_abrupt_balanced 0 done
+insects_abrupt_balanced 1 done
+insects_abrupt_balanced 2 done
+insects_abrupt_balanced 3 done
+insects_abrupt_balanced 4 done
+h2_poker 0 done
+h2_poker 1 done
+h2_poker 2 done
+h2_poker 3 done
+h2_poker 4 done
+h2_airlines 0 done
+h2_airlines 1 done
+h2_airlines 2 done
+h2_airlines 3 done
+h2_airlines 4 done
+elec2 0 done
+elec2 1 done
+elec2 2 done
+elec2 3 done
+elec2 4 done
+h2_spam 0 done
+h2_spam 1 done
+h2_spam 2 done
+h2_spam 3 done
+h2_spam 4 done
+h2_phishing 0 done
+h2_phishing 1 done
+h2_phishing 2 done
+h2_phishing 3 done
+h2_phishing 4 done
+h2_rialto 0 done
+h2_rialto 1 done
+h2_rialto 2 done
+h2_rialto 3 done
+h2_rialto 4 done
+h2_weather 0 done
+h2_weather 1 done
+h2_weather 2 done
+h2_weather 3 done
+h2_weather 4 done
+mean over data sets and seeds, by the number of context rows of the emerging class
+     recall_new  em_recall_new  acc_old  em_acc_old   acc  em_acc  conf_new  conf_old  auroc_unc  em_share
+n_c                                                                                                       
+0           0.0            NaN     92.3         NaN  69.2     NaN      87.6      92.0       57.4       NaN
+1           3.3           49.6     92.3        73.9  70.0    67.9      85.0      91.8       69.7      31.3
+2           5.2           70.8     92.3        58.5  70.5    61.5      84.1      91.6       71.5      47.5
+5          10.8           72.9     92.2        64.2  71.9    66.4      82.5      91.5       75.3      41.5
+10         18.8           64.8     92.2        80.5  73.9    76.6      80.8      91.3       77.8      27.8
+20         28.5           58.5     92.2        88.3  76.2    80.9      79.9      90.9       78.6      19.9
+50         43.4           63.6     92.0        88.7  79.8    82.4      79.9      89.7       75.6      20.3
+100        55.6           65.8     91.2        88.9  82.3    83.1      80.8      88.2       69.3      20.7
+recall of the emerging class per data set
+n_c                      0     1     2     5     10    20    50    100
+data                                                                  
+covertype                0.0   7.8  10.3  15.2  28.6  47.6  63.2  72.7
+elec2                    0.0   0.0   0.7   0.7   1.2   3.0  13.0  26.5
+h2_airlines              0.0   0.0   0.0   0.1   0.0   0.0   0.0   0.4
+h2_phishing              0.0  14.6  20.9  40.2  54.6  60.2  68.3  77.0
+h2_poker                 0.0   1.3   4.4  20.7  29.4  54.0  82.8  93.4
+h2_rialto                0.0   0.6   2.8   7.7  17.4  30.8  56.0  78.1
+h2_spam                  0.0   5.2   5.8  12.1  36.4  55.6  78.0  87.9
+h2_weather               0.0   0.4   1.4   0.0   1.5   2.9   8.5  22.0
+insects_abrupt_balanced  0.0   0.2   0.8   0.7   0.4   2.1  21.0  42.0
+rule 1: recall at n_c = 10 relative to n_c = 100: mean 0.24 (need <= 0.70); <= 0.70 on 8 of 9 data sets (need 6)
+rule 2: EM prior correction closes 1.25 of the gap at n_c = 10 on average (open if < 0.50); change of old-class accuracy -11.69 points
+EM share of the gap closed per data set: {'covertype': 1.01, 'elec2': 1.68, 'h2_airlines': 112.0, 'h2_phishing': 0.98, 'h2_poker': 1.08, 'h2_rialto': 1.06, 'h2_spam': 0.66, 'h2_weather': 1.16, 'insects_abrupt_balanced': 1.77}
+before any labelled row of the class (n_c = 0): AUROC of 1 - max probability for new vs old rows
+                         auroc_unc  conf_new  conf_old
+data                                                  
+covertype                    0.703     0.798     0.902
+elec2                        0.500     1.000     1.000
+h2_airlines                  0.500     1.000     1.000
+h2_phishing                  0.500     1.000     1.000
+h2_poker                     0.735     0.873     0.972
+h2_rialto                    0.749     0.532     0.747
+h2_spam                      0.500     1.000     1.000
+h2_weather                   0.500     1.000     1.000
+insects_abrupt_balanced      0.475     0.685     0.662
+CHECK_DONE 12:32:16
