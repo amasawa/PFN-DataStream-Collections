@@ -181,3 +181,13 @@
   - T1 worst source: +hedge - full = 24.71 (need >= 10) -> holds
   - T2 best source: +hedge 4.57 vs half of full 2.39 -> holds
 - 运行期间的 GPU：145 samples (one per minute), mean utilisation 92.4%, minutes below 70%: 16, mean memory 6529 MiB（`results/gpu_util_stage2.csv`）；CUDA 重试 0 次。机器方面的记录见 `env/MACHINE_LOG.md`。
+
+## 2026-10-07 06:08：阶段 3（TabPFN 种子 1）结果——04:14 提前关机，分析在重启后手动运行
+- **中断**：WSL 在 04:14:40 正常关机（journal 是完整 systemd poweroff，与 01:35 那次相同，来自 Windows 一侧），早于 04:40 的自动分析和 commit；06:06 重启后手动运行 `seed_compare.py 1 2` 和 `analyse_backbone.py tabpfn_s1`（输出 `results/console_stage3_seeds.txt`、`console_stage3_tabpfn_s1.txt`）。
+- **完成度**：种子 1 真实流 36/39 完整（缺 gas、h2_rialto、h2_spam，关机时在跑）；种子 2 只有 3 个策略文件；合成流两个种子都没开始。种子 3 备用队列未用到。
+- **判定（只针对种子 1 真实流，PARTIAL）**：
+  - S1：完全重置逐流差值与种子 0 的 Pearson r = 0.975（≥ 0.9）→ 成立；平均绝对差 0.57 点。
+  - S2：来源加权平均的符号，完全重置 8/8、+hedge 8/8 与种子 0 一致；T1（最差来源 +hedge − full）种子 0 24.76、种子 1 24.37；T2 两个种子都成立 → 成立。
+  - H1'（真实流 full 低于 none）8/8 成立；真实流上 89.7% 的 28174 次非零重置是损失；+hedge 真实流平均 +0.34。H2'/H3'/H4' 的合成部分无数据，不作判定。
+- **GPU**：196 个样本（每分钟一个，00:55–04:13），平均利用率 95.8%，低于 70% 的分钟 8 个（`results/gpu_util_stage3.csv`）。
+- **结论**：真实流上的结论对 TabPFN 随机种子稳健；种子 2 和合成流未跑，需要的话用 `run_queue2.sh` 接着跑（已完成的文件会自动跳过）。

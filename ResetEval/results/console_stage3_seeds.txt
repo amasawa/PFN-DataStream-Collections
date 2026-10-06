@@ -1,0 +1,53 @@
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:34: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  for v in ("", "+hedge")}, m.mean(1)
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:34: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  for v in ("", "+hedge")}, m.mean(1)
+
+== seed 1 vs seed 0, real: 36/39 streams complete in both; Pearson r of per-stream d (full resets) 0.975; mean |diff| 0.57 points
+source-weighted mean d, seed 0 vs seed 1 :
+             seed0  seed1
+pol                      
+ddm          -0.53  -0.57
+eddm         -3.96  -4.62
+fhddm        -2.36  -2.25
+hddma        -4.27  -4.40
+hddmw        -3.66  -3.72
+adwin        -3.44  -3.30
+ph           -2.48  -2.41
+kswin        -3.13  -3.15
+ddm+half     -0.25  -0.42
+eddm+half    -0.44  -0.40
+fhddm+half   -0.07  -0.08
+hddma+half   -0.80  -0.67
+hddmw+half   -0.26  -0.11
+adwin+half   -0.41  -0.37
+ph+half      -0.23  -0.32
+kswin+half   -0.26  -0.07
+ddm+hedge     0.26   0.20
+eddm+hedge    0.30   0.36
+fhddm+hedge   0.12   0.14
+hddma+hedge   0.30   0.31
+hddmw+hedge   0.34   0.32
+adwin+hedge   0.38   0.46
+ph+hedge      0.55   0.52
+kswin+hedge   0.39   0.40
+S1 r >= 0.9 -> holds; S2 sign kept: full 8/8, +hedge 8/8; T1 (+hedge - full, worst source) {'seed0': np.float64(24.76), 'seed1': np.float64(24.37)}; T2 {'seed0': np.True_, 'seed1': np.True_} -> holds
+seed 2, real: no complete stream
+seed 1, syn: no complete stream
+seed 2, syn: no complete stream

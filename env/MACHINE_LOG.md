@@ -85,3 +85,7 @@ file modification times.
 
 ## 2026-10-07 02:15 ResetEval stage 2 (TabICL), unattended run finished (auto-written)
 - 9 queue chains; CUDA retries: 0; GPU: 145 samples (one per minute), mean utilisation 92.4%, minutes below 70%: 16, mean memory 6529 MiB.
+
+## 2026-10-07 04:14:40 第二次 WSL 关机
+- 与 01:35:57 相同：journal 中是完整的 systemd poweroff，来自 Windows 一侧，原因未知（早于预计的 05:00 重启约 45 分钟）。关机前 GPU 利用率 99–100%。
+- 后果：relay 04:40 的自动分析/commit 没有执行；06:08 重启后手动补跑并 commit。教训：自动收尾不要排在离预计重启时间太近的地方，或每完成一条流就增量 commit。
