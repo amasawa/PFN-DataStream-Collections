@@ -229,3 +229,26 @@
 - 完整输出：`results/console_queue_hsens.txt`。
 - **08:40 人工核对（hsens）**：81 条流都齐（没有 PARTIAL）。默认 +hedge 一行（最差来源 −1.64）、完全重置一行（最差来源 −26.23）与 10-06 23:38 的表相同，所以敏感性实验和原实验口径一致。7 个变体之间：真实流平均在 +0.24 到 +0.29 之间，最差来源在 −1.58 到 −1.73 之间，合成流在 +7.86 到 +7.93 之间，即 η 在 0.5–8、γ 在 0.25–0.9 的范围内结果几乎不变。事先的预期"η = 0.5 时 HS3 可能不成立"没有发生。结论：+hedge 的效果不依赖这两个超参数，可以写进论文。
 - **同一检查，资源**：07:59 和 08:01 显存两次连续超过 19.5 GB（19.8 GB、19.6 GB，当时有几条 covertype 段在跑），supervisor 各停掉 1 条种子链（seedR9、seedR8），把它们的流放回队列，GPU 链上限降到 7。之后显存 ≤ 17.4 GB，利用率 86–98%（08:09、08:14 两次低于 90%）。显存上限优先于利用率，所以不再加链。
+
+## 2026-10-07 起的无人值守运行：queue_seeds 全部完成，10-07 09:17 自动分析（自动写入，未经人工核对）
+- == seed 1 vs seed 0, real: 39/39 streams complete in both; Pearson r of per-stream d (full resets) 0.975; mean |diff| 0.56 points
+- S1 r >= 0.9 -> holds; S2 sign kept: full 8/8, +hedge 8/8; T1 (+hedge - full, worst source) {'seed0': np.float64(24.59), 'seed1': np.float64(24.29)}; T2 {'seed0': np.True_, 'seed1': np.True_} -> holds
+- == seed 2 vs seed 0, real: 39/39 streams complete in both; Pearson r of per-stream d (full resets) 0.973; mean |diff| 0.64 points
+- S1 r >= 0.9 -> holds; S2 sign kept: full 8/8, +hedge 8/8; T1 (+hedge - full, worst source) {'seed0': np.float64(24.59), 'seed2': np.float64(23.99)}; T2 {'seed0': np.True_, 'seed2': np.True_} -> holds
+- == seed 1 vs seed 0, syn: 42/42 streams complete in both; Pearson r of per-stream d (full resets) 0.999; mean |diff| 0.22 points
+- == seed 2 vs seed 0, syn: 42/42 streams complete in both; Pearson r of per-stream d (full resets) 0.999; mean |diff| 0.21 points
+- H1' full below none on real: 8/8 (need >= 6) -> holds
+- H2' full above none on synthetic: 8/8 (need >= 6) -> holds
+- H3' real: 87.8% of 29516 non-zero resets are losses; synthetic: 84.0% of 3283 resets are wins (need > 50% each) -> holds
+- H4' per detector 8/8; detector average: real +hedge 0.28 (need >= -0.2), synthetic +hedge 7.93 vs half of full 4.03 -> holds
+- tail over 19 real sources, detector-averaged (worst, best): {'full': (np.float64(-25.9), np.float64(6.18)), '+half': (np.float64(-4.02), np.float64(0.71)), '+hedge': (np.float64(-1.62), np.float64(5.98))}
+- T1 worst source: +hedge - full = 24.29 (need >= 10) -> holds
+- T2 best source: +hedge 5.98 vs half of full 3.09 -> holds
+- H1' full below none on real: 8/8 (need >= 6) -> holds
+- H2' full above none on synthetic: 8/8 (need >= 6) -> holds
+- H3' real: 88.0% of 29641 non-zero resets are losses; synthetic: 84.6% of 3284 resets are wins (need > 50% each) -> holds
+- H4' per detector 8/8; detector average: real +hedge 0.26 (need >= -0.2), synthetic +hedge 7.91 vs half of full 4.02 -> holds
+- tail over 19 real sources, detector-averaged (worst, best): {'full': (np.float64(-26.0), np.float64(6.94)), '+half': (np.float64(-3.76), np.float64(1.27)), '+hedge': (np.float64(-2.01), np.float64(6.6))}
+- T1 worst source: +hedge - full = 23.99 (need >= 10) -> holds
+- T2 best source: +hedge 6.60 vs half of full 3.47 -> holds
+- 完整输出：`results/console_queue_seeds.txt`。

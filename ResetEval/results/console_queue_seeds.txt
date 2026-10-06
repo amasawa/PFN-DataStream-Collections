@@ -1,0 +1,256 @@
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:34: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  for v in ("", "+hedge")}, m.mean(1)
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:34: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  for v in ("", "+hedge")}, m.mean(1)
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:34: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  for v in ("", "+hedge")}, m.mean(1)
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:33: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  return {v or "full": (m.loc[[x + v for x in DETS]].min(1).mean(), m.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/seed_compare.py:34: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  for v in ("", "+hedge")}, m.mean(1)
+
+== seed 1 vs seed 0, real: 39/39 streams complete in both; Pearson r of per-stream d (full resets) 0.975; mean |diff| 0.56 points
+source-weighted mean d, seed 0 vs seed 1 :
+             seed0  seed1
+pol                      
+ddm          -0.82  -0.89
+eddm         -3.71  -4.28
+fhddm        -2.33  -2.27
+hddma        -3.93  -3.97
+hddmw        -3.33  -3.39
+adwin        -3.21  -3.10
+ph           -2.41  -2.37
+kswin        -3.00  -2.95
+ddm+half     -0.36  -0.45
+eddm+half    -0.48  -0.42
+fhddm+half   -0.13  -0.07
+hddma+half   -0.82  -0.66
+hddmw+half   -0.32  -0.15
+adwin+half   -0.48  -0.37
+ph+half      -0.21  -0.26
+kswin+half   -0.31  -0.15
+ddm+hedge     0.16   0.14
+eddm+hedge    0.34   0.35
+fhddm+hedge   0.13   0.12
+hddma+hedge   0.20   0.20
+hddmw+hedge   0.30   0.27
+adwin+hedge   0.30   0.38
+ph+hedge      0.46   0.46
+kswin+hedge   0.29   0.33
+S1 r >= 0.9 -> holds; S2 sign kept: full 8/8, +hedge 8/8; T1 (+hedge - full, worst source) {'seed0': np.float64(24.59), 'seed1': np.float64(24.29)}; T2 {'seed0': np.True_, 'seed1': np.True_} -> holds
+
+== seed 2 vs seed 0, real: 39/39 streams complete in both; Pearson r of per-stream d (full resets) 0.973; mean |diff| 0.64 points
+source-weighted mean d, seed 0 vs seed 2 :
+             seed0  seed2
+pol                      
+ddm          -0.82  -0.69
+eddm         -3.71  -4.22
+fhddm        -2.33  -2.24
+hddma        -3.93  -3.85
+hddmw        -3.33  -3.10
+adwin        -3.21  -3.16
+ph           -2.41  -2.64
+kswin        -3.00  -3.10
+ddm+half     -0.36  -0.22
+eddm+half    -0.48  -0.43
+fhddm+half   -0.13  -0.07
+hddma+half   -0.82  -0.75
+hddmw+half   -0.32  -0.34
+adwin+half   -0.48  -0.42
+ph+half      -0.21   0.01
+kswin+half   -0.31  -0.36
+ddm+hedge     0.16   0.17
+eddm+hedge    0.34   0.31
+fhddm+hedge   0.13   0.03
+hddma+hedge   0.20   0.25
+hddmw+hedge   0.30   0.24
+adwin+hedge   0.30   0.34
+ph+hedge      0.46   0.45
+kswin+hedge   0.29   0.28
+S1 r >= 0.9 -> holds; S2 sign kept: full 8/8, +hedge 8/8; T1 (+hedge - full, worst source) {'seed0': np.float64(24.59), 'seed2': np.float64(23.99)}; T2 {'seed0': np.True_, 'seed2': np.True_} -> holds
+
+== seed 1 vs seed 0, syn: 42/42 streams complete in both; Pearson r of per-stream d (full resets) 0.999; mean |diff| 0.22 points
+
+== seed 2 vs seed 0, syn: 42/42 streams complete in both; Pearson r of per-stream d (full resets) 0.999; mean |diff| 0.21 points
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+
+== tabpfn_s1, real: source-weighted mean of d (points), 95% source bootstrap, Wilcoxon over sources, Holm over 8
+             sources  mean  median  pos  neg  ci_lo  ci_hi       p  p_holm
+pol                                                                       
+ddm               19 -0.89   -0.29    6   11  -2.28   0.50  0.1773   0.744
+eddm              19 -4.28   -0.43    5   13  -8.88  -0.49  0.0526   0.421
+fhddm             19 -2.27   -0.43    5   13  -5.03  -0.27  0.0582   0.421
+hddma             19 -3.97   -0.16    6   12  -8.96  -0.07  0.1570   0.744
+hddmw             19 -3.39   -1.01    5   13  -7.36  -0.19  0.0582   0.421
+adwin             19 -3.10   -0.16    6   11  -7.32   0.07  0.1930   0.744
+ph                19 -2.37   -0.29    7   11  -5.82   0.18  0.2311   0.744
+kswin             19 -2.95   -0.42    6   11  -6.58   0.03  0.1488   0.744
+ddm+half          19 -0.45    0.00    9    8  -1.21   0.13  0.6529   1.000
+eddm+half         19 -0.42   -0.07    7   11  -1.20   0.13  0.4724   1.000
+fhddm+half        19 -0.07   -0.02    6   11  -0.22   0.07  0.4631   1.000
+hddma+half        19 -0.66   -0.00    8   10  -1.62   0.03  0.5277   1.000
+hddmw+half        19 -0.15   -0.00    8   10  -0.41   0.09  0.4204   1.000
+adwin+half        19 -0.37   -0.01    7   10  -0.87   0.05  0.4631   1.000
+ph+half           19 -0.26   -0.02    7   10  -0.82   0.11  0.5540   1.000
+kswin+half        19 -0.15   -0.04    7   10  -0.45   0.11  0.5540   1.000
+ddm+hedge         19  0.14   -0.04    6   11  -0.58   1.10  0.4631   1.000
+eddm+hedge        19  0.35   -0.03    7   11  -0.31   1.24  0.7439   1.000
+fhddm+hedge       19  0.12   -0.04    6   12  -0.37   0.72  0.5862   1.000
+hddma+hedge       19  0.20   -0.03    6   12  -0.52   1.08  0.5277   1.000
+hddmw+hedge       19  0.27   -0.16    6   12  -0.34   1.04  0.7439   1.000
+adwin+hedge       19  0.38    0.00    8    9  -0.23   1.17  0.6874   1.000
+ph+hedge          19  0.46   -0.02    7   11  -0.08   1.22  0.8446   1.000
+kswin+hedge       19  0.33   -0.02    6   11  -0.28   1.14  0.8684   1.000
+
+== tabpfn_s1, syn: source-weighted mean of d (points), 95% source bootstrap, Wilcoxon over sources, Holm over 8
+             sources  mean  median  pos  neg  ci_lo  ci_hi       p  p_holm
+pol                                                                       
+ddm                7  9.45   10.07    7    0   3.85  15.48  0.0156  0.1250
+eddm               7  9.12   10.19    7    0   3.45  15.06  0.0156  0.1250
+fhddm              7  0.90    0.19    5    2  -0.01   2.46  0.1562  0.1562
+hddma              7  9.49   10.21    7    0   3.67  15.79  0.0156  0.1250
+hddmw              7  9.27   10.21    6    0   3.28  15.76  0.0312  0.1250
+adwin              7  9.05    9.76    7    0   3.91  14.31  0.0156  0.1250
+ph                 7  8.33    8.81    7    0   3.15  13.75  0.0156  0.1250
+kswin              7  8.88    9.15    5    0   2.90  15.30  0.0625  0.1250
+ddm+half           7  1.77    2.20    7    0   0.89   2.64  0.0156  0.1250
+eddm+half          7  3.46    4.44    7    0   1.45   5.41  0.0156  0.1250
+fhddm+half         7  0.45    0.26    5    2   0.13   0.82  0.0781  0.1250
+hddma+half         7  1.61    2.00    7    0   0.76   2.49  0.0156  0.1250
+hddmw+half         7  1.61    2.06    6    0   0.59   2.56  0.0312  0.1250
+adwin+half         7  1.91    2.30    7    0   0.89   3.20  0.0156  0.1250
+ph+half            7  2.20    3.08    7    0   0.99   3.42  0.0156  0.1250
+kswin+half         7  1.66    1.95    5    0   0.59   2.80  0.0625  0.1250
+ddm+hedge          7  9.24    9.61    7    0   3.78  15.08  0.0156  0.1250
+eddm+hedge         7  9.04    9.49    7    0   3.55  14.78  0.0156  0.1250
+fhddm+hedge        7  1.19    0.40    6    1   0.13   3.07  0.0469  0.1250
+hddma+hedge        7  9.19    9.66    7    0   3.51  15.33  0.0156  0.1250
+hddmw+hedge        7  8.99    9.66    6    0   3.10  15.21  0.0312  0.1250
+adwin+hedge        7  8.96    9.34    7    0   3.72  14.45  0.0156  0.1250
+ph+hedge           7  8.36    8.54    7    0   3.08  13.97  0.0156  0.1250
+kswin+hedge        7  8.51    8.57    5    0   2.73  14.68  0.0625  0.1250
+
+H1' full below none on real: 8/8 (need >= 6) -> holds
+H2' full above none on synthetic: 8/8 (need >= 6) -> holds
+H3' real: 87.8% of 29516 non-zero resets are losses; synthetic: 84.0% of 3283 resets are wins (need > 50% each) -> holds
+H4' per detector 8/8; detector average: real +hedge 0.28 (need >= -0.2), synthetic +hedge 7.93 vs half of full 4.03 -> holds
+tail over 19 real sources, detector-averaged (worst, best): {'full': (np.float64(-25.9), np.float64(6.18)), '+half': (np.float64(-4.02), np.float64(0.71)), '+hedge': (np.float64(-1.62), np.float64(5.98))}
+T1 worst source: +hedge - full = 24.29 (need >= 10) -> holds
+T2 best source: +hedge 5.98 vs half of full 3.09 -> holds
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+
+== tabpfn_s2, real: source-weighted mean of d (points), 95% source bootstrap, Wilcoxon over sources, Holm over 8
+             sources  mean  median  pos  neg  ci_lo  ci_hi       p  p_holm
+pol                                                                       
+ddm               19 -0.69   -0.26    5   12  -2.06   0.73  0.1930  0.7229
+eddm              19 -4.22   -0.51    5   13  -8.98  -0.36  0.0526  0.4210
+fhddm             19 -2.24   -0.54    5   13  -5.02  -0.28  0.0526  0.4210
+hddma             19 -3.85   -0.14    6   11  -8.83   0.05  0.1626  0.7229
+hddmw             19 -3.10   -0.87    5   13  -6.82  -0.05  0.0526  0.4210
+adwin             19 -3.16   -0.11    6   11  -7.63   0.28  0.2274  0.7229
+ph                19 -2.64   -0.43    7   11  -6.25   0.13  0.1841  0.7229
+kswin             19 -3.10   -0.49    6   12  -7.04   0.08  0.1446  0.7229
+ddm+half          19 -0.22    0.00    8    8  -0.67   0.17  0.7960  1.0000
+eddm+half         19 -0.43   -0.08    6   12  -1.10   0.09  0.1841  1.0000
+fhddm+half        19 -0.07    0.00    8    9  -0.28   0.12  0.7946  1.0000
+hddma+half        19 -0.75   -0.00    7   10  -1.76   0.04  0.4074  1.0000
+hddmw+half        19 -0.34   -0.02    7   11  -0.88   0.08  0.2668  1.0000
+adwin+half        19 -0.42   -0.01    7   10  -1.07   0.10  0.4348  1.0000
+ph+half           19  0.01   -0.03    6   12  -0.21   0.25  0.5862  1.0000
+kswin+half        19 -0.36    0.00    9    9  -0.91   0.08  0.4460  1.0000
+ddm+hedge         19  0.17   -0.06    5   12  -0.54   1.14  0.4925  1.0000
+eddm+hedge        19  0.31   -0.05    7   11  -0.41   1.29  0.7771  1.0000
+fhddm+hedge       19  0.03   -0.09    8   10  -0.54   0.68  0.5862  1.0000
+hddma+hedge       19  0.25   -0.01    7   10  -0.52   1.24  0.7226  1.0000
+hddmw+hedge       19  0.24   -0.13    7   11  -0.45   1.15  0.6791  1.0000
+adwin+hedge       19  0.34   -0.01    7   10  -0.34   1.22  0.9811  1.0000
+ph+hedge          19  0.45   -0.04    7   11  -0.12   1.29  0.9826  1.0000
+kswin+hedge       19  0.28   -0.02    6   12  -0.40   1.18  0.7112  1.0000
+
+== tabpfn_s2, syn: source-weighted mean of d (points), 95% source bootstrap, Wilcoxon over sources, Holm over 8
+             sources  mean  median  pos  neg  ci_lo  ci_hi       p  p_holm
+pol                                                                       
+ddm                7  9.50   10.05    7    0   3.91  15.58  0.0156  0.1250
+eddm               7  9.08   10.18    7    0   3.49  14.95  0.0156  0.1250
+fhddm              7  0.88    0.13    5    2  -0.00   2.37  0.1562  0.1562
+hddma              7  9.42   10.20    7    0   3.63  15.71  0.0156  0.1250
+hddmw              7  9.21   10.20    6    0   3.27  15.64  0.0312  0.1250
+adwin              7  9.05    9.95    7    0   3.93  14.36  0.0156  0.1250
+ph                 7  8.27    8.90    7    0   3.11  13.65  0.0156  0.1250
+kswin              7  8.86    9.28    6    0   2.94  15.21  0.0312  0.1250
+ddm+half           7  1.79    2.13    7    0   0.91   2.66  0.0156  0.1250
+eddm+half          7  3.53    4.54    7    0   1.51   5.53  0.0156  0.1250
+fhddm+half         7  0.50    0.19    5    2   0.13   0.99  0.0781  0.1250
+hddma+half         7  1.65    1.97    7    0   0.77   2.56  0.0156  0.1250
+hddmw+half         7  1.63    2.07    6    0   0.60   2.59  0.0312  0.1250
+adwin+half         7  1.99    2.26    7    0   0.91   3.31  0.0156  0.1250
+ph+half            7  2.21    3.10    7    0   1.01   3.45  0.0156  0.1250
+kswin+half         7  1.75    1.96    6    0   0.60   2.95  0.0312  0.1250
+ddm+hedge          7  9.20    9.61    7    0   3.75  15.02  0.0156  0.1250
+eddm+hedge         7  8.99    9.44    7    0   3.57  14.65  0.0156  0.1250
+fhddm+hedge        7  1.23    0.37    6    1   0.15   3.16  0.0312  0.1250
+hddma+hedge        7  9.15    9.64    7    0   3.50  15.25  0.0156  0.1250
+hddmw+hedge        7  8.95    9.64    6    0   3.09  15.14  0.0312  0.1250
+adwin+hedge        7  8.97    9.29    7    0   3.71  14.51  0.0156  0.1250
+ph+hedge           7  8.32    8.53    7    0   3.07  13.94  0.0156  0.1250
+kswin+hedge        7  8.47    8.53    6    0   2.74  14.56  0.0312  0.1250
+
+H1' full below none on real: 8/8 (need >= 6) -> holds
+H2' full above none on synthetic: 8/8 (need >= 6) -> holds
+H3' real: 88.0% of 29641 non-zero resets are losses; synthetic: 84.6% of 3284 resets are wins (need > 50% each) -> holds
+H4' per detector 8/8; detector average: real +hedge 0.26 (need >= -0.2), synthetic +hedge 7.91 vs half of full 4.02 -> holds
+tail over 19 real sources, detector-averaged (worst, best): {'full': (np.float64(-26.0), np.float64(6.94)), '+half': (np.float64(-3.76), np.float64(1.27)), '+hedge': (np.float64(-2.01), np.float64(6.6))}
+T1 worst source: +hedge - full = 23.99 (need >= 10) -> holds
+T2 best source: +hedge 6.60 vs half of full 3.47 -> holds
