@@ -70,3 +70,11 @@
 2026-10-07_09:38:29 util5 82% gmem 4231 ram 12465 gpu_chains 7/7 cpu_chains 4/4 unclaimed gpu 230 cpu 77 | queue_seeds 162 162 0 queue_M500 81 6 68 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 0 77 
 2026-10-07_09:40:31 start NCPU=4 GCAP=14
 2026-10-07_09:40:34 manual: restarted supervisor with GCAP=14 (M500 chains are light; cap 7 from the covertype memory spikes left util at 40-82%)
+2026-10-07_09:44:43 util5 94% gmem 4408 ram 12110 gpu_chains 7/14 cpu_chains 4/4 unclaimed gpu 225 cpu 76 | queue_seeds 162 162 0 queue_M500 81 11 63 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 1 76 
+2026-10-07_09:49:54 util5 82% gmem 4454 ram 11780 gpu_chains 7/14 cpu_chains 4/4 unclaimed gpu 223 cpu 73 | queue_seeds 162 162 0 queue_M500 81 13 61 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 4 73 
+2026-10-07_09:49:54 started g8
+2026-10-07_09:55:07 util5 80% gmem 5116 ram 12895 gpu_chains 8/14 cpu_chains 4/4 unclaimed gpu 217 cpu 71 | queue_seeds 162 162 0 queue_M500 81 18 55 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 6 71 
+2026-10-07_09:55:07 started g9
+2026-10-07_10:00:21 util5 98% gmem 5775 ram 14688 gpu_chains 9/14 cpu_chains 4/4 unclaimed gpu 215 cpu 69 | queue_seeds 162 162 0 queue_M500 81 19 53 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 8 69 
+2026-10-07_10:05:31 util5 74% gmem 6994 ram 12636 gpu_chains 9/14 cpu_chains 4/4 unclaimed gpu 199 cpu 66 | queue_seeds 162 162 0 queue_M500 81 35 37 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 11 66 
+2026-10-07_10:05:31 started g10
