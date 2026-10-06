@@ -292,4 +292,13 @@
 - **判定**：与 TabICL 阶段相同，H1'–H4'、T1、T2（`analyse_backbone.py tabdpt`）。另外在这里事先写定，用来检验 FIFO 吸收的解读：
   - D1：T1、T2 都成立（在三个 backbone 上都成立，才写成"不依赖 backbone"）；
   - D2：真实流上，完全重置的来源加权平均（检测器平均）为负，且净亏的单次重置 > 70%。
-- **预期**：H1'、H3'、T1 成立；TabDPT 自带检索式上下文的处理，在长上下文上的表现可能与 TabPFN 不同，H2' 和 H4' 不确定。
+- **预期**：H1'、H3'、T1 成立；TabDPT 的上下文缩减只在超过它的上下文上限时才起作用，M = 1000 时不会触发；它的预训练和 TabPFN 不同，所以 H2' 和 H4' 不确定。
+
+## 2026-10-07 起的无人值守运行：queue_trained_nb 全部完成，10-07 10:57 自动分析（自动写入，未经人工核对）
+- 81 common streams; detector-averaged (real mean, worst real source, synthetic mean):
+- full reset: nb [  7.29 -11.7   13.71], TabPFN [ -2.84 -26.23   8.02]
+- +hedge:     nb [ 8.35 -6.92 12.82], TabPFN [ 0.27 -1.64  7.91]
+- TR1 full-reset real mean: nb - TabPFN = 10.14 (need >= 2) -> holds
+- TR2 worst real source: nb - TabPFN = 14.53 (need >= 10) -> holds
+- TR3 real: 48.8% of 32149 non-zero resets are losses for nb (TabPFN 88.1% of 29211; need < 70%) -> holds
+- 完整输出：`results/console_queue_trained_nb.txt`。

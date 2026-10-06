@@ -99,3 +99,7 @@
 2026-10-07_10:40:23 manual: restarted with GKILL=19000 GHITS=1 GADMIT=15000 GCAP=8 (10:23 peak 20622 MiB exceeded the 20 GB limit before the two-sample rule fired; M2000 chains are heavier)
 2026-10-07_10:42:21 manual: restarted with queue_tabdpt appended to GPU_Q, chains now run_queue4.sh (same flags)
 2026-10-07_10:42:21 start NCPU=4 GCAP=8
+2026-10-07_10:46:33 util5 99% gmem 18554 ram 12428 gpu_chains 8/8 cpu_chains 4/4 unclaimed gpu 111 cpu 35 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 1 30 queue_seeds3b 0 0 0 queue_tabdpt 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 42 35 
+2026-10-07_10:51:46 util5 99% gmem 17244 ram 11462 gpu_chains 8/8 cpu_chains 4/4 unclaimed gpu 111 cpu 18 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 1 30 queue_seeds3b 0 0 0 queue_tabdpt 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 59 18 
+2026-10-07_10:56:59 util5 100% gmem 14493 ram 11912 gpu_chains 8/8 cpu_chains 0/4 unclaimed gpu 110 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 2 29 queue_seeds3b 0 0 0 queue_tabdpt 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_10:56:59 queue queue_trained_nb complete -> stage_done.sh

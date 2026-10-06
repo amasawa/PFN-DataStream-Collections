@@ -247,3 +247,51 @@ h4_poker_e ddm acc=0.8369 resets=374 new_calls=1105 time=0s
 h4_poker_e ddm+half acc=0.9249 resets=231 new_calls=1676 time=421s
 h4_poker_e ddm+hedge acc=0.9290 resets=216 new_calls=1810 time=105s
 h4_poker_e eddm acc=0.8073 resets=361 new_calls=1819 time=7s
+h4_poker_e eddm+half acc=0.9307 resets=124 new_calls=2202 time=309s
+h4_poker_e eddm+hedge acc=0.9307 resets=124 new_calls=2353 time=111s
+h4_poker_e fhddm acc=0.8297 resets=197 new_calls=2404 time=38s
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 178, in <module>
+    ap.add_argument("streams", nargs="+")
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 157, in run
+    break
+^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 87, in get
+    self.X, self.y, self.K, self.f, self.new = X, y, K, None, 0
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 72, in predict
+    return P
+             
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 74, in __next__
+    torch.cuda.synchronize(self._device)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1281, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 10:50:45 h4_poker_e_M2000
+h4_poker_e fhddm+half acc=0.9327 resets=82 new_calls=430 time=315s

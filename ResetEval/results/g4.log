@@ -268,3 +268,9 @@ grid_c100_b2000_s10 kswin acc=0.8117 resets=13 new_calls=212 time=9s
 grid_c100_b2000_s10 kswin+half acc=0.8035 resets=11 new_calls=212 time=10s
 grid_c100_b2000_s10 kswin+hedge acc=0.8124 resets=14 new_calls=212 time=10s
 STREAM_DONE 10:16:03 grid_c100_b2000_s10_M500
+h4_covertype_d none acc=0.9658 resets=0 new_calls=989 time=1799s
+h4_covertype_d ddmM acc=0.9074 resets=86 new_calls=998 time=13s
+h4_covertype_d ddm acc=0.9074 resets=86 new_calls=998 time=0s
+h4_covertype_d ddm+half acc=0.9644 resets=153 new_calls=1237 time=292s
+h4_covertype_d ddm+hedge acc=0.9657 resets=7 new_calls=1246 time=10s
+h4_covertype_d eddm acc=0.8693 resets=151 new_calls=1255 time=10s

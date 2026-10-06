@@ -169,3 +169,9 @@ h4_airlines_d eddm acc=0.6669 resets=4 new_calls=1059 time=6s
 h4_airlines_d eddm+half acc=0.6673 resets=3 new_calls=1059 time=0s
 h4_airlines_d eddm+hedge acc=0.6612 resets=309 new_calls=1299 time=169s
 h4_airlines_d fhddm acc=0.6570 resets=43 new_calls=1577 time=214s
+h4_airlines_d fhddm+half acc=0.6670 resets=33 new_calls=1856 time=223s
+h4_airlines_d fhddm+hedge acc=0.6657 resets=33 new_calls=2015 time=125s
+h4_airlines_d hddma acc=0.6663 resets=5 new_calls=2070 time=43s
+h4_airlines_d hddma+half acc=0.6669 resets=14 new_calls=2162 time=71s
+h4_airlines_d hddma+hedge acc=0.6667 resets=16 new_calls=2280 time=87s
+h4_airlines_d hddmw acc=0.6331 resets=152 new_calls=2399 time=87s

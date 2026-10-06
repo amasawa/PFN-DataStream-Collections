@@ -274,3 +274,24 @@ kdd ddm acc=0.9865 resets=58 new_calls=1125 time=0s
 kdd ddm+half acc=0.9898 resets=55 new_calls=1340 time=313s
 kdd ddm+hedge acc=0.9893 resets=54 new_calls=1375 time=51s
 kdd eddm acc=0.9874 resets=24 new_calls=1449 time=113s
+kdd eddm+half acc=0.9898 resets=18 new_calls=1509 time=101s
+kdd eddm+hedge acc=0.9902 resets=18 new_calls=1527 time=30s
+kdd fhddm acc=0.9867 resets=18 new_calls=1589 time=62s
+kdd fhddm+half acc=0.9896 resets=13 new_calls=1663 time=121s
+kdd fhddm+hedge acc=0.9874 resets=17 new_calls=1685 time=15s
+kdd hddma acc=0.9877 resets=35 new_calls=1697 time=21s
+kdd hddma+half acc=0.9898 resets=29 new_calls=1717 time=31s
+kdd hddma+hedge acc=0.9900 resets=28 new_calls=1717 time=2s
+kdd hddmw acc=0.9877 resets=27 new_calls=1735 time=28s
+kdd hddmw+half acc=0.9898 resets=23 new_calls=1741 time=10s
+kdd hddmw+hedge acc=0.9900 resets=23 new_calls=1741 time=1s
+kdd adwin acc=0.9875 resets=33 new_calls=1813 time=26s
+kdd adwin+half acc=0.9898 resets=27 new_calls=1850 time=38s
+kdd adwin+hedge acc=0.9900 resets=27 new_calls=1850 time=0s
+kdd ph acc=0.9898 resets=11 new_calls=1906 time=18s
+kdd ph+half acc=0.9900 resets=11 new_calls=1938 time=23s
+kdd ph+hedge acc=0.9905 resets=11 new_calls=1989 time=0s
+kdd kswin acc=0.9874 resets=27 new_calls=1989 time=51s
+kdd kswin+half acc=0.9899 resets=22 new_calls=1989 time=50s
+kdd kswin+hedge acc=0.9900 resets=21 new_calls=1989 time=51s
+STREAM_DONE 10:53:47 kdd_M2000
