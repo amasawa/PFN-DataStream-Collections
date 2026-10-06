@@ -1,0 +1,31 @@
+RESTART 06:11:34
+home ddm+half acc=0.9757 resets=45 new_calls=151 time=93s
+home ddm+hedge acc=0.9809 resets=36 new_calls=243 time=16s
+home eddm acc=0.9823 resets=24 new_calls=280 time=14s
+home eddm+half acc=0.9741 resets=37 new_calls=304 time=13s
+home eddm+hedge acc=0.9820 resets=25 new_calls=304 time=0s
+home fhddm acc=0.9788 resets=20 new_calls=446 time=0s
+home fhddm+half acc=0.9739 resets=27 new_calls=536 time=57s
+home fhddm+hedge acc=0.9788 resets=20 new_calls=536 time=0s
+home hddma acc=0.9847 resets=30 new_calls=545 time=2s
+home hddma+half acc=0.9751 resets=43 new_calls=547 time=3s
+home hddma+hedge acc=0.9827 resets=31 new_calls=547 time=2s
+home hddmw acc=0.9834 resets=27 new_calls=547 time=1s
+home hddmw+half acc=0.9750 resets=38 new_calls=548 time=1s
+home hddmw+hedge acc=0.9827 resets=28 new_calls=548 time=1s
+home adwin acc=0.9834 resets=27 new_calls=557 time=0s
+home adwin+half acc=0.9742 resets=39 new_calls=575 time=6s
+home adwin+hedge acc=0.9827 resets=28 new_calls=584 time=0s
+home ph acc=0.9815 resets=19 new_calls=604 time=2s
+home ph+half acc=0.9759 resets=28 new_calls=643 time=17s
+home ph+hedge acc=0.9809 resets=21 new_calls=656 time=0s
+home kswin acc=0.9830 resets=27 new_calls=667 time=45s
+home kswin+half acc=0.9750 resets=38 new_calls=667 time=44s
+home kswin+hedge acc=0.9813 resets=28 new_calls=677 time=45s
+STREAM_DONE 06:17:38 home_s2
+h4_poker_d none acc=0.9411 resets=0 new_calls=999 time=731s
+h4_poker_d ddmM acc=0.8593 resets=393 new_calls=1741 time=457s
+h4_poker_d ddm acc=0.8597 resets=389 new_calls=1746 time=3s
+h4_poker_d ddm+half acc=0.9142 resets=301 new_calls=2347 time=272s
+h4_poker_d ddm+hedge acc=0.9292 resets=239 new_calls=2768 time=164s
+h4_poker_d eddm acc=0.8317 resets=319 new_calls=3269 time=175s

@@ -1,0 +1,45 @@
+RESTART 06:11:20
+STREAM_DONE 06:11:22 insects_abrupt_imbalanced_s1
+STREAM_DONE 06:11:24 insects_gradual_imbalanced_s1
+STREAM_DONE 06:11:25 home_s1
+STREAM_DONE 06:11:27 h4_covertype_e_s1
+STREAM_DONE 06:11:28 h3_poker_c_s1
+STREAM_DONE 06:11:29 h3_covertype_b_s1
+STREAM_DONE 06:11:30 chest_s1
+STREAM_DONE 06:11:32 insects_abrupt_balanced_s1
+STREAM_DONE 06:11:33 h2_weather_s1
+STREAM_DONE 06:11:34 wall_s1
+kdd none acc=0.9895 resets=0 new_calls=199 time=64s
+kdd ddmM acc=0.9868 resets=61 new_calls=470 time=161s
+kdd ddm acc=0.9868 resets=60 new_calls=471 time=1s
+kdd ddm+half acc=0.9891 resets=51 new_calls=649 time=143s
+kdd ddm+hedge acc=0.9887 resets=55 new_calls=686 time=22s
+kdd eddm acc=0.9876 resets=21 new_calls=751 time=59s
+kdd eddm+half acc=0.9891 resets=21 new_calls=779 time=30s
+kdd eddm+hedge acc=0.9893 resets=19 new_calls=790 time=10s
+kdd fhddm acc=0.9863 resets=20 new_calls=884 time=28s
+kdd fhddm+half acc=0.9894 resets=14 new_calls=935 time=49s
+kdd fhddm+hedge acc=0.9870 resets=18 new_calls=945 time=10s
+kdd hddma acc=0.9881 resets=34 new_calls=952 time=8s
+kdd hddma+half acc=0.9890 resets=31 new_calls=956 time=6s
+kdd hddma+hedge acc=0.9894 resets=30 new_calls=956 time=2s
+kdd hddmw acc=0.9880 resets=28 new_calls=971 time=9s
+kdd hddmw+half acc=0.9890 resets=24 new_calls=976 time=5s
+kdd hddmw+hedge acc=0.9894 resets=23 new_calls=976 time=1s
+kdd adwin acc=0.9880 resets=31 new_calls=1039 time=7s
+kdd adwin+half acc=0.9890 resets=28 new_calls=1059 time=14s
+kdd adwin+hedge acc=0.9894 resets=27 new_calls=1059 time=0s
+kdd ph acc=0.9897 resets=12 new_calls=1109 time=5s
+kdd ph+half acc=0.9894 resets=12 new_calls=1126 time=3s
+kdd ph+hedge acc=0.9898 resets=12 new_calls=1135 time=0s
+kdd kswin acc=0.9879 resets=24 new_calls=1135 time=45s
+kdd kswin+half acc=0.9891 resets=21 new_calls=1135 time=45s
+kdd kswin+hedge acc=0.9894 resets=20 new_calls=1135 time=45s
+STREAM_DONE 06:24:26 kdd_s2
+h4_covertype_d none acc=0.9621 resets=0 new_calls=999 time=841s
+h4_covertype_d ddmM acc=0.9377 resets=26 new_calls=1048 time=24s
+h4_covertype_d ddm acc=0.9377 resets=26 new_calls=1048 time=0s
+h4_covertype_d ddm+half acc=0.9609 resets=6 new_calls=1058 time=6s
+h4_covertype_d ddm+hedge acc=0.9610 resets=90 new_calls=1316 time=125s
+h4_covertype_d eddm acc=0.5138 resets=744 new_calls=2211 time=326s
+h4_covertype_d eddm+half acc=0.9287 resets=84 new_calls=2395 time=89s

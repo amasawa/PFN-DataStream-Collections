@@ -191,3 +191,33 @@
   - H1'（真实流 full 低于 none）8/8 成立；真实流上 89.7% 的 28174 次非零重置是损失；+hedge 真实流平均 +0.34。H2'/H3'/H4' 的合成部分无数据，不作判定。
 - **GPU**：196 个样本（每分钟一个，00:55–04:13），平均利用率 95.8%，低于 70% 的分钟 8 个（`results/gpu_util_stage3.csv`）。
 - **结论**：真实流上的结论对 TabPFN 随机种子稳健；种子 2 和合成流未跑，需要的话用 `run_queue2.sh` 接着跑（已完成的文件会自动跳过）。
+
+## 2026-10-07 06:11：阶段 3 续跑（用户："接着跑种子2和合成流"）
+- 删掉 `~/.reset_locks/queue_seeds`，用同一队列 `results/queue_seeds.txt` 重开 9 条 `run_queue2.sh` 链（tmux `seedR1`–`seedR9`，日志 `results/seedR*.log`）；已完成的策略文件自动跳过。剩下的是：种子 1 的 gas、h2_rialto、h2_spam，种子 2 的 39 条真实流，以及两个种子各 42 条合成流。
+- tmux `gpu_sampler3` 接着往 `results/gpu_util_stage3.csv` 记录；`code/finish_stage3.sh`（tmux `finish3`）在 9 条链都 CHAIN_DONE 后运行 `seed_compare.py 1 2` 和 `analyse_backbone.py tabpfn_s1/s2`，把结果追加到本日志，再 commit 并 push。吸取 04:14 的教训，运行期间每小时把日志 commit 一次。判定标准不变（S1、S2，以及每个种子的 H1'–H4'、T1、T2）。
+- 开跑 1 分钟后：GPU 99%，显存 13.2 GB。
+
+## 2026-10-07 06:22：无人值守运行的安排与事先写定的判定（用户："你自己迭代吧，保持 util 利用率不低 90 吧，然后内存不超过 20G，就行了，结束一个任务你就帮我自己迭代加任务上去"）
+- **约束的执行**：`code/supervisor.sh`（tmux `supervisor`，决定记到 `results/supervisor.txt`）。"内存不超过 20G"对 GPU 显存和系统内存都执行。规则如下：
+  - 每分钟采样一次。显存连续两次 > 19.5 GB，就停掉最新的一条 GPU 链，把它正在跑的那条流放回队列，GPU 链的上限减一；内存 > 19.5 GB，先停 CPU 链。
+  - 每 5 分钟判断一次。平均利用率 < 90%、显存 < 16.5 GB、内存 < 17 GB，并且 GPU 队列还有没领走的行，就加一条 GPU 链（< 70% 时加两条）。
+  - CPU 链最多保持 5 条。
+  - 某个队列全部完成时，`code/stage_done.sh` 运行这个队列对应的分析，把判定追加到本日志，再 commit 并 push。
+  - 每小时 commit 一次日志。
+  - 原来阶段 3 的 `finish3` 已停掉，由 supervisor 接管（队列 `queue_seeds` 完成时运行 `seed_compare.py 1 2` 和 `analyse_backbone.py tabpfn_s1/s2`，判定 S1、S2 不变）。
+- **新的链脚本** `code/run_queue3.sh`：按顺序处理多个队列。行格式为"流 数据目录 种子 M 策略集 类型"。完成的行写 done 标记；被停掉的行解锁后，会在下一遍被重新领走。
+- **代码改动**（旧策略的输出不变）：
+  - `reset_eval.py` 加了 `RESET_POLSET=hsens`（策略名 `<det>+hedge@e<η>g<γ>`）。核对：在 bank 上，`ddm+hedge@e2g0.5`、`adwin+hedge@e2.0g0.5` 与原来的 `+hedge` 逐批准确率、重置位置完全相同。
+  - 缓存写盘时与磁盘上的文件合并，因为现在会有多个进程共用 seed 0 的缓存。
+  - `analyse_backbone.py` 可以接受 `tabpfn_M500` 这样的目录名。
+- **GPU 队列（按顺序）**：
+  1. `queue_seeds`（阶段 3 剩余部分）；
+  2. `queue_M500`、`queue_M2000`：TabPFN 种子 0，上下文预算 M = 500、2000，81 条流 × 26 个策略。属于 RQ2，判定沿用 H1'–H4'、T1、T2；
+  3. `queue_seeds3b`：种子 3，作备用。
+- **CPU 队列（nice 19）**：
+  1. `queue_hsens`：+hedge 的超参数敏感性。TabPFN 种子 0，M = 1000，7 个变体（γ = 0.5 时 η ∈ {0.5, 1, 4, 8}；η = 2 时 γ ∈ {0.25, 0.75, 0.9}），8 个检测器，大部分预测走缓存。
+  2. `queue_trained_ht`、`queue_trained_nb`：训练式学习器对照（RQ2 后半）。`code/trained_eval.py`，river 0.26.1 的 HoeffdingTree 和 GaussianNB，默认参数，协议与 TFM 相同（批 100、标签晚一批、每批最多一次检测）。策略为 none、8 个检测器的完全重置（换一个新模型），以及 +hedge（不重置的模型与重置后的模型按同一规则混合）。
+- **判定（运行前写定，`code/analyse_variants.py`）**：
+  - +hedge 敏感性，对每个变体：HS1 真实流检测器平均 ≥ −0.2；HS2 最差来源上比完全重置好 ≥ 10 点；HS3 合成流保留完全重置收益的至少一半。7 个变体都满足三条，才算"对超参数稳健"。
+  - 训练式对照，与同一批流上的 TabPFN 比较：TR1 完全重置的真实流平均（检测器平均）比 TabPFN 高 ≥ 2 点；TR2 最差来源比 TabPFN 好 ≥ 10 点；TR3 真实流上非零单次重置的净亏比例 < 70%（TabPFN 约 88%）。
+  - 预期：HS 大体成立，η 很小（0.5）时混合跟不上，HS3 可能不成立；TR1–TR3 成立。如果 TR 不成立，"TFM 特有"的说法要撤回，改成"错误驱动的重置普遍有风险"。

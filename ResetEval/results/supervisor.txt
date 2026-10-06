@@ -1,0 +1,18 @@
+2026-10-07_06:22:36 start NCPU=5 GCAP=12
+2026-10-07_06:30:13 start NCPU=5 GCAP=12
+2026-10-07_06:30:39 start NCPU=5 GCAP=12
+2026-10-07_06:31:03 start NCPU=5 GCAP=12
+2026-10-07_06:38:21 start NCPU=5 GCAP=12
+2026-10-07_06:42:23 util5 98% gmem 8395 ram 13157 gpu_chains 9/12 cpu_chains 0/5 unclaimed gpu 355 cpu 243 | queue_seeds 162 41 112 queue_M500 81 0 81 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 0 81 queue_trained_ht 81 0 81 queue_trained_nb 81 0 81 
+2026-10-07_06:42:23 started c1
+2026-10-07_06:42:25 started c2
+2026-10-07_06:42:27 started c3
+2026-10-07_06:42:29 started c4
+2026-10-07_06:42:31 started c5
+2026-10-07_06:44:51 manual: stopped c1-c5 (CUDA init error from expandable_segments on WSL), removed that setting from run_queue3.sh
+2026-10-07_06:47:36 util5 93% gmem 7788 ram 13195 gpu_chains 9/12 cpu_chains 0/5 unclaimed gpu 354 cpu 243 | queue_seeds 162 42 111 queue_M500 81 0 81 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 0 81 queue_trained_ht 81 0 81 queue_trained_nb 81 0 81 
+2026-10-07_06:47:36 started c6
+2026-10-07_06:47:38 started c7
+2026-10-07_06:47:40 started c8
+2026-10-07_06:47:42 started c9
+2026-10-07_06:47:44 started c10

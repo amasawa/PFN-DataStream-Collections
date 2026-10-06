@@ -1,0 +1,6 @@
+home ph+hedge@e1g0.5 acc=0.9806 resets=21 new_calls=5 time=5s
+home ph+hedge@e4g0.5 acc=0.9805 resets=21 new_calls=5 time=0s
+home ph+hedge@e8g0.5 acc=0.9804 resets=22 new_calls=14 time=0s
+home ph+hedge@e2g0.25 acc=0.9805 resets=21 new_calls=14 time=0s
+home ph+hedge@e2g0.75 acc=0.9807 resets=21 new_calls=14 time=0s
+home ph+hedge@e2g0.9 acc=0.9807 resets=21 new_calls=14 time=0s

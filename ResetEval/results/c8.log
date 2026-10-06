@@ -1,0 +1,5 @@
+insects_gradual_imbalanced ddm+hedge@e4g0.5 acc=0.8167 resets=6 new_calls=6 time=9s
+insects_gradual_imbalanced ddm+hedge@e8g0.5 acc=0.8167 resets=6 new_calls=6 time=0s
+insects_gradual_imbalanced ddm+hedge@e2g0.25 acc=0.8167 resets=6 new_calls=6 time=0s
+insects_gradual_imbalanced ddm+hedge@e2g0.75 acc=0.8167 resets=6 new_calls=6 time=0s
+insects_gradual_imbalanced ddm+hedge@e2g0.9 acc=0.8167 resets=6 new_calls=6 time=0s

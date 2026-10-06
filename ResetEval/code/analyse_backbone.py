@@ -7,7 +7,7 @@ Source-weighted means as in cluster_tests.py. Per-reset effect as in analyse_sta
   H4' +hedge on real >= -0.2 and on synthetic >= half of the full-reset gain (per detector and on the detector average)
   T1  detector-averaged worst real source: +hedge at least 10 points better than full reset
   T2  detector-averaged best real source: +hedge at least half of full reset's
-Usage: python analyse_backbone.py tabicl|tabpfn -> ../results/stage2_<backbone>_summary.csv, _tests.csv, printed verdicts"""
+Usage: python analyse_backbone.py tabicl|tabpfn|tabpfn_s<s>|tabpfn_M<M> -> ../results/stage2_<backbone>_summary.csv, _tests.csv, printed verdicts"""
 import os
 import sys
 
@@ -21,7 +21,7 @@ NEW = ["gas", "occupancy", "room", "bank", "kdd", "eeg", "news", "home", "wall",
 
 
 def main(bb):
-    d = f"{RES}/{bb}_M1000"
+    d = f"{RES}/{bb}" if "_M" in bb else f"{RES}/{bb}_M1000"     # e.g. tabpfn, tabpfn_s1, tabpfn_M500
     rows, rr = [], []
     for grp, streams in (("real", REAL + NEW), ("syn", SYN)):
         done = [s for s in streams if all(os.path.exists(f"{d}/{s}__{p}.npz") for p in POLS)]

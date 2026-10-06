@@ -1,0 +1,30 @@
+RESTART 06:11:28
+STREAM_DONE 06:11:29 h3_insects_b_s1
+STREAM_DONE 06:11:30 h2_airlines_s1
+STREAM_DONE 06:11:32 insects_incremental_balanced_s1
+STREAM_DONE 06:11:33 occupancy_s1
+STREAM_DONE 06:11:34 room_s1
+insects_gradual_imbalanced none acc=0.8157 resets=0 new_calls=1232 time=1419s
+insects_gradual_imbalanced ddmM acc=0.8161 resets=8 new_calls=1288 time=35s
+insects_gradual_imbalanced ddm acc=0.8161 resets=8 new_calls=1288 time=0s
+insects_gradual_imbalanced ddm+half acc=0.8161 resets=9 new_calls=1325 time=23s
+insects_gradual_imbalanced ddm+hedge acc=0.8159 resets=3 new_calls=1337 time=7s
+insects_gradual_imbalanced eddm acc=0.8146 resets=21 new_calls=1423 time=43s
+insects_gradual_imbalanced eddm+half acc=0.8152 resets=66 new_calls=1581 time=93s
+insects_gradual_imbalanced eddm+hedge acc=0.8152 resets=86 new_calls=1812 time=104s
+insects_gradual_imbalanced fhddm acc=0.8158 resets=7 new_calls=1872 time=32s
+insects_gradual_imbalanced fhddm+half acc=0.8160 resets=8 new_calls=1907 time=21s
+insects_gradual_imbalanced fhddm+hedge acc=0.8162 resets=7 new_calls=1907 time=0s
+insects_gradual_imbalanced hddma acc=0.8161 resets=6 new_calls=1947 time=18s
+insects_gradual_imbalanced hddma+half acc=0.8159 resets=6 new_calls=1975 time=14s
+insects_gradual_imbalanced hddma+hedge acc=0.8165 resets=6 new_calls=1984 time=5s
+insects_gradual_imbalanced hddmw acc=0.8162 resets=14 new_calls=2073 time=39s
+insects_gradual_imbalanced hddmw+half acc=0.8157 resets=16 new_calls=2129 time=29s
+insects_gradual_imbalanced hddmw+hedge acc=0.8169 resets=16 new_calls=2156 time=12s
+insects_gradual_imbalanced adwin acc=0.8169 resets=8 new_calls=2192 time=16s
+insects_gradual_imbalanced adwin+half acc=0.8160 resets=10 new_calls=2217 time=14s
+insects_gradual_imbalanced adwin+hedge acc=0.8170 resets=8 new_calls=2235 time=8s
+insects_gradual_imbalanced ph acc=0.8159 resets=16 new_calls=2327 time=41s
+insects_gradual_imbalanced ph+half acc=0.8159 resets=17 new_calls=2385 time=26s
+insects_gradual_imbalanced ph+hedge acc=0.8169 resets=15 new_calls=2448 time=23s
+insects_gradual_imbalanced kswin acc=0.8171 resets=3 new_calls=2454 time=82s

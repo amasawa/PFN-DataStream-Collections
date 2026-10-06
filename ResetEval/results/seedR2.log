@@ -1,0 +1,46 @@
+RESTART 06:11:22
+STREAM_DONE 06:11:24 covertype_s1
+STREAM_DONE 06:11:25 kdd_s1
+STREAM_DONE 06:11:27 h4_poker_d_s1
+STREAM_DONE 06:11:28 h4_airlines_d_s1
+STREAM_DONE 06:11:29 h3_covertype_c_s1
+STREAM_DONE 06:11:30 h2_poker_s1
+STREAM_DONE 06:11:31 elec2_s1
+STREAM_DONE 06:11:33 insects_gradual_balanced_s1
+h2_spam ddmM acc=0.9205 resets=11 new_calls=61 time=354s
+h2_spam ddm acc=0.9205 resets=11 new_calls=61 time=0s
+h2_spam ddm+half acc=0.9418 resets=4 new_calls=94 time=277s
+h2_spam ddm+hedge acc=0.9416 resets=4 new_calls=107 time=82s
+h2_spam eddm acc=0.9192 resets=10 new_calls=150 time=134s
+h2_spam eddm+half acc=0.9408 resets=7 new_calls=175 time=158s
+h2_spam eddm+hedge acc=0.9431 resets=7 new_calls=208 time=142s
+h2_spam fhddm acc=0.9392 resets=2 new_calls=220 time=49s
+h2_spam fhddm+half acc=0.9448 resets=1 new_calls=225 time=30s
+h2_spam fhddm+hedge acc=0.9421 resets=2 new_calls=225 time=0s
+h2_spam hddma acc=0.9351 resets=7 new_calls=234 time=22s
+h2_spam hddma+half acc=0.9421 resets=6 new_calls=240 time=34s
+h2_spam hddma+hedge acc=0.9408 resets=6 new_calls=244 time=12s
+h2_spam hddmw acc=0.9356 resets=3 new_calls=244 time=0s
+h2_spam hddmw+half acc=0.9430 resets=2 new_calls=244 time=0s
+h2_spam hddmw+hedge acc=0.9389 resets=3 new_calls=244 time=0s
+h2_spam adwin acc=0.9372 resets=2 new_calls=244 time=0s
+h2_spam adwin+half acc=0.9430 resets=2 new_calls=244 time=0s
+h2_spam adwin+hedge acc=0.9415 resets=2 new_calls=256 time=52s
+h2_spam ph acc=0.9369 resets=2 new_calls=266 time=44s
+h2_spam ph+half acc=0.9420 resets=2 new_calls=273 time=39s
+h2_spam ph+hedge acc=0.9410 resets=2 new_calls=279 time=22s
+h2_spam kswin acc=0.9344 resets=3 new_calls=281 time=7s
+h2_spam kswin+half acc=0.9430 resets=2 new_calls=281 time=3s
+h2_spam kswin+hedge acc=0.9367 resets=3 new_calls=281 time=3s
+STREAM_DONE 06:35:59 h2_spam_s1
+h4_airlines_d none acc=0.6588 resets=0 new_calls=999 time=427s
+h4_airlines_d ddmM acc=0.6582 resets=3 new_calls=1026 time=10s
+h4_airlines_d ddm acc=0.6582 resets=3 new_calls=1026 time=0s
+h4_airlines_d ddm+half acc=0.6586 resets=3 new_calls=1037 time=5s
+h4_airlines_d ddm+hedge acc=0.6584 resets=5 new_calls=1061 time=9s
+h4_airlines_d eddm acc=0.6580 resets=7 new_calls=1077 time=7s
+h4_airlines_d eddm+half acc=0.6567 resets=99 new_calls=1218 time=51s
+h4_airlines_d eddm+hedge acc=0.6586 resets=7 new_calls=1218 time=0s
+h4_airlines_d fhddm acc=0.6526 resets=42 new_calls=1558 time=105s
+h4_airlines_d fhddm+half acc=0.6582 resets=33 new_calls=1722 time=59s
+h4_airlines_d fhddm+hedge acc=0.6575 resets=34 new_calls=1782 time=22s

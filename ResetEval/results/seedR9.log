@@ -1,0 +1,8 @@
+RESTART 06:11:36
+h4_poker_e none acc=0.9164 resets=0 new_calls=999 time=712s
+h4_poker_e ddmM acc=0.8338 resets=430 new_calls=1856 time=626s
+h4_poker_e ddm acc=0.8331 resets=424 new_calls=1868 time=8s
+h4_poker_e ddm+half acc=0.8961 resets=313 new_calls=2533 time=331s
+h4_poker_e ddm+hedge acc=0.9089 resets=303 new_calls=2948 time=174s
+h4_poker_e eddm acc=0.8154 resets=351 new_calls=3430 time=179s
+h4_poker_e eddm+half acc=0.9011 resets=176 new_calls=3752 time=111s

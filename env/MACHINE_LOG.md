@@ -89,3 +89,8 @@ file modification times.
 ## 2026-10-07 04:14:40 第二次 WSL 关机
 - 与 01:35:57 相同：journal 中是完整的 systemd poweroff，来自 Windows 一侧，原因未知（早于预计的 05:00 重启约 45 分钟）。关机前 GPU 利用率 99–100%。
 - 后果：relay 04:40 的自动分析/commit 没有执行；06:08 重启后手动补跑并 commit。教训：自动收尾不要排在离预计重启时间太近的地方，或每完成一条流就增量 commit。
+
+## 2026-10-07 06:44 `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` breaks CUDA under WSL
+- Symptom: every new TabPFN process started with this setting failed at model load with `RuntimeError: CUDA driver error: unknown error` (ResetEval c1–c5 logs). Processes without it ran normally on the same GPU at the same time.
+- Fix: removed the setting from `ResetEval/code/run_queue3.sh` and restarted the chains. Do not use expandable segments on this machine.
+- Also: the supervisor's first version died after 5 min (`(( ) / 0`): `${a[@]: -5}` on an array shorter than 5 elements is empty. Fixed 06:38.

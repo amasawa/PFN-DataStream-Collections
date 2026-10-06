@@ -1,0 +1,14 @@
+RESTART 06:11:30
+STREAM_DONE 06:11:31 insects_incremental_abrupt_balanced_s1
+STREAM_DONE 06:11:32 news_s1
+STREAM_DONE 06:11:34 h2_phishing_s1
+covertype none acc=0.9479 resets=0 new_calls=1099 time=909s
+covertype ddmM acc=0.9414 resets=61 new_calls=1258 time=121s
+covertype ddm acc=0.9414 resets=60 new_calls=1259 time=1s
+covertype ddm+half acc=0.9478 resets=118 new_calls=1486 time=165s
+covertype ddm+hedge acc=0.9482 resets=84 new_calls=1692 time=132s
+covertype eddm acc=0.8925 resets=256 new_calls=2118 time=230s
+covertype eddm+half acc=0.9477 resets=159 new_calls=2585 time=236s
+covertype eddm+hedge acc=0.9482 resets=178 new_calls=3347 time=290s
+covertype fhddm acc=0.9346 resets=54 new_calls=3514 time=64s
+covertype fhddm+half acc=0.9473 resets=20 new_calls=3579 time=40s

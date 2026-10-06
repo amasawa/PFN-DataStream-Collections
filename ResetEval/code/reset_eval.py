@@ -18,7 +18,8 @@ Detectors <det> (river 0.26.1, default parameters; input = per-row 0/1 error of 
   ddm eddm fhddm hddma hddmw adwin ph kswin
 At most one detection per labelled batch (the rest of the batch is not fed after a detection), as in MICE.
 Environment: RESET_BACKBONE=tabpfn|tabicl, RESET_M (default 1000), RESET_DATA (stream directory, default MICE/data),
-RESET_SEED (backbone random_state, default 0; seed s > 0 writes to <backbone>_s<s>_M<M> and cache_<backbone>_s<s>).
+RESET_SEED (backbone random_state, default 0; seed s > 0 writes to <backbone>_s<s>_M<M> and cache_<backbone>_s<s>),
+RESET_POLSET (std = the policies above, default; hsens = the +hedge sensitivity variants <det>+hedge@e<eta>g<gamma>).
 Usage: python reset_eval.py <stream> [...] [--pols none ddm ...] -> ../results/<backbone>_M<M>/<stream>__<pol>.npz"""
 import argparse
 import os
@@ -41,6 +42,8 @@ TAG = BB if SEED == 0 else f"{BB}_s{SEED}"
 DETS = {"ddm": DDM, "eddm": EDDM, "fhddm": FHDDM, "hddma": HDDMA, "hddmw": HDDMW, "adwin": ADWIN, "ph": PageHinkley,
         "kswin": lambda: KSWIN(seed=0)}
 POLS = ["none", "ddmM"] + [d + v for d in DETS for v in ("", "+half", "+hedge")]
+HSENS = [f"+hedge@e{e}g{g}" for e, g in [(0.5, 0.5), (1, 0.5), (4, 0.5), (8, 0.5), (2, 0.25), (2, 0.75), (2, 0.9)]]
+POLSETS = {"std": POLS, "hsens": [d + v for d in DETS for v in HSENS]}
 
 
 class TFM:
@@ -87,8 +90,10 @@ class Cache:
                 self.save()
         return self.d[key].astype(np.float64)
 
-    def save(self):
+    def save(self):                                     # merge with the file on disk: another process may share the cache
         os.makedirs(os.path.dirname(self.path), exist_ok=True)
+        if os.path.exists(self.path):
+            self.d = {**pickle.load(open(self.path, "rb")), **self.d}
         pickle.dump(self.d, open(self.path + ".tmp", "wb"))
         os.replace(self.path + ".tmp", self.path)
 
@@ -116,6 +121,8 @@ def run(stream, pol, cache, X, y):
     if os.path.exists(dst):
         return
     det_name, _, var = pol.partition("+")
+    hedge = var.startswith("hedge")
+    eta, gam = (float(v) for v in var[7:].split("g")) if "@" in var else (2.0, 0.5)   # hedge@e<eta>g<gamma>
     T = len(y) // B
     acc, ll, lo_used = np.full(T, np.nan), np.full(T, np.nan), np.zeros(T, int)
     det = DDMCopy() if pol == "ddmM" else None if pol == "none" else DETS[det_name]()
@@ -124,10 +131,10 @@ def run(stream, pol, cache, X, y):
     for t in range(1, T):
         yq = y[t * B:(t + 1) * B]
         if errs is not None and det is not None:
-            if Pq is not None and var == "hedge":
+            if Pq is not None and hedge:
                 yb = y[(t - 1) * B:t * B]
                 for k, P in Pq.items():
-                    L[k] = 0.5 * L[k] - np.log(np.clip(P[np.arange(B), yb], 1e-6, 1)).mean()
+                    L[k] = gam * L[k] - np.log(np.clip(P[np.arange(B), yb], 1e-6, 1)).mean()
             for e in errs:
                 if isinstance(det, DDMCopy):
                     hit = det.feed(int(e))
@@ -137,14 +144,14 @@ def run(stream, pol, cache, X, y):
                 if hit:
                     start = t * B - M // 2 if var == "half" else (t - 1) * B
                     resets.append(t)
-                    if var == "hedge":
+                    if hedge:
                         L["reset"] = L["fifo"]
                     break
         lo_f = max(0, t * B - M)
         lo = max(start, lo_f)
-        if var == "hedge":
+        if hedge:
             Pq = {"fifo": cache.get(lo_f, t), "reset": cache.get(lo, t)}
-            w = np.exp(-2.0 * (np.array([L["fifo"], L["reset"]]) - min(L.values()))); w /= w.sum()
+            w = np.exp(-eta * (np.array([L["fifo"], L["reset"]]) - min(L.values()))); w /= w.sum()
             P = w[0] * Pq["fifo"] + w[1] * Pq["reset"]
         else:
             P = cache.get(lo, t)
@@ -161,7 +168,7 @@ def run(stream, pol, cache, X, y):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("streams", nargs="+")
-    ap.add_argument("--pols", nargs="+", default=POLS)
+    ap.add_argument("--pols", nargs="+", default=POLSETS[os.environ.get("RESET_POLSET", "std")])
     a = ap.parse_args()
     for s in a.streams:
         z = np.load(f"{DATA}/{s}.npz")

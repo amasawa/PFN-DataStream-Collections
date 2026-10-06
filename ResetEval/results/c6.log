@@ -1,0 +1,7 @@
+insects_abrupt_imbalanced ddm+hedge@e0.5g0.5 acc=0.7959 resets=6 new_calls=9 time=10s
+insects_abrupt_imbalanced ddm+hedge@e1g0.5 acc=0.7950 resets=5 new_calls=13 time=3s
+insects_abrupt_imbalanced ddm+hedge@e4g0.5 acc=0.7962 resets=6 new_calls=16 time=2s
+insects_abrupt_imbalanced ddm+hedge@e8g0.5 acc=0.7940 resets=2 new_calls=25 time=6s
+insects_abrupt_imbalanced ddm+hedge@e2g0.25 acc=0.7962 resets=5 new_calls=25 time=0s
+insects_abrupt_imbalanced ddm+hedge@e2g0.75 acc=0.7962 resets=5 new_calls=25 time=0s
+insects_abrupt_imbalanced ddm+hedge@e2g0.9 acc=0.7962 resets=6 new_calls=25 time=0s

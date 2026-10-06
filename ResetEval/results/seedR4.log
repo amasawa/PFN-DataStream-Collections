@@ -1,0 +1,34 @@
+RESTART 06:11:26
+STREAM_DONE 06:11:27 h4_airlines_e_s1
+STREAM_DONE 06:11:28 h3_insects_c_s1
+STREAM_DONE 06:11:29 h3_airlines_b_s1
+STREAM_DONE 06:11:31 insects_incremental_reoccurring_balanced_s1
+STREAM_DONE 06:11:32 bank_s1
+STREAM_DONE 06:11:33 eeg_s1
+insects_abrupt_imbalanced none acc=0.7943 resets=0 new_calls=1099 time=1295s
+insects_abrupt_imbalanced ddmM acc=0.7966 resets=5 new_calls=1136 time=25s
+insects_abrupt_imbalanced ddm acc=0.7966 resets=5 new_calls=1136 time=0s
+insects_abrupt_imbalanced ddm+half acc=0.7953 resets=5 new_calls=1161 time=19s
+insects_abrupt_imbalanced ddm+hedge acc=0.7943 resets=1 new_calls=1161 time=0s
+insects_abrupt_imbalanced eddm acc=0.7940 resets=4 new_calls=1182 time=14s
+insects_abrupt_imbalanced eddm+half acc=0.7942 resets=10 new_calls=1204 time=16s
+insects_abrupt_imbalanced eddm+hedge acc=0.7937 resets=38 new_calls=1307 time=57s
+insects_abrupt_imbalanced fhddm acc=0.7946 resets=11 new_calls=1397 time=52s
+insects_abrupt_imbalanced fhddm+half acc=0.7949 resets=11 new_calls=1442 time=29s
+insects_abrupt_imbalanced fhddm+hedge acc=0.7952 resets=11 new_calls=1442 time=0s
+insects_abrupt_imbalanced hddma acc=0.7977 resets=7 new_calls=1500 time=31s
+insects_abrupt_imbalanced hddma+half acc=0.7953 resets=7 new_calls=1525 time=17s
+insects_abrupt_imbalanced hddma+hedge acc=0.7976 resets=7 new_calls=1525 time=1s
+insects_abrupt_imbalanced hddmw acc=0.7971 resets=16 new_calls=1618 time=55s
+insects_abrupt_imbalanced hddmw+half acc=0.7949 resets=16 new_calls=1683 time=41s
+insects_abrupt_imbalanced hddmw+hedge acc=0.7976 resets=17 new_calls=1701 time=10s
+insects_abrupt_imbalanced adwin acc=0.7980 resets=7 new_calls=1710 time=5s
+insects_abrupt_imbalanced adwin+half acc=0.7955 resets=9 new_calls=1720 time=6s
+insects_abrupt_imbalanced adwin+hedge acc=0.7979 resets=8 new_calls=1747 time=13s
+insects_abrupt_imbalanced ph acc=0.7972 resets=16 new_calls=1837 time=44s
+insects_abrupt_imbalanced ph+half acc=0.7958 resets=19 new_calls=1901 time=39s
+insects_abrupt_imbalanced ph+hedge acc=0.7978 resets=15 new_calls=1937 time=19s
+insects_abrupt_imbalanced kswin acc=0.7980 resets=7 new_calls=1946 time=90s
+insects_abrupt_imbalanced kswin+half acc=0.7952 resets=8 new_calls=1961 time=96s
+insects_abrupt_imbalanced kswin+hedge acc=0.7978 resets=9 new_calls=1965 time=84s
+STREAM_DONE 06:45:52 insects_abrupt_imbalanced_s2

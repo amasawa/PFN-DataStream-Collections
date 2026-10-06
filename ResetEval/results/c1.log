@@ -1,0 +1,135 @@
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 178, in <module>
+    run(s, p, cache, X, y)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 153, in run
+    Pq = {"fifo": cache.get(lo_f, t), "reset": cache.get(lo, t)}
+                                               ^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 87, in get
+    self.d[key] = self.f.predict(self.X[lo:t * B], self.y[lo:t * B], self.X[t * B:(t + 1) * B]).astype(np.float16)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 69, in predict
+    self.m.fit(Xc, yc)
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 960, in fit
+    self.executor_ = create_inference_engine(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/base.py", line 385, in create_inference_engine
+    return InferenceEngineCachePreprocessing(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 694, in __init__
+    self.to(devices, self.force_inference_dtype, self.dtype_byte_size)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 232, in to
+    self._move_models_to_devices(devices)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 318, in _move_models_to_devices
+    model_cache.to(devices)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 1391, in to
+    self._models = {device: get_on_device(device) for device in devices}
+                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 1387, in get_on_device
+    return spare_models.pop().to(device)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1388, in to
+    return self._apply(convert)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 933, in _apply
+    module._apply(fn)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 966, in _apply
+    param_applied = fn(param)
+                    ^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1374, in convert
+    return t.to(
+           ^^^^^
+RuntimeError: CUDA driver error: unknown error
+RETRY 06:42:30 insects_abrupt_imbalanced_hsens
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 178, in <module>
+    run(s, p, cache, X, y)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 153, in run
+    Pq = {"fifo": cache.get(lo_f, t), "reset": cache.get(lo, t)}
+                                               ^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 87, in get
+    self.d[key] = self.f.predict(self.X[lo:t * B], self.y[lo:t * B], self.X[t * B:(t + 1) * B]).astype(np.float16)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 69, in predict
+    self.m.fit(Xc, yc)
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 960, in fit
+    self.executor_ = create_inference_engine(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/base.py", line 385, in create_inference_engine
+    return InferenceEngineCachePreprocessing(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 694, in __init__
+    self.to(devices, self.force_inference_dtype, self.dtype_byte_size)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 232, in to
+    self._move_models_to_devices(devices)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 318, in _move_models_to_devices
+    model_cache.to(devices)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 1391, in to
+    self._models = {device: get_on_device(device) for device in devices}
+                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 1387, in get_on_device
+    return spare_models.pop().to(device)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1388, in to
+    return self._apply(convert)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 933, in _apply
+    module._apply(fn)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 966, in _apply
+    param_applied = fn(param)
+                    ^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1374, in convert
+    return t.to(
+           ^^^^^
+RuntimeError: CUDA driver error: unknown error
+RETRY 06:43:21 insects_abrupt_imbalanced_hsens
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 178, in <module>
+    run(s, p, cache, X, y)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 153, in run
+    Pq = {"fifo": cache.get(lo_f, t), "reset": cache.get(lo, t)}
+                                               ^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 87, in get
+    self.d[key] = self.f.predict(self.X[lo:t * B], self.y[lo:t * B], self.X[t * B:(t + 1) * B]).astype(np.float16)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 69, in predict
+    self.m.fit(Xc, yc)
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 960, in fit
+    self.executor_ = create_inference_engine(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/base.py", line 385, in create_inference_engine
+    return InferenceEngineCachePreprocessing(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 694, in __init__
+    self.to(devices, self.force_inference_dtype, self.dtype_byte_size)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 232, in to
+    self._move_models_to_devices(devices)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 318, in _move_models_to_devices
+    model_cache.to(devices)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 1391, in to
+    self._models = {device: get_on_device(device) for device in devices}
+                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 1387, in get_on_device
+    return spare_models.pop().to(device)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1388, in to
+    return self._apply(convert)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 933, in _apply
+    module._apply(fn)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 966, in _apply
+    param_applied = fn(param)
+                    ^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1374, in convert
+    return t.to(
+           ^^^^^
+RuntimeError: CUDA driver error: unknown error
+RETRY 06:44:12 insects_abrupt_imbalanced_hsens
