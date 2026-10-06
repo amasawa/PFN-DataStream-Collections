@@ -21,4 +21,8 @@ echo "- 运行期间的 GPU：$STATS（\`results/gpu_util_stage2.csv\`）；CUDA
 { echo; echo "## 2026-10-07 $(date +%H:%M) ResetEval stage 2 (TabICL), unattended run finished (auto-written)"
   echo "- 9 queue chains; CUDA retries: $RET; GPU: $STATS."; } >> ../../env/MACHINE_LOG.md
 tmux kill-session -t gpu_sampler 2>/dev/null
+cd ../.. && git add ResetEval/logs ResetEval/results ResetEval/code env/MACHINE_LOG.md && \
+  git commit -q -m "ResetEval stage 2 (TabICL): unattended finish, analysis and logs (auto-committed)" \
+    -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && \
+  git push origin main >> ResetEval/results/finish_stage2.txt 2>&1; cd ResetEval/code
 echo FINISHED $(date +%T) >> ../results/finish_stage2.txt

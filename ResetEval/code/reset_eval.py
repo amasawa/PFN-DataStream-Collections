@@ -17,7 +17,8 @@ Policies (name):
 Detectors <det> (river 0.26.1, default parameters; input = per-row 0/1 error of the policy's own prediction):
   ddm eddm fhddm hddma hddmw adwin ph kswin
 At most one detection per labelled batch (the rest of the batch is not fed after a detection), as in MICE.
-Environment: RESET_BACKBONE=tabpfn|tabicl, RESET_M (default 1000), RESET_DATA (stream directory, default MICE/data).
+Environment: RESET_BACKBONE=tabpfn|tabicl, RESET_M (default 1000), RESET_DATA (stream directory, default MICE/data),
+RESET_SEED (backbone random_state, default 0; seed s > 0 writes to <backbone>_s<s>_M<M> and cache_<backbone>_s<s>).
 Usage: python reset_eval.py <stream> [...] [--pols none ddm ...] -> ../results/<backbone>_M<M>/<stream>__<pol>.npz"""
 import argparse
 import os
@@ -35,6 +36,8 @@ DATA = os.environ.get("RESET_DATA", os.path.join(os.path.dirname(os.path.abspath
 RES = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "results")
 B, M = 100, int(os.environ.get("RESET_M", 1000))
 BB = os.environ.get("RESET_BACKBONE", "tabpfn")
+SEED = int(os.environ.get("RESET_SEED", 0))                       # backbone random_state; 0 keeps the original paths
+TAG = BB if SEED == 0 else f"{BB}_s{SEED}"
 DETS = {"ddm": DDM, "eddm": EDDM, "fhddm": FHDDM, "hddma": HDDMA, "hddmw": HDDMW, "adwin": ADWIN, "ph": PageHinkley,
         "kswin": lambda: KSWIN(seed=0)}
 POLS = ["none", "ddmM"] + [d + v for d in DETS for v in ("", "+half", "+hedge")]
@@ -69,7 +72,7 @@ class TFM:
 
 class Cache:
     def __init__(self, stream, X, y, K):
-        self.path = f"{RES}/cache_{BB}/{stream}.pkl"
+        self.path = f"{RES}/cache_{TAG}/{stream}.pkl"
         self.X, self.y, self.K, self.f, self.new = X, y, K, None, 0
         self.d = pickle.load(open(self.path, "rb")) if os.path.exists(self.path) else {}
 
@@ -77,7 +80,7 @@ class Cache:
         key = (int(lo), int(t))
         if key not in self.d:
             if self.f is None:
-                self.f = TFM(self.K)
+                self.f = TFM(self.K, seed=SEED)
             self.d[key] = self.f.predict(self.X[lo:t * B], self.y[lo:t * B], self.X[t * B:(t + 1) * B]).astype(np.float16)
             self.new += 1
             if self.new % 200 == 0:
@@ -108,7 +111,7 @@ class DDMCopy:
 
 
 def run(stream, pol, cache, X, y):
-    out = f"{RES}/{BB}_M{M}"
+    out = f"{RES}/{TAG}_M{M}"
     dst = f"{out}/{stream}__{pol}.npz"
     if os.path.exists(dst):
         return

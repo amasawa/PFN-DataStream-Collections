@@ -157,3 +157,27 @@
 - **如果 05:00 重启时还没跑完**：所有结果按策略写盘、缓存每 200 次调用写盘，重启后用同样的命令重开 9 条链即可接着跑（先删 `~/.reset_locks/queue_tabicl`，已完成的文件会自动跳过），再运行 `finish_stage2.sh`。
 - **23:50 记录安排**（用户："跑完记录到log里面，不光要记录做了什么实验得到什么结论还要记录这个机器的故障，我们怎么解决的，怎么监督利用率"）：机器故障、处理办法和利用率的监督方法写在 `env/MACHINE_LOG.md`（所有项目共用）；tmux `gpu_sampler` 每分钟记一行 GPU 利用率、显存和进程数到 `results/gpu_util_stage2.csv`；`finish_stage2.sh` 跑完后自动在本日志和 `env/MACHINE_LOG.md` 末尾追加判定结果、平均利用率、低于 70% 的分钟数和重试次数。
 - **23:58 进度与截止**：开跑 21 分钟后，按 TabPFN 的逐策略耗时折算，完成约 5.7%（不计正在跑的流），整体可能要 3–6 小时，可能赶不上 05:00 重启。`finish_stage2.sh` 改为：9 条链都结束，或到 04:45，二者先到就运行分析；`analyse_backbone.py` 只用 26 个策略都齐的流，缺的流列为 PARTIAL，此时日志标题写明"部分结果，判定不作数"，并写出重启后续跑的步骤。队列是真实流在前，所以没跑完时缺的主要是合成流。
+- **00:16** 已 commit 并 push（817752d）；`finish_stage2.sh` 结束时会把 ResetEval 的日志、结果表、代码和 `env/MACHINE_LOG.md` 自动 commit 并 push 到 main。
+
+## 2026-10-07 00:55：阶段 3——TabPFN 换种子的重复（用户："那跑完还继续继续安排2小时的任务，反正你别让利用率掉下来，直到5点自动关机"；设计与判定在运行前写定）
+- **动机**：阶段 1 每条流只跑了一次（种子 0）；本阶段检验结论是否依赖 backbone 的随机性。同时在 TabICL 结束后到 05:00 重启前让 GPU 不空闲。
+- **代码**：`reset_eval.py` 加环境变量 RESET_SEED（TabPFN 的 random_state，默认 0 时路径不变；s > 0 时写到 `tabpfn_s<s>_M1000/`、`cache_tabpfn_s<s>/`）。队列脚本另存为 `run_queue2.sh`（队列行多一列种子）；正在跑的 `run_queue.sh` 没有改动（bash 边读边执行，改运行中的脚本可能出错；已从 git 恢复原样，逐字节一致）。
+- **队列** `results/queue_seeds.txt`：种子 1 的 39 条真实流（从长到短）→ 种子 2 的真实流 → 两个种子的合成流。
+- **接力**（`code/relay_seeds.sh`，tmux `relay`）：每有一条 TabICL 链结束，就启动一条种子链，保持约 9 个 GPU 进程；04:35 之后不再启动新链；04:40（或全部种子链结束）时运行 `seed_compare.py 1 2` 和 `analyse_backbone.py tabpfn_s1/s2`，结果追加到本日志，并 commit、push。利用率由 tmux `gpu_sampler3` 每分钟记录到 `results/gpu_util_stage3.csv`。
+- **判定**（只用两个种子都跑完 26 个策略的流）：
+  - S1：完全重置的逐流差值（8 个检测器合并）在种子 s 与种子 0 之间的 Pearson r ≥ 0.9（真实流）。
+  - S2：在同一批真实流上，完全重置和 +hedge 的来源加权平均，8 个检测器中至少 7 个与种子 0 同号；T1（+hedge 在最差来源上比完全重置好 ≥ 10 点）和 T2 在两个种子上都成立。
+- **预期**：时间只够种子 1 的大部分真实流，可能加上种子 2 的一部分；没跑完的部分会列为 PARTIAL。
+- **01:35:57 中断与 01:38 重开**：WSL 虚拟机在 01:35:57 正常关机（journal 里是 systemd 完整的 poweroff 流程，不是 OOM 或进程崩溃；关机指令来自 Windows 一侧，原因未知）。关机前 GPU 利用率 99–100%，9 条链 0 次重试。01:38 删除 `~/.reset_locks/queue_tabicl`，用同一队列重开 9 条 TabICL 链（`icl1`–`icl9` 日志里有 RESTART 行），同时重开 `gpu_sampler`、`finish2`、`relay`（含 `gpu_sampler3`）。已完成的策略文件自动跳过；关机时正在跑的策略从头重跑。04:35/04:40/04:45 的截止时间不变。
+- **01:44 保持利用率**（用户："如果5点前跑完任务你就放一点任务去跑，保持利用率90以上"）：新增 `code/keep_busy.sh`（tmux `keep_busy`）。它每 5 分钟算一次 GPU 平均利用率，低于 90% 就多开一条 `run_queue2.sh` 链。这些链先消化 `queue_seeds.txt`（和 relay 共用锁）；该队列的每一行都被领走之后，改用 `results/queue_seeds3.txt`（TabPFN 种子 3，81 条流，作备用）。最多加 6 条，显存超过 26 GB 时不加，04:35 之后不加。每次判断都记到 `results/keep_busy.txt`，日志写到 `results/extra*.log`。relay 04:40 的自动 commit 会一并带上这些结果。
+
+## 2026-10-07 02:15：阶段 2（TabICL）运行完毕，分析已自动运行（自动写入，未经人工核对）
+- 队列链 9/9 条 CHAIN_DONE；重试 0 次。判定结果（原样摘自 `results/console_stage2_tabicl.txt`）：
+  - H1' full below none on real: 8/8 (need >= 6) -> holds
+  - H2' full above none on synthetic: 8/8 (need >= 6) -> holds
+  - H3' real: 88.3% of 30217 non-zero resets are losses; synthetic: 86.8% of 3172 resets are wins (need > 50% each) -> holds
+  - H4' per detector 8/8; detector average: real +hedge 0.22 (need >= -0.2), synthetic +hedge 8.26 vs half of full 4.19 -> holds
+  - tail over 19 real sources, detector-averaged (worst, best): {'full': (np.float64(-26.46), np.float64(4.78)), '+half': (np.float64(-5.37), np.float64(0.87)), '+hedge': (np.float64(-1.74), np.float64(4.57))}
+  - T1 worst source: +hedge - full = 24.71 (need >= 10) -> holds
+  - T2 best source: +hedge 4.57 vs half of full 2.39 -> holds
+- 运行期间的 GPU：145 samples (one per minute), mean utilisation 92.4%, minutes below 70%: 16, mean memory 6529 MiB（`results/gpu_util_stage2.csv`）；CUDA 重试 0 次。机器方面的记录见 `env/MACHINE_LOG.md`。

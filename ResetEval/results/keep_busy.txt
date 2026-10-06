@@ -1,0 +1,6 @@
+01:49:03 mean util 99%, mem 6307 MiB, extra 0
+01:54:05 mean util 98%, mem 8969 MiB, extra 0
+01:59:07 mean util 99%, mem 5341 MiB, extra 0
+02:04:09 mean util 98%, mem 4839 MiB, extra 0
+02:09:11 mean util 98%, mem 5757 MiB, extra 0
+02:14:13 mean util 99%, mem 9917 MiB, extra 0

@@ -81,3 +81,7 @@ file modification times.
 | 23:10–23:37 | 10 new real streams (2 rounds × 5 chains), 0 retries | — |
 | 23:35–23:36 | TabICL queue: lock race on /mnt/c | locks moved to Linux fs |
 | 23:48 | 9 TabICL chains, finisher and per-minute sampler started | unattended until done |
+| 01:35:57 | WSL VM clean poweroff (systemd shutdown in journal, not OOM/crash; triggered from Windows side, cause unknown); all tmux jobs lost | 01:38 cleared queue lock, restarted 9 TabICL chains + sampler, finisher, relay; per-policy outputs resume |
+
+## 2026-10-07 02:15 ResetEval stage 2 (TabICL), unattended run finished (auto-written)
+- 9 queue chains; CUDA retries: 0; GPU: 145 samples (one per minute), mean utilisation 92.4%, minutes below 70%: 16, mean memory 6529 MiB.

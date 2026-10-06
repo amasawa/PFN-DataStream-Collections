@@ -1,0 +1,76 @@
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+
+== tabicl, real: source-weighted mean of d (points), 95% source bootstrap, Wilcoxon over sources, Holm over 8
+             sources  mean  median  pos  neg  ci_lo  ci_hi       p  p_holm
+pol                                                                       
+ddm               19 -0.79   -0.23    5   12  -2.07   0.40  0.1698  0.4643
+eddm              19 -4.39   -0.54    4   14  -8.87  -0.69  0.0347  0.2774
+fhddm             19 -2.20   -0.36    5   13  -4.93  -0.29  0.0526  0.3684
+hddma             19 -3.99   -0.19    5   11  -8.73  -0.27  0.1089  0.4643
+hddmw             19 -3.91   -0.88    5   13  -8.28  -0.40  0.0526  0.3684
+adwin             19 -3.32   -0.12    4   13  -7.55  -0.13  0.0929  0.4643
+ph                19 -2.53   -0.33    6   12  -6.04   0.05  0.1119  0.4643
+kswin             19 -3.29   -0.31    5   12  -7.00  -0.28  0.0929  0.4643
+ddm+half          19 -0.74    0.00    8    8  -2.08   0.15  0.7564  1.0000
+eddm+half         19 -0.67   -0.05    7   11  -1.48  -0.04  0.1570  1.0000
+fhddm+half        19 -0.13   -0.03    7   11  -0.39   0.09  0.5566  1.0000
+hddma+half        19 -0.90   -0.03    6   10  -2.12  -0.03  0.4080  1.0000
+hddmw+half        19 -0.38   -0.01    7   10  -0.99   0.07  0.4631  1.0000
+adwin+half        19 -0.29   -0.03    6   11  -0.72   0.11  0.5228  1.0000
+ph+half           19 -0.29    0.00    9    9  -0.96   0.15  0.8446  1.0000
+kswin+half        19 -0.15   -0.03    7   10  -0.47   0.13  0.5228  1.0000
+ddm+hedge         19  0.12   -0.05    6   11  -0.48   0.87  0.5228  1.0000
+eddm+hedge        19  0.27   -0.06    6   12  -0.26   0.96  0.6791  1.0000
+fhddm+hedge       19 -0.01   -0.03    7   11  -0.48   0.48  0.6475  1.0000
+hddma+hedge       19  0.27   -0.02    6   10  -0.27   0.94  0.9588  1.0000
+hddmw+hedge       19  0.25   -0.08    5   13  -0.24   0.88  0.6475  1.0000
+adwin+hedge       19  0.23   -0.02    6   11  -0.27   0.84  0.8684  1.0000
+ph+hedge          19  0.41    0.00    9    9  -0.02   1.02  0.4997  1.0000
+kswin+hedge       19  0.22   -0.03    7   10  -0.24   0.79  0.9434  1.0000
+
+== tabicl, syn: source-weighted mean of d (points), 95% source bootstrap, Wilcoxon over sources, Holm over 8
+             sources  mean  median  pos  neg  ci_lo  ci_hi       p  p_holm
+pol                                                                       
+ddm                7  9.75   10.02    7    0   3.94  16.18  0.0156  0.1250
+eddm               7  9.49   10.11    7    0   3.58  15.83  0.0156  0.1250
+fhddm              7  1.10    0.13    4    3  -0.07   3.14  0.2969  0.2969
+hddma              7  9.70   10.19    7    0   3.69  16.39  0.0156  0.1250
+hddmw              7  9.50   10.19    6    0   3.28  16.30  0.0312  0.1250
+adwin              7  9.65    9.96    7    0   3.92  15.96  0.0156  0.1250
+ph                 7  8.69    8.61    7    0   3.10  14.71  0.0156  0.1250
+kswin              7  9.10    9.25    5    0   2.89  15.94  0.0625  0.1250
+ddm+half           7  1.87    2.23    7    0   0.91   2.84  0.0156  0.1250
+eddm+half          7  3.43    4.70    7    0   1.55   5.22  0.0156  0.1250
+fhddm+half         7  0.38    0.13    6    1   0.11   0.69  0.0469  0.1250
+hddma+half         7  1.73    2.03    7    0   0.80   2.65  0.0156  0.1250
+hddmw+half         7  1.66    2.12    6    0   0.61   2.63  0.0312  0.1250
+adwin+half         7  1.87    2.05    7    0   0.86   3.11  0.0156  0.1250
+ph+half            7  2.34    3.15    7    0   1.06   3.60  0.0156  0.1250
+kswin+half         7  1.72    2.06    5    0   0.61   2.93  0.0625  0.1250
+ddm+hedge          7  9.57    9.63    7    0   3.84  15.84  0.0156  0.1250
+eddm+hedge         7  9.47    9.53    7    0   3.70  15.67  0.0156  0.1250
+fhddm+hedge        7  1.20    0.22    5    1   0.11   3.15  0.0625  0.1250
+hddma+hedge        7  9.50    9.70    7    0   3.56  16.03  0.0156  0.1250
+hddmw+hedge        7  9.27    9.70    6    0   3.10  15.91  0.0312  0.1250
+adwin+hedge        7  9.49    9.46    7    0   3.76  15.80  0.0156  0.1250
+ph+hedge           7  8.71    8.44    7    0   3.05  14.94  0.0156  0.1250
+kswin+hedge        7  8.87    8.79    5    0   2.72  15.50  0.0625  0.1250
+
+H1' full below none on real: 8/8 (need >= 6) -> holds
+H2' full above none on synthetic: 8/8 (need >= 6) -> holds
+H3' real: 88.3% of 30217 non-zero resets are losses; synthetic: 86.8% of 3172 resets are wins (need > 50% each) -> holds
+H4' per detector 8/8; detector average: real +hedge 0.22 (need >= -0.2), synthetic +hedge 8.26 vs half of full 4.19 -> holds
+tail over 19 real sources, detector-averaged (worst, best): {'full': (np.float64(-26.46), np.float64(4.78)), '+half': (np.float64(-5.37), np.float64(0.87)), '+hedge': (np.float64(-1.74), np.float64(4.57))}
+T1 worst source: +hedge - full = 24.71 (need >= 10) -> holds
+T2 best source: +hedge 4.57 vs half of full 2.39 -> holds

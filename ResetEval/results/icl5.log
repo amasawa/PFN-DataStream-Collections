@@ -33,3 +33,126 @@ h4_covertype_e ddm+hedge acc=0.9723 resets=31 new_calls=1123 time=47s
 h4_covertype_e eddm acc=0.5913 resets=666 new_calls=1985 time=372s
 h4_covertype_e eddm+half acc=0.9714 resets=46 new_calls=2195 time=150s
 h4_covertype_e eddm+hedge acc=0.9719 resets=76 new_calls=2721 time=321s
+h4_covertype_e fhddm acc=0.6485 resets=289 new_calls=3288 time=222s
+h4_covertype_e fhddm+half acc=0.9731 resets=2 new_calls=3293 time=2s
+h4_covertype_e fhddm+hedge acc=0.9730 resets=2 new_calls=3297 time=2s
+h4_covertype_e hddma acc=0.6677 resets=630 new_calls=3488 time=80s
+h4_covertype_e hddma+half acc=0.9686 resets=55 new_calls=3626 time=91s
+h4_covertype_e hddma+hedge acc=0.9722 resets=45 new_calls=3736 time=66s
+h4_covertype_e hddmw acc=0.7429 resets=359 new_calls=3806 time=34s
+h4_covertype_e hddmw+half acc=0.9728 resets=12 new_calls=3829 time=16s
+h4_covertype_e hddmw+hedge acc=0.9728 resets=11 new_calls=3844 time=11s
+h4_covertype_e adwin acc=0.6156 resets=388 new_calls=4161 time=141s
+h4_covertype_e adwin+half acc=0.9723 resets=19 new_calls=4200 time=31s
+h4_covertype_e adwin+hedge acc=0.9728 resets=17 new_calls=4241 time=32s
+h4_covertype_e ph acc=0.6794 resets=233 new_calls=4637 time=220s
+h4_covertype_e ph+half acc=0.9727 resets=10 new_calls=4663 time=18s
+h4_covertype_e ph+hedge acc=0.9731 resets=8 new_calls=4696 time=23s
+h4_covertype_e kswin acc=0.6261 resets=465 new_calls=4761 time=51s
+h4_covertype_e kswin+half acc=0.9728 resets=6 new_calls=4761 time=49s
+h4_covertype_e kswin+hedge acc=0.9729 resets=6 new_calls=4761 time=49s
+STREAM_DONE 00:32:40 h4_covertype_e
+h3_airlines_c none acc=0.6569 resets=0 new_calls=999 time=545s
+h3_airlines_c ddmM acc=0.6561 resets=5 new_calls=1037 time=12s
+h3_airlines_c ddm acc=0.6561 resets=5 new_calls=1037 time=0s
+h3_airlines_c ddm+half acc=0.6565 resets=5 new_calls=1058 time=9s
+h3_airlines_c ddm+hedge acc=0.6566 resets=5 new_calls=1076 time=7s
+h3_airlines_c eddm acc=0.6567 resets=4 new_calls=1088 time=5s
+h3_airlines_c eddm+half acc=0.6565 resets=27 new_calls=1128 time=16s
+h3_airlines_c eddm+hedge acc=0.6564 resets=26 new_calls=1170 time=16s
+h3_airlines_c fhddm acc=0.6516 resets=42 new_calls=1523 time=143s
+h3_airlines_c fhddm+half acc=0.6554 resets=34 new_calls=1686 time=73s
+h3_airlines_c fhddm+hedge acc=0.6559 resets=35 new_calls=1749 time=22s
+h3_airlines_c hddma acc=0.6543 resets=15 new_calls=1837 time=29s
+h3_airlines_c hddma+half acc=0.6560 resets=12 new_calls=1895 time=23s
+h3_airlines_c hddma+hedge acc=0.6558 resets=14 new_calls=1961 time=22s
+h3_airlines_c hddmw acc=0.6411 resets=126 new_calls=2602 time=214s
+h3_airlines_c hddmw+half acc=0.6531 resets=132 new_calls=3069 time=196s
+h3_airlines_c hddmw+hedge acc=0.6522 resets=117 new_calls=3338 time=105s
+h3_airlines_c adwin acc=0.6558 resets=11 new_calls=3419 time=28s
+h3_airlines_c adwin+half acc=0.6562 resets=11 new_calls=3439 time=8s
+h3_airlines_c adwin+hedge acc=0.6566 resets=11 new_calls=3488 time=16s
+h3_airlines_c ph acc=0.6531 resets=29 new_calls=3672 time=61s
+h3_airlines_c ph+half acc=0.6565 resets=23 new_calls=3745 time=28s
+h3_airlines_c ph+hedge acc=0.6560 resets=24 new_calls=3817 time=26s
+h3_airlines_c kswin acc=0.6487 resets=69 new_calls=4006 time=117s
+h3_airlines_c kswin+half acc=0.6547 resets=68 new_calls=4124 time=95s
+h3_airlines_c kswin+hedge acc=0.6541 resets=66 new_calls=4256 time=95s
+STREAM_DONE 01:04:32 h3_airlines_c
+insects_incremental_reoccurring_balanced none acc=0.7936 resets=0 new_calls=798 time=759s
+insects_incremental_reoccurring_balanced ddmM acc=0.8037 resets=12 new_calls=897 time=74s
+insects_incremental_reoccurring_balanced ddm acc=0.8037 resets=12 new_calls=897 time=0s
+insects_incremental_reoccurring_balanced ddm+half acc=0.7968 resets=12 new_calls=952 time=48s
+insects_incremental_reoccurring_balanced ddm+hedge acc=0.8047 resets=15 new_calls=997 time=32s
+insects_incremental_reoccurring_balanced eddm acc=0.7942 resets=70 new_calls=1157 time=94s
+insects_incremental_reoccurring_balanced eddm+half acc=0.7967 resets=93 new_calls=1363 time=155s
+insects_incremental_reoccurring_balanced eddm+hedge acc=0.7973 resets=103 new_calls=1535 time=97s
+insects_incremental_reoccurring_balanced fhddm acc=0.7990 resets=19 new_calls=1673 time=96s
+insects_incremental_reoccurring_balanced fhddm+half acc=0.7983 resets=18 new_calls=1753 time=63s
+insects_incremental_reoccurring_balanced fhddm+hedge acc=0.7992 resets=19 new_calls=1775 time=15s
+insects_incremental_reoccurring_balanced hddma acc=0.8102 resets=15 new_calls=1832 time=37s
+insects_incremental_reoccurring_balanced hddma+half acc=0.7978 resets=14 new_calls=1882 time=42s
+insects_incremental_reoccurring_balanced hddma+hedge acc=0.8098 resets=15 new_calls=1882 time=1s
+insects_incremental_reoccurring_balanced hddmw acc=0.8104 resets=23 new_calls=1965 time=54s
+insects_incremental_reoccurring_balanced hddmw+half acc=0.7981 resets=24 new_calls=2027 time=53s
+insects_incremental_reoccurring_balanced hddmw+hedge acc=0.8103 resets=25 new_calls=2051 time=18s
+insects_incremental_reoccurring_balanced adwin acc=0.8106 resets=19 new_calls=2118 time=46s
+insects_incremental_reoccurring_balanced adwin+half acc=0.7987 resets=25 new_calls=2184 time=57s
+insects_incremental_reoccurring_balanced adwin+hedge acc=0.8102 resets=20 new_calls=2188 time=1s
+insects_incremental_reoccurring_balanced ph acc=0.8070 resets=23 new_calls=2288 time=74s
+insects_incremental_reoccurring_balanced ph+half acc=0.7987 resets=26 new_calls=2328 time=32s
+RESTART 01:38:31 after WSL poweroff at 01:35:57
+STREAM_DONE 01:38:32 h3_insects_b
+STREAM_DONE 01:38:34 h2_poker
+STREAM_DONE 01:38:35 insects_incremental_balanced
+STREAM_DONE 01:38:36 bank
+STREAM_DONE 01:38:37 occupancy
+h2_weather eddm+half acc=0.8081 resets=62 new_calls=152 time=69s
+h2_weather eddm+hedge acc=0.8048 resets=63 new_calls=313 time=48s
+h2_weather fhddm acc=0.7984 resets=17 new_calls=395 time=25s
+h2_weather fhddm+half acc=0.8138 resets=6 new_calls=418 time=10s
+h2_weather fhddm+hedge acc=0.8120 resets=6 new_calls=436 time=7s
+h2_weather hddma acc=0.8141 resets=0 new_calls=436 time=0s
+h2_weather hddma+half acc=0.8141 resets=0 new_calls=436 time=0s
+h2_weather hddma+hedge acc=0.8141 resets=0 new_calls=436 time=0s
+h2_weather hddmw acc=0.8052 resets=5 new_calls=473 time=13s
+h2_weather hddmw+half acc=0.8138 resets=6 new_calls=498 time=10s
+h2_weather hddmw+hedge acc=0.8132 resets=5 new_calls=501 time=1s
+h2_weather adwin acc=0.8141 resets=0 new_calls=501 time=0s
+h2_weather adwin+half acc=0.8141 resets=0 new_calls=501 time=0s
+h2_weather adwin+hedge acc=0.8141 resets=0 new_calls=501 time=0s
+h2_weather ph acc=0.8117 resets=2 new_calls=516 time=5s
+h2_weather ph+half acc=0.8143 resets=2 new_calls=526 time=4s
+h2_weather ph+hedge acc=0.8142 resets=2 new_calls=526 time=0s
+h2_weather kswin acc=0.8141 resets=0 new_calls=526 time=9s
+h2_weather kswin+half acc=0.8141 resets=0 new_calls=526 time=9s
+h2_weather kswin+hedge acc=0.8141 resets=0 new_calls=526 time=9s
+STREAM_DONE 01:42:17 h2_weather
+h2_spam none acc=0.9475 resets=0 new_calls=61 time=547s
+h2_spam ddmM acc=0.9428 resets=5 new_calls=79 time=115s
+h2_spam ddm acc=0.9428 resets=5 new_calls=79 time=0s
+h2_spam ddm+half acc=0.9452 resets=4 new_calls=85 time=48s
+h2_spam ddm+hedge acc=0.9462 resets=4 new_calls=90 time=39s
+h2_spam eddm acc=0.9298 resets=9 new_calls=135 time=250s
+h2_spam eddm+half acc=0.9433 resets=7 new_calls=161 time=206s
+h2_spam eddm+hedge acc=0.9456 resets=6 new_calls=179 time=128s
+h2_spam fhddm acc=0.9466 resets=2 new_calls=191 time=74s
+h2_spam fhddm+half acc=0.9457 resets=2 new_calls=199 time=60s
+h2_spam fhddm+hedge acc=0.9477 resets=2 new_calls=199 time=0s
+h2_spam hddma acc=0.9410 resets=4 new_calls=199 time=0s
+h2_spam hddma+half acc=0.9451 resets=2 new_calls=200 time=7s
+h2_spam hddma+hedge acc=0.9485 resets=6 new_calls=215 time=63s
+h2_spam hddmw acc=0.9420 resets=3 new_calls=215 time=0s
+h2_spam hddmw+half acc=0.9470 resets=2 new_calls=215 time=0s
+h2_spam hddmw+hedge acc=0.9439 resets=3 new_calls=215 time=0s
+h2_spam adwin acc=0.9410 resets=2 new_calls=215 time=0s
+h2_spam adwin+half acc=0.9470 resets=2 new_calls=215 time=0s
+h2_spam adwin+hedge acc=0.9441 resets=2 new_calls=215 time=0s
+h2_spam ph acc=0.9418 resets=2 new_calls=225 time=72s
+h2_spam ph+half acc=0.9462 resets=2 new_calls=227 time=17s
+h2_spam ph+hedge acc=0.9446 resets=2 new_calls=236 time=66s
+h2_spam kswin acc=0.9405 resets=3 new_calls=238 time=13s
+h2_spam kswin+half acc=0.9470 resets=2 new_calls=238 time=3s
+h2_spam kswin+hedge acc=0.9430 resets=3 new_calls=238 time=3s
+STREAM_DONE 02:10:52 h2_spam
+CHAIN_DONE 02:10:52
