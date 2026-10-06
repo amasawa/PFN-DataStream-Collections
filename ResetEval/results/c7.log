@@ -1025,3 +1025,38 @@ grid_c100_b2000_s11 kswin+hedge@e2g0.75 acc=0.8036 resets=20 new_calls=64 time=8
 grid_c100_b2000_s11 kswin+hedge@e2g0.9 acc=0.8037 resets=20 new_calls=64 time=8s
 STREAM_DONE 08:13:53 grid_c100_b2000_s11_hsens
 ht insects_gradual_imbalanced none acc=0.5632 resets=0 time=46s
+ht insects_gradual_imbalanced ddm acc=0.6118 resets=16 time=48s
+ht insects_gradual_imbalanced ddm+hedge acc=0.6133 resets=22 time=95s
+ht insects_gradual_imbalanced eddm acc=0.5793 resets=37 time=52s
+ht insects_gradual_imbalanced eddm+hedge acc=0.6042 resets=30 time=90s
+ht insects_gradual_imbalanced fhddm acc=0.5451 resets=106 time=51s
+ht insects_gradual_imbalanced fhddm+hedge acc=0.5962 resets=78 time=96s
+ht insects_gradual_imbalanced hddma acc=0.6118 resets=34 time=46s
+ht insects_gradual_imbalanced hddma+hedge acc=0.6258 resets=39 time=96s
+ht insects_gradual_imbalanced hddmw acc=0.6006 resets=119 time=53s
+ht insects_gradual_imbalanced hddmw+hedge acc=0.6151 resets=133 time=94s
+ht insects_gradual_imbalanced adwin acc=0.5830 resets=41 time=49s
+ht insects_gradual_imbalanced adwin+hedge acc=0.5939 resets=38 time=95s
+ht insects_gradual_imbalanced ph acc=0.5694 resets=105 time=49s
+ht insects_gradual_imbalanced ph+hedge acc=0.6040 resets=73 time=96s
+ht insects_gradual_imbalanced kswin acc=0.5806 resets=45 time=124s
+ht insects_gradual_imbalanced kswin+hedge acc=0.6031 resets=33 time=175s
+STREAM_DONE 08:36:31 insects_gradual_imbalanced_ht
+ht h4_airlines_d none acc=0.6292 resets=0 time=5s
+ht h4_airlines_d ddm acc=0.6257 resets=2 time=5s
+ht h4_airlines_d ddm+hedge acc=0.6283 resets=2 time=10s
+ht h4_airlines_d eddm acc=0.6002 resets=45 time=5s
+ht h4_airlines_d eddm+hedge acc=0.6267 resets=120 time=10s
+ht h4_airlines_d fhddm acc=0.5967 resets=53 time=4s
+ht h4_airlines_d fhddm+hedge acc=0.6296 resets=48 time=9s
+ht h4_airlines_d hddma acc=0.5977 resets=34 time=5s
+ht h4_airlines_d hddma+hedge acc=0.6276 resets=17 time=10s
+ht h4_airlines_d hddmw acc=0.5878 resets=167 time=4s
+ht h4_airlines_d hddmw+hedge acc=0.6236 resets=173 time=10s
+ht h4_airlines_d adwin acc=0.6047 resets=15 time=5s
+ht h4_airlines_d adwin+hedge acc=0.6277 resets=12 time=10s
+ht h4_airlines_d ph acc=0.5994 resets=37 time=4s
+ht h4_airlines_d ph+hedge acc=0.6284 resets=28 time=10s
+ht h4_airlines_d kswin acc=0.5924 resets=104 time=52s
+ht h4_airlines_d kswin+hedge acc=0.6257 resets=109 time=59s
+STREAM_DONE 08:40:07 h4_airlines_d_ht
