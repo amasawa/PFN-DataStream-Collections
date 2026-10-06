@@ -1542,3 +1542,11 @@ nb covertype none acc=0.7035 resets=0 time=63s
 nb covertype ddm acc=0.6870 resets=190 time=42s
 nb covertype ddm+hedge acc=0.6979 resets=513 time=103s
 nb covertype eddm acc=0.6395 resets=610 time=33s
+nb covertype eddm+hedge acc=0.6986 resets=424 time=106s
+nb covertype fhddm acc=0.6433 resets=420 time=34s
+nb covertype fhddm+hedge acc=0.6866 resets=420 time=104s
+nb covertype hddma acc=0.6322 resets=797 time=37s
+nb covertype hddma+hedge acc=0.6795 resets=869 time=99s
+nb covertype hddmw acc=0.6317 resets=676 time=36s
+nb covertype hddmw+hedge acc=0.6812 resets=647 time=105s
+nb covertype adwin acc=0.6322 resets=527 time=34s

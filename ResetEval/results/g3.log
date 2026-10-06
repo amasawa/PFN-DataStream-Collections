@@ -23,3 +23,14 @@ insects_gradual_imbalanced ph+half acc=0.8094 resets=16 new_calls=1839 time=10s
 insects_gradual_imbalanced ph+hedge acc=0.8097 resets=15 new_calls=1852 time=4s
 insects_gradual_imbalanced kswin acc=0.8101 resets=3 new_calls=1852 time=81s
 insects_gradual_imbalanced kswin+half acc=0.8098 resets=3 new_calls=1852 time=83s
+insects_gradual_imbalanced kswin+hedge acc=0.8102 resets=3 new_calls=1852 time=88s
+STREAM_DONE 09:33:59 insects_gradual_imbalanced_M500
+h3_poker_c none acc=0.8711 resets=0 new_calls=208 time=63s
+h3_poker_c ddmM acc=0.8250 resets=436 new_calls=224 time=5s
+h3_poker_c ddm acc=0.8249 resets=430 new_calls=227 time=1s
+h3_poker_c ddm+half acc=0.8534 resets=408 new_calls=921 time=182s
+h3_poker_c ddm+hedge acc=0.8693 resets=403 new_calls=948 time=7s
+h3_poker_c eddm acc=0.8162 resets=347 new_calls=953 time=1s
+h3_poker_c eddm+half acc=0.8544 resets=260 new_calls=1272 time=80s
+h3_poker_c eddm+hedge acc=0.8706 resets=236 new_calls=1291 time=4s
+h3_poker_c fhddm acc=0.8321 resets=183 new_calls=1322 time=7s

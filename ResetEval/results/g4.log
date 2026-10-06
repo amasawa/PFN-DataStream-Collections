@@ -61,3 +61,21 @@ h4_airlines_e eddm acc=0.6383 resets=73 new_calls=618 time=7s
 h4_airlines_e eddm+half acc=0.6386 resets=113 new_calls=785 time=37s
 h4_airlines_e eddm+hedge acc=0.6401 resets=94 new_calls=830 time=10s
 h4_airlines_e fhddm acc=0.6370 resets=44 new_calls=903 time=18s
+h4_airlines_e fhddm+half acc=0.6395 resets=37 new_calls=1009 time=27s
+h4_airlines_e fhddm+hedge acc=0.6401 resets=37 new_calls=1025 time=4s
+h4_airlines_e hddma acc=0.6390 resets=17 new_calls=1039 time=4s
+h4_airlines_e hddma+half acc=0.6399 resets=16 new_calls=1073 time=9s
+h4_airlines_e hddma+hedge acc=0.6404 resets=14 new_calls=1078 time=2s
+h4_airlines_e hddmw acc=0.6300 resets=121 new_calls=1157 time=21s
+h4_airlines_e hddmw+half acc=0.6378 resets=120 new_calls=1450 time=80s
+h4_airlines_e hddmw+hedge acc=0.6379 resets=124 new_calls=1498 time=14s
+h4_airlines_e adwin acc=0.6398 resets=11 new_calls=1518 time=6s
+h4_airlines_e adwin+half acc=0.6403 resets=11 new_calls=1538 time=5s
+h4_airlines_e adwin+hedge acc=0.6404 resets=11 new_calls=1554 time=4s
+h4_airlines_e ph acc=0.6370 resets=33 new_calls=1613 time=14s
+h4_airlines_e ph+half acc=0.6402 resets=26 new_calls=1665 time=13s
+h4_airlines_e ph+hedge acc=0.6399 resets=28 new_calls=1687 time=6s
+h4_airlines_e kswin acc=0.6361 resets=56 new_calls=1705 time=58s
+h4_airlines_e kswin+half acc=0.6392 resets=52 new_calls=1768 time=72s
+h4_airlines_e kswin+hedge acc=0.6392 resets=60 new_calls=1782 time=60s
+STREAM_DONE 09:39:49 h4_airlines_e_M500

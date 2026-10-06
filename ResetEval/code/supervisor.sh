@@ -12,7 +12,7 @@
 cd "$(dirname "$0")"; C=$PWD; R=$(cd ../results && pwd); PY=~/pfn-venvs/venv/bin/python
 GPU_Q="$R/queue_seeds.txt $R/queue_M500.txt $R/queue_M2000.txt $R/queue_seeds3b.txt"
 CPU_Q="$R/queue_hsens.txt $R/queue_trained_ht.txt $R/queue_trained_nb.txt"
-NCPU=${NCPU:-6}; GCAP=12; ng_new=0; nc_new=0; hi=0; cool=0; tick=0; lastc=$(date +%s); utils=()
+NCPU=${NCPU:-6}; GCAP=${GCAP:-12}; ng_new=$(ls $R/g*.log 2>/dev/null | wc -l); nc_new=$(ls $R/c*.log 2>/dev/null | wc -l); hi=0; cool=0; tick=0; lastc=$(date +%s); utils=()
 log() { echo "$(date +%F_%T) $*" >> $R/supervisor.txt; }
 chains() { tmux ls -F '#{session_name} #{session_created}' 2>/dev/null | awk -v p="$1" '$1 ~ p' | sort -k2n | awk '{print $1}'; }
 stop_chain() {                                     # stop tmux session $1, release the line it was running

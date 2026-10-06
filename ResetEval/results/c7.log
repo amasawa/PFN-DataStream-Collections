@@ -1353,3 +1353,10 @@ nb insects_abrupt_imbalanced ddm acc=0.5607 resets=23 time=45s
 nb insects_abrupt_imbalanced ddm+hedge acc=0.5506 resets=4 time=89s
 nb insects_abrupt_imbalanced eddm acc=0.5983 resets=560 time=45s
 nb insects_abrupt_imbalanced eddm+hedge acc=0.5721 resets=362 time=89s
+nb insects_abrupt_imbalanced fhddm acc=0.5412 resets=30 time=47s
+nb insects_abrupt_imbalanced fhddm+hedge acc=0.5447 resets=37 time=99s
+nb insects_abrupt_imbalanced hddma acc=0.5544 resets=21 time=48s
+nb insects_abrupt_imbalanced hddma+hedge acc=0.5534 resets=16 time=94s
+nb insects_abrupt_imbalanced hddmw acc=0.5839 resets=145 time=49s
+nb insects_abrupt_imbalanced hddmw+hedge acc=0.5756 resets=138 time=100s
+nb insects_abrupt_imbalanced adwin acc=0.5446 resets=7 time=48s

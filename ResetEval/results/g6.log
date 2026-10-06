@@ -5,3 +5,23 @@ h4_covertype_e ddm+half acc=0.8871 resets=146 new_calls=747 time=53s
 h4_covertype_e ddm+hedge acc=0.9420 resets=200 new_calls=779 time=9s
 h4_covertype_e eddm acc=0.7032 resets=474 new_calls=779 time=0s
 h4_covertype_e eddm+half acc=0.8077 resets=308 new_calls=1095 time=89s
+h4_covertype_e eddm+hedge acc=0.9422 resets=116 new_calls=1129 time=11s
+h4_covertype_e fhddm acc=0.6617 resets=284 new_calls=1129 time=0s
+h4_covertype_e fhddm+half acc=0.8853 resets=81 new_calls=1266 time=43s
+h4_covertype_e fhddm+hedge acc=0.9442 resets=30 new_calls=1282 time=6s
+h4_covertype_e hddma acc=0.6696 resets=596 new_calls=1292 time=5s
+h4_covertype_e hddma+half acc=0.7990 resets=386 new_calls=1521 time=77s
+h4_covertype_e hddma+hedge acc=0.9414 resets=156 new_calls=1537 time=6s
+h4_covertype_e hddmw acc=0.6592 resets=485 new_calls=1538 time=2s
+h4_covertype_e hddmw+half acc=0.8115 resets=267 new_calls=1607 time=23s
+h4_covertype_e hddmw+hedge acc=0.9436 resets=75 new_calls=1608 time=1s
+h4_covertype_e adwin acc=0.6221 resets=387 new_calls=1608 time=0s
+h4_covertype_e adwin+half acc=0.7924 resets=239 new_calls=1912 time=89s
+h4_covertype_e adwin+hedge acc=0.9435 resets=56 new_calls=1928 time=5s
+h4_covertype_e ph acc=0.6803 resets=232 new_calls=1942 time=4s
+h4_covertype_e ph+half acc=0.8430 resets=133 new_calls=2111 time=50s
+h4_covertype_e ph+hedge acc=0.9440 resets=22 new_calls=2127 time=5s
+h4_covertype_e kswin acc=0.6227 resets=458 new_calls=2127 time=21s
+h4_covertype_e kswin+half acc=0.8676 resets=148 new_calls=2143 time=53s
+h4_covertype_e kswin+hedge acc=0.9428 resets=77 new_calls=2143 time=53s
+STREAM_DONE 09:40:41 h4_covertype_e_M500

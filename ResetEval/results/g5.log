@@ -4,3 +4,24 @@ h4_poker_d ddm acc=0.8348 resets=452 new_calls=281 time=0s
 h4_poker_d ddm+half acc=0.8485 resets=484 new_calls=1005 time=178s
 h4_poker_d ddm+hedge acc=0.8775 resets=378 new_calls=1054 time=11s
 h4_poker_d eddm acc=0.8132 resets=357 new_calls=1071 time=4s
+h4_poker_d eddm+half acc=0.8574 resets=268 new_calls=1386 time=76s
+h4_poker_d eddm+hedge acc=0.8765 resets=247 new_calls=1432 time=12s
+h4_poker_d fhddm acc=0.8378 resets=169 new_calls=1465 time=8s
+h4_poker_d fhddm+half acc=0.8597 resets=159 new_calls=1779 time=89s
+h4_poker_d fhddm+hedge acc=0.8849 resets=122 new_calls=1799 time=5s
+h4_poker_d hddma acc=0.8115 resets=536 new_calls=1802 time=3s
+h4_poker_d hddma+half acc=0.8445 resets=478 new_calls=1923 time=36s
+h4_poker_d hddma+hedge acc=0.8734 resets=424 new_calls=1944 time=7s
+h4_poker_d hddmw acc=0.8331 resets=288 new_calls=1944 time=2s
+h4_poker_d hddmw+half acc=0.8618 resets=263 new_calls=2003 time=18s
+h4_poker_d hddmw+hedge acc=0.8801 resets=235 new_calls=2013 time=5s
+h4_poker_d adwin acc=0.8426 resets=199 new_calls=2058 time=11s
+h4_poker_d adwin+half acc=0.8617 resets=199 new_calls=2170 time=27s
+h4_poker_d adwin+hedge acc=0.8799 resets=172 new_calls=2203 time=8s
+h4_poker_d ph acc=0.8637 resets=102 new_calls=2251 time=11s
+h4_poker_d ph+half acc=0.8750 resets=102 new_calls=2331 time=21s
+h4_poker_d ph+hedge acc=0.8810 resets=96 new_calls=2372 time=10s
+h4_poker_d kswin acc=0.8417 resets=220 new_calls=2373 time=41s
+h4_poker_d kswin+half acc=0.8626 resets=205 new_calls=2402 time=52s
+h4_poker_d kswin+hedge acc=0.8810 resets=171 new_calls=2403 time=45s
+STREAM_DONE 09:40:14 h4_poker_d_M500

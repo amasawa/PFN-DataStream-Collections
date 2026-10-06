@@ -1502,3 +1502,10 @@ nb insects_gradual_imbalanced none acc=0.5742 resets=0 time=42s
 nb insects_gradual_imbalanced ddm acc=0.6025 resets=28 time=43s
 nb insects_gradual_imbalanced ddm+hedge acc=0.6184 resets=24 time=85s
 nb insects_gradual_imbalanced eddm acc=0.6585 resets=502 time=42s
+nb insects_gradual_imbalanced eddm+hedge acc=0.6458 resets=398 time=88s
+nb insects_gradual_imbalanced fhddm acc=0.5938 resets=30 time=47s
+nb insects_gradual_imbalanced fhddm+hedge acc=0.6224 resets=39 time=93s
+nb insects_gradual_imbalanced hddma acc=0.6287 resets=40 time=45s
+nb insects_gradual_imbalanced hddma+hedge acc=0.6269 resets=20 time=88s
+nb insects_gradual_imbalanced hddmw acc=0.6444 resets=108 time=46s
+nb insects_gradual_imbalanced hddmw+hedge acc=0.6526 resets=102 time=93s

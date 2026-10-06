@@ -67,3 +67,6 @@
 2026-10-07_09:32:57 util5 71% gmem 3885 ram 11132 gpu_chains 6/7 cpu_chains 4/4 unclaimed gpu 233 cpu 77 | queue_seeds 162 162 0 queue_M500 81 4 71 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 0 77 
 2026-10-07_09:32:57 started g7
 2026-10-07_09:32:59 queue queue_trained_ht complete -> stage_done.sh
+2026-10-07_09:38:29 util5 82% gmem 4231 ram 12465 gpu_chains 7/7 cpu_chains 4/4 unclaimed gpu 230 cpu 77 | queue_seeds 162 162 0 queue_M500 81 6 68 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 0 77 
+2026-10-07_09:40:31 start NCPU=4 GCAP=14
+2026-10-07_09:40:34 manual: restarted supervisor with GCAP=14 (M500 chains are light; cap 7 from the covertype memory spikes left util at 40-82%)

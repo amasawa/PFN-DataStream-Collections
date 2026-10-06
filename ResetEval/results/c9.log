@@ -1584,3 +1584,18 @@ nb kdd eddm+hedge acc=0.8963 resets=28 time=44s
 nb kdd fhddm acc=0.5730 resets=17 time=19s
 nb kdd fhddm+hedge acc=0.7566 resets=19 time=44s
 nb kdd hddma acc=0.7813 resets=31 time=19s
+nb kdd hddma+hedge acc=0.8381 resets=34 time=49s
+nb kdd hddmw acc=0.6943 resets=28 time=20s
+nb kdd hddmw+hedge acc=0.8769 resets=28 time=49s
+nb kdd adwin acc=0.8976 resets=37 time=16s
+nb kdd adwin+hedge acc=0.8222 resets=38 time=46s
+nb kdd ph acc=0.9749 resets=24 time=17s
+nb kdd ph+hedge acc=0.8982 resets=25 time=45s
+nb kdd kswin acc=0.6942 resets=37 time=73s
+nb kdd kswin+hedge acc=0.8026 resets=38 time=104s
+STREAM_DONE 09:39:33 kdd_nb
+nb home none acc=0.6366 resets=0 time=12s
+nb home ddm acc=0.9771 resets=26 time=11s
+nb home ddm+hedge acc=0.9726 resets=25 time=23s
+nb home eddm acc=0.9799 resets=23 time=11s
+nb home eddm+hedge acc=0.9795 resets=23 time=23s
