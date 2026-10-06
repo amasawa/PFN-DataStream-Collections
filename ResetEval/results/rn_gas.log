@@ -1,0 +1,27 @@
+gas none acc=0.8896 resets=0 new_calls=138 time=221s
+gas ddmM acc=0.8159 resets=53 new_calls=275 time=47s
+gas ddm acc=0.8159 resets=53 new_calls=275 time=0s
+gas ddm+half acc=0.8599 resets=48 new_calls=396 time=91s
+gas ddm+hedge acc=0.8696 resets=47 new_calls=415 time=8s
+gas eddm acc=0.8291 resets=38 new_calls=446 time=13s
+gas eddm+half acc=0.8646 resets=31 new_calls=482 time=27s
+gas eddm+hedge acc=0.8809 resets=28 new_calls=514 time=16s
+gas fhddm acc=0.8186 resets=27 new_calls=609 time=32s
+gas fhddm+half acc=0.8702 resets=20 new_calls=672 time=33s
+gas fhddm+hedge acc=0.8802 resets=19 new_calls=696 time=10s
+gas hddma acc=0.8269 resets=44 new_calls=699 time=1s
+gas hddma+half acc=0.8598 resets=39 new_calls=707 time=4s
+gas hddma+hedge acc=0.8689 resets=37 new_calls=707 time=0s
+gas hddmw acc=0.8396 resets=37 new_calls=707 time=0s
+gas hddmw+half acc=0.8654 resets=34 new_calls=709 time=1s
+gas hddmw+hedge acc=0.8782 resets=30 new_calls=710 time=1s
+gas adwin acc=0.8333 resets=39 new_calls=728 time=4s
+gas adwin+half acc=0.8593 resets=36 new_calls=743 time=7s
+gas adwin+hedge acc=0.8734 resets=31 new_calls=754 time=4s
+gas ph acc=0.8251 resets=20 new_calls=781 time=9s
+gas ph+half acc=0.8814 resets=14 new_calls=793 time=6s
+gas ph+hedge acc=0.8784 resets=14 new_calls=803 time=4s
+gas kswin acc=0.8161 resets=40 new_calls=808 time=5s
+gas kswin+half acc=0.8677 resets=35 new_calls=812 time=6s
+gas kswin+hedge acc=0.8715 resets=31 new_calls=813 time=4s
+CHAIN_DONE 23:22:15

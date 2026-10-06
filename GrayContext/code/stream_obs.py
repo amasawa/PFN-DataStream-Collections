@@ -3,7 +3,10 @@ Batches of B rows, labels one batch late, context budget M. The labels that ente
 are the CONTAMINATED ones; accuracy is measured against the clean labels.
 Policies: fifo | ddm (reset on the DDM rule, errors against the given labels) | pf (prequential filter: a row whose
 given label had predicted probability < TAU and differs from the predicted class is not added) | pr (such a row is
-added with the predicted class instead). Usage: python stream_obs.py <stream> [<stream> ...] -> ../results/stream/"""
+added with the predicted class instead). Threshold variants (2026-10-06 follow-up): pf@<tau> / pr@<tau> use a fixed tau, pf@k / pr@k use tau = 0.5/K; set
+STREAM_OBS_PLAN=tau to run only those on clean and sym20 into ../results/stream_tau/; prec_flag records the share of
+flagged rows whose given label was indeed wrong.
+Usage: python stream_obs.py <stream> [<stream> ...] -> ../results/stream/"""
 import os, sys, time, warnings
 import numpy as np
 
@@ -11,6 +14,8 @@ warnings.filterwarnings("ignore")
 DATA, OUT = "../../MICE/data", "../results/stream"
 B, M, NMAX, TAU = 100, 1000, 30_000, 0.2
 CONDS, POLS = ("clean", "sym20", "burst"), ("fifo", "ddm", "pf", "pr")
+if os.environ.get("STREAM_OBS_PLAN") == "tau":
+    OUT, CONDS, POLS = "../results/stream_tau", ("clean", "sym20"), ("pf@0.05", "pr@0.05", "pf@k", "pr@k")
 
 
 class TFM:
@@ -44,15 +49,16 @@ def run(stream, cond, pol):
         return
     z = np.load(f"{DATA}/{stream}.npz"); X, y = np.nan_to_num(z["X"][:NMAX].astype(np.float32)), z["y"][:NMAX].astype(int)
     K, T = int(y.max()) + 1, len(y) // B
+    kind, _, tau = pol.partition("@"); tau = TAU if not tau else 0.5 / K if tau == "k" else float(tau)
     yn = contaminate(y, cond, K, np.random.default_rng(7))
     f = TFM(K); cx, cy = np.zeros((0, X.shape[1]), np.float32), np.zeros(0, int)
-    acc = np.full(T, np.nan); dropped = np.zeros(T); changed = np.zeros(T); wrong_in_ctx = np.full(T, np.nan); resets = []
+    acc = np.full(T, np.nan); dropped = np.zeros(T); changed = np.zeros(T); flag_ok = np.zeros(T); wrong_in_ctx = np.full(T, np.nan); resets = []
     n = err = 0; pmin = smin = np.inf; P_prev = None; t0 = time.time()
     for t in range(1, T):
         lab = slice((t - 1) * B, t * B); Xl, yl = X[lab], yn[lab].copy(); keep = np.ones(B, bool)
-        if P_prev is not None and pol in ("pf", "pr"):
-            hat = P_prev.argmax(1); sus = (hat != yl) & (P_prev[np.arange(B), yl] < TAU)
-            if pol == "pf":
+        if P_prev is not None and kind in ("pf", "pr"):
+            hat = P_prev.argmax(1); sus = (hat != yl) & (P_prev[np.arange(B), yl] < tau); flag_ok[t] = (sus & (yl != y[lab])).sum()
+            if kind == "pf":
                 keep = ~sus; dropped[t] = sus.sum()
             else:
                 yl[sus] = hat[sus]; changed[t] = sus.sum()
@@ -68,8 +74,8 @@ def run(stream, cond, pol):
         P_prev = f.predict(cx, cy, X[q]) if len(cy) else np.full((B, K), 1 / K)
         acc[t] = (P_prev.argmax(1) == y[q]).mean()
     os.makedirs(OUT, exist_ok=True)
-    np.savez_compressed(dst, acc=acc, dropped=dropped, changed=changed, resets=np.array(resets), noise=float((yn != y).mean()))
-    print(stream, cond, pol, f"acc={np.nanmean(acc):.4f} resets={len(resets)} dropped={int(dropped.sum())} changed={int(changed.sum())} time={time.time() - t0:.0f}s", flush=True)
+    np.savez_compressed(dst, acc=acc, dropped=dropped, changed=changed, flag_ok=flag_ok, tau=tau, resets=np.array(resets), noise=float((yn != y).mean()))
+    print(stream, cond, pol, f"acc={np.nanmean(acc):.4f} resets={len(resets)} dropped={int(dropped.sum())} changed={int(changed.sum())} prec_flag={flag_ok.sum() / max(dropped.sum() + changed.sum(), 1):.3f} tau={tau:.3f} time={time.time() - t0:.0f}s", flush=True)
 
 
 if __name__ == "__main__":

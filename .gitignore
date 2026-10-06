@@ -33,3 +33,5 @@ refs/
 **/overleaf/**/main.log
 # local tool settings
 .claude/settings.local.json
+# raw downloads for ResetEval streams (see ResetEval/code/streams_new.py)
+ResetEval/data/_raw/

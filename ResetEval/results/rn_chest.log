@@ -1,0 +1,70 @@
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 168, in <module>
+    run(s, p, cache, X, y)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 147, in run
+    P = cache.get(lo, t)
+        ^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 81, in get
+    self.d[key] = self.f.predict(self.X[lo:t * B], self.y[lo:t * B], self.X[t * B:(t + 1) * B]).astype(np.float16)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 66, in predict
+    P[:, self.m.classes_.astype(int)] = self.m.predict_proba(Xq)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 74, in __next__
+    torch.cuda.synchronize(self._device)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1281, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 23:27:52
+chest none acc=0.9700 resets=0 new_calls=799 time=30s
+chest ddmM acc=0.9904 resets=9 new_calls=872 time=18s
+chest ddm acc=0.9904 resets=9 new_calls=872 time=0s
+chest ddm+half acc=0.9770 resets=17 new_calls=927 time=14s
+chest ddm+hedge acc=0.9879 resets=9 new_calls=936 time=1s
+chest eddm acc=0.9912 resets=10 new_calls=967 time=0s
+chest eddm+half acc=0.9776 resets=18 new_calls=992 time=7s
+chest eddm+hedge acc=0.9902 resets=10 new_calls=1001 time=0s
+chest fhddm acc=0.9774 resets=8 new_calls=1064 time=0s
+chest fhddm+half acc=0.9738 resets=11 new_calls=1080 time=5s
+chest fhddm+hedge acc=0.9774 resets=8 new_calls=1080 time=0s
+chest hddma acc=0.9902 resets=12 new_calls=1093 time=3s
+chest hddma+half acc=0.9762 resets=12 new_calls=1102 time=4s
+chest hddma+hedge acc=0.9876 resets=10 new_calls=1102 time=2s
+chest hddmw acc=0.9907 resets=12 new_calls=1102 time=0s
+chest hddmw+half acc=0.9763 resets=14 new_calls=1109 time=2s
+chest hddmw+hedge acc=0.9879 resets=10 new_calls=1109 time=0s
+chest adwin acc=0.9908 resets=12 new_calls=1118 time=0s
+chest adwin+half acc=0.9771 resets=19 new_calls=1131 time=4s
+chest adwin+hedge acc=0.9896 resets=12 new_calls=1140 time=0s
+chest ph acc=0.9909 resets=10 new_calls=1158 time=0s
+chest ph+half acc=0.9764 resets=16 new_calls=1164 time=2s
+chest ph+hedge acc=0.9900 resets=10 new_calls=1164 time=0s
+chest kswin acc=0.9907 resets=12 new_calls=1173 time=41s
+chest kswin+half acc=0.9771 resets=20 new_calls=1173 time=40s
+chest kswin+hedge acc=0.9895 resets=13 new_calls=1173 time=39s
+CHAIN_DONE 23:32:10

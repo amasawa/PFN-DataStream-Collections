@@ -1,0 +1,266 @@
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 90, in <module>
+    run(s)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 65, in run
+    Pf = f.predict(X[lo:t * B], y[lo:t * B], X[q])
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 40, in predict
+    self.m.fit(Xc, yc); P[:, self.m.classes_.astype(int)] = self.m.predict_proba(Xq); return P
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 74, in __next__
+    torch.cuda.synchronize(self._device)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1281, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 18:25:26
+RESTART 21:30:23 (WSL restarted ~21:00; chain stopped after RETRY 18:25:26)
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 90, in <module>
+    run(s)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 72, in run
+    Pc = f.predict(X[r], y[r], X[idx])
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 40, in predict
+    self.m.fit(Xc, yc); P[:, self.m.classes_.astype(int)] = self.m.predict_proba(Xq); return P
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 74, in __next__
+    torch.cuda.synchronize(self._device)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1281, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 21:31:54
+RESTART 21:35:56 (query rows of predict_proba chunked to 1000; previous run filled the 32 GB GPU)
+h2_spam fifo=94.49 sel=92.11 duo=94.54 mean w_sel=0.41 time=474s
+h2_phishing fifo=94.57 sel=94.66 duo=94.80 mean w_sel=0.49 time=187s
+h2_weather fifo=81.09 sel=78.11 duo=80.54 mean w_sel=0.45 time=203s
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 93, in <module>
+    run(s)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 75, in run
+    Pc = f.predict(X[r], y[r], X[idx])
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 42, in predict
+    P[i:i + 1000, cls] = self.m.predict_proba(Xq[i:i + 1000])  # ~10^4 rows at once filled the 32 GB GPU
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 74, in __next__
+    torch.cuda.synchronize(self._device)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1281, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 21:50:42
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 93, in <module>
+    run(s)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 75, in run
+    Pc = f.predict(X[r], y[r], X[idx])
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 42, in predict
+    P[i:i + 1000, cls] = self.m.predict_proba(Xq[i:i + 1000])  # ~10^4 rows at once filled the 32 GB GPU
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 74, in __next__
+    torch.cuda.synchronize(self._device)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1281, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 21:53:58
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 93, in <module>
+    run(s)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 75, in run
+    Pc = f.predict(X[r], y[r], X[idx])
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 42, in predict
+    P[i:i + 1000, cls] = self.m.predict_proba(Xq[i:i + 1000])  # ~10^4 rows at once filled the 32 GB GPU
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 74, in __next__
+    torch.cuda.synchronize(self._device)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1281, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 21:57:54
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 93, in <module>
+    run(s)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 75, in run
+    Pc = f.predict(X[r], y[r], X[idx])
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/code/check_duo.py", line 42, in predict
+    P[i:i + 1000, cls] = self.m.predict_proba(Xq[i:i + 1000])  # ~10^4 rows at once filled the 32 GB GPU
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 74, in __next__
+    torch.cuda.synchronize(self._device)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1281, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 21:59:10
+STOPPED duo 22:02:57 after 4 retries without a finished stream
+RESTART 22:42:38 (22:43, alongside the last ResetEval real streams; 4 parallel chains, checkpoint every 20 batches)
+method         duo   fifo  fifo_ref   mice    sel
+stream                                           
+elec2        81.22  81.04     81.05  81.47  80.52
+h2_airlines  67.65  68.15     68.15  68.17  66.76
+h2_phishing  94.80  94.57     94.57  94.60  94.66
+h2_poker     91.11  90.76     90.76  91.27  86.51
+h2_rialto    82.24  75.51     75.51  81.13  81.84
+h2_spam      94.54  94.49     94.49  94.25  92.11
+h2_weather   80.54  81.09     81.08  81.07  78.11
+mean {'duo': 84.59, 'fifo': 83.66, 'fifo_ref': 83.66, 'mice': 84.56, 'sel': 82.93}
+           acc  macro_f1  roc_auc    ece  logloss
+method                                           
+duo     84.586    78.544   90.531  2.030    0.387
+fifo    83.659    77.492   89.319  1.969    0.422
+sel     82.929    77.174   89.037  4.842    0.489
+check: fifo here vs MICE's fifo, max abs diff 0.011
+D1: duo - fifo mean +0.93 (need >= +0.50), better on 5/7 (need 5/7)
+D2: duo - mice mean +0.02 (need >= 0), better on 3/7
+CHECK_DONE 23:00:11

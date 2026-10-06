@@ -1,0 +1,27 @@
+home none acc=0.9695 resets=0 new_calls=999 time=78s
+home ddmM acc=0.9843 resets=33 new_calls=1221 time=34s
+home ddm acc=0.9843 resets=33 new_calls=1221 time=0s
+home ddm+half acc=0.9758 resets=40 new_calls=1367 time=35s
+home ddm+hedge acc=0.9812 resets=36 new_calls=1429 time=2s
+home eddm acc=0.9833 resets=23 new_calls=1451 time=1s
+home eddm+half acc=0.9748 resets=36 new_calls=1472 time=6s
+home eddm+hedge acc=0.9816 resets=25 new_calls=1472 time=0s
+home fhddm acc=0.9783 resets=20 new_calls=1619 time=0s
+home fhddm+half acc=0.9733 resets=27 new_calls=1721 time=18s
+home fhddm+hedge acc=0.9783 resets=20 new_calls=1721 time=0s
+home hddma acc=0.9846 resets=27 new_calls=1730 time=2s
+home hddma+half acc=0.9759 resets=39 new_calls=1732 time=2s
+home hddma+hedge acc=0.9825 resets=32 new_calls=1732 time=2s
+home hddmw acc=0.9845 resets=25 new_calls=1732 time=0s
+home hddmw+half acc=0.9756 resets=37 new_calls=1732 time=1s
+home hddmw+hedge acc=0.9824 resets=28 new_calls=1732 time=1s
+home adwin acc=0.9845 resets=26 new_calls=1751 time=0s
+home adwin+half acc=0.9751 resets=38 new_calls=1758 time=1s
+home adwin+hedge acc=0.9824 resets=28 new_calls=1767 time=0s
+home ph acc=0.9821 resets=19 new_calls=1790 time=1s
+home ph+half acc=0.9753 resets=27 new_calls=1831 time=5s
+home ph+hedge acc=0.9806 resets=21 new_calls=1849 time=0s
+home kswin acc=0.9839 resets=25 new_calls=1859 time=39s
+home kswin+half acc=0.9756 resets=37 new_calls=1859 time=37s
+home kswin+hedge acc=0.9808 resets=28 new_calls=1869 time=37s
+CHAIN_DONE 23:32:39

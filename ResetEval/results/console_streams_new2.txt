@@ -1,0 +1,5 @@
+eeg.npz (14980, 14) classes 2 counts [8257, 6723] NaN 0 majority rate 0.551; sliding RF 0.689 vs sliding majority 0.565
+news.npz (39644, 58) classes 2 counts [18490, 21154] NaN 0 majority rate 0.534; sliding RF 0.654 vs sliding majority 0.544
+home.npz (100000, 10) classes 3 counts [68917, 17478, 13605] NaN 0 majority rate 0.689; sliding RF 0.965 vs sliding majority 0.878
+wall.npz (5456, 24) classes 4 counts [2205, 2097, 328, 826] NaN 0 majority rate 0.404; sliding RF 0.951 vs sliding majority 0.349
+chest.npz (100000, 3) classes 7 counts [33677, 928, 11179, 26860, 3191, 2917, 21248] NaN 0 majority rate 0.337; sliding RF 0.952 vs sliding majority 0.950

@@ -1,0 +1,27 @@
+covertype 0 first 7180 fifo=78.85 ltm=78.76 em=75.49 rp=79.43 rp5=78.83 oracle=81.46 time=112s
+covertype 1 first 6821 fifo=80.61 ltm=80.20 em=77.95 rp=80.22 rp5=80.42 oracle=82.16 time=109s
+covertype 2 first 6842 fifo=79.05 ltm=78.73 em=75.86 rp=79.10 rp5=78.63 oracle=80.88 time=105s
+covertype 3 first 10409 fifo=76.37 ltm=76.21 em=73.11 rp=76.82 rp5=76.38 oracle=79.38 time=93s
+covertype 4 first 6652 fifo=79.01 ltm=78.60 em=75.69 rp=79.50 rp5=78.88 oracle=81.22 time=106s
+covertype 5 first 6787 fifo=78.83 ltm=78.91 em=76.10 rp=79.27 rp5=78.71 oracle=80.99 time=109s
+covertype 6 first 7391 fifo=77.56 ltm=77.14 em=73.76 rp=77.54 rp5=77.28 oracle=79.64 time=111s
+insects_abrupt_balanced 0 first 6496 fifo=75.32 ltm=74.81 em=71.40 rp=77.35 rp5=76.47 oracle=78.61 time=103s
+insects_abrupt_balanced 1 first 6460 fifo=76.15 ltm=75.83 em=72.25 rp=77.97 rp5=77.31 oracle=79.68 time=103s
+insects_abrupt_balanced 2 first 6484 fifo=78.96 ltm=78.50 em=75.63 rp=80.98 rp5=80.22 oracle=82.35 time=102s
+insects_abrupt_balanced 3 first 6523 fifo=77.29 ltm=77.02 em=74.38 rp=79.34 rp5=78.54 oracle=80.90 time=104s
+insects_abrupt_balanced 4 first 6469 fifo=78.36 ltm=77.88 em=75.18 rp=80.50 rp5=79.62 oracle=81.70 time=103s
+insects_abrupt_balanced 5 first 7615 fifo=77.73 ltm=77.52 em=74.51 rp=79.47 rp5=78.80 oracle=80.70 time=108s
+h2_poker 0 first 3243 fifo=91.05 ltm=89.76 em=79.12 rp=88.60 rp5=90.64 oracle=91.66 time=51s
+h2_poker 1 first 5152 fifo=92.87 ltm=92.15 em=81.36 rp=90.64 rp5=92.37 oracle=93.23 time=57s
+h2_poker 2 first 8375 fifo=90.93 ltm=91.01 em=74.86 rp=87.45 rp5=89.88 oracle=91.27 time=65s
+h2_rialto 0 first 7200 fifo=72.83 ltm=72.83 em=66.32 rp=72.87 rp5=72.82 oracle=72.83 time=79s
+h2_rialto 1 first 7201 fifo=73.63 ltm=73.69 em=66.90 rp=73.60 rp5=73.64 oracle=73.57 time=73s
+h2_rialto 2 first 7202 fifo=73.50 ltm=73.52 em=66.84 rp=73.54 rp5=73.52 oracle=73.53 time=70s
+h2_rialto 3 first 7203 fifo=73.52 ltm=73.55 em=66.75 rp=73.46 rp5=73.47 oracle=73.48 time=86s
+h2_rialto 4 first 7204 fifo=74.01 ltm=74.01 em=67.09 rp=74.03 rp5=74.06 oracle=74.00 time=86s
+h2_rialto 5 first 7205 fifo=74.02 ltm=74.04 em=67.32 rp=74.01 rp5=74.02 oracle=74.02 time=81s
+h2_rialto 6 first 7206 fifo=72.86 ltm=72.94 em=66.20 rp=72.77 rp5=72.90 oracle=72.75 time=82s
+h2_rialto 7 first 7207 fifo=74.24 ltm=74.26 em=67.03 rp=73.99 rp5=74.16 oracle=74.15 time=81s
+h2_rialto 8 first 7208 fifo=73.58 ltm=73.66 em=67.04 rp=73.47 rp5=73.55 oracle=73.53 time=83s
+h2_rialto 9 first 7209 fifo=72.42 ltm=72.41 em=65.50 rp=72.44 rp5=72.45 oracle=72.48 time=81s
+CHECK_DONE 15:22:46

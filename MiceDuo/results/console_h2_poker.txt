@@ -1,0 +1,2 @@
+h2_poker fifo=90.76 sel=86.51 duo=91.11 mean w_sel=0.38 time=1000s
+DONE 22:59:21

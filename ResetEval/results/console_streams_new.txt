@@ -1,0 +1,5 @@
+gas.npz (13910, 128) classes 6 counts [2565, 2926, 1641, 1936, 3009, 1833] NaN 0 majority rate 0.216; sliding RF 0.834 vs sliding majority 0.178
+occupancy.npz (20560, 5) classes 2 counts [15810, 4750] NaN 0 majority rate 0.769; sliding RF 0.958 vs sliding majority 0.591
+room.npz (10129, 16) classes 4 counts [8228, 459, 748, 694] NaN 0 majority rate 0.812; sliding RF 0.950 vs sliding majority 0.841
+bank.npz (41188, 19) classes 2 counts [36548, 4640] NaN 0 majority rate 0.887; sliding RF 0.877 vs sliding majority 0.871
+kdd.npz (100000, 41) classes 5 counts [41844, 56237, 1808, 102, 9] NaN 0 majority rate 0.562; sliding RF 0.995 vs sliding majority 0.936

@@ -1,0 +1,27 @@
+wall none acc=0.9325 resets=0 new_calls=53 time=32s
+wall ddmM acc=0.9013 resets=2 new_calls=68 time=5s
+wall ddm acc=0.9013 resets=2 new_calls=68 time=0s
+wall ddm+half acc=0.9011 resets=15 new_calls=85 time=6s
+wall ddm+hedge acc=0.9143 resets=12 new_calls=111 time=9s
+wall eddm acc=0.6057 resets=36 new_calls=154 time=12s
+wall eddm+half acc=0.8751 resets=15 new_calls=184 time=13s
+wall eddm+hedge acc=0.9198 resets=9 new_calls=204 time=8s
+wall fhddm acc=0.9104 resets=3 new_calls=212 time=3s
+wall fhddm+half acc=0.9319 resets=2 new_calls=217 time=2s
+wall fhddm+hedge acc=0.9306 resets=2 new_calls=218 time=0s
+wall hddma acc=0.5947 resets=42 new_calls=231 time=4s
+wall hddma+half acc=0.8540 resets=26 new_calls=241 time=4s
+wall hddma+hedge acc=0.9175 resets=18 new_calls=252 time=4s
+wall hddmw acc=0.6911 resets=20 new_calls=260 time=2s
+wall hddmw+half acc=0.8923 resets=10 new_calls=271 time=5s
+wall hddmw+hedge acc=0.9200 resets=7 new_calls=274 time=1s
+wall adwin acc=0.7285 resets=15 new_calls=285 time=4s
+wall adwin+half acc=0.8849 resets=9 new_calls=286 time=1s
+wall adwin+hedge acc=0.9281 resets=6 new_calls=291 time=2s
+wall ph acc=0.7994 resets=9 new_calls=316 time=8s
+wall ph+half acc=0.9011 resets=5 new_calls=326 time=5s
+wall ph+hedge acc=0.9315 resets=2 new_calls=331 time=2s
+wall kswin acc=0.7238 resets=19 new_calls=336 time=3s
+wall kswin+half acc=0.8964 resets=10 new_calls=336 time=2s
+wall kswin+hedge acc=0.9291 resets=5 new_calls=336 time=2s
+CHAIN_DONE 23:29:52

@@ -1,0 +1,2 @@
+elec2 fifo=81.04 sel=80.52 duo=81.22 mean w_sel=0.45 time=992s
+DONE 22:59:13

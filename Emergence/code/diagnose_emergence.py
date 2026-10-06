@@ -1,4 +1,10 @@
-"""Feasibility check: how does a tabular foundation model treat a class while it emerges, i.e. while the context holds
+"""Diagnosis (2026-10-06, design in logs/EXPERIMENT_LOG.md), derived from check_emergence.py with the same protocol.
+For every n_c it adds: auroc_c (AUROC of P(c|x) for new vs old rows: ranking quality, free of any prior/threshold);
+oracle_all (rescale every class to the true test prior); oracle_c (rescale class c only, to its true test share,
+other classes keep their relative probabilities); em_c (EM on the prior of class c only); and the best accuracy a
+single multiplicative weight on class c can reach (best_w_acc, an upper bound for any c-only prior correction).
+Original docstring of check_emergence.py follows.
+Feasibility check: how does a tabular foundation model treat a class while it emerges, i.e. while the context holds
 n_c = 0, 1, 2, ... rows of it and the incoming data already contain it at a much larger share?
 (design and decision rule: logs/EXPERIMENT_LOG.md, 2026-10-06). Usage: python check_emergence.py -> ../results/emergence.csv;
 python check_emergence.py <out.csv> <set> [<set> ...] runs other data sets (multi-class replication, 2026-10-06)."""
@@ -10,7 +16,7 @@ warnings.filterwarnings("ignore")
 DATA = "../../MICE/data"
 SETS = ["covertype", "insects_abrupt_balanced", "h2_poker", "h2_airlines", "elec2", "h2_spam", "h2_phishing", "h2_rialto", "h2_weather"]
 N_CTX, N_TEST, SHARE, SEEDS, NC = 1000, 2000, 0.25, range(5), (0, 1, 2, 5, 10, 20, 50, 100)
-OUT = "../results/emergence.csv"
+OUT = "../results/diagnosis.csv"
 if len(sys.argv) > 2:
     OUT, SETS = sys.argv[1], sys.argv[2:]
 
@@ -28,6 +34,25 @@ def em_prior(P, prior, it=50):
     for _ in range(it):
         W = P * (q / np.clip(prior, 1e-9, None)); W /= W.sum(1, keepdims=True); q = W.mean(0)
     return W
+
+
+def reweight(P, w):
+    W = P * w; return W / W.sum(1, keepdims=True)
+
+
+def em_c(P, prior, ci, it=50):
+    """EM on the prior of class ci only; the other classes keep their context proportions."""
+    q = prior[ci]
+    for _ in range(it):
+        w = np.ones(P.shape[1]) * (1 - q) / max(1 - prior[ci], 1e-9); w[ci] = q / max(prior[ci], 1e-9)
+        q = reweight(P, w)[:, ci].mean()
+    return reweight(P, w)
+
+
+def scores(W, yt, isnew, ci, tag):
+    p = W.argmax(1)
+    return {f"{tag}_recall_new": float((p[isnew] == ci).mean()), f"{tag}_acc_old": float((p[~isnew] == yt[~isnew]).mean()),
+            f"{tag}_acc": float((p == yt).mean())}
 
 
 def main():
@@ -59,14 +84,29 @@ def main():
                          conf_new=float(conf[isnew].mean()), conf_old=float(conf[~isnew].mean()),
                          auroc_unc=float(roc_auc_score(isnew, 1 - conf)),
                          auroc_ent=float(roc_auc_score(isnew, -(P * np.log(np.clip(P, 1e-12, 1))).sum(1))))
+                r["auroc_c"] = float(roc_auc_score(isnew, P[:, ci]))
                 if n_c > 0:
                     prior = np.bincount(yc, minlength=K) / len(yc); W = em_prior(P, prior); pw = W.argmax(1)
                     r.update(em_recall_new=float((pw[isnew] == ci).mean()), em_acc_old=float((pw[~isnew] == yt[~isnew]).mean()),
                              em_acc=float((pw == yt).mean()), em_share=float(W.mean(0)[ci]))
+                    true = np.bincount(yt, minlength=K) / len(yt)
+                    r.update(scores(reweight(P, true / np.clip(prior, 1e-9, None)), yt, isnew, ci, "oracle_all"))
+                    w = np.ones(K) * (1 - true[ci]) / max(1 - prior[ci], 1e-9); w[ci] = true[ci] / max(prior[ci], 1e-9)
+                    r.update(scores(reweight(P, w), yt, isnew, ci, "oracle_c"))
+                    r.update(scores(em_c(P, prior, ci), yt, isnew, ci, "emc"))
+                    best = 0.0
+                    for lw in np.linspace(-2, 8, 101):
+                        w = np.ones(K); w[ci] = 10.0 ** lw; best = max(best, float((reweight(P, w).argmax(1) == yt).mean()))
+                    r["best_w_acc"] = best
                 rows.append(r)
             print(name, seed, "done", flush=True)
             pd.DataFrame(rows).to_csv(OUT, index=False)
     r = pd.DataFrame(rows); pd.set_option("display.width", 250)
+    cols = ["recall_new", "acc_old", "acc", "auroc_c", "em_recall_new", "em_acc_old", "em_acc", "emc_recall_new", "emc_acc_old",
+            "emc_acc", "oracle_c_recall_new", "oracle_c_acc_old", "oracle_c_acc", "oracle_all_acc", "best_w_acc"]
+    print("diagnosis: mean over data sets and seeds by n_c"); print((100 * r.groupby("n_c")[cols].mean()).round(1).T.to_string())
+    print("AUROC of P(c|x), new vs old, per data set"); print(r.pivot_table(index="data", columns="n_c", values="auroc_c").round(3).to_string())
+    return; pd.set_option("display.width", 250)
     print("mean over data sets and seeds, by the number of context rows of the emerging class")
     print((100 * r.groupby("n_c")[["recall_new", "em_recall_new", "acc_old", "em_acc_old", "acc", "em_acc", "conf_new", "conf_old", "auroc_unc", "em_share"]].mean()).round(1).to_string())
     g = r.pivot_table(index="data", columns="n_c", values="recall_new"); e = r.pivot_table(index="data", columns="n_c", values="em_recall_new")

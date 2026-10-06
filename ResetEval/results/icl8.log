@@ -1,0 +1,6 @@
+h4_covertype_d none acc=0.9599 resets=0 new_calls=999 time=1058s
+h4_covertype_d ddmM acc=0.9390 resets=28 new_calls=1043 time=19s
+h4_covertype_d ddm acc=0.9390 resets=28 new_calls=1043 time=0s
+h4_covertype_d ddm+half acc=0.9509 resets=24 new_calls=1071 time=20s
+h4_covertype_d ddm+hedge acc=0.9590 resets=76 new_calls=1234 time=88s
+h4_covertype_d eddm acc=0.5062 resets=738 new_calls=2144 time=369s

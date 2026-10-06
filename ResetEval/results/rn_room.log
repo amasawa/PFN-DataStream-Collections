@@ -1,0 +1,27 @@
+room none acc=0.9566 resets=0 new_calls=100 time=30s
+room ddmM acc=0.9271 resets=17 new_calls=147 time=18s
+room ddm acc=0.9271 resets=17 new_calls=147 time=0s
+room ddm+half acc=0.9602 resets=15 new_calls=176 time=13s
+room ddm+hedge acc=0.9372 resets=16 new_calls=177 time=0s
+room eddm acc=0.9343 resets=11 new_calls=183 time=2s
+room eddm+half acc=0.9600 resets=7 new_calls=188 time=2s
+room eddm+hedge acc=0.9420 resets=10 new_calls=195 time=2s
+room fhddm acc=0.9344 resets=5 new_calls=210 time=2s
+room fhddm+half acc=0.9570 resets=3 new_calls=220 time=4s
+room fhddm+hedge acc=0.9432 resets=5 new_calls=221 time=0s
+room hddma acc=0.9271 resets=17 new_calls=221 time=0s
+room hddma+half acc=0.9602 resets=12 new_calls=224 time=1s
+room hddma+hedge acc=0.9372 resets=16 new_calls=224 time=0s
+room hddmw acc=0.9295 resets=15 new_calls=227 time=1s
+room hddmw+half acc=0.9601 resets=9 new_calls=227 time=0s
+room hddmw+hedge acc=0.9419 resets=12 new_calls=227 time=0s
+room adwin acc=0.9343 resets=11 new_calls=250 time=1s
+room adwin+half acc=0.9600 resets=7 new_calls=255 time=0s
+room adwin+hedge acc=0.9420 resets=10 new_calls=264 time=0s
+room ph acc=0.9329 resets=8 new_calls=280 time=2s
+room ph+half acc=0.9602 resets=5 new_calls=287 time=3s
+room ph+hedge acc=0.9530 resets=6 new_calls=287 time=0s
+room kswin acc=0.9334 resets=13 new_calls=287 time=4s
+room kswin+half acc=0.9601 resets=9 new_calls=287 time=4s
+room kswin+hedge acc=0.9420 resets=12 new_calls=287 time=4s
+CHAIN_DONE 23:14:36

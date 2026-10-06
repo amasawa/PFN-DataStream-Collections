@@ -1,0 +1,2 @@
+h2_rialto fifo=75.51 sel=81.84 duo=82.24 mean w_sel=0.65 time=1035s
+DONE 22:59:57

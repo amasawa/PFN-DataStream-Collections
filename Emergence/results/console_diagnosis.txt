@@ -1,0 +1,87 @@
+covertype 0 done
+covertype 1 done
+covertype 2 done
+covertype 3 done
+covertype 4 done
+insects_abrupt_balanced 0 done
+insects_abrupt_balanced 1 done
+insects_abrupt_balanced 2 done
+insects_abrupt_balanced 3 done
+insects_abrupt_balanced 4 done
+h2_poker 0 done
+h2_poker 1 done
+h2_poker 2 done
+h2_poker 3 done
+h2_poker 4 done
+h2_rialto 0 done
+h2_rialto 1 done
+h2_rialto 2 done
+h2_rialto 3 done
+h2_rialto 4 done
+h3_covertype_b 0 done
+h3_covertype_b 1 done
+h3_covertype_b 2 done
+h3_covertype_b 3 done
+h3_covertype_b 4 done
+h4_covertype_d 0 done
+h4_covertype_d 1 done
+h4_covertype_d 2 done
+h4_covertype_d 3 done
+h4_covertype_d 4 done
+h3_insects_b 0 done
+h3_insects_b 1 done
+h3_insects_b 2 done
+h3_insects_b 3 done
+h3_insects_b 4 done
+insects_gradual_balanced 0 done
+insects_gradual_balanced 1 done
+insects_gradual_balanced 2 done
+insects_gradual_balanced 3 done
+insects_gradual_balanced 4 done
+insects_incremental_balanced 0 done
+insects_incremental_balanced 1 done
+insects_incremental_balanced 2 done
+insects_incremental_balanced 3 done
+insects_incremental_balanced 4 done
+h3_poker_b 0 done
+h3_poker_b 1 done
+h3_poker_b 2 done
+h3_poker_b 3 done
+h3_poker_b 4 done
+rbf_s10 0 done
+rbf_s10 1 done
+rbf_s10 2 done
+rbf_s10 3 done
+rbf_s10 4 done
+diagnosis: mean over data sets and seeds by n_c
+n_c                   0     1     2     5     10    20    50    100
+recall_new            0.0   2.1   3.9   8.5  15.2  29.4  51.2  66.9
+acc_old              82.9  82.8  82.8  82.8  82.8  82.6  82.3  81.2
+acc                  62.2  62.6  63.1  64.2  65.9  69.3  74.5  77.6
+auroc_c              50.0  83.7  86.8  90.1  92.0  93.3  94.7  95.2
+em_recall_new         NaN  72.5  79.5  81.5  79.0  71.3  75.5  78.4
+em_acc_old            NaN  56.0  57.3  63.3  71.9  77.2  78.3  78.4
+em_acc                NaN  60.1  62.8  67.8  73.7  75.7  77.6  78.4
+emc_recall_new        NaN  74.0  80.4  81.0  78.2  74.7  79.2  82.0
+emc_acc_old           NaN  57.6  59.6  66.2  73.7  77.3  78.4  78.4
+emc_acc               NaN  61.7  64.8  69.9  74.8  76.6  78.6  79.3
+oracle_c_recall_new   NaN  69.2  75.8  78.8  77.7  77.9  81.5  83.7
+oracle_c_acc_old      NaN  66.4  67.9  72.4  75.6  77.1  77.9  78.0
+oracle_c_acc          NaN  67.1  69.9  74.0  76.2  77.3  78.8  79.4
+oracle_all_acc        NaN  67.2  70.0  74.1  76.2  77.5  78.9  79.5
+best_w_acc            NaN  71.5  73.2  75.3  76.7  77.7  79.2  79.7
+AUROC of P(c|x), new vs old, per data set
+n_c                           0      1      2      5      10     20     50     100
+data                                                                              
+covertype                     0.5  0.882  0.892  0.917  0.943  0.948  0.959  0.965
+h2_poker                      0.5  0.942  0.960  0.984  0.987  0.993  0.996  0.998
+h2_rialto                     0.5  0.801  0.848  0.908  0.918  0.938  0.956  0.967
+h3_covertype_b                0.5  0.822  0.873  0.900  0.930  0.941  0.960  0.967
+h3_insects_b                  0.5  0.825  0.861  0.895  0.908  0.914  0.923  0.927
+h3_poker_b                    0.5  0.956  0.965  0.980  0.987  0.991  0.996  0.999
+h4_covertype_d                0.5  0.895  0.906  0.931  0.949  0.958  0.969  0.972
+insects_abrupt_balanced       0.5  0.697  0.783  0.824  0.844  0.871  0.895  0.901
+insects_gradual_balanced      0.5  0.780  0.770  0.823  0.854  0.861  0.885  0.888
+insects_incremental_balanced  0.5  0.750  0.818  0.857  0.863  0.883  0.894  0.899
+rbf_s10                       0.5  0.851  0.872  0.896  0.939  0.965  0.983  0.985
+CHECK_DONE 14:38:48

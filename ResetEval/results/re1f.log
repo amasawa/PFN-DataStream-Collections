@@ -1,0 +1,27 @@
+insects_abrupt_balanced none acc=0.7653 resets=0 new_calls=527 time=410s
+insects_abrupt_balanced ddmM acc=0.7653 resets=0 new_calls=527 time=0s
+insects_abrupt_balanced ddm acc=0.7780 resets=10 new_calls=598 time=31s
+insects_abrupt_balanced ddm+half acc=0.7700 resets=8 new_calls=638 time=22s
+insects_abrupt_balanced ddm+hedge acc=0.7777 resets=10 new_calls=638 time=0s
+insects_abrupt_balanced eddm acc=0.7647 resets=31 new_calls=736 time=41s
+insects_abrupt_balanced eddm+half acc=0.7671 resets=73 new_calls=879 time=69s
+insects_abrupt_balanced eddm+hedge acc=0.7716 resets=42 new_calls=973 time=39s
+insects_abrupt_balanced fhddm acc=0.7687 resets=15 new_calls=1085 time=51s
+insects_abrupt_balanced fhddm+half acc=0.7697 resets=13 new_calls=1149 time=35s
+insects_abrupt_balanced fhddm+hedge acc=0.7720 resets=12 new_calls=1165 time=6s
+insects_abrupt_balanced hddma acc=0.7832 resets=10 new_calls=1205 time=14s
+insects_abrupt_balanced hddma+half acc=0.7710 resets=10 new_calls=1225 time=12s
+insects_abrupt_balanced hddma+hedge acc=0.7813 resets=9 new_calls=1234 time=4s
+insects_abrupt_balanced hddmw acc=0.7821 resets=16 new_calls=1287 time=23s
+insects_abrupt_balanced hddmw+half acc=0.7705 resets=14 new_calls=1320 time=17s
+insects_abrupt_balanced hddmw+hedge acc=0.7820 resets=15 new_calls=1326 time=2s
+insects_abrupt_balanced adwin acc=0.7826 resets=12 new_calls=1347 time=8s
+insects_abrupt_balanced adwin+half acc=0.7717 resets=18 new_calls=1388 time=18s
+insects_abrupt_balanced adwin+hedge acc=0.7812 resets=12 new_calls=1397 time=4s
+insects_abrupt_balanced ph acc=0.7780 resets=15 new_calls=1433 time=16s
+insects_abrupt_balanced ph+half acc=0.7709 resets=20 new_calls=1472 time=17s
+insects_abrupt_balanced ph+hedge acc=0.7798 resets=16 new_calls=1499 time=12s
+insects_abrupt_balanced kswin acc=0.7839 resets=11 new_calls=1499 time=24s
+insects_abrupt_balanced kswin+half acc=0.7727 resets=15 new_calls=1504 time=29s
+insects_abrupt_balanced kswin+hedge acc=0.7824 resets=12 new_calls=1504 time=27s
+CHAIN_DONE 22:58:13

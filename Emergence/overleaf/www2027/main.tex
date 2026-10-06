@@ -1,0 +1,73 @@
+%%%%%%%% ACM Web Conference 2027 (WWW '27) research-track submission, anonymous. Template taken from AgDR/overleaf/www2027 on 2026-10-06.
+%%%%%%%% Limits: 8 pages main text, 12 pages in total including references and appendix. Skeleton only: no result in this file yet.
+\documentclass[sigconf,anonymous,review]{acmart}
+
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{mathtools}
+\usepackage[capitalize,noabbrev]{cleveref}
+\setlength{\marginparwidth}{2cm}
+\usepackage[textsize=tiny]{todonotes}   % use [disable,textsize=tiny] to hide TODOs
+
+% acmart defines theorem, proposition, lemma, corollary and definition
+\theoremstyle{acmdefinition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+
+\crefname{assumption}{Assumption}{Assumptions}
+\DeclareMathOperator{\AUROC}{AUROC}
+
+% top-3 marks in result tables
+\newcommand{\first}[1]{\textbf{#1}}
+\newcommand{\second}[1]{\underline{#1}}
+\newcommand{\third}[1]{\textit{#1}}
+\newcommand{\pmstd}[2]{#1{\scriptsize$\pm$#2}}
+
+\setcopyright{none}
+\copyrightyear{2027}
+\acmYear{2027}
+\acmConference[WWW '27]{The ACM Web Conference 2027}{2027}{Dublin, Ireland}
+
+% method name (change here only)
+\newcommand{\method}{\textsc{Method}}
+\newcommand{\nc}{n_c}
+
+\begin{document}
+
+\title{Emerging Classes in the Context of Tabular Foundation Models on Data Streams}
+\author{Anonymous Author(s)}
+
+\begin{abstract}
+\todo[inline]{After the Observations and the method are fixed (writing gate: self-defined stream problem, method with theory, state of the art).}
+\end{abstract}
+
+\keywords{tabular foundation models, in-context learning, data streams, emerging classes, label shift}
+
+\maketitle
+
+\section{Introduction}
+\todo[inline]{Yang-style: the stream setting in which a class emerges; Observations 1--3 lead to the question; contributions.}
+
+\section{Problem: a class emerging in the context}
+\todo[inline]{Self-defined stream: batches, delayed labels, context budget $M$; the emerging class $c$ with $\nc$ labelled rows in the context and share $\pi_t$ in the incoming batches. Assumptions stated explicitly.}
+
+\section{Observations}
+\todo[inline]{Obs.~1: recall of $c$ at $\nc=10$ is a small fraction of that at $\nc=100$ (feasibility: 0.24 on 9 sources, 0.16 on 7 multi-class sources; Emergence log 2026-10-06). Obs.~2: prior correction (EM) recovers recall only at a large cost on the old classes. Obs.~3: no rejection signal before the first labelled row (AUROC $\approx 0.6$). To be redone on streams before they enter the paper.}
+
+\section{Method}
+\todo[inline]{Based on Confidence Amendment (Zhao et al., TPAMI 2025): an amendment schedule in $\nc$.}
+
+\section{Theory}
+\todo[inline]{Assumptions, displayed statements, remarks.}
+
+\section{Experiments}
+\todo[inline]{Streams, baselines (FIFO, EM prior correction, LTM, MICE, \ldots), protocol fixed before the final test.}
+
+\section{Related work}
+
+\section{Conclusion}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{refs}
+
+\end{document}

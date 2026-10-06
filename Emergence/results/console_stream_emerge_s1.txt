@@ -1,0 +1,1 @@
+covertype 0 first 7180 fifo=78.86 ltm=78.83 em=74.95 rp=79.39 rp5=78.86 oracle=81.27 time=118s

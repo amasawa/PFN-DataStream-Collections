@@ -1,0 +1,100 @@
+
+== real (29 streams): accuracy difference to none, points; wins = streams with d > 0
+             mean  median  worst  best  wins  resets
+pol                                                 
+ddmM        -1.80   -0.04  -9.57  1.10     8   96.00
+ddm         -1.75   -0.04  -9.54  1.27     9   94.93
+ddm+half    -0.46   -0.02  -3.67  0.47    10   82.03
+ddm+hedge   -0.05   -0.02  -1.61  1.25     9   78.31
+eddm        -5.34   -0.27 -48.43  1.05     4  148.45
+eddm+half   -0.43   -0.08  -3.92  0.50     6   87.59
+eddm+hedge   0.04   -0.04  -1.05  2.43     9   84.93
+fhddm       -5.47   -0.51 -45.62  0.90     9   80.28
+fhddm+half  -0.19   -0.02  -1.50  0.55    10   33.66
+fhddm+hedge  0.04   -0.01  -0.67  1.66    11   30.48
+hddma       -6.65   -0.11 -38.77  1.82     9  201.90
+hddma+half  -1.14   -0.02 -14.23  0.58    11   91.72
+hddma+hedge  0.05    0.00  -1.63  1.83    13   70.62
+hddmw       -6.37   -1.13 -48.17  1.75     9  154.62
+hddmw+half  -0.32   -0.07  -1.96  0.53    11   66.79
+hddmw+hedge  0.14   -0.01  -0.65  1.77    12   63.28
+adwin       -6.73   -0.11 -46.03  1.73     9  114.34
+adwin+half  -0.57   -0.01  -7.21  0.65    12   50.03
+adwin+hedge  0.16   -0.01  -0.67  1.63    11   39.86
+ph          -5.38   -0.53 -42.04  1.28     8   71.69
+ph+half     -0.32   -0.03  -4.49  0.56    11   34.66
+ph+hedge     0.19   -0.02  -0.35  1.46    10   28.55
+kswin       -5.66   -0.77 -47.57  1.87     9  117.72
+kswin+half  -0.37   -0.02  -5.25  0.74    11   50.86
+kswin+hedge  0.15   -0.01  -0.66  1.75    11   44.24
+
+== syn (42 streams): accuracy difference to none, points; wins = streams with d > 0
+              mean  median  worst   best  wins  resets
+pol                                                   
+ddmM         11.58   10.17  -0.02  41.91    41   14.81
+ddm          11.59   10.17  -0.02  41.91    41   14.64
+ddm+half      2.02    2.16   0.18   6.05    42   11.38
+ddm+hedge    11.28    9.76   0.60  42.23    42   13.36
+eddm         10.95   10.29  -0.74  47.59    41   14.43
+eddm+half     4.23    4.52   0.17  14.84    42   20.17
+eddm+hedge   11.05    9.73   0.72  47.55    42   13.86
+fhddm         1.69    0.30 -10.10  21.93    30    9.64
+fhddm+half    0.72    0.22  -0.95   3.89    31    7.26
+fhddm+hedge   2.04    0.47  -0.03  19.73    34    7.48
+hddma        11.75   10.34   0.43  47.59    42    7.76
+hddma+half    1.84    2.07  -0.66   5.02    41    7.36
+hddma+hedge  11.38    9.82   0.40  47.55    42    7.79
+hddmw        11.52   10.34   0.00  45.66    35    7.10
+hddmw+half    1.84    2.12  -2.14   6.27    34    7.19
+hddmw+hedge  11.18    9.82   0.00  46.84    35    7.10
+adwin        10.91   10.10  -3.66  47.59    40   10.19
+adwin+half    2.09    2.31   0.20   6.43    42   13.43
+adwin+hedge  10.90    9.60   0.51  47.55    42   11.29
+ph            9.96    9.03  -4.16  44.98    40    9.02
+ph+half       2.44    2.94  -0.02   9.57    41   12.26
+ph+hedge     10.14    8.63   0.12  44.98    42    9.29
+kswin        11.11    9.71   0.00  44.59    32    6.88
+kswin+half    1.82    2.00  -2.95   6.73    31    8.24
+kswin+hedge  10.65    9.09   0.00  44.52    32    7.45
+
+H1: full reset below none on real streams for 8/8 detectors (need >= 6) -> holds
+H2: full reset above none on synthetic streams for 8/8 detectors (need >= 6) -> holds
+
+H3: share of single full resets with a net loss (sum over batches t .. t+9, cut at the next reset)
+-- real: all 28534 resets, loss 87.6%, win 10.4%, tie 2.0%, mean gain -44.68 points
+          n   loss    win  mean_gain
+det                                 
+ddm    2753  80.60  15.22     -18.86
+eddm   4305  85.71  11.89     -34.76
+fhddm  2328  88.32  10.35     -68.04
+hddma  5855  89.84   8.25     -34.23
+hddmw  4484  88.72   9.72     -41.71
+adwin  3316  89.84   8.59     -60.74
+ph     2079  87.59  11.16     -76.57
+kswin  3414  87.64  10.84     -48.86
+-- syn: all 3346 resets, loss 15.2%, win 82.7%, tie 2.1%, mean gain 137.55 points
+         n   loss     win  mean_gain
+det                                 
+ddm    615  11.87   83.74     111.75
+eddm   606  29.54   69.80     107.08
+fhddm  405  32.84   58.27       4.67
+hddma  326   0.61   99.08     211.33
+hddmw  298   0.00  100.00     226.69
+adwin  428  14.49   85.28     150.94
+ph     379  14.25   85.75     156.46
+kswin  289   2.08   97.58     222.77
+H3: real loss share 87.6% (need > 50%), synthetic win share 82.7% (need > 50%) -> holds
+
+H4 per detector: real mean d(+hedge) >= -0.2 and synthetic d(+hedge) >= 0.5 * d(full) (when d(full) > 0); +half between full and +hedge on real
+       real_full  real_half  real_hedge  syn_full  syn_half  syn_hedge  real_ok  syn_ok  half_between
+det                                                                                                  
+ddm        -1.75      -0.46       -0.05     11.59      2.02      11.28     True    True          True
+eddm       -5.34      -0.43        0.04     10.95      4.23      11.05     True    True          True
+fhddm      -5.47      -0.19        0.04      1.69      0.72       2.04     True    True          True
+hddma      -6.65      -1.14        0.05     11.75      1.84      11.38     True    True          True
+hddmw      -6.37      -0.32        0.14     11.52      1.84      11.18     True    True          True
+adwin      -6.73      -0.57        0.16     10.91      2.09      10.90     True    True          True
+ph         -5.38      -0.32        0.19      9.96      2.44      10.14     True    True          True
+kswin      -5.66      -0.37        0.15     11.11      1.82      10.65     True    True          True
+H4 on the detector average: real d(+hedge) 0.09, synthetic d(+hedge) 9.83 vs half of d(full) 4.97 -> holds; per detector both parts hold for 8/8
+check: ddmM vs ddm on real streams, max |acc diff| 1.27 points

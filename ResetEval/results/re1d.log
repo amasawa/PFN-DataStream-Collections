@@ -1,0 +1,343 @@
+grid_c100_b2000_s11 none acc=0.7441 resets=0 new_calls=179 time=67s
+grid_c100_b2000_s11 ddmM acc=0.8447 resets=8 new_calls=251 time=26s
+grid_c100_b2000_s11 ddm acc=0.8447 resets=8 new_calls=251 time=0s
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 168, in <module>
+    run(s, p, cache, X, y)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 147, in run
+    P = cache.get(lo, t)
+        ^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 81, in get
+    self.d[key] = self.f.predict(self.X[lo:t * B], self.y[lo:t * B], self.X[t * B:(t + 1) * B]).astype(np.float16)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 66, in predict
+    P[:, self.m.classes_.astype(int)] = self.m.predict_proba(Xq)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 74, in __next__
+    torch.cuda.synchronize(self._device)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1281, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 22:09:13
+grid_c100_b2000_s11 ddm+half acc=0.7615 resets=8 new_calls=40 time=18s
+grid_c100_b2000_s11 ddm+hedge acc=0.8336 resets=8 new_calls=91 time=18s
+grid_c100_b2000_s11 eddm acc=0.7697 resets=42 new_calls=167 time=25s
+grid_c100_b2000_s11 eddm+half acc=0.7859 resets=36 new_calls=244 time=23s
+grid_c100_b2000_s11 eddm+hedge acc=0.8088 resets=22 new_calls=278 time=9s
+grid_c100_b2000_s11 fhddm acc=0.6431 resets=59 new_calls=424 time=42s
+grid_c100_b2000_s11 fhddm+half acc=0.7745 resets=10 new_calls=439 time=5s
+grid_c100_b2000_s11 fhddm+hedge acc=0.7568 resets=17 new_calls=525 time=27s
+grid_c100_b2000_s11 hddma acc=0.8447 resets=8 new_calls=525 time=0s
+grid_c100_b2000_s11 hddma+half acc=0.7615 resets=8 new_calls=525 time=0s
+grid_c100_b2000_s11 hddma+hedge acc=0.8336 resets=8 new_calls=525 time=0s
+grid_c100_b2000_s11 hddmw acc=0.8447 resets=8 new_calls=525 time=0s
+grid_c100_b2000_s11 hddmw+half acc=0.7657 resets=9 new_calls=525 time=0s
+grid_c100_b2000_s11 hddmw+hedge acc=0.8336 resets=8 new_calls=525 time=0s
+grid_c100_b2000_s11 adwin acc=0.7303 resets=36 new_calls=624 time=34s
+grid_c100_b2000_s11 adwin+half acc=0.7711 resets=17 new_calls=664 time=14s
+grid_c100_b2000_s11 adwin+hedge acc=0.8028 resets=27 new_calls=696 time=12s
+grid_c100_b2000_s11 ph acc=0.7025 resets=34 new_calls=772 time=24s
+grid_c100_b2000_s11 ph+half acc=0.7751 resets=17 new_calls=780 time=3s
+grid_c100_b2000_s11 ph+hedge acc=0.8092 resets=25 new_calls=823 time=12s
+grid_c100_b2000_s11 kswin acc=0.8304 resets=12 new_calls=834 time=12s
+grid_c100_b2000_s11 kswin+half acc=0.7679 resets=11 new_calls=842 time=10s
+grid_c100_b2000_s11 kswin+hedge acc=0.8035 resets=20 new_calls=872 time=16s
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 168, in <module>
+    run(s, p, cache, X, y)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 147, in run
+    P = cache.get(lo, t)
+        ^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 81, in get
+    self.d[key] = self.f.predict(self.X[lo:t * B], self.y[lo:t * B], self.X[t * B:(t + 1) * B]).astype(np.float16)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/reset_eval.py", line 66, in predict
+    P[:, self.m.classes_.astype(int)] = self.m.predict_proba(Xq)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 71, in __next__
+    value = next(self._inner)
+            ^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/parallel_execute.py", line 86, in parallel_execute
+    yield from _execute_in_current_thread(devices[0], functions)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/parallel_execute.py", line 97, in _execute_in_current_thread
+    yield function(device=device)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 796, in _call_model
+    X_full, feature_schema = _maybe_run_gpu_preprocessing(
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 1347, in _maybe_run_gpu_preprocessing
+    result = gpu_preprocessor(
+             ^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/preprocessing/torch/pipeline_interface.py", line 210, in __call__
+    result = step.fit_transform(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/preprocessing/torch/pipeline_interface.py", line 55, in fit_transform
+    x[:, :, column_indices] = transformed
+    ~^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 22:16:02
+grid_c100_b2000_s10 none acc=0.7553 resets=0 new_calls=179 time=59s
+grid_c100_b2000_s10 ddmM acc=0.8504 resets=8 new_calls=251 time=19s
+grid_c100_b2000_s10 ddm acc=0.8504 resets=8 new_calls=251 time=0s
+grid_c100_b2000_s10 ddm+half acc=0.7737 resets=8 new_calls=291 time=12s
+grid_c100_b2000_s10 ddm+hedge acc=0.8415 resets=8 new_calls=291 time=0s
+grid_c100_b2000_s10 eddm acc=0.7892 resets=32 new_calls=374 time=24s
+grid_c100_b2000_s10 eddm+half acc=0.7887 resets=25 new_calls=430 time=17s
+grid_c100_b2000_s10 eddm+hedge acc=0.8028 resets=31 new_calls=496 time=19s
+grid_c100_b2000_s10 fhddm acc=0.6588 resets=55 new_calls=651 time=42s
+grid_c100_b2000_s10 fhddm+half acc=0.7815 resets=9 new_calls=661 time=3s
+grid_c100_b2000_s10 fhddm+hedge acc=0.7621 resets=13 new_calls=739 time=24s
+grid_c100_b2000_s10 hddma acc=0.8504 resets=8 new_calls=739 time=0s
+grid_c100_b2000_s10 hddma+half acc=0.7727 resets=8 new_calls=743 time=1s
+grid_c100_b2000_s10 hddma+hedge acc=0.8415 resets=8 new_calls=743 time=0s
+grid_c100_b2000_s10 hddmw acc=0.8504 resets=8 new_calls=743 time=0s
+grid_c100_b2000_s10 hddmw+half acc=0.7727 resets=8 new_calls=743 time=0s
+grid_c100_b2000_s10 hddmw+hedge acc=0.8415 resets=8 new_calls=743 time=0s
+grid_c100_b2000_s10 adwin acc=0.7187 resets=34 new_calls=846 time=29s
+grid_c100_b2000_s10 adwin+half acc=0.7770 resets=17 new_calls=871 time=7s
+grid_c100_b2000_s10 adwin+hedge acc=0.8148 resets=25 new_calls=945 time=20s
+grid_c100_b2000_s10 ph acc=0.7210 resets=33 new_calls=993 time=11s
+grid_c100_b2000_s10 ph+half acc=0.7844 resets=17 new_calls=1013 time=5s
+grid_c100_b2000_s10 ph+hedge acc=0.8155 resets=25 new_calls=1063 time=13s
+grid_c100_b2000_s10 kswin acc=0.8234 resets=12 new_calls=1065 time=7s
+grid_c100_b2000_s10 kswin+half acc=0.7763 resets=10 new_calls=1070 time=9s
+grid_c100_b2000_s10 kswin+hedge acc=0.8172 resets=18 new_calls=1090 time=13s
+grid_c100_b500_s11 none acc=0.4032 resets=0 new_calls=44 time=15s
+grid_c100_b500_s11 ddmM acc=0.6334 resets=8 new_calls=83 time=11s
+grid_c100_b500_s11 ddm acc=0.6334 resets=8 new_calls=83 time=0s
+grid_c100_b500_s11 ddm+half acc=0.4636 resets=8 new_calls=119 time=13s
+grid_c100_b500_s11 ddm+hedge acc=0.6098 resets=8 new_calls=119 time=0s
+grid_c100_b500_s11 eddm acc=0.5648 resets=21 new_calls=138 time=6s
+grid_c100_b500_s11 eddm+half acc=0.4936 resets=19 new_calls=166 time=8s
+grid_c100_b500_s11 eddm+hedge acc=0.5448 resets=17 new_calls=178 time=3s
+grid_c100_b500_s11 fhddm acc=0.5125 resets=11 new_calls=203 time=8s
+grid_c100_b500_s11 fhddm+half acc=0.4420 resets=8 new_calls=225 time=6s
+grid_c100_b500_s11 fhddm+hedge acc=0.4941 resets=10 new_calls=246 time=7s
+grid_c100_b500_s11 hddma acc=0.6334 resets=8 new_calls=246 time=0s
+grid_c100_b500_s11 hddma+half acc=0.4534 resets=8 new_calls=257 time=2s
+grid_c100_b500_s11 hddma+hedge acc=0.6098 resets=8 new_calls=257 time=0s
+grid_c100_b500_s11 hddmw acc=0.6239 resets=9 new_calls=257 time=0s
+grid_c100_b500_s11 hddmw+half acc=0.4475 resets=8 new_calls=257 time=0s
+grid_c100_b500_s11 hddmw+hedge acc=0.6014 resets=9 new_calls=257 time=0s
+grid_c100_b500_s11 adwin acc=0.5589 resets=9 new_calls=268 time=3s
+grid_c100_b500_s11 adwin+half acc=0.4084 resets=1 new_calls=268 time=0s
+grid_c100_b500_s11 adwin+hedge acc=0.5307 resets=11 new_calls=282 time=4s
+grid_c100_b500_s11 ph acc=0.5164 resets=7 new_calls=291 time=2s
+grid_c100_b500_s11 ph+half acc=0.4132 resets=2 new_calls=293 time=1s
+grid_c100_b500_s11 ph+hedge acc=0.5080 resets=7 new_calls=297 time=1s
+grid_c100_b500_s11 kswin acc=0.6239 resets=9 new_calls=297 time=1s
+grid_c100_b500_s11 kswin+half acc=0.4357 resets=6 new_calls=297 time=1s
+grid_c100_b500_s11 kswin+hedge acc=0.5814 resets=11 new_calls=297 time=1s
+grid_c100_b500_s10 none acc=0.4414 resets=0 new_calls=44 time=10s
+grid_c100_b500_s10 ddmM acc=0.6486 resets=8 new_calls=83 time=10s
+grid_c100_b500_s10 ddm acc=0.6486 resets=8 new_calls=83 time=0s
+grid_c100_b500_s10 ddm+half acc=0.4748 resets=7 new_calls=111 time=6s
+grid_c100_b500_s10 ddm+hedge acc=0.6343 resets=8 new_calls=111 time=0s
+grid_c100_b500_s10 eddm acc=0.5643 resets=19 new_calls=137 time=6s
+grid_c100_b500_s10 eddm+half acc=0.5073 resets=20 new_calls=167 time=7s
+grid_c100_b500_s10 eddm+hedge acc=0.6093 resets=13 new_calls=176 time=2s
+grid_c100_b500_s10 fhddm acc=0.4980 resets=10 new_calls=204 time=6s
+grid_c100_b500_s10 fhddm+half acc=0.4652 resets=7 new_calls=229 time=5s
+grid_c100_b500_s10 fhddm+hedge acc=0.5102 resets=8 new_calls=249 time=4s
+grid_c100_b500_s10 hddma acc=0.6486 resets=8 new_calls=249 time=0s
+grid_c100_b500_s10 hddma+half acc=0.4695 resets=5 new_calls=253 time=1s
+grid_c100_b500_s10 hddma+hedge acc=0.6343 resets=8 new_calls=253 time=0s
+grid_c100_b500_s10 hddmw acc=0.6486 resets=8 new_calls=253 time=0s
+grid_c100_b500_s10 hddmw+half acc=0.4720 resets=7 new_calls=253 time=0s
+grid_c100_b500_s10 hddmw+hedge acc=0.6343 resets=8 new_calls=253 time=0s
+grid_c100_b500_s10 adwin acc=0.5618 resets=9 new_calls=265 time=3s
+grid_c100_b500_s10 adwin+half acc=0.4443 resets=2 new_calls=265 time=0s
+grid_c100_b500_s10 adwin+hedge acc=0.5484 resets=7 new_calls=273 time=2s
+grid_c100_b500_s10 ph acc=0.5309 resets=7 new_calls=285 time=3s
+grid_c100_b500_s10 ph+half acc=0.4411 resets=3 new_calls=289 time=1s
+grid_c100_b500_s10 ph+hedge acc=0.5227 resets=7 new_calls=305 time=4s
+grid_c100_b500_s10 kswin acc=0.6443 resets=9 new_calls=305 time=1s
+grid_c100_b500_s10 kswin+half acc=0.4452 resets=3 new_calls=305 time=2s
+grid_c100_b500_s10 kswin+hedge acc=0.6270 resets=10 new_calls=305 time=1s
+grid_c30_b2000_s11 none acc=0.7848 resets=0 new_calls=179 time=46s
+grid_c30_b2000_s11 ddmM acc=0.9355 resets=12 new_calls=256 time=25s
+grid_c30_b2000_s11 ddm acc=0.9355 resets=12 new_calls=256 time=0s
+grid_c30_b2000_s11 ddm+half acc=0.8143 resets=8 new_calls=296 time=14s
+grid_c30_b2000_s11 ddm+hedge acc=0.9259 resets=9 new_calls=312 time=5s
+grid_c30_b2000_s11 eddm acc=0.9331 resets=11 new_calls=340 time=9s
+grid_c30_b2000_s11 eddm+half acc=0.8499 resets=22 new_calls=387 time=16s
+grid_c30_b2000_s11 eddm+hedge acc=0.9203 resets=13 new_calls=406 time=6s
+grid_c30_b2000_s11 fhddm acc=0.8073 resets=8 new_calls=478 time=23s
+grid_c30_b2000_s11 fhddm+half acc=0.8123 resets=8 new_calls=488 time=3s
+grid_c30_b2000_s11 fhddm+hedge acc=0.8087 resets=8 new_calls=488 time=0s
+grid_c30_b2000_s11 hddma acc=0.9365 resets=8 new_calls=488 time=0s
+grid_c30_b2000_s11 hddma+half acc=0.8143 resets=8 new_calls=488 time=0s
+grid_c30_b2000_s11 hddma+hedge acc=0.9268 resets=8 new_calls=488 time=0s
+grid_c30_b2000_s11 hddmw acc=0.9365 resets=8 new_calls=488 time=0s
+grid_c30_b2000_s11 hddmw+half acc=0.8143 resets=8 new_calls=488 time=0s
+grid_c30_b2000_s11 hddmw+hedge acc=0.9268 resets=8 new_calls=488 time=0s
+grid_c30_b2000_s11 adwin acc=0.9365 resets=8 new_calls=488 time=0s
+grid_c30_b2000_s11 adwin+half acc=0.8339 resets=16 new_calls=498 time=3s
+grid_c30_b2000_s11 adwin+hedge acc=0.9225 resets=17 new_calls=549 time=14s
+grid_c30_b2000_s11 ph acc=0.9365 resets=8 new_calls=549 time=0s
+grid_c30_b2000_s11 ph+half acc=0.8307 resets=16 new_calls=554 time=2s
+grid_c30_b2000_s11 ph+hedge acc=0.9215 resets=16 new_calls=602 time=16s
+grid_c30_b2000_s11 kswin acc=0.9365 resets=8 new_calls=602 time=8s
+grid_c30_b2000_s11 kswin+half acc=0.8164 resets=10 new_calls=607 time=9s
+grid_c30_b2000_s11 kswin+hedge acc=0.9250 resets=10 new_calls=607 time=7s
+grid_c30_b2000_s10 none acc=0.8301 resets=0 new_calls=179 time=66s
+grid_c30_b2000_s10 ddmM acc=0.9440 resets=12 new_calls=255 time=24s
+grid_c30_b2000_s10 ddm acc=0.9447 resets=11 new_calls=263 time=2s
+grid_c30_b2000_s10 ddm+half acc=0.8533 resets=8 new_calls=303 time=12s
+grid_c30_b2000_s10 ddm+hedge acc=0.9368 resets=9 new_calls=311 time=2s
+grid_c30_b2000_s10 eddm acc=0.9451 resets=9 new_calls=328 time=5s
+grid_c30_b2000_s10 eddm+half acc=0.8836 resets=24 new_calls=370 time=14s
+grid_c30_b2000_s10 eddm+hedge acc=0.9342 resets=11 new_calls=387 time=5s
+grid_c30_b2000_s10 fhddm acc=0.8440 resets=8 new_calls=459 time=22s
+grid_c30_b2000_s10 fhddm+half acc=0.8472 resets=9 new_calls=472 time=4s
+grid_c30_b2000_s10 fhddm+hedge acc=0.8467 resets=8 new_calls=472 time=0s
+grid_c30_b2000_s10 hddma acc=0.9461 resets=8 new_calls=472 time=0s
+grid_c30_b2000_s10 hddma+half acc=0.8533 resets=8 new_calls=472 time=0s
+grid_c30_b2000_s10 hddma+hedge acc=0.9375 resets=8 new_calls=472 time=0s
+grid_c30_b2000_s10 hddmw acc=0.9461 resets=8 new_calls=472 time=0s
+grid_c30_b2000_s10 hddmw+half acc=0.8586 resets=10 new_calls=475 time=2s
+grid_c30_b2000_s10 hddmw+hedge acc=0.9375 resets=8 new_calls=475 time=0s
+grid_c30_b2000_s10 adwin acc=0.9449 resets=9 new_calls=479 time=2s
+grid_c30_b2000_s10 adwin+half acc=0.8587 resets=16 new_calls=504 time=8s
+grid_c30_b2000_s10 adwin+hedge acc=0.9334 resets=16 new_calls=576 time=22s
+grid_c30_b2000_s10 ph acc=0.9427 resets=8 new_calls=576 time=0s
+grid_c30_b2000_s10 ph+half acc=0.8603 resets=16 new_calls=590 time=4s
+grid_c30_b2000_s10 ph+hedge acc=0.9332 resets=15 new_calls=617 time=7s
+grid_c30_b2000_s10 kswin acc=0.9461 resets=8 new_calls=617 time=9s
+grid_c30_b2000_s10 kswin+half acc=0.8627 resets=11 new_calls=617 time=8s
+grid_c30_b2000_s10 kswin+hedge acc=0.9357 resets=10 new_calls=621 time=9s
+grid_c30_b500_s11 none acc=0.3655 resets=0 new_calls=44 time=18s
+grid_c30_b500_s11 ddmM acc=0.7845 resets=11 new_calls=83 time=13s
+grid_c30_b500_s11 ddm acc=0.7845 resets=11 new_calls=83 time=0s
+grid_c30_b500_s11 ddm+half acc=0.4141 resets=6 new_calls=110 time=9s
+grid_c30_b500_s11 ddm+hedge acc=0.7877 resets=10 new_calls=123 time=4s
+grid_c30_b500_s11 eddm acc=0.8064 resets=8 new_calls=127 time=1s
+grid_c30_b500_s11 eddm+half acc=0.5139 resets=23 new_calls=150 time=6s
+grid_c30_b500_s11 eddm+hedge acc=0.7877 resets=9 new_calls=150 time=0s
+grid_c30_b500_s11 fhddm acc=0.5848 resets=8 new_calls=171 time=7s
+grid_c30_b500_s11 fhddm+half acc=0.4030 resets=8 new_calls=200 time=9s
+grid_c30_b500_s11 fhddm+hedge acc=0.5627 resets=8 new_calls=204 time=1s
+grid_c30_b500_s11 hddma acc=0.8064 resets=8 new_calls=204 time=0s
+grid_c30_b500_s11 hddma+half acc=0.4105 resets=6 new_calls=212 time=3s
+grid_c30_b500_s11 hddma+hedge acc=0.7893 resets=8 new_calls=212 time=0s
+grid_c30_b500_s11 hddmw acc=0.8064 resets=8 new_calls=212 time=0s
+grid_c30_b500_s11 hddmw+half acc=0.4282 resets=9 new_calls=218 time=2s
+grid_c30_b500_s11 hddmw+hedge acc=0.7893 resets=8 new_calls=218 time=0s
+grid_c30_b500_s11 adwin acc=0.8064 resets=8 new_calls=218 time=0s
+grid_c30_b500_s11 adwin+half acc=0.4298 resets=7 new_calls=227 time=3s
+grid_c30_b500_s11 adwin+hedge acc=0.7884 resets=9 new_calls=229 time=1s
+grid_c30_b500_s11 ph acc=0.8064 resets=8 new_calls=229 time=0s
+grid_c30_b500_s11 ph+half acc=0.4223 resets=7 new_calls=239 time=4s
+grid_c30_b500_s11 ph+hedge acc=0.7893 resets=8 new_calls=239 time=0s
+grid_c30_b500_s11 kswin acc=0.8064 resets=8 new_calls=239 time=1s
+grid_c30_b500_s11 kswin+half acc=0.4327 resets=10 new_calls=239 time=1s
+grid_c30_b500_s11 kswin+hedge acc=0.7893 resets=8 new_calls=239 time=2s
+grid_c30_b500_s10 none acc=0.5118 resets=0 new_calls=44 time=12s
+grid_c30_b500_s10 ddmM acc=0.8266 resets=11 new_calls=87 time=11s
+grid_c30_b500_s10 ddm acc=0.8266 resets=11 new_calls=87 time=0s
+grid_c30_b500_s10 ddm+half acc=0.5443 resets=6 new_calls=110 time=7s
+grid_c30_b500_s10 ddm+hedge acc=0.8173 resets=10 new_calls=114 time=1s
+grid_c30_b500_s10 eddm acc=0.8325 resets=8 new_calls=118 time=1s
+grid_c30_b500_s10 eddm+half acc=0.6150 resets=22 new_calls=151 time=10s
+grid_c30_b500_s10 eddm+hedge acc=0.8202 resets=8 new_calls=151 time=0s
+grid_c30_b500_s10 fhddm acc=0.6425 resets=7 new_calls=172 time=7s
+grid_c30_b500_s10 fhddm+half acc=0.5357 resets=5 new_calls=193 time=7s
+grid_c30_b500_s10 fhddm+hedge acc=0.6034 resets=6 new_calls=209 time=5s
+grid_c30_b500_s10 hddma acc=0.8325 resets=8 new_calls=209 time=0s
+grid_c30_b500_s10 hddma+half acc=0.5366 resets=4 new_calls=212 time=1s
+grid_c30_b500_s10 hddma+hedge acc=0.8202 resets=8 new_calls=212 time=0s
+grid_c30_b500_s10 hddmw acc=0.8325 resets=8 new_calls=212 time=0s
+grid_c30_b500_s10 hddmw+half acc=0.5568 resets=8 new_calls=226 time=4s
+grid_c30_b500_s10 hddmw+hedge acc=0.8202 resets=8 new_calls=226 time=0s
+grid_c30_b500_s10 adwin acc=0.8325 resets=8 new_calls=226 time=0s
+grid_c30_b500_s10 adwin+half acc=0.5405 resets=4 new_calls=227 time=0s
+grid_c30_b500_s10 adwin+hedge acc=0.8202 resets=8 new_calls=227 time=0s
+grid_c30_b500_s10 ph acc=0.8014 resets=8 new_calls=235 time=3s
+grid_c30_b500_s10 ph+half acc=0.5450 resets=4 new_calls=239 time=1s
+grid_c30_b500_s10 ph+hedge acc=0.7748 resets=8 new_calls=243 time=1s
+grid_c30_b500_s10 kswin acc=0.8325 resets=8 new_calls=243 time=1s
+grid_c30_b500_s10 kswin+half acc=0.5507 resets=6 new_calls=244 time=2s
+grid_c30_b500_s10 kswin+hedge acc=0.8202 resets=8 new_calls=244 time=1s
+grid_c5_b2000_s11 none acc=0.8199 resets=0 new_calls=179 time=60s
+grid_c5_b2000_s11 ddmM acc=0.9580 resets=28 new_calls=301 time=39s
+grid_c5_b2000_s11 ddm acc=0.9580 resets=28 new_calls=301 time=0s
+grid_c5_b2000_s11 ddm+half acc=0.8577 resets=15 new_calls=353 time=18s
+grid_c5_b2000_s11 ddm+hedge acc=0.9546 resets=27 new_calls=387 time=9s
+grid_c5_b2000_s11 eddm acc=0.9657 resets=8 new_calls=429 time=12s
+grid_c5_b2000_s11 eddm+half acc=0.8843 resets=16 new_calls=462 time=9s
+grid_c5_b2000_s11 eddm+hedge acc=0.9655 resets=8 new_calls=462 time=0s
+grid_c5_b2000_s11 fhddm acc=0.8201 resets=8 new_calls=529 time=18s
+grid_c5_b2000_s11 fhddm+half acc=0.8209 resets=8 new_calls=561 time=8s
+grid_c5_b2000_s11 fhddm+hedge acc=0.8202 resets=8 new_calls=561 time=0s
+grid_c5_b2000_s11 hddma acc=0.9657 resets=8 new_calls=561 time=0s
+grid_c5_b2000_s11 hddma+half acc=0.8551 resets=8 new_calls=575 time=4s
+grid_c5_b2000_s11 hddma+hedge acc=0.9655 resets=8 new_calls=575 time=0s
+grid_c5_b2000_s11 hddmw acc=0.9623 resets=8 new_calls=584 time=2s
+grid_c5_b2000_s11 hddmw+half acc=0.8535 resets=8 new_calls=589 time=2s
+grid_c5_b2000_s11 hddmw+hedge acc=0.9620 resets=8 new_calls=589 time=0s
+grid_c5_b2000_s11 adwin acc=0.9657 resets=8 new_calls=589 time=0s
+grid_c5_b2000_s11 adwin+half acc=0.8541 resets=16 new_calls=593 time=1s
+grid_c5_b2000_s11 adwin+hedge acc=0.9655 resets=8 new_calls=593 time=0s
+grid_c5_b2000_s11 ph acc=0.9602 resets=8 new_calls=598 time=1s
+grid_c5_b2000_s11 ph+half acc=0.8557 resets=16 new_calls=603 time=1s
+grid_c5_b2000_s11 ph+hedge acc=0.9601 resets=8 new_calls=603 time=0s
+grid_c5_b2000_s11 kswin acc=0.9484 resets=6 new_calls=603 time=9s
+grid_c5_b2000_s11 kswin+half acc=0.8527 resets=12 new_calls=603 time=7s
+grid_c5_b2000_s11 kswin+hedge acc=0.9483 resets=6 new_calls=603 time=7s
+grid_c5_b2000_s10 fhddm acc=0.8380 resets=8 new_calls=49 time=17s
+grid_c5_b2000_s10 hddmw+half acc=0.8705 resets=10 new_calls=54 time=2s
+grid_c5_b2000_s10 hddmw+hedge acc=0.9697 resets=8 new_calls=54 time=0s
+grid_c5_b2000_s10 adwin+half acc=0.8698 resets=16 new_calls=74 time=6s
+grid_c5_b2000_s10 kswin acc=0.9698 resets=8 new_calls=74 time=7s
+grid_c5_b2000_s10 kswin+half acc=0.8691 resets=13 new_calls=74 time=7s
+grid_c5_b2000_s10 kswin+hedge acc=0.9697 resets=8 new_calls=74 time=8s
+CHAIN_DONE 22:39:27

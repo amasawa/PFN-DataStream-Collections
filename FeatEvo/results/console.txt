@@ -1,0 +1,133 @@
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/FeatEvo/code/check_featevo.py", line 100, in <module>
+    run(src, kind, X, y, int(y.max()) + 1)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/FeatEvo/code/check_featevo.py", line 80, in run
+    P["settled"][i] = f.predict(X[lo:hi][:, np.r_[Bf, C]], y[lo:hi], X[q][:, np.r_[Bf, C]])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/FeatEvo/code/check_featevo.py", line 45, in predict
+    self.m.fit(Xc, yc); P[:, self.m.classes_.astype(int)] = self.m.predict_proba(Xq); return P
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1876, in forward
+    for output, config in tqdm(
+                          ^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tqdm/std.py", line 1175, in __iter__
+    yield from iterable
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+                                   ^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/inference.py", line 74, in __next__
+    torch.cuda.synchronize(self._device)
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1281, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 17:31:43
+elec2 r0 |A|=2 |B|=3 |C|=3 first 10 after switch: union=78.90 shared=84.00 new=78.50 settled=83.40 oracle=81.40 time=52s
+elec2 r1 |A|=2 |B|=3 |C|=3 first 10 after switch: union=85.50 shared=75.60 new=87.00 settled=86.50 oracle=81.40 time=50s
+elec2 r2 |A|=2 |B|=3 |C|=3 first 10 after switch: union=79.30 shared=85.50 new=81.60 settled=81.10 oracle=81.40 time=52s
+elec2 strong |A|=2 |B|=3 |C|=3 first 10 after switch: union=63.00 shared=53.70 new=58.80 settled=67.40 oracle=81.40 time=50s
+covertype r0 |A|=17 |B|=17 |C|=18 first 10 after switch: union=61.80 shared=63.30 new=62.20 settled=66.10 oracle=66.40 time=79s
+covertype r1 |A|=17 |B|=17 |C|=18 first 10 after switch: union=62.50 shared=65.60 new=63.70 settled=63.70 oracle=66.40 time=79s
+covertype r2 |A|=17 |B|=17 |C|=18 first 10 after switch: union=64.00 shared=60.60 new=63.00 settled=64.80 oracle=66.40 time=79s
+covertype strong |A|=17 |B|=17 |C|=18 first 10 after switch: union=48.50 shared=35.90 new=47.00 settled=45.80 oracle=66.40 time=77s
+insects_abrupt_balanced r0 |A|=11 |B|=11 |C|=11 first 10 after switch: union=74.40 shared=75.70 new=74.30 settled=76.70 oracle=76.90 time=66s
+insects_abrupt_balanced r1 |A|=11 |B|=11 |C|=11 first 10 after switch: union=73.00 shared=76.40 new=75.10 settled=77.90 oracle=76.90 time=65s
+insects_abrupt_balanced r2 |A|=11 |B|=11 |C|=11 first 10 after switch: union=72.60 shared=75.80 new=75.00 settled=77.60 oracle=76.90 time=57s
+insects_abrupt_balanced strong |A|=11 |B|=11 |C|=11 first 10 after switch: union=70.60 shared=76.80 new=75.00 settled=78.10 oracle=76.90 time=61s
+h2_poker r0 |A|=2 |B|=3 |C|=3 first 10 after switch: union=86.00 shared=87.50 new=84.70 settled=96.50 oracle=96.20 time=55s
+h2_poker r1 |A|=2 |B|=3 |C|=3 first 10 after switch: union=64.10 shared=36.60 new=67.20 settled=75.10 oracle=96.20 time=56s
+h2_poker r2 |A|=2 |B|=3 |C|=3 first 10 after switch: union=49.80 shared=75.30 new=67.90 settled=75.70 oracle=96.20 time=56s
+h2_poker strong |A|=2 |B|=3 |C|=3 first 10 after switch: union=40.40 shared=51.10 new=45.50 settled=47.80 oracle=96.20 time=55s
+h2_rialto r0 |A|=7 |B|=7 |C|=8 first 10 after switch: union=79.90 shared=71.70 new=85.40 settled=84.80 oracle=85.60 time=61s
+h2_rialto r1 |A|=7 |B|=7 |C|=8 first 10 after switch: union=77.60 shared=69.90 new=81.30 settled=83.80 oracle=85.60 time=59s
+h2_rialto r2 |A|=7 |B|=7 |C|=8 first 10 after switch: union=79.40 shared=61.20 new=82.60 settled=83.20 oracle=85.60 time=59s
+h2_rialto strong |A|=7 |B|=7 |C|=8 first 10 after switch: union=74.90 shared=61.90 new=82.40 settled=80.20 oracle=85.60 time=59s
+h2_weather r0 |A|=2 |B|=3 |C|=3 first 10 after switch: union=78.60 shared=74.90 new=80.10 settled=80.80 oracle=80.90 time=52s
+h2_weather r1 |A|=2 |B|=3 |C|=3 first 10 after switch: union=79.50 shared=71.40 new=79.60 settled=80.10 oracle=80.90 time=52s
+h2_weather r2 |A|=2 |B|=3 |C|=3 first 10 after switch: union=80.30 shared=74.50 new=80.90 settled=82.00 oracle=80.90 time=51s
+h2_weather strong |A|=2 |B|=3 |C|=3 first 10 after switch: union=76.10 shared=73.60 new=79.50 settled=80.90 oracle=80.90 time=53s
+h2_phishing r0 |A|=15 |B|=15 |C|=16 first 10 after switch: union=94.80 shared=83.00 new=93.30 settled=95.40 oracle=96.60 time=76s
+h2_phishing r1 |A|=15 |B|=15 |C|=16 first 10 after switch: union=94.20 shared=89.20 new=93.60 settled=94.70 oracle=96.60 time=74s
+h2_phishing r2 |A|=15 |B|=15 |C|=16 first 10 after switch: union=94.50 shared=86.20 new=94.90 settled=95.20 oracle=96.60 time=76s
+h2_phishing strong |A|=15 |B|=15 |C|=16 first 10 after switch: union=81.80 shared=74.40 new=81.90 settled=83.80 oracle=96.60 time=80s
+h2_airlines r0 |A|=2 |B|=2 |C|=3 first 10 after switch: union=60.10 shared=57.20 new=62.30 settled=64.00 oracle=64.30 time=54s
+h2_airlines r1 |A|=2 |B|=2 |C|=3 first 10 after switch: union=53.60 shared=54.30 new=55.00 settled=55.70 oracle=64.30 time=51s
+Traceback (most recent call last):
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/FeatEvo/code/check_featevo.py", line 100, in <module>
+    run(src, kind, X, y, int(y.max()) + 1)
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/FeatEvo/code/check_featevo.py", line 79, in run
+    P["union"][i] = f.predict(Xo[lo:hi], y[lo:hi], Xo[q])
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/zhwu9808/Desktop/pfn/FeatEvo/code/check_featevo.py", line 45, in predict
+    self.m.fit(Xc, yc); P[:, self.m.classes_.astype(int)] = self.m.predict_proba(Xq); return P
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1616, in predict_proba
+    return self._predict_proba(X)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1630, in _predict_proba
+    self._raw_predict(X, return_logits=False).float().detach().cpu().numpy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1542, in _raw_predict
+    return self.forward(
+           ^^^^^^^^^^^^^
+  File "/home/zhwu9808/pfn-venvs/venv/lib/python3.12/site-packages/tabpfn/classifier.py", line 1926, in forward
+    output_batch.append(processed_output[:, i, use_perm])
+                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+
+RETRY 18:03:54
+h2_airlines r2 |A|=2 |B|=2 |C|=3 first 10 after switch: union=59.70 shared=51.40 new=60.00 settled=65.00 oracle=64.30 time=53s
+h2_airlines strong |A|=2 |B|=2 |C|=3 first 10 after switch: union=55.60 shared=57.20 new=56.60 settled=57.10 oracle=64.30 time=51s
+== pre (32 streams)
+           acc  macro_f1  roc_auc   ece  logloss
+policy                                          
+union    75.03     64.72    85.09  5.27     0.58
+shared   75.03     64.72    85.09  5.27     0.58
+new      75.03     64.72    85.09  5.27     0.58
+settled  73.34     64.32    83.76  4.93     0.62
+oracle   78.69     69.52    88.08  4.20     0.50
+== early (32 streams)
+           acc  macro_f1  roc_auc   ece  logloss
+policy                                          
+union    71.72     66.48    84.87  7.28     0.72
+shared   68.48     61.91    80.96  7.20     0.77
+new      73.62     68.77    85.89  6.38     0.66
+settled  75.97     71.35    87.43  5.41     0.62
+oracle   81.04     78.24    91.34  4.40     0.49
+== late (32 streams)
+           acc  macro_f1  roc_auc   ece  logloss
+policy                                          
+union    75.82     70.22    87.72  3.84     0.59
+shared   67.22     59.34    80.47  6.57     0.78
+new      75.90     70.40    87.75  3.79     0.59
+settled  75.90     70.40    87.75  3.79     0.59
+oracle   82.18     78.71    91.61  2.56     0.45
+F1: early gap settled - best feasible +1.00 (need >= 3), >= 3 on 4/32 (need 2/3); late gap -0.39
+best feasible policy early: {'new': 15, 'shared': 12, 'union': 5}  late: {'new': 17, 'union': 12, 'shared': 3}
+F2: best feasible policy differs between early and late on 19/32 streams
+early gap by split: {'r0': 1.83, 'r1': 1.4, 'r2': 0.7, 'strong': 0.09}
+early gap by source: {'covertype': -0.25, 'elec2': -0.27, 'h2_airlines': 1.83, 'h2_phishing': 0.83, 'h2_poker': 3.5, 'h2_rialto': 0.08, 'h2_weather': 0.92, 'insects_abrupt_balanced': 1.4}
+union - shared early +3.24, union - new early -1.90; oracle - settled late +6.27
+CHECK_DONE 18:06:34

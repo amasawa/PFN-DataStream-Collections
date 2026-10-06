@@ -1,0 +1,10 @@
+covertype acc=0.7860 time=56s
+insects_abrupt_balanced acc=0.7599 time=54s
+h2_poker acc=0.9137 time=33s
+h2_rialto acc=0.7396 time=42s
+        acc_em  acc_ctl  old_em  old_ctl  new_em  new_ctl
+period                                                   
+late     75.94    76.09   75.94    76.11   74.16    74.07
+window   66.47    68.24   68.48    67.85   55.75    66.82
+C1: window cost (control - emergence) +1.77 points (need >= 3); on old rows -0.63 (C2 needs >= 1.5), on new rows +11.07; cost >= 3 on 6/26 streams
+CONTROL_DONE 16:36:13
