@@ -1,0 +1,68 @@
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:66: Pandas4Warning: Starting with pandas version 4.0 all arguments of all will be keyword-only.
+  n = int(T.loc[HSENS, ["HS1", "HS2", "HS3"]].all(1).sum())
+full reset: real mean -2.84, worst source -26.23, synthetic 8.02
+                 real_mean  worst_src  syn_mean   HS1   HS2   HS3
+variant                                                          
++hedge                0.27      -1.64      7.91  True  True  True
++hedge@e0.5g0.5       0.24      -1.63      7.86  True  True  True
++hedge@e1g0.5         0.25      -1.62      7.90  True  True  True
++hedge@e4g0.5         0.27      -1.73      7.92  True  True  True
++hedge@e8g0.5         0.29      -1.58      7.93  True  True  True
++hedge@e2g0.25        0.25      -1.67      7.90  True  True  True
++hedge@e2g0.75        0.28      -1.63      7.91  True  True  True
++hedge@e2g0.9         0.29      -1.62      7.91  True  True  True
+HS variants passing HS1-HS3: 7/7 -> robust; HS1 7/7, HS2 7/7, HS3 7/7

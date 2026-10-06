@@ -91,3 +91,26 @@ h2_airlines fhddm+hedge acc=0.6901 resets=24 new_calls=1505 time=13s
 h2_airlines hddma acc=0.6899 resets=17 new_calls=1627 time=35s
 h2_airlines hddma+half acc=0.6911 resets=10 new_calls=1667 time=11s
 h2_airlines hddma+hedge acc=0.6905 resets=14 new_calls=1694 time=8s
+h2_airlines hddmw acc=0.6802 resets=79 new_calls=2152 time=226s
+h2_airlines hddmw+half acc=0.6892 resets=76 new_calls=2459 time=227s
+h2_airlines hddmw+hedge acc=0.6884 resets=78 new_calls=2683 time=146s
+h2_airlines adwin acc=0.6905 resets=12 new_calls=2768 time=60s
+h2_airlines adwin+half acc=0.6906 resets=12 new_calls=2788 time=13s
+h2_airlines adwin+hedge acc=0.6905 resets=12 new_calls=2797 time=6s
+h2_airlines ph acc=0.6891 resets=22 new_calls=2916 time=83s
+h2_airlines ph+half acc=0.6906 resets=21 new_calls=2977 time=44s
+h2_airlines ph+hedge acc=0.6904 resets=22 new_calls=3031 time=39s
+h2_airlines kswin acc=0.6864 resets=33 new_calls=3120 time=114s
+h2_airlines kswin+half acc=0.6899 resets=32 new_calls=3190 time=103s
+h2_airlines kswin+hedge acc=0.6897 resets=33 new_calls=3208 time=66s
+STREAM_DONE 07:57:59 h2_airlines_s2
+elec2 none acc=0.8121 resets=0 new_calls=452 time=266s
+elec2 ddmM acc=0.7954 resets=203 new_calls=802 time=164s
+elec2 ddm acc=0.8005 resets=179 new_calls=811 time=4s
+elec2 ddm+half acc=0.8085 resets=147 new_calls=1041 time=89s
+elec2 ddm+hedge acc=0.8051 resets=250 new_calls=1222 time=55s
+elec2 eddm acc=0.7876 resets=205 new_calls=1451 time=69s
+elec2 eddm+half acc=0.8056 resets=195 new_calls=1767 time=96s
+elec2 eddm+hedge acc=0.8069 resets=187 new_calls=1880 time=42s
+elec2 fhddm acc=0.8004 resets=73 new_calls=2124 time=98s
+elec2 fhddm+half acc=0.8108 resets=67 new_calls=2317 time=87s

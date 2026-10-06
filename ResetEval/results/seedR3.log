@@ -131,3 +131,17 @@ chest ph+half acc=0.9765 resets=16 new_calls=1367 time=2s
 chest ph+hedge acc=0.9900 resets=10 new_calls=1367 time=0s
 chest kswin acc=0.9906 resets=12 new_calls=1376 time=59s
 chest kswin+half acc=0.9772 resets=20 new_calls=1376 time=57s
+chest kswin+hedge acc=0.9895 resets=13 new_calls=1376 time=60s
+STREAM_DONE 07:39:23 chest_s2
+h2_rialto none acc=0.7753 resets=0 new_calls=821 time=597s
+h2_rialto ddmM acc=0.7818 resets=122 new_calls=1153 time=233s
+h2_rialto ddm acc=0.7818 resets=122 new_calls=1153 time=0s
+h2_rialto ddm+half acc=0.7783 resets=96 new_calls=1382 time=144s
+h2_rialto ddm+hedge acc=0.7866 resets=138 new_calls=1552 time=111s
+h2_rialto eddm acc=0.7872 resets=277 new_calls=2082 time=320s
+h2_rialto eddm+half acc=0.7809 resets=273 new_calls=2544 time=209s
+h2_rialto eddm+hedge acc=0.7975 resets=267 new_calls=2748 time=67s
+h2_rialto fhddm acc=0.7835 resets=92 new_calls=3186 time=135s
+h2_rialto fhddm+half acc=0.7775 resets=96 new_calls=3523 time=134s
+h2_rialto fhddm+hedge acc=0.7912 resets=89 new_calls=3623 time=44s
+h2_rialto hddma acc=0.7830 resets=135 new_calls=3786 time=77s

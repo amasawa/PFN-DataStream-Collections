@@ -221,3 +221,9 @@
   - +hedge 敏感性，对每个变体：HS1 真实流检测器平均 ≥ −0.2；HS2 最差来源上比完全重置好 ≥ 10 点；HS3 合成流保留完全重置收益的至少一半。7 个变体都满足三条，才算"对超参数稳健"。
   - 训练式对照，与同一批流上的 TabPFN 比较：TR1 完全重置的真实流平均（检测器平均）比 TabPFN 高 ≥ 2 点；TR2 最差来源比 TabPFN 好 ≥ 10 点；TR3 真实流上非零单次重置的净亏比例 < 70%（TabPFN 约 88%）。
   - 预期：HS 大体成立，η 很小（0.5）时混合跟不上，HS3 可能不成立；TR1–TR3 成立。如果 TR 不成立，"TFM 特有"的说法要撤回，改成"错误驱动的重置普遍有风险"。
+- **07:40 检查**：近 1 小时 5 分钟平均利用率 94–99%，显存 ≤ 13.0 GB，内存 17.2–18.5 GB。06:52 内存到 19.8 GB，supervisor 按规则停掉 1 条 CPU 链，上限改为 4 条，之后没有再超。种子 2 的两条 covertype 段各有 1 次 cudaErrorLaunchFailure（MACHINE_LOG 中已知的问题），自动重试后继续。进度：queue_seeds 52/162，hsens 18/81；GPU 队列还剩 344 行未领，不需要加任务。
+
+## 2026-10-07 起的无人值守运行：queue_hsens 全部完成，10-07 08:14 自动分析（自动写入，未经人工核对）
+- full reset: real mean -2.84, worst source -26.23, synthetic 8.02
+- HS variants passing HS1-HS3: 7/7 -> robust; HS1 7/7, HS2 7/7, HS3 7/7
+- 完整输出：`results/console_queue_hsens.txt`。

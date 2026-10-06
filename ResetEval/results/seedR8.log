@@ -73,3 +73,27 @@ h3_airlines_b adwin+hedge acc=0.7065 resets=14 new_calls=3080 time=7s
 h3_airlines_b ph acc=0.7036 resets=33 new_calls=3240 time=51s
 h3_airlines_b ph+half acc=0.7061 resets=30 new_calls=3333 time=29s
 h3_airlines_b ph+hedge acc=0.7057 resets=29 new_calls=3412 time=23s
+h3_airlines_b kswin acc=0.7018 resets=30 new_calls=3484 time=85s
+h3_airlines_b kswin+half acc=0.7050 resets=40 new_calls=3546 time=88s
+h3_airlines_b kswin+hedge acc=0.7059 resets=30 new_calls=3585 time=81s
+STREAM_DONE 07:42:39 h3_airlines_b_s2
+insects_incremental_balanced none acc=0.6738 resets=0 new_calls=569 time=635s
+insects_incremental_balanced ddmM acc=0.6738 resets=0 new_calls=569 time=0s
+insects_incremental_balanced ddm acc=0.6738 resets=0 new_calls=569 time=0s
+insects_incremental_balanced ddm+half acc=0.6738 resets=0 new_calls=569 time=0s
+insects_incremental_balanced ddm+hedge acc=0.6738 resets=0 new_calls=569 time=0s
+insects_incremental_balanced eddm acc=0.6724 resets=13 new_calls=591 time=14s
+insects_incremental_balanced eddm+half acc=0.6738 resets=3 new_calls=597 time=4s
+insects_incremental_balanced eddm+hedge acc=0.6741 resets=11 new_calls=606 time=6s
+insects_incremental_balanced fhddm acc=0.6696 resets=15 new_calls=734 time=89s
+insects_incremental_balanced fhddm+half acc=0.6730 resets=10 new_calls=779 time=40s
+insects_incremental_balanced fhddm+hedge acc=0.6731 resets=10 new_calls=793 time=11s
+insects_incremental_balanced hddma acc=0.6737 resets=2 new_calls=811 time=14s
+insects_incremental_balanced hddma+half acc=0.6736 resets=2 new_calls=821 time=9s
+insects_incremental_balanced hddma+hedge acc=0.6741 resets=2 new_calls=821 time=0s
+insects_incremental_balanced hddmw acc=0.6682 resets=22 new_calls=991 time=125s
+insects_incremental_balanced hddmw+half acc=0.6730 resets=23 new_calls=1089 time=80s
+insects_incremental_balanced hddmw+hedge acc=0.6744 resets=22 new_calls=1124 time=24s
+insects_incremental_balanced adwin acc=0.6727 resets=4 new_calls=1155 time=25s
+insects_incremental_balanced adwin+half acc=0.6739 resets=4 new_calls=1170 time=14s
+insects_incremental_balanced adwin+hedge acc=0.6740 resets=4 new_calls=1188 time=14s

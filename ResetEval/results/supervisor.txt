@@ -29,3 +29,17 @@
 2026-10-07_07:28:13 util5 98% gmem 10665 ram 17212 gpu_chains 9/12 cpu_chains 4/4 unclaimed gpu 346 cpu 224 | queue_seeds 162 50 103 queue_M500 81 0 81 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 15 62 queue_trained_ht 81 0 81 queue_trained_nb 81 0 81 
 2026-10-07_07:33:16 util5 95% gmem 10523 ram 18513 gpu_chains 9/12 cpu_chains 4/4 unclaimed gpu 345 cpu 223 | queue_seeds 162 51 102 queue_M500 81 0 81 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 16 61 queue_trained_ht 81 0 81 queue_trained_nb 81 0 81 
 2026-10-07_07:38:20 util5 97% gmem 9089 ram 17306 gpu_chains 9/12 cpu_chains 4/4 unclaimed gpu 344 cpu 221 | queue_seeds 162 52 101 queue_M500 81 0 81 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 18 59 queue_trained_ht 81 0 81 queue_trained_nb 81 0 81 
+2026-10-07_07:43:29 util5 94% gmem 14751 ram 18027 gpu_chains 9/12 cpu_chains 4/4 unclaimed gpu 340 cpu 217 | queue_seeds 162 56 97 queue_M500 81 0 81 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 22 55 queue_trained_ht 81 0 81 queue_trained_nb 81 0 81 
+2026-10-07_07:48:33 util5 99% gmem 15239 ram 18016 gpu_chains 9/12 cpu_chains 4/4 unclaimed gpu 340 cpu 216 | queue_seeds 162 56 97 queue_M500 81 0 81 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 23 54 queue_trained_ht 81 0 81 queue_trained_nb 81 0 81 
+2026-10-07_07:53:36 util5 99% gmem 15445 ram 18004 gpu_chains 9/12 cpu_chains 4/4 unclaimed gpu 339 cpu 210 | queue_seeds 162 57 96 queue_M500 81 0 81 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 29 48 queue_trained_ht 81 0 81 queue_trained_nb 81 0 81 
+2026-10-07_07:58:40 util5 99% gmem 19803 ram 17941 gpu_chains 9/12 cpu_chains 4/4 unclaimed gpu 338 cpu 198 | queue_seeds 162 58 95 queue_M500 81 0 81 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 41 36 queue_trained_ht 81 0 81 queue_trained_nb 81 0 81 
+2026-10-07_07:59:40 GPU memory 19807 MiB twice > 19500 -> stop newest GPU chain, cap 8
+2026-10-07_07:59:48 stopped seedR9 (pane 2348)
+2026-10-07_07:59:48 released orphan /home/zhwu9808/.reset_locks/queue_seeds/h3_covertype_b_s2
+2026-10-07_08:01:50 GPU memory 19591 MiB twice > 19500 -> stop newest GPU chain, cap 7
+2026-10-07_08:01:58 stopped seedR8 (pane 2259)
+2026-10-07_08:02:00 released orphan /home/zhwu9808/.reset_locks/queue_seeds/insects_incremental_balanced_s2
+2026-10-07_08:04:05 util5 98% gmem 11174 ram 15608 gpu_chains 7/7 cpu_chains 4/4 unclaimed gpu 340 cpu 189 | queue_seeds 162 58 97 queue_M500 81 0 81 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 51 27 queue_trained_ht 81 0 81 queue_trained_nb 81 0 81 
+2026-10-07_08:09:11 util5 86% gmem 7175 ram 10729 gpu_chains 7/7 cpu_chains 4/4 unclaimed gpu 338 cpu 176 | queue_seeds 162 60 95 queue_M500 81 0 81 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 63 14 queue_trained_ht 81 0 81 queue_trained_nb 81 0 81 
+2026-10-07_08:14:17 util5 89% gmem 7989 ram 12167 gpu_chains 7/7 cpu_chains 4/4 unclaimed gpu 333 cpu 158 | queue_seeds 162 65 90 queue_M500 81 0 81 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 0 77 queue_trained_nb 81 0 81 
+2026-10-07_08:14:17 queue queue_hsens complete -> stage_done.sh

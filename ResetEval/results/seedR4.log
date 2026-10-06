@@ -57,3 +57,37 @@ h3_poker_c ph+half acc=0.9018 resets=100 new_calls=6483 time=38s
 h3_poker_c ph+hedge acc=0.9078 resets=94 new_calls=6608 time=44s
 h3_poker_c kswin acc=0.8411 resets=248 new_calls=6680 time=65s
 h3_poker_c kswin+half acc=0.8997 resets=174 new_calls=6688 time=49s
+h3_poker_c kswin+hedge acc=0.9074 resets=158 new_calls=6700 time=53s
+STREAM_DONE 07:40:01 h3_poker_c_s2
+insects_incremental_reoccurring_balanced none acc=0.7914 resets=0 new_calls=798 time=792s
+insects_incremental_reoccurring_balanced ddmM acc=0.8020 resets=18 new_calls=921 time=83s
+insects_incremental_reoccurring_balanced ddm acc=0.8020 resets=18 new_calls=921 time=0s
+insects_incremental_reoccurring_balanced ddm+half acc=0.7954 resets=15 new_calls=986 time=55s
+insects_incremental_reoccurring_balanced ddm+hedge acc=0.8021 resets=14 new_calls=1013 time=21s
+insects_incremental_reoccurring_balanced eddm acc=0.7939 resets=48 new_calls=1177 time=109s
+insects_incremental_reoccurring_balanced eddm+half acc=0.7944 resets=36 new_calls=1260 time=70s
+insects_incremental_reoccurring_balanced eddm+hedge acc=0.8002 resets=114 new_calls=1513 time=164s
+insects_incremental_reoccurring_balanced fhddm acc=0.7976 resets=21 new_calls=1671 time=85s
+insects_incremental_reoccurring_balanced fhddm+half acc=0.7960 resets=20 new_calls=1759 time=51s
+insects_incremental_reoccurring_balanced fhddm+hedge acc=0.7977 resets=21 new_calls=1793 time=22s
+insects_incremental_reoccurring_balanced hddma acc=0.8077 resets=17 new_calls=1880 time=45s
+insects_incremental_reoccurring_balanced hddma+half acc=0.7955 resets=16 new_calls=1941 time=34s
+insects_incremental_reoccurring_balanced hddma+hedge acc=0.8073 resets=16 new_calls=1941 time=1s
+insects_incremental_reoccurring_balanced hddmw acc=0.8082 resets=22 new_calls=2011 time=35s
+insects_incremental_reoccurring_balanced hddmw+half acc=0.7953 resets=24 new_calls=2067 time=28s
+insects_incremental_reoccurring_balanced hddmw+hedge acc=0.8078 resets=22 new_calls=2076 time=4s
+insects_incremental_reoccurring_balanced adwin acc=0.8067 resets=20 new_calls=2138 time=21s
+insects_incremental_reoccurring_balanced adwin+half acc=0.7951 resets=25 new_calls=2203 time=29s
+insects_incremental_reoccurring_balanced adwin+hedge acc=0.8061 resets=19 new_calls=2212 time=3s
+insects_incremental_reoccurring_balanced ph acc=0.8055 resets=21 new_calls=2268 time=20s
+insects_incremental_reoccurring_balanced ph+half acc=0.7956 resets=27 new_calls=2333 time=25s
+insects_incremental_reoccurring_balanced ph+hedge acc=0.8037 resets=24 new_calls=2392 time=23s
+insects_incremental_reoccurring_balanced kswin acc=0.8031 resets=14 new_calls=2419 time=56s
+insects_incremental_reoccurring_balanced kswin+half acc=0.7958 resets=15 new_calls=2435 time=53s
+insects_incremental_reoccurring_balanced kswin+hedge acc=0.8030 resets=13 new_calls=2444 time=49s
+STREAM_DONE 08:11:24 insects_incremental_reoccurring_balanced_s2
+insects_gradual_balanced none acc=0.7888 resets=0 new_calls=240 time=166s
+insects_gradual_balanced ddmM acc=0.7999 resets=4 new_calls=275 time=17s
+insects_gradual_balanced ddm acc=0.7999 resets=4 new_calls=275 time=0s
+insects_gradual_balanced ddm+half acc=0.7913 resets=8 new_calls=290 time=7s
+insects_gradual_balanced ddm+hedge acc=0.7966 resets=5 new_calls=297 time=0s

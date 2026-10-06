@@ -37,3 +37,37 @@ h3_covertype_c ddm+hedge acc=0.9558 resets=127 new_calls=1554 time=153s
 h3_covertype_c eddm acc=0.4704 resets=760 new_calls=2382 time=334s
 h3_covertype_c eddm+half acc=0.9346 resets=94 new_calls=2668 time=146s
 h3_covertype_c eddm+hedge acc=0.9564 resets=22 new_calls=2787 time=50s
+h3_covertype_c fhddm acc=0.4961 resets=335 new_calls=3470 time=325s
+h3_covertype_c fhddm+half acc=0.9412 resets=28 new_calls=3518 time=43s
+h3_covertype_c fhddm+hedge acc=0.9568 resets=4 new_calls=3539 time=19s
+h3_covertype_c hddma acc=0.5600 resets=602 new_calls=3747 time=159s
+h3_covertype_c hddma+half acc=0.8686 resets=280 new_calls=4122 time=278s
+h3_covertype_c hddma+hedge acc=0.9561 resets=31 new_calls=4169 time=39s
+h3_covertype_c hddmw acc=0.5077 resets=597 new_calls=4285 time=83s
+h3_covertype_c hddmw+half acc=0.9459 resets=41 new_calls=4331 time=34s
+h3_covertype_c hddmw+hedge acc=0.9566 resets=25 new_calls=4424 time=68s
+h3_covertype_c adwin acc=0.4999 resets=424 new_calls=4653 time=158s
+h3_covertype_c adwin+half acc=0.9241 resets=87 new_calls=4786 time=103s
+h3_covertype_c adwin+hedge acc=0.9568 resets=20 new_calls=4808 time=16s
+h3_covertype_c ph acc=0.5428 resets=259 new_calls=5182 time=213s
+h3_covertype_c ph+half acc=0.9393 resets=38 new_calls=5268 time=54s
+h3_covertype_c ph+hedge acc=0.9569 resets=9 new_calls=5300 time=18s
+h3_covertype_c kswin acc=0.4749 resets=536 new_calls=5350 time=34s
+h3_covertype_c kswin+half acc=0.9402 resets=41 new_calls=5364 time=64s
+h3_covertype_c kswin+hedge acc=0.9566 resets=12 new_calls=5367 time=60s
+STREAM_DONE 08:07:31 h3_covertype_c_s2
+h3_covertype_b kswin+half acc=0.9657 resets=8 new_calls=0 time=58s
+h3_covertype_b kswin+hedge acc=0.9656 resets=8 new_calls=0 time=59s
+STREAM_DONE 08:09:29 h3_covertype_b_s2
+insects_incremental_balanced ph acc=0.6705 resets=12 new_calls=77 time=34s
+insects_incremental_balanced ph+half acc=0.6734 resets=9 new_calls=117 time=20s
+insects_incremental_balanced ph+hedge acc=0.6736 resets=9 new_calls=175 time=27s
+insects_incremental_balanced kswin acc=0.6731 resets=3 new_calls=188 time=39s
+insects_incremental_balanced kswin+half acc=0.6737 resets=3 new_calls=193 time=36s
+insects_incremental_balanced kswin+hedge acc=0.6738 resets=7 new_calls=213 time=43s
+STREAM_DONE 08:12:50 insects_incremental_balanced_s2
+h2_weather none acc=0.8125 resets=0 new_calls=180 time=87s
+h2_weather ddmM acc=0.8090 resets=1 new_calls=189 time=4s
+h2_weather ddm acc=0.8090 resets=1 new_calls=189 time=0s
+h2_weather ddm+half acc=0.8119 resets=10 new_calls=223 time=14s
+h2_weather ddm+hedge acc=0.8119 resets=1 new_calls=223 time=0s

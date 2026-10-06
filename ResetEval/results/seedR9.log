@@ -81,3 +81,15 @@ h3_covertype_b fhddm acc=0.9242 resets=48 new_calls=989 time=38s
 h3_covertype_b fhddm+half acc=0.9655 resets=3 new_calls=999 time=5s
 h3_covertype_b fhddm+hedge acc=0.9656 resets=3 new_calls=1017 time=8s
 h3_covertype_b hddma acc=0.7129 resets=497 new_calls=1523 time=171s
+h3_covertype_b hddma+half acc=0.9648 resets=66 new_calls=1724 time=95s
+h3_covertype_b hddma+hedge acc=0.9650 resets=63 new_calls=1996 time=188s
+h3_covertype_b hddmw acc=0.8163 resets=213 new_calls=2152 time=121s
+h3_covertype_b hddmw+half acc=0.9656 resets=15 new_calls=2168 time=12s
+h3_covertype_b hddmw+hedge acc=0.9655 resets=15 new_calls=2190 time=17s
+h3_covertype_b adwin acc=0.7075 resets=318 new_calls=2600 time=281s
+h3_covertype_b adwin+half acc=0.9656 resets=19 new_calls=2618 time=14s
+h3_covertype_b adwin+hedge acc=0.9654 resets=19 new_calls=2665 time=36s
+h3_covertype_b ph acc=0.7158 resets=267 new_calls=3181 time=352s
+h3_covertype_b ph+half acc=0.9654 resets=10 new_calls=3205 time=18s
+h3_covertype_b ph+hedge acc=0.9647 resets=10 new_calls=3220 time=10s
+h3_covertype_b kswin acc=0.9047 resets=93 new_calls=3245 time=70s
