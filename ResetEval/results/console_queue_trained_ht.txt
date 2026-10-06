@@ -1,0 +1,33 @@
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:51: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  return src.mean(1).mean(), src.min(1).mean(), syn.mean(1).mean() if len(syn) else np.nan
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_variants.py:82: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  per = S[(S.group == "real") & S.stream.isin(common)].groupby(["pol", "src"]).d.mean().unstack().mean(1)
+81 common streams; detector-averaged (real mean, worst real source, synthetic mean):
+  full reset: ht [  1.83 -17.47  12.46], TabPFN [ -2.84 -26.23   8.02]
+  +hedge:     ht [ 3.55 -7.77 13.67], TabPFN [ 0.27 -1.64  7.91]
+  per-policy source-weighted real d: {'adwin': 2.07, 'adwin+hedge': 3.76, 'ddm': 3.25, 'ddm+hedge': 4.0, 'eddm': 1.81, 'eddm+hedge': 3.41, 'fhddm': -0.06, 'fhddm+hedge': 2.6, 'hddma': 1.6, 'hddma+hedge': 3.57, 'hddmw': 1.81, 'hddmw+hedge': 3.51, 'kswin': 1.31, 'kswin+hedge': 3.15, 'ph': 2.82, 'ph+hedge': 4.39}
+TR1 full-reset real mean: ht - TabPFN = 4.67 (need >= 2) -> holds
+TR2 worst real source: ht - TabPFN = 8.76 (need >= 10) -> fails
+TR3 real: 69.9% of 33127 non-zero resets are losses for ht (TabPFN 88.1% of 29211; need < 70%) -> holds

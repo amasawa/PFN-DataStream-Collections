@@ -252,3 +252,12 @@
 - T1 worst source: +hedge - full = 23.99 (need >= 10) -> holds
 - T2 best source: +hedge 6.60 vs half of full 3.47 -> holds
 - 完整输出：`results/console_queue_seeds.txt`。
+
+## 2026-10-07 起的无人值守运行：queue_trained_ht 全部完成，10-07 09:33 自动分析（自动写入，未经人工核对）
+- 81 common streams; detector-averaged (real mean, worst real source, synthetic mean):
+- full reset: ht [  1.83 -17.47  12.46], TabPFN [ -2.84 -26.23   8.02]
+- +hedge:     ht [ 3.55 -7.77 13.67], TabPFN [ 0.27 -1.64  7.91]
+- TR1 full-reset real mean: ht - TabPFN = 4.67 (need >= 2) -> holds
+- TR2 worst real source: ht - TabPFN = 8.76 (need >= 10) -> fails
+- TR3 real: 69.9% of 33127 non-zero resets are losses for ht (TabPFN 88.1% of 29211; need < 70%) -> holds
+- 完整输出：`results/console_queue_trained_ht.txt`。
