@@ -78,3 +78,14 @@
 2026-10-07_10:00:21 util5 98% gmem 5775 ram 14688 gpu_chains 9/14 cpu_chains 4/4 unclaimed gpu 215 cpu 69 | queue_seeds 162 162 0 queue_M500 81 19 53 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 8 69 
 2026-10-07_10:05:31 util5 74% gmem 6994 ram 12636 gpu_chains 9/14 cpu_chains 4/4 unclaimed gpu 199 cpu 66 | queue_seeds 162 162 0 queue_M500 81 35 37 queue_M2000 81 0 81 queue_seeds3b 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 11 66 
 2026-10-07_10:05:31 started g10
+2026-10-07_10:10:45 util5 82% gmem 5061 ram 15591 gpu_chains 10/14 cpu_chains 4/4 unclaimed gpu 54 cpu 64 | queue_seeds 162 162 0 queue_M500 81 56 15 queue_M2000 39 0 39 queue_seeds3b 0 0 0 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 13 64 
+2026-10-07_10:10:45 started g11
+2026-10-07_10:15:58 util5 88% gmem 17215 ram 17274 gpu_chains 11/14 cpu_chains 4/4 unclaimed gpu 32 cpu 64 | queue_seeds 162 162 0 queue_M500 81 77 0 queue_M2000 39 0 32 queue_seeds3b 0 0 0 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 13 64 
+2026-10-07_10:17:58 GPU memory 22205 MiB twice > 19500 -> stop newest GPU chain, cap 10
+2026-10-07_10:18:05 released /home/zhwu9808/.reset_locks/queue_M2000/covertype_M2000
+2026-10-07_10:18:05 stopped g11 (pane 77126)
+2026-10-07_10:20:13 GPU memory 20117 MiB twice > 19500 -> stop newest GPU chain, cap 9
+2026-10-07_10:20:20 released /home/zhwu9808/.reset_locks/queue_M2000/h4_poker_d_M2000
+2026-10-07_10:20:20 stopped g10 (pane 74921)
+2026-10-07_10:21:37 util5 100% gmem 19192 ram 13952 gpu_chains 9/9 cpu_chains 4/4 unclaimed gpu 30 cpu 61 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 0 30 queue_seeds3b 0 0 0 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 16 61 
+2026-10-07_10:21:37 queue queue_M500 complete -> stage_done.sh

@@ -273,3 +273,13 @@
 - **种子 3 不跑**：种子 1、2 与种子 0 的相关在真实流上是 0.97，在合成流上是 0.999，第三个种子不会带来新信息。`queue_seeds3b.txt` 已清空（原列表在 `queue_seeds3b_full.txt`），并写了 `stage_done_queue_seeds3b.txt`，这样 supervisor 不会对空队列跑分析。
 - **M = 2000 只跑 39 条真实流**（原列表在 `queue_M2000_full.txt`）：合成流在各种子间几乎不变，争议在真实流上。所以 M = 2000 的 H2'、H3'、H4' 中合成流的部分按设计不作判定，只看 H1'、H3' 的真实流部分、H4' 的真实流部分、T1、T2。M = 500 照原计划跑全部 81 条流。
 - GPU 队列在 M2000 跑完后就空了；在那之前，按小时的检查会事先写好新的设计和判定，再追加任务，保持利用率。
+
+## 2026-10-07 起的无人值守运行：queue_M500 全部完成，10-07 10:21 自动分析（自动写入，未经人工核对）
+- H1' full below none on real: 8/8 (need >= 6) -> holds
+- H2' full above none on synthetic: 7/8 (need >= 6) -> holds
+- H3' real: 80.4% of 30156 non-zero resets are losses; synthetic: 72.2% of 3290 resets are wins (need > 50% each) -> holds
+- H4' per detector 8/8; detector average: real +hedge -0.03 (need >= -0.2), synthetic +hedge 3.56 vs half of full 1.75 -> holds
+- tail over 19 real sources, detector-averaged (worst, best): {'full': (np.float64(-17.59), np.float64(4.37)), '+half': (np.float64(-6.89), np.float64(1.01)), '+hedge': (np.float64(-2.56), np.float64(3.35))}
+- T1 worst source: +hedge - full = 15.03 (need >= 10) -> holds
+- T2 best source: +hedge 3.35 vs half of full 2.18 -> holds
+- 完整输出：`results/console_queue_M500.txt`。
