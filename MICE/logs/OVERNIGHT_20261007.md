@@ -107,3 +107,32 @@ MICE 原来的每 20 批断点保留。调度器改为四次“无断点进展�
 - 2026-10-08T03:32+11:00：进度 37/86。seed1 MICE 参考完成 h2_poker、h2_spam（7 条仅剩 rialto）；seed1 DUO anchor=1 完成 elec2、h2_phishing，h2_airlines 已从检查点重跑。本窗口无新失败（累计 6 次）。GPU 利用率均值 99.0%（1 次 <90%），显存峰值 9962 MiB（30%），RAM 可用 ≥21.8 GB；维持 6 worker。
 
 - 2026-10-08T03:42+11:00：进度 40/86。seed1 的 7 条 MICE 参考全部完成；seed1 DUO anchor=1 完成 h2_airlines（重跑后成功）、h2_poker，anchor=3 开始。本窗口无新失败（累计 6 次）。GPU 利用率均值 99.3%（1 次 <90%），显存峰值 10254 MiB（31%），RAM 可用 ≥21.9 GB；维持 6 worker。过去 1 小时完成 17 个任务，剩 46 个，预计约 06:15–06:45 完成。
+
+## 2026-10-08T03:48:04+11:00 — k2 完成
+
+全部任务完成后自动核验；原始数据与旧结果保持只读。以下含全部判定，包括不成立项。
+
+```text
+                 mice  mice10   fast  windows   fifo  ltm    ddm  winens
+stream                                                                  
+h3_airlines_b   70.47   70.49  70.10    70.37  70.63  NaN  70.64   69.81
+h3_covertype_b  96.58   96.58  96.36    96.60  96.56  NaN  94.89   96.57
+h3_insects_b    81.68   81.71  81.73    81.56  81.46  NaN  81.44   81.16
+h3_poker_b      94.04   93.58  91.43    93.12  93.14  NaN  84.07   92.31
+mean {'mice': 85.69, 'mice10': 85.59, 'fast': 84.91, 'windows': 85.41, 'fifo': 85.45, 'ltm': nan, 'ddm': 82.76, 'winens': 84.96}
+K21 non-inferiority, mice - max(fifo, ddm) >= -0.5 on every segment: True {'h3_airlines_b': -0.17, 'h3_covertype_b': 0.02, 'h3_insects_b': 0.22, 'h3_poker_b': 0.9}
+K22a mice above all of ['fifo', 'ddm', 'winens'] on 3 of 4 (majority = 3): True {'h3_airlines_b': -0.17, 'h3_covertype_b': 0.0, 'h3_insects_b': 0.22, 'h3_poker_b': 0.9}
+K22b highest mean: True mean margin +0.24
+K23 safety, mice - fifo >= -0.3 on every segment: True {'h3_airlines_b': -0.16, 'h3_covertype_b': 0.02, 'h3_insects_b': 0.22, 'h3_poker_b': 0.9} mean +0.24
+K24 memory, mice above the windows-only variant on 3 of 4 (majority?): True {'h3_airlines_b': 0.1, 'h3_covertype_b': -0.02, 'h3_insects_b': 0.12, 'h3_poker_b': 0.93}
+report only: step 10 minus step 1/2 {'h3_airlines_b': 0.02, 'h3_covertype_b': 0.01, 'h3_insects_b': 0.03, 'h3_poker_b': -0.46} ; fast level alone minus fifo {'h3_airlines_b': -0.53, 'h3_covertype_b': -0.2, 'h3_insects_b': 0.27, 'h3_poker_b': -1.71} ; ddm minus fifo {'h3_airlines_b': 0.0, 'h3_covertype_b': -1.66, 'h3_insects_b': -0.02, 'h3_poker_b': -9.07}
+
+Three backbone seeds (same fixed data, not independent data replicates):
+                    mean       min       max
+stream                                      
+h3_airlines_b  -0.105105 -0.164164 -0.071071
+h3_covertype_b -0.007007 -0.033033  0.019019
+h3_insects_b    0.243911  0.219219  0.261261
+h3_poker_b      0.825826  0.576577  0.998999
+```
+<!-- stage:k2:complete -->
