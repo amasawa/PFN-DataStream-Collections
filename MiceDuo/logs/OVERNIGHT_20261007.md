@@ -65,3 +65,5 @@ MICE 阶段共 14 次 CUDA 失败，315 次资源采样显存峰值约 7.5 GB、
 - 2026-10-08T02:12+11:00：进度 15/86。K2 的 fifo/ddm/winens 基线全部完成（12/12），K2 仅剩 covertype_b、insects_b、poker_b 三个 micev1000_500 在跑。DUO 开发阶段已完成 elec2（a3，约 16 分钟）与 h2_phishing（a3，约 8 分钟）。02:02 covertype_b micev 再次 launch failure（该任务累计第 4 次，检查点均有推进，02:08 已恢复）；自 01:20 起全局 4 次失败，约 1 次/12 分钟，未达熔断阈值。02:02–02:11 GPU 利用率均值 98.0%，显存峰值 6382 MiB（19%），RAM 可用 ≥22 GB；维持 6 worker。
 
 - 2026-10-08T02:22+11:00：进度 17/86。K2 insects_b micev1000_500 完成（K2 剩 covertype_b、poker_b 两个 micev）；DUO 开发阶段 h2_airlines（a3）完成。本窗口无新失败。GPU 利用率均值 98.9%（195 次采样仅 2 次 <90%），显存峰值升至 9956 MiB（30%，h2_spam/weather 等 DUO 任务占用较大），RAM 可用 ≥22 GB；均在 90% 以下，维持 6 worker。02:12 的日志推送因 GitHub 端 `remote rejected (failure)` 暂未推送，本次一并推送。
+
+- 2026-10-08T02:32+11:00：进度 20/86。K2 poker_b micev1000_500 完成，K2 仅剩 covertype_b micev（完成后自动运行 K2 分析）。DUO 开发阶段 a3 已完成 h2_poker、h2_weather，a5（anchor=500）开始运行。本窗口无新失败（自 01:20 起累计 4 次）。GPU 利用率均值 99.0%（194 次采样仅 1 次 <90%），显存峰值 10980 MiB（34%），RAM 可用 ≥22 GB；维持 6 worker。
