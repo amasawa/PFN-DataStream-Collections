@@ -1,53 +1,20 @@
-# PFN × Zhilin OOD under Beyond-IID splits — project root
+# dataStream — tabular foundation models on data streams
 
-## Layout since 2026-10-02 (two isolated projects, named after their methods)
-
-| folder | content | start here |
-|---|---|---|
-| `AgDR/` | the ICML paper (evaluation protocol + AgDR baseline): `code/`, `data/`, `overleaf/icml2026/`, `logs/`, `env/`; frozen copy of the state of 2026-09-29 | [`AgDR/README.md`](AgDR/README.md) |
-| `GOR/` | the AISTATS paper (I-Div framework, group-out reference): `exp/` (code and results), `data/`, `overleaf/aistats2026/`, `logs/` (shared research and session logs), `env/` | [`GOR/logs/EXPERIMENT_LOG.md`](GOR/logs/EXPERIMENT_LOG.md), last entries |
-| `pdfs/` | `refs/` (reference PDFs, not versioned), `reports/`, `research_notes/` | — |
-
-Scripts in `GOR/exp/` are run from `GOR/exp/` and reach data and the paper through `../data`, `../overleaf`;
-the launch scripts in `GOR/exp/run_scripts/` derive the project root from their own location.
-The sections below were written before the move: read `exp/`, `data/`, `logs/`, `env/`, `overleaf/aistats2026/` as
-`GOR/...`, `overleaf/icml2026/` as `AgDR/overleaf/icml2026/`, and `refs/` as `pdfs/refs/`.
-
-## Before 2026-10-02
+Split on 2026-10-07 from the joint repository `oodpfn` (which also held the OOD projects AgDR and GOR, now in the
+`ood` repository). History of the folders below was kept with `git filter-repo`; commit hashes therefore differ from
+those quoted in older log entries (the old hashes still resolve in `oodpfn`).
 
 | folder | content | start here |
 |---|---|---|
-| `refs/` | reference PDFs, original categories kept: `zhilinpapers/` (Zhao & Cao OOD papers), `noiidpapers/` (TabArena, Beyond IID), `baseline/` (TabDPT) | — |
-| `exp/` | code, raw results, figures, English draft | [`exp/README.md`](exp/README.md) |
-| `logs/` | how deep the exploration went and how it was done | [`logs/DEFECT_EXPERIMENTS.md`](logs/DEFECT_EXPERIMENTS.md) → first section "最终汇总" |
-| `overleaf/` | ICML 2026 LaTeX paper (`icml2026/main.tex`, `refs.bib`, figures, official style) | upload the folder to Overleaf, compile with pdflatex |
-| `data/` | parquet backup of the 11 BeyondArena tasks used (`beyondarena/<task>/{data.parquet,splits.json,meta.json}`), checkpoint list (`ckpt/README.md`) | [`data/export_beyondarena.py`](data/export_beyondarena.py) |
-| `env/` | exact package versions of the two environments | `exp/README.md` §1 |
+| `MICE/` | Mixture of In-Context Experts for recurring drift (MOOE-based); also the stream data (`MICE/data/`) used by the other projects | `MICE/logs/EXPERIMENT_LOG.md` |
+| `DriftTriage/` | benign vs harmful vs novel drift for in-context learners (I-Div-based; method line stopped) | `DriftTriage/logs/EXPERIMENT_LOG.md` |
+| `ResetEval/` | evaluation paper (TMLR): error-driven context resets on TFMs — heavy left tail, removed by hedging against FIFO | `ResetEval/logs/EXPERIMENT_LOG.md` |
+| `GrayContext/` | contaminated label streams for in-context learners | `GrayContext/logs/EXPERIMENT_LOG.md` |
+| `MiceDuo/` | MICE-DUO, a separate paper from MICE | `MiceDuo/logs/EXPERIMENT_LOG.md` |
+| `Emergence/` | a class turning from OOD into ID inside the context | `Emergence/logs/EXPERIMENT_LOG.md` |
+| `FeatEvo/` | TFMs on streams with an evolving feature space | `FeatEvo/logs/EXPERIMENT_LOG.md` |
+| `InterTFM/` | disagreement between TFMs as a drift signal (feasibility check only) | `InterTFM/logs/EXPERIMENT_LOG.md` |
+| `pdfs/`, `env/`, `skills/`, `SETUP.md` | shared with the `ood` repository (same content at the split) | `SETUP.md` |
 
-## logs/ in detail
-- `DEFECT_EXPERIMENTS.md` — research logic: final summary (template), then rounds 1–17 in time order, incl. negative results.
-- `EXPERIMENT_LOG.md` — commands, files changed, key outputs, errors, per experiment task (first part T1–T6 detailed; later tasks one section each).
-- `20260927-PFN-session-b8578f99-dialogue.md` — this session turn by turn (user input / Claude reply, 02:06–13:17 UTC).
-- `20260927-PFN-session-c275378b-dialogue.md` — an earlier short session the same day.
-- `20260927-PFN-ZhilinNonIID-Experiments.log`, `20260927-PFN-BeyondIID-ZhilinOOD-ExperimentAndMethod.log` — the two logs from before this session.
-- `claude_memory/` — Claude Code memory of this project (user preferences: state runtime before running, lightweight exp/, env and data outside exp/, Zhilin-style AUROC evaluation, method-paper goal). To reuse on a new machine, copy into `~/.claude/projects/<project-dir>/memory/`.
-
-## Status (2026-09-27)
-Defect A (main) and Defect B (supporting) established; method AgDR frozen and evaluated on held-out trials;
-ICML draft compiled. Open: theory for the agreement weight, `% TODO verify` entries in `overleaf/icml2026/refs.bib`,
-more non-IID datasets for statistical power (see `logs/DEFECT_EXPERIMENTS.md` F6).
-
-## Status (2026-09-29, evening)
-Direction A fixed: the paper borrows the I-Div framework (Zhao et al., NeurIPS 2024). New AISTATS draft in
-`overleaf/aistats2026/` (theory: Thm 1 familiarity, Thm 2 decomposition, Prop 2 OOD posterior, Cor 1 rank statistic,
-Thm 3 group conformal, Props 3-4 entity columns; method GOR-adapter; final test on trials 15-19 done once:
-mean AUROC 79.9 vs 76.7 for the best baseline). The ICML draft in `overleaf/icml2026/` (AgDR) is kept unchanged.
-Theory notes: `logs/THEORY_IDIV.md`; run log: `logs/EXPERIMENT_LOG.md`; today's dialogue:
-`logs/20260929-PFN-session-4f58d8bd-dialogue.md`.
-
-## Status (2026-09-30)
-Proofs completed in `overleaf/aistats2026/` (Thm 1(f) pointwise familiarity, Cor 2 entity columns, self-contained Thm 3(b),
-Cor 3 valid GOR calibration, Prop 5 monotone adapter). GOR-v1 failed on one cardio final trial (AUROC 39.2); post-hoc
-diagnosis: negative adapter weights invert on extreme OOD rows. Round 2: sign-constrained adapter chosen on trials 20-24
-by a pre-set rule, frozen, final test 2 on trials 25-29 run once: mean AUROC 80.9 vs 77.9 (kNN†, p = .057, n.s.), best
-mean rank / FPR95 / worst table. Both final tests are reported in the paper. Parallel runner: `exp/par_run.py`.
+Each project keeps its own experiment log; never mix them. Several projects read `MICE/data/` through relative paths
+(`../../MICE/data`), so keep the folders side by side. Machine issues and their fixes: `env/MACHINE_LOG.md`.
