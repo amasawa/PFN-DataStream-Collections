@@ -29,10 +29,13 @@ def main():
     tasks = json.loads((root / 'tasks.json').read_text())
     state_path = root / 'queue_state.json'
     state = json.loads(state_path.read_text()) if state_path.exists() else {}
-    for task in tasks: state.setdefault(task['id'], dict(attempts=0, failures=0, next=0, blocked=False))
+    for task in tasks:
+        state.setdefault(task['id'], dict(attempts=0, failures=0, next=0, blocked=False))
+        state[task['id']].setdefault('stalled_failures', 0)
+        state[task['id']].setdefault('checkpoint_mtime', 0)
     running, history = {}, deque(maxlen=20)
     reports = None
-    started, last_launch, cooldown, last_publish = time.time(), 0, 0, 0
+    started, last_launch, cooldown = time.time(), 0, 0
     target, cap, consecutive_gpu_errors = 4, 10, 0
     allowed_paths = ['experiments/night_20261007', 'MICE/logs/OVERNIGHT_20261007.md',
                      'MiceDuo/logs/OVERNIGHT_20261007.md', 'MICE/results/night_20261007',
@@ -72,12 +75,13 @@ def main():
     env = os.environ.copy()
     env.update(OMP_NUM_THREADS='1', MKL_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1', NUMEXPR_NUM_THREADS='1',
                PYTHONDONTWRITEBYTECODE='1', MICE_CKPT_EVERY='20',
+               CUDA_LAUNCH_BLOCKING='1',
                TABPFN_MODEL_CACHE_DIR=str(Path.home() / 'pfn-venvs/cache/tabpfn'),
                HF_HUB_OFFLINE='1', TABPFN_DISABLE_TELEMETRY='1')
     env.pop('PYTORCH_CUDA_ALLOC_CONF', None)
     telemetry = (root / 'gpu.csv').open('a', buffering=1)
     if telemetry.tell() == 0: telemetry.write('time,utilization,gpu_mib,ram_available_mib,running,target,done,blocked\n')
-    event('START: GPU target >=90%, pause at 22000 MiB, emergency 23200 MiB, cap 10, allocator cap 1792 MiB/worker')
+    event('START: GPU target >=90%, pause at 22000 MiB, emergency 23200 MiB, cap 10, allocator cap 1792 MiB/worker; CUDA_LAUNCH_BLOCKING=1')
     try:
         while not STOP and time.time() - started < args.hours * 3600:
             now = time.time()
@@ -98,9 +102,16 @@ def main():
                     item['next'] = now + 90
                 else:
                     item['failures'] += 1; item['next'] = now + min(600, 60 * item['failures'])
-                    item['blocked'] = item['failures'] >= 4
+                    task = next(t for t in tasks if t['id'] == job_id)
+                    ck = (root / task['out'] / f"{task['stream']}__{task['method']}.ckpt" if task['kind'] == 'mice'
+                          else (root / task['out']).with_suffix('.part.pkl'))
+                    mtime = ck.stat().st_mtime if ck.exists() else 0
+                    advanced = mtime > item['checkpoint_mtime']
+                    item['stalled_failures'] = 0 if advanced else item['stalled_failures'] + 1
+                    item['checkpoint_mtime'] = mtime
+                    item['blocked'] = item['stalled_failures'] >= 4 or item['failures'] >= 20
                     consecutive_gpu_errors += 1
-                    event(f'RETRY {job_id} exit={code} failures={item["failures"]} blocked={item["blocked"]}')
+                    event(f'RETRY {job_id} exit={code} failures={item["failures"]} checkpoint_advanced={advanced} blocked={item["blocked"]}')
                     if consecutive_gpu_errors >= 2:
                         target = max(1, len(running)); cooldown = now + 180
                         event(f'COOLDOWN after errors; target={target}')
@@ -112,7 +123,6 @@ def main():
                 reports = None
                 try: publish()
                 except Exception as error: event('PUBLISH error: ' + repr(error))
-                last_publish = now
             done = {t['id'] for t in tasks if (root / 'done' / (t['id'] + '.json')).exists()}
             if reports is None:
                 for stage in ('k2', 'duo_dev', 'duo_replicates'):
@@ -158,6 +168,8 @@ def main():
             atomic_json(root / 'status.json', dict(time=datetime.now().astimezone().isoformat(),
                         utilization=util, gpu_mib=memory, ram_available_mib=available, target=target,
                         running={k:v['p'].pid for k,v in running.items()}, done=len(done), total=len(tasks), blocked=blocked))
+            if (root / 'STOP').exists():
+                event('STOP file requested graceful shutdown'); break
             if len(done) + blocked == len(tasks) and not running and reports is None: break
             time.sleep(3)
     finally:
@@ -190,4 +202,5 @@ if __name__ == '__main__':
         global STOP
         STOP = True
     signal.signal(signal.SIGTERM, stop); signal.signal(signal.SIGINT, stop)
+    signal.signal(signal.SIGHUP, stop)
     main()

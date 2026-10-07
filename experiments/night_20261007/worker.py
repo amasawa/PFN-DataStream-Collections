@@ -155,7 +155,11 @@ def main():
         dst = out / f"{task['stream']}__{task['method']}.npz"
         if task['method'].startswith('micev') and dst.exists() and not dst.with_suffix('.pkl').exists():
             dst.unlink()  # only this task's incomplete result, never an input/archive
-        run.run(task['stream'], task['method'], 100, str(out))
+        if task['method'].startswith('micev'):
+            run.run(task['stream'], task['method'], 100, str(out))
+        else:
+            from checkpointed_baselines import run_baseline
+            run_baseline(run, task['stream'], task['method'], 100, str(out))
         with np.load(dst) as z:
             assert np.isfinite(z['acc'][1:]).all()
         if task['method'].startswith('micev'):

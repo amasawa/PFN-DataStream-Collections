@@ -41,13 +41,20 @@ pauses workers at 22000 MiB total device use (about 23.1 GB), with emergency ter
 (about 24.3 GB), leaving headroom below 25 GB. These are observed-resource controls; they cannot
 guarantee instantaneous device-wide use if external jobs allocate between samples. RAM admission
 requires >6500 MiB available; <4096 MiB triggers a pause. Two successive failed jobs lower concurrency;
-four failures of a task block that task and retain its logs. No expandable_segments setting is used.
+Four failures without checkpoint progress (or twenty total failures) block a task and retain its
+logs. Productive checkpoint recovery does not exhaust the four-failure allowance. No expandable_segments setting is used.
+After recurring launch failures during startup, CUDA_LAUNCH_BLOCKING=1 is enabled as a Linux-side
+diagnostic/mitigation attempt. It changes synchronization, not the experiment's prediction rules;
+its effect on stability is measured in the resource/event logs rather than assumed.
 
-MICE stores its original checkpoints every 20 batches. DUO checkpoints every 10 batches, including
+MICE stores its original checkpoints every 20 batches; FIFO/DDM/window baselines use an equivalent
+loop with the same checkpoint interval. DUO checkpoints every 10 batches, including
 all losses and predictions needed for exact restart. Completed task markers are written only after
 validation. The supervisor has a Linux flock, so duplicate launches cannot execute duplicate queues.
 The run stops after eight hours or when all tasks finish/block, whichever comes first. It does not
 manufacture GPU work after the scientific queue is exhausted.
+`restart.sh` gracefully stops only this run's verified supervisor PID, waits for its workers to
+exit, then refreshes controller code and resumes checkpoints. It does not kill unrelated processes.
 
 Completed stages run their analyses automatically. Results including failed hypotheses are appended
 to the appropriate `logs/OVERNIGHT_20261007.md` and committed/pushed with an explicit path allowlist.

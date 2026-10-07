@@ -5,11 +5,16 @@ root="$HOME/pfn-runs/night-20261007"
 py="$HOME/pfn-venvs/venv/bin/python"
 export PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 export TABPFN_MODEL_CACHE_DIR="$HOME/pfn-venvs/cache/tabpfn"
+if tmux has-session -t pfn-night-20261007 2>/dev/null; then
+  echo 'Supervisor already running; controller snapshots were not changed.'
+  exit 0
+fi
 "$py" "$repo/experiments/night_20261007/prepare.py" "$root"
 mkdir -p "$root/controller"
-for name in worker.py supervisor.py analyse.py; do
-  if [ ! -f "$root/controller/$name" ]; then cp "$repo/experiments/night_20261007/$name" "$root/controller/$name"; fi
+for name in worker.py supervisor.py analyse.py checkpointed_baselines.py; do
+  cp "$repo/experiments/night_20261007/$name" "$root/controller/$name"
 done
+if [ -f "$root/STOP" ]; then mv "$root/STOP" "$root/STOP.previous"; fi
 if tmux has-session -t pfn-night-20261007 2>/dev/null; then
   echo 'Supervisor tmux session already exists.'
 else

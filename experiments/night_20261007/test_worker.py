@@ -9,8 +9,9 @@ import worker
 
 
 class FakeTFM:
-    def __init__(self, K=3): self.K = K
+    def __init__(self, K=3): self.K, self.calls = K, 0
     def predict(self, Xc, yc, Xq):
+        self.calls += 1
         counts = np.bincount(yc, minlength=self.K).astype(float) + 1
         features = np.cos(Xq[:, 1:2] + np.arange(self.K)[None]) + 2
         p = features * counts[None]
@@ -48,6 +49,35 @@ def main():
             np.testing.assert_array_equal(a['chosen'], b['chosen'])
             np.testing.assert_allclose(a['wsel'], b['weights'][:, 0], equal_nan=True)
         print('PASS: original DUO equivalence, exact checkpoint resume (3 anchors), no future-label selection')
+        spec = importlib.util.spec_from_file_location('original_mice', repo / 'MICE/code/run.py')
+        original = importlib.util.module_from_spec(spec); spec.loader.exec_module(original)
+        original.TFM = FakeTFM; original.DATA = str(root)
+        from checkpointed_baselines import run_baseline
+        Xb = np.column_stack([np.arange(9000), rng.normal(size=9000)]).astype(np.float32)
+        yb = rng.integers(0, 3, size=9000); yb[:2000] = 0
+        np.savez(root / 'baseline.npz', X=Xb, y=yb, concept=np.zeros(9000))
+        for method in ('fifo1000', 'ddm1000', 'winens1000'):
+            expected, actual = root / ('old_'+method), root / ('new_'+method)
+            expected.mkdir(); actual.mkdir()
+            original.TFM = FakeTFM
+            original.run('baseline', method, 100, str(expected))
+            class Interrupted(FakeTFM):
+                def predict(self, *args):
+                    if self.calls >= (75 if method.startswith('winens') else 33):
+                        raise InterruptedError('simulated process failure')
+                    return super().predict(*args)
+            original.TFM = Interrupted
+            try:
+                run_baseline(original, 'baseline', method, 100, str(actual))
+                raise AssertionError('Interruption was not exercised')
+            except InterruptedError: pass
+            assert (actual / f'baseline__{method}.ckpt').exists()
+            original.TFM = FakeTFM
+            run_baseline(original, 'baseline', method, 100, str(actual))
+            with np.load(expected / f'baseline__{method}.npz') as a, np.load(actual / f'baseline__{method}.npz') as b:
+                for key in ('acc', 'll', 'B', 'concept', 'calls', 'n_experts'):
+                    np.testing.assert_array_equal(a[key], b[key])
+        print('PASS: original FIFO/DDM/window predictions and losses equal checkpointed interrupted/resumed runs')
 
 
 if __name__ == '__main__': main()
