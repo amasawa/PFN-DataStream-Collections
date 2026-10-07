@@ -136,3 +136,5 @@ h3_insects_b    0.243911  0.219219  0.261261
 h3_poker_b      0.825826  0.576577  0.998999
 ```
 <!-- stage:k2:complete -->
+
+- 2026-10-08T03:50+11:00（K2 seed2 解读）：seed2 复现下预注册的 K21–K24 全部成立。MICE 平均 85.69，是最高均值，比次优 FIFO 高 0.24 个点。各流相对 FIFO：poker_b +0.90、insects_b +0.22、covertype_b +0.02、airlines_b −0.16；airlines 的 −0.16 在 −0.30 安全阈值和 −0.5 非劣阈值之内。三个 backbone seed 上，各流相对 FIFO 的方向一致：poker 恒正（+0.58 到 +1.00），insects 恒正（约 +0.22 到 +0.26），covertype 约为 0，airlines 恒小幅为负（−0.07 到 −0.16）。整体优势主要来自 poker_b；平均优势的量级小，seed 只改变 backbone 随机性、数据相同，不能视为独立重复，也不支持显著性结论。DDM 在 poker_b 上比 FIFO 低 9.07 个点，复现了其在突变检测上的失效。另：03:48 duo_s1_a3_h2_airlines 单进程失败一次（累计第 7 次），已从检查点重跑；h2_airlines 的 DUO 任务已两次触发此类失败，继续观察。
