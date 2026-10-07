@@ -10,7 +10,9 @@ file modification times.
 - RDP policy (checked 2026-09-30): idle 15 min, disconnected 5 min, `fResetBroken=1` → the session is ended and WSL,
   tmux and every job die. Keep the RDP window open with `rdp-keepalive.ps1`; locking the screen is fine, disconnecting
   or closing the window is not.
-- The machine is restarted at 05:00 (user, 2026-10-06). All long runs must be resumable.
+- No scheduled restart. The 04:00–05:00 server update announced on 2026-10-06 was cancelled (user, 2026-10-08);
+  runs no longer need to finish or pause before 05:00. Long runs still checkpoint and resume, because the WSL VM has
+  been powered off from the Windows side without notice (see the table below).
 
 ## Faults and fixes
 
