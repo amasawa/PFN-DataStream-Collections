@@ -144,3 +144,31 @@
 2026-10-07_13:34:27 util5 99% gmem 15814 ram 7644 gpu_chains 5/5 cpu_chains 0/4 unclaimed gpu 95 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 20 14 queue_seeds3b 0 0 0 queue_tabdpt 81 0 81 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
 2026-10-07_13:39:41 util5 99% gmem 13784 ram 7700 gpu_chains 5/5 cpu_chains 0/4 unclaimed gpu 51 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 22 12 queue_seeds3b 0 0 0 queue_tabdpt 39 0 39 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
 2026-10-07_13:44:54 util5 97% gmem 11936 ram 7581 gpu_chains 5/5 cpu_chains 0/4 unclaimed gpu 50 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 23 11 queue_seeds3b 0 0 0 queue_tabdpt 39 0 39 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_13:50:12 util5 99% gmem 14680 ram 7646 gpu_chains 5/5 cpu_chains 0/4 unclaimed gpu 48 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 25 9 queue_seeds3b 0 0 0 queue_tabdpt 39 0 39 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_13:55:25 util5 94% gmem 14684 ram 7615 gpu_chains 5/5 cpu_chains 0/4 unclaimed gpu 47 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 26 8 queue_seeds3b 0 0 0 queue_tabdpt 39 0 39 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_14:00:39 util5 100% gmem 13444 ram 7438 gpu_chains 5/5 cpu_chains 0/4 unclaimed gpu 45 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 28 6 queue_seeds3b 0 0 0 queue_tabdpt 39 0 39 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_14:05:52 util5 99% gmem 14436 ram 7614 gpu_chains 5/5 cpu_chains 0/4 unclaimed gpu 44 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 29 5 queue_seeds3b 0 0 0 queue_tabdpt 39 0 39 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_14:06:52 GPU memory 21778 MiB > 19000 x1 -> stop newest GPU chain, cap 4
+2026-10-07_14:06:59 released /home/zhwu9808/.reset_locks/queue_M2000/insects_gradual_balanced_M2000
+2026-10-07_14:06:59 stopped g5 (pane 62560)
+2026-10-07_14:08:09 GPU memory 20084 MiB > 19000 x1 -> stop newest GPU chain, cap 3
+2026-10-07_14:08:16 released /home/zhwu9808/.reset_locks/queue_M2000/news_M2000
+2026-10-07_14:08:16 stopped g4 (pane 60592)
+2026-10-07_14:10:27 GPU memory 21756 MiB > 19000 x1 -> stop newest GPU chain, cap 2
+2026-10-07_14:10:34 released /home/zhwu9808/.reset_locks/queue_M2000/room_M2000
+2026-10-07_14:10:34 stopped g3 (pane 60409)
+2026-10-07_14:11:50 GPU memory 29555 MiB > 19000 x1 -> stop newest GPU chain, cap 1
+2026-10-07_14:11:57 released /home/zhwu9808/.reset_locks/queue_M2000/gas_M2000
+2026-10-07_14:11:57 stopped g2 (pane 58330)
+2026-10-07_14:12:28 util5 78% gmem 29555 ram 3917 gpu_chains 2/1 cpu_chains 0/4 unclaimed gpu 44 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 33 5 queue_seeds3b 0 0 0 queue_tabdpt 39 0 39 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_14:17:46 util5 35% gmem 18809 ram 2521 gpu_chains 1/1 cpu_chains 0/4 unclaimed gpu 44 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 33 5 queue_seeds3b 0 0 0 queue_tabdpt 39 0 39 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_14:23:01 util5 52% gmem 3005 ram 2428 gpu_chains 1/1 cpu_chains 0/4 unclaimed gpu 43 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 34 4 queue_seeds3b 0 0 0 queue_tabdpt 39 0 39 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_14:28:17 util5 46% gmem 4981 ram 2454 gpu_chains 1/1 cpu_chains 0/4 unclaimed gpu 42 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 35 3 queue_seeds3b 0 0 0 queue_tabdpt 39 0 39 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_14:33:34 util5 71% gmem 11265 ram 2488 gpu_chains 1/1 cpu_chains 0/4 unclaimed gpu 40 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 37 1 queue_seeds3b 0 0 0 queue_tabdpt 39 0 39 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_14:38:52 util5 59% gmem 11271 ram 2483 gpu_chains 1/1 cpu_chains 0/4 unclaimed gpu 40 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 37 1 queue_seeds3b 0 0 0 queue_tabdpt 39 0 39 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_14:42:13 after_gas.sh: gas_M2000 done -> restarted supervisor with GCAP=8
+2026-10-07_14:42:13 start NCPU=4 GCAP=8
+2026-10-07_14:46:32 util5 1% gmem 517 ram 1144 gpu_chains 0/8 cpu_chains 0/4 unclaimed gpu 39 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 39 0 queue_seeds3b 0 0 0 queue_tabdpt 39 0 39 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_14:46:32 started g12
+2026-10-07_14:46:34 started g13
+2026-10-07_14:46:36 queue queue_M2000 complete -> stage_done.sh

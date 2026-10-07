@@ -313,3 +313,14 @@
   - 29.6 GB 超过了 20 GB 的限制（停链之前的 1 分钟里出现的）。原因是 WSL 下 nvidia-smi 看不到每个进程的显存，没法停掉真正占显存的那条链。
   - 处理：`code/after_gas.sh`（tmux `after_gas`）等 gas_M2000 完成后，以 GCAP=8 重启 supervisor（其他参数不变），由剩下的 1 行 M2000 和 TabDPT 接着跑。
   - 教训：特征很多的流在长上下文下要单独跑。以后排队时，按"行数 × 特征数"把这类流单独放一个队列，并限制它的并发。
+
+## 2026-10-07 起的无人值守运行：queue_M2000 全部完成，10-07 14:46 自动分析（自动写入，未经人工核对）
+- PARTIAL syn: 0/42 streams complete; missing: ['agrawal_s10', 'agrawal_s11', 'agrawal_s12', 'agrawal_s13', 'agrawal_s14', 'grid_c100_b2000_s10', 'grid_c100_b2000_s11', 'grid_c100_b500_s10', 'grid_c100_b500_s11', 'grid_c30_b2000_s10', 'grid_c30_b2000_s11', 'grid_c30_b500_s10', 'grid_c30_b500_s11', 'grid_c5_b2000_s10', 'grid_c5_b2000_s11', 'grid_c5_b500_s10', 'grid_c5_b500_s11', 'hyperplane_s10', 'hyperplane_s11', 'hyperplane_s12', 'hyperplane_s13', 'hyperplane_s14', 'rbf_s10', 'rbf_s11', 'rbf_s12', 'rbf_s13', 'rbf_s14', 'sea_s10', 'sea_s11', 'sea_s12', 'sea_s13', 'sea_s14', 'sine_s10', 'sine_s11', 'sine_s12', 'sine_s13', 'sine_s14', 'stagger_s10', 'stagger_s11', 'stagger_s12', 'stagger_s13', 'stagger_s14']
+- H1' full below none on real: 8/8 (need >= 6) -> holds
+- H2' full above none on synthetic: 0/8 (need >= 6) -> fails
+- H3' real: 88.1% of 29117 non-zero resets are losses; synthetic: nan% of 0 resets are wins (need > 50% each) -> fails
+- H4' per detector 0/8; detector average: real +hedge 0.50 (need >= -0.2), synthetic +hedge nan vs half of full nan -> fails
+- tail over 19 real sources, detector-averaged (worst, best): {'full': (np.float64(-26.55), np.float64(7.67)), '+half': (np.float64(-1.16), np.float64(1.18)), '+hedge': (np.float64(-1.91), np.float64(7.13))}
+- T1 worst source: +hedge - full = 24.64 (need >= 10) -> holds
+- T2 best source: +hedge 7.13 vs half of full 3.83 -> holds
+- 完整输出：`results/console_queue_M2000.txt`。

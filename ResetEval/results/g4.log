@@ -374,3 +374,16 @@ insects_incremental_reoccurring_balanced ph+half acc=0.7829 resets=30 new_calls=
 insects_incremental_reoccurring_balanced ph+hedge acc=0.8033 resets=25 new_calls=2809 time=70s
 insects_incremental_reoccurring_balanced kswin acc=0.7940 resets=13 new_calls=2851 time=73s
 insects_incremental_reoccurring_balanced kswin+half acc=0.7783 resets=13 new_calls=2877 time=65s
+insects_incremental_reoccurring_balanced kswin+hedge acc=0.7935 resets=10 new_calls=2877 time=37s
+STREAM_DONE 13:45:12 insects_incremental_reoccurring_balanced_M2000
+news none acc=0.6642 resets=0 new_calls=385 time=873s
+news ddmM acc=0.6642 resets=0 new_calls=385 time=0s
+news ddm acc=0.6642 resets=0 new_calls=385 time=0s
+news ddm+half acc=0.6642 resets=0 new_calls=385 time=0s
+news ddm+hedge acc=0.6642 resets=0 new_calls=385 time=0s
+news eddm acc=0.6569 resets=50 new_calls=394 time=14s
+news eddm+half acc=0.6638 resets=24 new_calls=420 time=43s
+news eddm+hedge acc=0.6645 resets=1 new_calls=429 time=15s
+news fhddm acc=0.6535 resets=23 new_calls=558 time=166s
+news fhddm+half acc=0.6627 resets=15 new_calls=666 time=158s
+news fhddm+hedge acc=0.6623 resets=17 new_calls=734 time=101s
