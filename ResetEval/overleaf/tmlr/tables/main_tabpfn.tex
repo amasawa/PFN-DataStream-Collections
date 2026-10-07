@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\caption{Effect of error-driven resets on TabPFN ($M=1000$): accuracy of each policy minus FIFO, in points.
+Real: source-weighted mean over 19 sources with 95\% cluster-bootstrap interval, and Holm-corrected Wilcoxon $p$ over
+sources for the full reset. Synthetic: mean over 7 generator families.}
+\label{tab:main}
+\small
+\begin{tabular}{l rrrr rrr}
+\toprule
+& \multicolumn{4}{c}{Real (19 sources)} & \multicolumn{3}{c}{Synthetic (7 families)} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-8}
+Detector & \full & $p_{\mathrm{Holm}}$ & \half & \hedge & \full & \half & \hedge \\
+\midrule
+DDM & $-$0.82 {\scriptsize[$-$2.3, +0.6]} & 0.62 & $-$0.36 & +0.16 {\scriptsize[$-$0.5, +1.1]} & +9.40 & +1.82 & +9.17 \\
+EDDM & $-$3.71 {\scriptsize[$-$7.8, $-$0.4]} & 0.36 & $-$0.48 & +0.34 {\scriptsize[$-$0.3, +1.2]} & +8.96 & +3.60 & +9.04 \\
+FHDDM & $-$2.33 {\scriptsize[$-$5.2, $-$0.3]} & 0.37 & $-$0.13 & +0.13 {\scriptsize[$-$0.3, +0.7]} & +0.93 & +0.51 & +1.16 \\
+HDDM$_A$ & $-$3.93 {\scriptsize[$-$8.8, $-$0.1]} & 0.62 & $-$0.82 & +0.20 {\scriptsize[$-$0.5, +1.1]} & +9.43 & +1.68 & +9.16 \\
+HDDM$_W$ & $-$3.33 {\scriptsize[$-$7.3, $-$0.1]} & 0.56 & $-$0.32 & +0.30 {\scriptsize[$-$0.3, +1.1]} & +9.21 & +1.65 & +8.96 \\
+ADWIN & $-$3.21 {\scriptsize[$-$7.5, +0.1]} & 0.62 & $-$0.48 & +0.30 {\scriptsize[$-$0.3, +1.1]} & +9.10 & +1.97 & +8.97 \\
+Page--Hinkley & $-$2.41 {\scriptsize[$-$5.9, +0.2]} & 0.62 & $-$0.21 & +0.46 {\scriptsize[$-$0.1, +1.2]} & +8.28 & +2.23 & +8.30 \\
+KSWIN & $-$3.00 {\scriptsize[$-$6.7, +0.0]} & 0.62 & $-$0.31 & +0.29 {\scriptsize[$-$0.3, +1.1]} & +8.83 & +1.68 & +8.52 \\
+\bottomrule
+\end{tabular}
+\end{table}

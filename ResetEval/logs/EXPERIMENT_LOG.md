@@ -349,3 +349,11 @@
   - Holm 校正后完全重置全部不显著（p_holm ≥ 0.47），与 TabPFN、TabICL 一样。
   - **结论**：在 TabPFN、TabICL、TabDPT 三个 backbone 上，"完全重置有重的左尾，+hedge 几乎不付代价就能去掉它"都成立。TabDPT 的左尾最重（−31.1，TabPFN 为 −26.2）。
 - **18:15 无人值守运行结束**：停掉 supervisor、gpu_sampler3、after_gas；没有剩下的 GPU 进程。按用户的安排（"跑完了告诉我，然后开始拆repo"），不再追加任务。
+
+## 2026-10-07 19:08：开始写 TMLR 论文（用户："那就开始写ResetEval的TMLR论文吧"）；补算指标与定理对应的变体
+- 写作位置：拆分后的 `pfn-split/dataStream/ResetEval/overleaf/tmlr/`（TMLR 官方模板 JmlrOrg/tmlr-style-file）。
+- **补算其余指标**（`code/metrics_replay.py`，tmux `metrics`，14 个 CPU 进程）：用预测缓存重放每个策略（缓存里查不到就报错，不调用 TFM），重放出的逐批准确率和重置位置必须与存储的完全一致，否则报错；在 bank 上已核对。对 7 个配置计算 acc、macro-F1、macro OvR ROC AUC、ECE（15 个箱）、log-loss、Brier、熵：TabPFN 种子 0/1/2、TabICL、TabPFN M500 的 81 条流，TabPFN M2000、TabDPT 的 39 条真实流。主配置（TabPFN 种子 0、M1000）的逐行概率另存为 float16（`results/probs_tabpfn_M1000/`）。训练式学习器没有存概率，只报准确率。
+- **定理对应的变体**：论文的 Theorem（+hedge 每段比较好的那个上下文最多差 ln 2/η，整条流比 FIFO 最多差 (R+1) ln 2/η）要求 η ≤ 1、γ = 1，而默认配置是 η = 2、γ = 0.5。所以补跑 `<det>+hedge@e1g1`（TabPFN 种子 0、M1000，81 条流 × 8 个检测器；tmux `thmvar`，4 个进程，缓存命中为主）。
+- **事先写定的检验**：在 e1g1 上，每条流都要满足"累计批均 log-loss ≤ FIFO 的 + (R+1) ln 2"（这是定理本身，必须 100% 成立，否则代码或证明有错）；另外 HS1–HS3 照 06:22 的标准判定。
+- **19:23 定理核对与 e1g1 结果**：`<det>+hedge@e1g1` 在 81 条流 × 8 个检测器上都跑完了（0 次重试）。`code/thm_check.py`：Theorem 1(ii) 的界在 648/648 个情况下成立（用的是存储的批均 log-loss，概率在 1e−6 处截断）；用掉界的比例最多为 0.683；有 424 个情况的累计 log-loss 低于 FIFO。e1g1 的 HS 数字：真实流平均 +0.27，最差来源 −1.59，合成流 +7.90，与默认配置（+0.27、−1.64、+7.91）几乎相同；HS1–HS3 都成立。
+- **写作进度**：`overleaf/tmlr/main.tex` 初稿已完成（引言按 Yang 的写法写：Observations、研究问题、Remark、贡献；理论部分有 Proposition 1 和 Theorem 1，附录里有 Lemma 和证明）。表格由 `code/make_tables.py` 从结果文件生成，图由 `code/make_figs.py` 生成。正文里的数字逐个和 `tables/numbers.txt` 核对过，按核对结果改掉了初稿里的几处错误（例如真实流平均的范围是 −0.8 到 −3.9，不是 −0.9 到 −6.7）。

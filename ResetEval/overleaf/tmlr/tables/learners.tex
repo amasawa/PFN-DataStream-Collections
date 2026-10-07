@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\caption{The same detectors on trained incremental learners and on TabPFN (all 81 streams), accuracy minus the
+never-reset learner in points, averaged over the 8 detectors. Harm as in \cref{tab:tails}.}
+\label{tab:learners}
+\small
+\begin{tabular}{l rrrr r rrrr}
+\toprule
+& \multicolumn{5}{c}{\full} & \multicolumn{4}{c}{\hedge} \\
+\cmidrule(lr){2-6}\cmidrule(lr){7-10}
+Learner & real & worst & best & synth. & Harm & real & worst & best & synth. \\
+\midrule
+Naive Bayes & +7.3 & $-$11.7 & +40.1 & +13.7 & 48.8 & +8.3 & $-$6.9 & +35.6 & +12.8 \\
+Hoeffding tree & +1.8 & $-$17.5 & +28.5 & +12.5 & 69.9 & +3.5 & $-$7.8 & +25.3 & +13.7 \\
+TabPFN & $-$2.8 & $-$26.2 & +6.3 & +8.0 & 88.1 & +0.3 & $-$1.6 & +6.0 & +7.9 \\
+\bottomrule
+\end{tabular}
+\end{table}

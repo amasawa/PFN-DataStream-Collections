@@ -1,0 +1,31 @@
+% Written by hand from logs/EXPERIMENT_LOG.md (criteria fixed before each stage was run).
+\begin{table}[h]
+\centering
+\caption{Hypotheses and pass criteria fixed before each stage, and their outcomes. ``Real'' and ``synthetic'' parts
+of a criterion were not judged where a stage ran on real streams only. The tail tests T1--T2 were added after the
+first TabPFN run (they were suggested by it) and were then tested on the later stages.}
+\label{tab:prereg}
+\small
+\begin{tabular}{p{0.17\linewidth}p{0.55\linewidth}p{0.20\linewidth}}
+\toprule
+Stage & Criterion & Outcome \\
+\midrule
+TabPFN, 29 MICE streams & H1: full reset below FIFO on real for $\ge6/8$ detectors; H2: above on synthetic for
+$\ge6/8$; H3: $>50\%$ of single resets lose on real and win on synthetic; H4: \hedge{} $\ge-0.2$ on real and keeps
+$\ge$ half of the synthetic gain & all hold \\
+10 new sources (two batches of 5) & same direction on the added sources & first batch: yes; \textbf{second batch: opposite} (resets help on 3 of 5);
+over 19 sources no detector significant after Holm \\
+TabICL & H1'--H4' over 19 sources; T1: \hedge{} beats \full{} on the worst source by $\ge10$; T2: \hedge{} keeps
+$\ge$ half of the best-source gain & all hold \\
+TabPFN seeds 1, 2 & S1: per-stream effects correlate with seed 0 at $r\ge0.9$; S2: signs kept for $\ge7/8$
+detectors, T1--T2 hold & all hold \\
+Hedge sensitivity & HS1--HS3 (\hedge{} criteria of H4 and T1) for all 7 variants & 7/7 hold (expected to fail
+for $\eta=0.5$; did not) \\
+Trained learners & TR1: learner's full-reset mean $\ge2$ points above TabPFN's; TR2: worst source $\ge10$ points
+better; TR3: $<70\%$ harmful resets & NB: all hold; HT: TR1, TR3 hold, \textbf{TR2 fails} (8.8) \\
+$M=500$, $M=2000$ & H1'--H4', T1, T2; prediction: both gain and loss grow with $M$ & all hold; prediction
+\textbf{only half} confirmed (loss flat from 1000 to 2000) \\
+TabDPT & D1: T1, T2 hold; D2: full-reset mean negative and $>70\%$ harmful resets & all hold \\
+\bottomrule
+\end{tabular}
+\end{table}
