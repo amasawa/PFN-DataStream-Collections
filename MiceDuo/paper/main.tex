@@ -1,0 +1,324 @@
+%% MICE-DUO draft. Numbers in tables come from make_tables.py; \todo marks results not yet run.
+\documentclass{article}
+
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+\usepackage{icml2026}          % blind review
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage[capitalize,noabbrev]{cleveref}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage[textsize=tiny]{todonotes}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\input{math.tex}
+\newcommand{\mice}{\textsc{MICE}}
+\newcommand{\duo}{\textsc{DUO}}
+\newcommand{\method}{\textsc{MICE-DUO}}
+\newcommand{\sel}{\mathrm{sel}}
+\makeatletter\newcommand{\rowinput}[1]{\@@input #1 }\makeatother
+
+\begin{document}
+
+\twocolumn[
+  \icmltitle{Select, but Safely: Relevance-Selected Contexts as Experts\\for In-Context Learning on Drifting Streams}
+  \icmlsetsymbol{equal}{*}
+  \begin{icmlauthorlist}
+    \icmlauthor{Anonymous Author(s)}{anon}
+  \end{icmlauthorlist}
+  \icmlaffiliation{anon}{Anonymous Institution}
+  \icmlcorrespondingauthor{Anonymous Author(s)}{anon@anon.org}
+  \icmlkeywords{concept drift, tabular foundation models, in-context learning, context selection, online learning}
+  \vskip 0.3in
+]
+\printAffiliationsAndNotice{}
+
+\begin{abstract}
+A tabular foundation model (TFM) learns a stream through its context, so the choice of which past rows to condition
+on is the learning algorithm. A natural choice is \emph{relevance selection}: at every step, rank recent labelled
+batches by how well they agree with the newest batch and condition on the most relevant ones, not on the most recent.
+We find that relevance selection is a high-variance learner. On seven development streams it matches the accuracy of
+\mice{}, a mixture of in-context experts with a worst-case safeguard, but it loses up to half a point to \mice{} on
+some streams and, used alone, up to 4.6 points to a plain window. We show that this variance is not a reason to drop
+selection but a reason to treat it as an expert. Inserted as one more expert into \mice{}, unchanged, the selected
+context inherits \mice{}'s any-time regret bound against the plain window, and empirically it costs at most
+0.15 points against \mice{} on every development stream while keeping most of its gain where concepts recur.
+\todo{Mechanism result on controlled recurrence and held-out confirmation, after the pre-registered runs.}
+\end{abstract}
+
+% =====================================================================================================
+\section{Introduction}
+\label{sec:intro}
+
+Tabular foundation models such as TabPFN \citep{hollmann2025tabpfn} and TabICL \citep{qu2025tabicl} predict in one
+forward pass given a context of labelled rows \citep{muller2022pfn,nagler2023statistical}. On a data stream they
+replace incremental learners: the model is frozen and the context is updated \citep{lourenco2026streams}. What the
+model knows about the current concept is then exactly the set of rows in its context, and the stream learner reduces
+to a rule for choosing that set.
+
+Two rules are in use. A \emph{window} conditions on the most recent rows; it is safe but forgets a concept as soon as
+it leaves the window. A \emph{memory} keeps past segments as stored contexts and decides which to recall; \mice{}
+\citep{mice2026} mixes windows and stored segments under a two-level meta expert and guarantees, with no assumption
+on the stream, that it is never much worse than the window. Both rules choose contexts made of contiguous rows.
+
+A third rule is suggested by the analysis of non-IID batches \citep{zhao2024wnb}: the error of a learner trained on
+a set of batches decomposes into a term that grows with the discrepancy between those batches and the test batch,
+and a term that shrinks with their size. For an in-context learner this is the trade-off between a large context and
+a relevant one. \emph{Relevance selection} resolves it per step. It ranks the recent labelled batches by the loss of
+the TFM conditioned on the newest batch, keeps the most relevant ones together with a short recent anchor, and
+conditions on this non-contiguous context. We call the pair of this context and the window \duo{}.
+
+\textbf{The problem.} Relevance selection is attractive and unreliable. On the seven development streams of
+\cref{sec:exp-dev} \duo{} is as accurate as \mice{} on average, gains 1.5 points on a stream whose concepts recur,
+and loses about half a point on two streams where they do not; the selected context alone is 4.6 points below a
+plain window on one stream (\cref{tab:dev}). Tuning the rule does not help: a pre-registered search over the size of
+the recent anchor traded the losses for the gains and passed on no seed (\cref{sec:exp-anchor}).
+
+\textbf{Our answer.} We do not choose between selection and memory. We insert the selected context as one more
+expert of \mice{}, with \mice{} unchanged. The consequence is immediate on the theory side and measurable on the
+empirical side.
+(i)~\mice{}'s slow level is a meta expert over two predictions, the window and the fast mixture; what the fast
+mixture contains does not enter its bound. The any-time discounted regret of the combined learner against the window
+is therefore at most $2\ln 2$, as for \mice{} (\cref{cor:safe}).
+(ii)~\mice{}'s fast level reweights its experts every batch from their last loss, so a selected context that is wrong
+is down-weighted after one labelled batch under a margin, and is otherwise absorbed by the slow level.
+(iii)~Against \mice{} itself there is no guarantee, and we measure it: on the development streams the combined
+learner is never more than 0.15 points below \mice{} on any stream and seed and is above it on average
+(\cref{tab:verdict}).
+
+\textbf{Contributions.}
+\textbf{(1)}~Relevance selection of non-contiguous contexts for TFMs on streams, derived from the discrepancy--size
+trade-off of non-IID batches, and the observation that it is a high-variance learner.
+\textbf{(2)}~A plug-in construction that turns any context-selection rule into an expert of \mice{} with the
+window safeguard intact.
+\textbf{(3)}~Pre-registered evidence: development streams, a controlled test of when selection helps, and a frozen
+held-out evaluation. \todo{(3) depends on the pending runs.}
+
+% =====================================================================================================
+\section{Setting and Background}
+\label{sec:setting}
+
+\textbf{Protocol.} A stream arrives in batches $X_1,X_2,\dots$ of $B$ rows; the labels of batch $t-1$ are revealed
+before batch $t$ is predicted. A frozen TFM $f_\Theta(\cdot\mid X;\cC)$ predicts class probabilities for the rows of
+$X$ given a context $\cC$ of at most $M$ labelled rows. A stream learner chooses $\cC_t$ from the labelled rows of
+batches $1,\dots,t-1$, or combines the predictions of several contexts.
+
+\textbf{\mice{}.} \mice{} \citep{mice2026} keeps a set $\mathcal E$ of in-context experts: FIFO windows of 100, 300 and
+$M$ rows, and up to 12 stored contexts of past segments. Its \emph{fast level} mixes all experts with weights
+\begin{equation}\label{eq:fast}
+  w_{t,k}\propto\exp\bigl(-\eta\,\ell^{\log}_{t-1,k}\bigr),\qquad k\in\mathcal E,
+\end{equation}
+where $\ell^{\log}_{t-1,k}$ is the log-loss of expert $k$ on the last labelled batch and $\eta=10$. Its \emph{slow
+level} mixes the fast mixture $p^{\mathrm{fast}}_t$ with the $M$-row window $p^{\mathrm{win}}_t$ by exponential
+weights on discounted half Brier scores $\ell_{t,k}\in[0,1]$,
+\begin{equation}\label{eq:slow}
+  L_{t,k}=\gamma L_{t-1,k}+\ell_{t,k},\quad v_{t,k}\propto e^{-\eta_2\gamma L_{t-1,k}},\quad
+  p_t=v_{t,0}\,p^{\mathrm{win}}_t+v_{t,1}\,p^{\mathrm{fast}}_t,
+\end{equation}
+with $\gamma=0.9$ and $\eta_2=\tfrac12$.
+
+\begin{theorem}[\citealp{mice2026}, any-time safeguard]\label{thm:outer}
+For $K$ predictions combined by \eqref{eq:slow} with $\eta_2\le\tfrac12$, every sequence of labels and predictions,
+every $T$ and every $k$:
+$\sum_{t\le T}\gamma^{T-t}\bigl(\ell_t(p_t)-\ell_{t,k}\bigr)\le\ln K/\eta_2$.
+\end{theorem}
+
+% =====================================================================================================
+\section{Relevance Selection}
+\label{sec:duo}
+
+\textbf{Motivation.} \citet{zhao2024wnb} bound the risk of a learner trained on a weighted set of non-IID batches by a
+term in the discrepancy between each batch and the target distribution, weighted by the batch's share, plus a term
+that decreases with the effective sample size. Small batches are individually far from the target; a large set of
+them is close only if they are relevant. A TFM does not accept sample weights, and duplicating rows to emulate them
+hurts \todo{cite our ResetEval negative results or drop}. We therefore implement the weights as a hard selection.
+
+\textbf{Rule.} At step $t$ the candidates are the labelled batches $t-H,\dots,t-1$ with $H=100$. A recent anchor
+$\mathcal A_t$ of the last $a$ batches is always kept. Every older candidate $b$ is scored by the mean log-loss of
+the TFM conditioned on the anchor,
+\begin{equation}\label{eq:score}
+  s_t(b)=\tfrac1B\textstyle\sum_{(x,y)\in b}-\log f_\Theta(y\mid x;\mathcal A_t),
+\end{equation}
+a model-oriented discrepancy between batch $b$ and the current concept in the sense of \citet{zhao2023rdiv}. The
+selected context $\cC^{\sel}_t$ is the anchor together with the $M/B-a$ lowest-scoring older batches; its prediction
+is $p^{\sel}_t=f_\Theta(\cdot\mid X_t;\cC^{\sel}_t)$. All scores use labels of batches before $t$ only.
+
+\textbf{\duo{}.} The original proposal mixes $p^{\sel}_t$ with the $M$-row window by exponential weights on
+discounted log-losses ($\eta=2$, $\gamma=0.5$) and uses $a=1$ (an anchor of one batch).
+
+\textbf{Cost.} Scoring takes one TFM call with up to $(H-a)B$ query rows, evaluated in chunks; predicting takes one
+call with $B$ query rows. \todo{Measured wall-clock cost per batch relative to \mice{}.}
+
+% =====================================================================================================
+\section{\method{}: Selection as an Expert}
+\label{sec:method}
+
+\method{} is \mice{} with one more expert: $\mathcal E'=\mathcal E\cup\{\sel\}$, where expert $\sel$ predicts
+$p^{\sel}_t$. Nothing else changes: the fast weights \eqref{eq:fast} now range over $\mathcal E'$, and the slow level
+\eqref{eq:slow} still combines the $M$-row window with the fast mixture. No constant is re-tuned.
+
+\begin{corollary}[The safeguard survives any added expert]\label{cor:safe}
+For every stream, every selection rule and every $T$, the discounted half-Brier regret of \method{} against the
+$M$-row window, and against its own fast mixture, is at most $\ln 2/\eta_2=2\ln2$.
+\end{corollary}
+\begin{proof}
+\Cref{thm:outer} holds for arbitrary predictions $p_{t,k}$. The slow level of \method{} has $K=2$ predictions, the
+window and the fast mixture over $\mathcal E'$; which experts the fast mixture contains is not used.
+\end{proof}
+
+\begin{remark}[What is not guaranteed]
+\Cref{cor:safe} compares \method{} with the window, not with \mice{}. Adding an expert changes the fast mixture, and
+the fast mixture of \mice{} is not one of \method{}'s slow-level experts, so a bound against \mice{} would need a third
+slow-level expert. We keep \mice{} unchanged and measure the difference instead (\cref{sec:exp-dev}).
+\todo{Optionally evaluate the nested variant whose slow level also contains \mice{}'s output, which has a
+$\ln3/\eta_2$ bound against \mice{}; pre-register before computing.}
+\end{remark}
+
+\begin{remark}[Why a wrong selection is cheap]
+Under \mice{}'s margin assumption, an expert whose loss on the last labelled batch exceeds the best by $\Delta$ has fast
+weight at most $e^{-\eta\Delta}$ by \eqref{eq:fast}; with $\eta=10$, a selected context whose last log-loss exceeds
+the best by 0.3 nats keeps less than 5\% of the fast weight after one labelled batch. When no expert is separated, the slow level decides whether following the fast mixture is worth
+it, which is the case \cref{cor:safe} covers.
+\end{remark}
+
+\textbf{Horizon.} Relevance selection only sees the last $H$ batches; \mice{}'s stored contexts have no horizon. The
+two are complementary: selection recovers concepts that recurred within $H$ batches at the granularity of single
+batches, stored contexts recover older concepts at the granularity of segments.
+
+% =====================================================================================================
+\section{Experiments}
+\label{sec:exp}
+
+\textbf{Protocol.} As \mice{}: $B=100$, $M=1000$, labels one batch late, TabPFN v2 with four estimators. Every
+comparison is on the same batches with the same backbone seed. All decision rules were written and committed before
+the corresponding runs; we report every pre-specified variant, including failures. The 22 real streams not used in
+development are held out and untouched. Backbone seeds change model randomness on fixed data and are not independent
+data replicates.
+
+\subsection{Development Streams: Selection Alone and as an Expert}
+\label{sec:exp-dev}
+
+Seven real streams (Elec2 and six streams used in \citet{mice2026}'s evaluation), first 300 batches, backbone seeds 1
+and 2. \Cref{tab:dev} reports accuracy. The selected context alone is the least accurate learner on average, yet on Rialto, whose concepts recur, it is
+6.3 points above FIFO and 1.2 above \mice{}. \duo{} matches \mice{} on average but is 0.50 and 0.47 points below it
+on Airlines and Weather. \method{} keeps the average and removes these losses.
+
+\begin{table}[t]
+  \centering
+  \caption{Accuracy (\%) on the development streams, mean over backbone seeds 1--2. sel: selected context alone;
+  last column: \method{} minus \mice{}. Bold: best per stream.}
+  \label{tab:dev}
+  \small
+  \setlength{\tabcolsep}{3.5pt}
+  \begin{tabular}{lcccccr}
+    \toprule
+    Stream & FIFO & sel & \duo{} & \mice{} & \method{} & $\Delta$ \\
+    \midrule
+    \rowinput{tab_dev_rows.tex}
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The pre-registered criterion for \method{} asks for no negative effect: on every stream at most 0.30 points below
+\mice{} and below FIFO, a mean not below \mice{}, and a mean log-loss at most 0.005 above \mice{}'s. Gains are not
+required. \Cref{tab:verdict} reports the primary variant (anchor 100) and three secondary ones. The primary variant
+passes on both seeds, as do the anchor-300 selection and the \duo{} mixture as experts; the anchor-500 selection fails
+on seed 2 (mean $-0.05$). The criterion was written after seeing \duo{}'s per-stream results on these streams, so
+this pass is exploratory; it licenses the tests of \cref{sec:exp-mech,sec:exp-heldout}, not a claim.
+
+\begin{table*}[t]
+  \centering
+  \caption{Pre-registered no-negative-effect check on the development streams. Differences in accuracy points;
+  $\Delta$LL: mean log-loss minus \mice{}'s.}
+  \label{tab:verdict}
+  \small
+  \begin{tabular}{lcccccccc}
+    \toprule
+    Expert added to \mice{} & seed & mean vs \mice{} & wins & worst vs \mice{} & worst vs FIFO & $\Delta$LL & pass \\
+    \midrule
+    \rowinput{tab_verdict_rows.tex}
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\subsection{Tuning Selection Alone Does Not Work}
+\label{sec:exp-anchor}
+
+Before \method{} we tried to make \duo{} safe by itself, by enlarging the recent anchor to 300 and 500 rows so that the
+selection only fills the rest of the context. The rule required, on every backbone seed, a mean gain over \mice{} of
+at least 0.5 points, wins on at least 5 of 7 streams and no stream more than 0.3 points below FIFO. No variant passed
+on any seed. Larger anchors moved \duo{} towards FIFO: they reduced the worst loss against FIFO (from about $-0.55$ to
+$-0.19$ with anchor 300) and removed the gain on Rialto (from $+1.35$ to $-0.47$ against \mice{}). Even an oracle that
+picks the better of \duo{} and \mice{} per stream after the fact is only 0.23--0.28 points above \mice{}.
+\todo{Move the full table to the appendix (\texttt{MiceDuo/results/night\_20261007/}).}
+
+\subsection{When Does Selection Help? Controlled Recurrence}
+\label{sec:exp-mech}
+
+Eighteen fresh synthetic streams from \mice{}'s grid generator, unused by either method: fifteen blocks of 2000 rows,
+pure real drift (shared inputs, permuted centroid labels), with $K\in\{3,5,15\}$ distinct concepts so that each
+concept appears 5 times, 3 times, or once; 30 or 100 centroids; three data seeds. Pre-registered hypotheses:
+(H1) no negative effect when concepts never recur; (H2) no negative effect anywhere; (H3) the gain over \mice{}
+increases with recurrence ($K=3>K=5>K=15$) and is positive on at least 5 of 6 streams at $K=3$. Before the results we
+noted that with blocks of 20 batches and $H=100$, a concept with $K=5$ returns exactly at the edge of the selection
+horizon. \todo{Results: running.}
+
+\subsection{Held-Out Real Streams}
+\label{sec:exp-heldout}
+
+\todo{Frozen evaluation on the 22 held-out real streams, only if \cref{sec:exp-mech} supports H1--H2; requires
+explicit approval before running.}
+
+% =====================================================================================================
+\section{Related Work}
+\label{sec:related}
+
+\textbf{In-context stream learning.} TFMs with sliding memories outperform adaptive tree ensembles on drifting
+streams \citep{lourenco2026streams}, and drifting priors improve them under temporal shift \citep{helli2024drift}.
+\mice{} \citep{mice2026} adds a memory of stored contexts with a worst-case safeguard. Relevance selection is a third
+way to build a context, at the granularity of batches and within a horizon.
+
+\textbf{Recurring drift.} Pools of models with reuse decisions \citep{goncalves2013rcd,gama2014recurrent} and the
+mixture of online and offline experts \citep{zhao2025mooe} recall trained models; drift detectors reset them
+\citep{gama2004ddm}. See \citet{gama2014survey,lu2019learning} for surveys.
+
+\textbf{Discrepancy and batch weighting.} R-divergence measures model-oriented discrepancy \citep{zhao2023rdiv};
+weighting non-IID batches by discrepancy improves out-of-distribution detection \citep{zhao2024wnb}. Our score
+\eqref{eq:score} is a one-batch model-oriented discrepancy used for selection rather than weighting.
+
+\textbf{Expert advice.} Exponential weights with exp-concave losses \citep{cesabianchi2006prediction,hazan2007log}
+make adding an expert cheap in regret; \cref{cor:safe} is an instance at the level of contexts.
+
+% =====================================================================================================
+\section{Limitations}
+
+The development gain of \method{} over \mice{} is small (+0.15 points) and comes mostly from one stream. The safeguard
+is against the window, not against \mice{}. Selection costs extra TFM calls per batch. Backbone seeds share data.
+\todo{Update after mechanism and held-out results.}
+
+\section{Conclusion}
+
+Relevance selection gives an in-context learner the right past rows when concepts recur and the wrong ones when they
+do not. As an expert of a mixture with a window safeguard, the first property is kept and the second is contained.
+\todo{Final claim after pending results.}
+
+\bibliography{refs}
+\bibliographystyle{icml2026}
+
+\end{document}
