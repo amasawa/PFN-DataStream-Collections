@@ -318,3 +318,34 @@ h4_covertype_e adwin+hedge acc=0.9733 resets=17 new_calls=2301 time=87s
 h4_covertype_e ph acc=0.6797 resets=234 new_calls=2312 time=12s
 h4_covertype_e ph+half acc=0.9737 resets=8 new_calls=2343 time=39s
 h4_covertype_e ph+hedge acc=0.9736 resets=8 new_calls=2415 time=81s
+h4_covertype_e kswin acc=0.6233 resets=458 new_calls=2433 time=37s
+h4_covertype_e kswin+half acc=0.9736 resets=10 new_calls=2439 time=55s
+h4_covertype_e kswin+hedge acc=0.9737 resets=8 new_calls=2439 time=47s
+STREAM_DONE 11:45:12 h4_covertype_e_M2000
+h3_covertype_b none acc=0.9667 resets=0 new_calls=989 time=1295s
+h3_covertype_b ddmM acc=0.9623 resets=9 new_calls=1008 time=18s
+h3_covertype_b ddm acc=0.9623 resets=9 new_calls=1008 time=0s
+h3_covertype_b ddm+half acc=0.9665 resets=131 new_calls=1175 time=164s
+h3_covertype_b ddm+hedge acc=0.9665 resets=65 new_calls=1302 time=114s
+h3_covertype_b eddm acc=0.9117 resets=108 new_calls=1340 time=28s
+h3_covertype_b eddm+half acc=0.9663 resets=89 new_calls=1969 time=589s
+h3_covertype_b eddm+hedge acc=0.9663 resets=86 new_calls=2236 time=201s
+h3_covertype_b fhddm acc=0.9549 resets=24 new_calls=2245 time=6s
+h3_covertype_b fhddm+half acc=0.9667 resets=1 new_calls=2245 time=0s
+h3_covertype_b fhddm+hedge acc=0.9667 resets=1 new_calls=2254 time=8s
+h3_covertype_b hddma acc=0.7196 resets=483 new_calls=2368 time=97s
+h3_covertype_b hddma+half acc=0.9669 resets=61 new_calls=2599 time=195s
+h3_covertype_b hddma+hedge acc=0.9660 resets=58 new_calls=2745 time=131s
+h3_covertype_b hddmw acc=0.9017 resets=101 new_calls=2770 time=22s
+h3_covertype_b hddmw+half acc=0.9666 resets=10 new_calls=2816 time=42s
+h3_covertype_b hddmw+hedge acc=0.9666 resets=10 new_calls=2838 time=21s
+h3_covertype_b adwin acc=0.6942 resets=337 new_calls=2865 time=20s
+h3_covertype_b adwin+half acc=0.9665 resets=18 new_calls=2927 time=53s
+h3_covertype_b adwin+hedge acc=0.9665 resets=18 new_calls=2980 time=36s
+h3_covertype_b ph acc=0.7390 resets=235 new_calls=3001 time=16s
+h3_covertype_b ph+half acc=0.9667 resets=9 new_calls=3056 time=38s
+h3_covertype_b ph+hedge acc=0.9657 resets=10 new_calls=3142 time=61s
+h3_covertype_b kswin acc=0.9459 resets=43 new_calls=3154 time=59s
+h3_covertype_b kswin+half acc=0.9667 resets=6 new_calls=3155 time=53s
+h3_covertype_b kswin+hedge acc=0.9666 resets=6 new_calls=3155 time=53s
+STREAM_DONE 12:40:35 h3_covertype_b_M2000
