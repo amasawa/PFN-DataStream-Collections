@@ -18,4 +18,4 @@ if tmux has-session -t pfn-night-20261007 2>/dev/null; then
     exit 1
   fi
 fi
-exec bash "$repo/experiments/night_20261007/launch.sh"
+exec bash "$repo/experiments/night_20261007/launch.sh" "${@}"

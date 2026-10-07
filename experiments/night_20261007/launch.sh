@@ -3,6 +3,10 @@ set -euo pipefail
 repo=$(cd "$(dirname "$0")/../.." && pwd)
 root="$HOME/pfn-runs/night-20261007"
 py="$HOME/pfn-venvs/venv/bin/python"
+if [ -f "$root/STOP" ] && [ "${1:-}" != '--resume' ]; then
+  echo 'This run was stopped for investigation. Inspect events.log; explicitly use --resume to restart.' >&2
+  exit 1
+fi
 export PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 export TABPFN_MODEL_CACHE_DIR="$HOME/pfn-venvs/cache/tabpfn"
 if tmux has-session -t pfn-night-20261007 2>/dev/null; then

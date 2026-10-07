@@ -43,6 +43,9 @@ guarantee instantaneous device-wide use if external jobs allocate between sample
 requires >6500 MiB available; <4096 MiB triggers a pause. Two successive failed jobs lower concurrency;
 Four failures without checkpoint progress (or twenty total failures) block a task and retain its
 logs. Productive checkpoint recovery does not exhaust the four-failure allowance. No expandable_segments setting is used.
+Following the reported crash, a global circuit breaker now stops the entire run after four worker
+failures in ten minutes. A STOP marker requires explicit `launch.sh --resume`; automatic re-escalation
+after repeated device errors is no longer allowed. This guard was added after the 23:33 incident stop.
 After recurring launch failures during startup, CUDA_LAUNCH_BLOCKING=1 is enabled as a Linux-side
 diagnostic/mitigation attempt. It changes synchronization, not the experiment's prediction rules;
 its effect on stability is measured in the resource/event logs rather than assumed.

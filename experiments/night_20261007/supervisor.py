@@ -33,7 +33,7 @@ def main():
         state.setdefault(task['id'], dict(attempts=0, failures=0, next=0, blocked=False))
         state[task['id']].setdefault('stalled_failures', 0)
         state[task['id']].setdefault('checkpoint_mtime', 0)
-    running, history = {}, deque(maxlen=20)
+    running, history, recent_failures = {}, deque(maxlen=20), deque()
     reports = None
     started, last_launch, cooldown = time.time(), 0, 0
     target, cap, consecutive_gpu_errors = 4, 10, 0
@@ -111,6 +111,12 @@ def main():
                     item['checkpoint_mtime'] = mtime
                     item['blocked'] = item['stalled_failures'] >= 4 or item['failures'] >= 20
                     consecutive_gpu_errors += 1
+                    recent_failures.append(now)
+                    while recent_failures and recent_failures[0] < now - 600:
+                        recent_failures.popleft()
+                    if len(recent_failures) >= 4:
+                        (root / 'STOP').write_text('Circuit breaker: four worker failures within ten minutes; investigate before resuming.\n')
+                        event('CIRCUIT BREAKER: four failures in ten minutes; stopping this run')
                     event(f'RETRY {job_id} exit={code} failures={item["failures"]} checkpoint_advanced={advanced} blocked={item["blocked"]}')
                     if consecutive_gpu_errors >= 2:
                         target = max(1, len(running)); cooldown = now + 180
@@ -153,7 +159,7 @@ def main():
                 if candidates:
                     stop_job(candidates[-1], f'resource pressure GPU={memory} MiB RAM_available={available}', memory >= 23200)
                     target = max(1, len(running) - 1); cooldown = now + 180
-            elif now >= cooldown and pending and memory < 18500 and available > 6500:
+            elif not (root / 'STOP').exists() and now >= cooldown and pending and memory < 18500 and available > 6500:
                 if len(history) >= 8 and np_mean(history) < 94 and now - last_launch > 25:
                     target = min(cap, target + 1)
                 if len(running) < target and now - last_launch > 8:
@@ -183,6 +189,11 @@ def main():
             try: reports['p'].wait(timeout=120)
             except subprocess.TimeoutExpired: reports['p'].terminate()
         atomic_json(state_path, state)
+        status_path = root / 'status.json'
+        final_status = json.loads(status_path.read_text()) if status_path.exists() else {}
+        final_status.update(state='stopped', running={}, stopped_at=datetime.now().astimezone().isoformat(),
+                            reason=(root / 'STOP').read_text().strip() if (root / 'STOP').exists() else 'finished or interrupted')
+        atomic_json(status_path, final_status)
         event('STOP: results/checkpoints retained; resume with launch.sh')
         for project in ('MICE', 'MiceDuo'):
             with (repo / project / 'logs/OVERNIGHT_20261007.md').open('a') as handle:

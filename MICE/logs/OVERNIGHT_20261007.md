@@ -40,3 +40,19 @@ MICE 原来的每 20 批断点保留。调度器改为四次“无断点进展�
 - 2026-10-07T23:29:47+11:00: 调度器结束；总完成 2/86，失败阻塞 0。详细事件与资源曲线：`/home/zhwu9808/pfn-runs/night-20261007`。
 
 - 2026-10-07T23:33:03+11:00: 调度器结束；总完成 2/86，失败阻塞 0。详细事件与资源曲线：`/home/zhwu9808/pfn-runs/night-20261007`。
+
+## 23:33 用户报告“刚才崩溃”：停止并取证
+
+- 已安全停止本轮调度器和所有 GPU 子任务；未调用任何 Windows 程序。
+- WSL 从 21:21:37 持续运行，未重启；kernel journal 在实验时段无记录，未见 OOM 证据。
+- 315 次采样（23:16:41–23:33:02）：GPU 显存峰值 7164 MiB（约 7.5 GB）；
+  MemAvailable 最低 21259 MiB（约 20.8 GiB），均远离资源上限。采样不能排除瞬态事件。
+- 共 14 次任务失败：12 次 `CUDA unspecified launch failure`、2 次 `illegal memory access`。
+  同步模式下也失败，落点包括 TabPFN 的 GPU 预处理和目标嵌入；尚不能据此确定根因。
+- 降并发/冷却后自动回升未能稳定运行。这轮未实现持续 >=90% 的目标，不能只凭短窗口 95–99% 宣称达标。
+- 2 项 FIFO 结果已完成（airlines_b、poker_b），四项 micev 有断点；K2 尚不完整，DUO 未开始。
+- 修正调度器：10 分钟内 4 次任务失败即全局停机，不再自动回升；STOP 需要明确 --resume。
+  停止状态现在明确写入 status.json，避免残留的运行 PID 造成误读。
+- Windows GPU 超时恢复（TDR）只是待核实假设；Microsoft 文档说明这类恢复会记入 Windows
+  Event Viewer。没有读取 Windows 事件、没有修改 TDR/驱动/安全软件，不能归因给 Cortex XDR。
+  文档：https://learn.microsoft.com/en-us/windows-hardware/drivers/display/timeout-detection-and-recovery
