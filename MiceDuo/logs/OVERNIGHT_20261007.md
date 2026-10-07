@@ -142,3 +142,5 @@ Seed 0 is exploratory. Independent backbone seeds check stability on these same 
 - 2026-10-08T05:42+11:00：进度 77/86。seed2 DUO anchor=3 完成 h2_airlines、h2_weather、h2_poker（剩 rialto、spam）；anchor=5 已启动 4 条。本窗口无新失败（累计 13 次）。GPU 利用率均值 99.5%（0 次 <90%），显存峰值 10700 MiB（33%），RAM 可用 ≥22 GB；维持 6 worker。仅剩 3 个排队任务。
 
 - 2026-10-08T05:52+11:00：进度 81/86，进入收尾。seed2 DUO anchor=3 7/7 完成；anchor=5 完成 elec2、h2_phishing，最后 5 个任务都在运行、无排队任务，并发将随任务结束逐个下降。本窗口无新失败（累计 13 次）。GPU 利用率均值 99.6%（0 次 <90%），显存峰值 10700 MiB（33%），RAM 可用 ≥22 GB。预计 06:05 前后全部完成，随后自动运行 duo_replicates 分析并发布。
+
+- 2026-10-08T06:02+11:00：进度 84/86。seed2 DUO anchor=5 完成 h2_airlines、h2_poker、h2_weather；最后 2 个任务（a5_h2_rialto、a5_h2_spam）在跑，没有排队任务。本窗口无新失败（累计 13 次）。收尾阶段并发自然降到 2，05:51–06:01 利用率均值 93.1%（32 次 <90%，原因是可跑任务不足，而非资源受限；按计划不制造额外 GPU 负载），当前仍为 100%；显存峰值 7108 MiB（22%），RAM 可用 ≥22 GB。
