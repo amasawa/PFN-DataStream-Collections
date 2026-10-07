@@ -385,8 +385,10 @@ trained learners as well (\cref{tab:learners}), so it is a general way to act on
 
 \input{tables/metrics.tex}
 
-\Cref{tab:metrics} shows that the same ordering holds for macro-F1, ROC AUC, calibration and log-loss: full resets
-are worse calibrated and have a higher log-loss than FIFO, and the hedge is on par with FIFO on all measures.
+\Cref{tab:metrics} shows that the same ordering holds for macro-F1, ROC AUC, calibration and log-loss on all three
+backbones. Full resets are worse on every measure (for TabPFN, macro-F1 76.4 against 79.9, ECE 3.6\% against 2.4\%,
+log-loss 0.62 against 0.39), and the hedge is slightly better than FIFO on every measure (macro-F1 80.4, ECE 2.2\%,
+log-loss 0.38).
 
 \subsection{Robustness}
 \label{sec:robust}
@@ -490,7 +492,7 @@ $W_t=\frac12\sum_k e^{-\eta\Lambda_{k,t}}$, so $W_{\tau_j}=1$ and $w_{k,t}=\frac
 Summing over $t\in S_j$ telescopes to $-\frac1\eta\log W_{\mathrm{end}}$, and
 $W_{\mathrm{end}}\ge\frac12e^{-\eta\Lambda_{k,\mathrm{end}}}$ for each $k$, which gives (i). For (ii), on $S_0$ the
 experts coincide, so the mixture equals FIFO with no additive cost; on each of the $N$ later segments (i) bounds the
-mixture by the better expert, and in particular by $F$, plus $\ln2/\eta$. Summing over segments gives both bounds. \qed
+mixture by the better expert, and in particular by $F$, plus $\ln2/\eta$. Summing over segments gives both bounds.
 \end{proof}
 
 \section{Data}
@@ -502,15 +504,24 @@ mixture by the better expert, and in particular by $F$, plus $\ln2/\eta$. Summin
 The result files of the main runs store per-batch accuracy and log-loss. Because every policy is a deterministic
 function of the cached TFM predictions (\cref{ass:frozen}), we replay each policy from the cache with the same code
 path, check that the replayed per-batch accuracies and reset positions equal the stored ones exactly, and compute the
-metrics over all scored rows. Two cache entries lost to a concurrent write were recomputed; the replay check confirms
-that the recomputed predictions reproduce the stored results.
+metrics over all scored rows. In 17 streams, 721 cache entries in total had been lost to concurrent writes of the same
+cache file (before writes were made to merge); they were recomputed with the TFM, and the replay check confirms that
+the recomputed predictions reproduce the stored per-batch accuracies and reset positions exactly.
 
+\clearpage
 \section{Trained learners}
 \label{app:learners}
+\Cref{tab:learners_abs} gives the absolute accuracy of the never-reset learners and the per-source effect of a full
+reset for the trained learners and TabPFN.
+
 \input{tables/learners_abs.tex}
 
+\clearpage
 \section{Pre-registered hypotheses and outcomes}
 \label{app:prereg}
+\Cref{tab:prereg} lists, stage by stage, the criteria fixed before the stage was run and the outcomes, including the
+ones that failed.
+
 \input{tables/prereg.tex}
 
 \end{document}

@@ -1,0 +1,64 @@
+TabPFN real full source-weighted mean range: (np.float64(-3.93), np.float64(-0.82))
+TabPFN real full p_holm min: 0.356
+TabPFN real full sources positive range: (5, 6)
+TabPFN syn full mean range: (np.float64(0.93), np.float64(9.43))
+TabPFN real hedge mean range: (np.float64(0.13), np.float64(0.46))
+TabPFN full real mean/worst/best: (np.float64(-2.84), np.float64(-26.23), np.float64(6.32))
+TabPFN +half real mean/worst/best: (np.float64(-0.39), np.float64(-4.27), np.float64(0.65))
+TabPFN +hedge real mean/worst/best: (np.float64(0.27), np.float64(-1.64), np.float64(5.98))
+TabPFN worst sources (mode, second): ('covertype', 'wall')
+TabPFN harmful share real/syn: (np.float64(88.1), np.float64(15.5))
+TabPFN syn full/hedge: (np.float64(8.02), np.float64(7.91))
+TabICL full real mean/worst/best: (np.float64(-3.05), np.float64(-26.46), np.float64(4.78))
+TabICL +half real mean/worst/best: (np.float64(-0.44), np.float64(-5.37), np.float64(0.87))
+TabICL +hedge real mean/worst/best: (np.float64(0.22), np.float64(-1.74), np.float64(4.57))
+TabICL worst sources (mode, second): ('covertype', 'wall')
+TabICL harmful share real/syn: (np.float64(88.3), np.float64(11.6))
+TabICL syn full/hedge: (np.float64(8.37), np.float64(8.26))
+TabDPT full real mean/worst/best: (np.float64(-3.31), np.float64(-31.1), np.float64(6.13))
+TabDPT +half real mean/worst/best: (np.float64(-0.78), np.float64(-12.99), np.float64(0.91))
+TabDPT +hedge real mean/worst/best: (np.float64(0.25), np.float64(-2.09), np.float64(5.63))
+TabDPT worst sources (mode, second): ('wall', 'covertype')
+TabDPT harmful share real/syn: (np.float64(87.3), np.float64(10.4))
+TabDPT syn full/hedge: (np.float64(8.64), np.float64(8.47))
+Naive Bayes full real mean/worst/best/syn: (np.float64(7.29), np.float64(-11.7), np.float64(40.11), np.float64(13.71))
+Naive Bayes hedge real mean/worst/syn: (np.float64(8.35), np.float64(-6.92), np.float64(12.82))
+Naive Bayes harmful share: 48.8
+Hoeffding tree full real mean/worst/best/syn: (np.float64(1.83), np.float64(-17.47), np.float64(28.53), np.float64(12.46))
+Hoeffding tree hedge real mean/worst/syn: (np.float64(3.55), np.float64(-7.77), np.float64(13.67))
+Hoeffding tree harmful share: 69.9
+TabPFN full real mean/worst/best/syn: (np.float64(-2.84), np.float64(-26.23), np.float64(6.32), np.float64(8.02))
+TabPFN hedge real mean/worst/syn: (np.float64(0.27), np.float64(-1.64), np.float64(7.91))
+TabPFN harmful share: 88.1
+per-source full d (eeg, chest, home, covertype, wall): {'Naive Bayes': {'eeg': 39.2, 'chest': 23.4, 'home': 34.1, 'covertype': -3.3, 'wall': -9.9}, 'Hoeffding tree': {'eeg': 28.5, 'chest': 14.5, 'home': 12.5, 'covertype': -17.5, 'wall': -9.2}, 'TabPFN': {'eeg': 6.3, 'chest': 1.9, 'home': 1.4, 'covertype': -23.1, 'wall': -18.8}}
+Naive Bayes absolute acc of none real/syn: (np.float64(61.9), np.float64(64.8))
+Hoeffding tree absolute acc of none real/syn: (np.float64(72.4), np.float64(67.6))
+TabPFN absolute acc of none real/syn: (np.float64(87.8), np.float64(83.9))
+M500 full mean/worst/best syn harmful: (np.float64(-1.99), np.float64(-17.59), np.float64(4.37), np.float64(3.5), np.float64(80.4))
+M500 hedge mean/worst/best: (np.float64(-0.03), np.float64(-2.56), np.float64(3.35))
+M1000 full mean/worst/best syn harmful: (np.float64(-2.84), np.float64(-26.23), np.float64(6.32), np.float64(8.02), np.float64(88.1))
+M1000 hedge mean/worst/best: (np.float64(0.27), np.float64(-1.64), np.float64(5.98))
+M2000 full mean/worst/best syn harmful: (np.float64(-2.81), np.float64(-26.55), np.float64(7.67), nan, np.float64(88.1))
+M2000 hedge mean/worst/best: (np.float64(0.5), np.float64(-1.91), np.float64(7.13))
+hsens +hedge mean/worst/syn: (np.float64(0.27), np.float64(-1.64), np.float64(7.91))
+hsens +hedge@e0.5g0.5 mean/worst/syn: (np.float64(0.24), np.float64(-1.63), np.float64(7.86))
+hsens +hedge@e1g0.5 mean/worst/syn: (np.float64(0.25), np.float64(-1.62), np.float64(7.9))
+hsens +hedge@e4g0.5 mean/worst/syn: (np.float64(0.27), np.float64(-1.73), np.float64(7.92))
+hsens +hedge@e8g0.5 mean/worst/syn: (np.float64(0.29), np.float64(-1.58), np.float64(7.93))
+hsens +hedge@e2g0.25 mean/worst/syn: (np.float64(0.25), np.float64(-1.67), np.float64(7.9))
+hsens +hedge@e2g0.75 mean/worst/syn: (np.float64(0.28), np.float64(-1.63), np.float64(7.91))
+hsens +hedge@e2g0.9 mean/worst/syn: (np.float64(0.29), np.float64(-1.62), np.float64(7.91))
+hsens +hedge@e1g1 mean/worst/syn: (np.float64(0.27), np.float64(-1.59), np.float64(7.9))
+metrics TabPFN FIFO: {'acc': 87.756, 'f1': 79.894, 'auc': 90.598, 'ece': 2.39, 'logloss': 0.392, 'brier': 0.175}
+metrics TabPFN \full: {'acc': 84.912, 'f1': 76.39, 'auc': 87.816, 'ece': 3.567, 'logloss': 0.617, 'brier': 0.217}
+metrics TabPFN \half: {'acc': 87.366, 'f1': 79.5, 'auc': 90.312, 'ece': 2.553, 'logloss': 0.415, 'brier': 0.181}
+metrics TabPFN \hedge: {'acc': 88.029, 'f1': 80.394, 'auc': 90.735, 'ece': 2.163, 'logloss': 0.38, 'brier': 0.171}
+metrics TabICL FIFO: {'acc': 88.054, 'f1': 80.427, 'auc': 90.793, 'ece': 2.986, 'logloss': 0.387, 'brier': 0.173}
+metrics TabICL \full: {'acc': 85.001, 'f1': 76.641, 'auc': 87.902, 'ece': 4.144, 'logloss': 0.613, 'brier': 0.217}
+metrics TabICL \half: {'acc': 87.61, 'f1': 79.916, 'auc': 90.391, 'ece': 3.121, 'logloss': 0.415, 'brier': 0.179}
+metrics TabICL \hedge: {'acc': 88.274, 'f1': 80.906, 'auc': 90.853, 'ece': 2.669, 'logloss': 0.376, 'brier': 0.169}
+metrics TabDPT FIFO: {'acc': 87.408, 'f1': 79.573, 'auc': 90.485, 'ece': 2.703, 'logloss': 0.399, 'brier': 0.181}
+metrics TabDPT \full: {'acc': 84.099, 'f1': 75.565, 'auc': 87.167, 'ece': 4.158, 'logloss': 0.647, 'brier': 0.229}
+metrics TabDPT \half: {'acc': 86.629, 'f1': 78.558, 'auc': 89.748, 'ece': 2.873, 'logloss': 0.441, 'brier': 0.192}
+metrics TabDPT \hedge: {'acc': 87.663, 'f1': 80.018, 'auc': 90.61, 'ece': 2.254, 'logloss': 0.387, 'brier': 0.176}
+real streams/sources/rows: (39, 19, 2946167)

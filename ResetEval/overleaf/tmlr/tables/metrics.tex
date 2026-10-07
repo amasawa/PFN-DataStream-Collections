@@ -1,1 +1,27 @@
-\begin{table}[t]\caption{placeholder}\label{tab:metrics}\end{table}
+\begin{table}[t]
+\centering
+\caption{Metrics beyond accuracy on the 19 real sources ($M=1000$; source-weighted means; reset actions averaged over
+the 8 detectors). Accuracy, macro-F1, macro one-vs-rest ROC AUC and ECE in \%.}
+\label{tab:metrics}
+\small
+\begin{tabular}{ll rrrrrr}
+\toprule
+Model & Policy & Acc. & F1 & AUC & ECE & Log-loss & Brier \\
+\midrule
+\multirow{4}{*}{TabPFN} & FIFO & 87.76 & 79.89 & 90.60 & 2.39 & 0.392 & 0.175 \\
+ & \full & 84.91 & 76.39 & 87.82 & 3.57 & 0.617 & 0.217 \\
+ & \half & 87.37 & 79.50 & 90.31 & 2.55 & 0.415 & 0.181 \\
+ & \hedge & 88.03 & 80.39 & 90.74 & 2.16 & 0.380 & 0.171 \\
+\midrule
+\multirow{4}{*}{TabICL} & FIFO & 88.05 & 80.43 & 90.79 & 2.99 & 0.387 & 0.173 \\
+ & \full & 85.00 & 76.64 & 87.90 & 4.14 & 0.613 & 0.217 \\
+ & \half & 87.61 & 79.92 & 90.39 & 3.12 & 0.415 & 0.179 \\
+ & \hedge & 88.27 & 80.91 & 90.85 & 2.67 & 0.376 & 0.169 \\
+\midrule
+\multirow{4}{*}{TabDPT} & FIFO & 87.41 & 79.57 & 90.49 & 2.70 & 0.399 & 0.181 \\
+ & \full & 84.10 & 75.56 & 87.17 & 4.16 & 0.647 & 0.229 \\
+ & \half & 86.63 & 78.56 & 89.75 & 2.87 & 0.441 & 0.192 \\
+ & \hedge & 87.66 & 80.02 & 90.61 & 2.25 & 0.387 & 0.176 \\
+\bottomrule
+\end{tabular}
+\end{table}
