@@ -172,3 +172,16 @@
 2026-10-07_14:46:32 started g12
 2026-10-07_14:46:34 started g13
 2026-10-07_14:46:36 queue queue_M2000 complete -> stage_done.sh
+2026-10-07_14:52:11 util5 75% gmem 2269 ram 3430 gpu_chains 2/8 cpu_chains 0/4 unclaimed gpu 37 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 39 0 queue_seeds3b 0 0 0 queue_tabdpt 39 0 37 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_14:52:11 started g14
+2026-10-07_14:57:32 util5 89% gmem 3144 ram 4611 gpu_chains 3/8 cpu_chains 0/4 unclaimed gpu 36 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 39 0 queue_seeds3b 0 0 0 queue_tabdpt 39 0 36 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_14:57:32 started g15
+2026-10-07_15:02:51 util5 92% gmem 4020 ram 5764 gpu_chains 4/8 cpu_chains 0/4 unclaimed gpu 35 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 39 0 queue_seeds3b 0 0 0 queue_tabdpt 39 0 35 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_15:08:08 util5 85% gmem 4020 ram 5732 gpu_chains 4/8 cpu_chains 0/4 unclaimed gpu 33 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 39 0 queue_seeds3b 0 0 0 queue_tabdpt 39 2 33 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_15:08:08 started g16
+2026-10-07_15:13:26 util5 94% gmem 4896 ram 6889 gpu_chains 5/8 cpu_chains 0/4 unclaimed gpu 30 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 39 0 queue_seeds3b 0 0 0 queue_tabdpt 39 4 30 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_15:18:42 util5 94% gmem 4896 ram 6952 gpu_chains 5/8 cpu_chains 0/4 unclaimed gpu 30 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 39 0 queue_seeds3b 0 0 0 queue_tabdpt 39 4 30 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_15:23:57 util5 95% gmem 4896 ram 6985 gpu_chains 5/8 cpu_chains 0/4 unclaimed gpu 30 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 39 0 queue_seeds3b 0 0 0 queue_tabdpt 39 4 30 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_15:29:13 util5 94% gmem 4896 ram 6950 gpu_chains 5/8 cpu_chains 0/4 unclaimed gpu 30 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 39 0 queue_seeds3b 0 0 0 queue_tabdpt 39 4 30 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_15:34:30 util5 94% gmem 4896 ram 6896 gpu_chains 5/8 cpu_chains 0/4 unclaimed gpu 29 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 39 0 queue_seeds3b 0 0 0 queue_tabdpt 39 5 29 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 
+2026-10-07_15:39:46 util5 95% gmem 4896 ram 6940 gpu_chains 5/8 cpu_chains 0/4 unclaimed gpu 29 cpu 0 | queue_seeds 162 162 0 queue_M500 81 81 0 queue_M2000 39 39 0 queue_seeds3b 0 0 0 queue_tabdpt 39 5 29 queue_hsens 81 81 0 queue_trained_ht 81 81 0 queue_trained_nb 81 81 0 

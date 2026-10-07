@@ -1,0 +1,10 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+h4_poker_d none acc=0.9399 resets=0 new_calls=999 time=457s
+h4_poker_d ddmM acc=0.8435 resets=398 new_calls=1773 time=390s
+h4_poker_d ddm acc=0.8435 resets=396 new_calls=1778 time=3s
+h4_poker_d ddm+half acc=0.9132 resets=321 new_calls=2403 time=321s
+h4_poker_d ddm+hedge acc=0.9348 resets=227 new_calls=2862 time=204s
+h4_poker_d eddm acc=0.8271 resets=332 new_calls=3328 time=215s
+h4_poker_d eddm+half acc=0.9255 resets=140 new_calls=3577 time=126s
+h4_poker_d eddm+hedge acc=0.9374 resets=117 new_calls=3803 time=112s
+h4_poker_d fhddm acc=0.8701 resets=155 new_calls=4233 time=226s
