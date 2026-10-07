@@ -114,3 +114,5 @@ Seed 0 is exploratory. Independent backbone seeds check stability on these same 
 - 2026-10-08T03:31+11:00（连接恢复核对）：后台进程持续运行，完成 37/86：K2 15/16、DUO 开发 14/14、复现 8/56；0 个阻塞任务。6 个 worker 均在运行，未重复启动。最近 10 分钟 195 次采样 GPU 平均 98.93%、1 次低于 90%，显存峰值 9962 MiB（约 10.45 GB）。最近一次失败仍为 03:21，保留既有断点重试与熔断机制。恢复前本地 HEAD 与 GitHub main 均为 9f6445c。
 
 - 2026-10-08T03:32+11:00：进度 37/86。seed1 MICE 参考完成 h2_poker、h2_spam（7 条仅剩 rialto）；seed1 DUO anchor=1 完成 elec2、h2_phishing，h2_airlines 已从检查点重跑。本窗口无新失败（累计 6 次）。GPU 利用率均值 99.0%（1 次 <90%），显存峰值 9962 MiB（30%），RAM 可用 ≥21.8 GB；维持 6 worker。
+
+- 2026-10-08T03:42+11:00：进度 40/86。seed1 的 7 条 MICE 参考全部完成；seed1 DUO anchor=1 完成 h2_airlines（重跑后成功）、h2_poker，anchor=3 开始。本窗口无新失败（累计 6 次）。GPU 利用率均值 99.3%（1 次 <90%），显存峰值 10254 MiB（31%），RAM 可用 ≥21.9 GB；维持 6 worker。过去 1 小时完成 17 个任务，剩 46 个，预计约 06:15–06:45 完成。
