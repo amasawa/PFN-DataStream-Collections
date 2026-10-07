@@ -302,3 +302,7 @@
 - TR2 worst real source: nb - TabPFN = 14.53 (need >= 10) -> holds
 - TR3 real: 48.8% of 32149 non-zero resets are losses for nb (TabPFN 88.1% of 29211; need < 70%) -> holds
 - 完整输出：`results/console_queue_trained_nb.txt`。
+- **11:40 人工核对（queue_trained_nb，10:56 完成）**：81 条流都齐。GaussianNB 的 TR1（+10.14）、TR2（+14.53）、TR3（48.8% 净亏，TabPFN 为 88.1%）全部成立。完全重置在真实流上的平均（检测器平均）：NB +7.29，HT +1.83，TabPFN −2.84；最差来源：NB −11.7，HT −17.5，TabPFN −26.2。
+  - 按来源看（Claude 补算），三者的排序几乎一致：wall、covertype、occupancy 上都亏；eeg、home、chest、gas 上 NB 和 HT 收益很大（eeg 上 NB +39.2、HT +28.5、TabPFN +6.3）。
+  - **解读（Claude 的判断）**：一个学习器越不会遗忘、越弱，重置的收益就越大（NB > HT > TabPFN）；TFM 用 FIFO 窗口时本来就会遗忘，所以收益最小，风险却还在。这支持 09:40 的解读。限定：NB 的绝对准确率低得多，它的"收益"部分来自起点低，写作时要报绝对准确率。
+- **11:40 资源**：11:23 显存到 19.6 GB，按新规则停掉 g8（流放回队列），GPU 链上限降为 7；之后显存 ≤ 16.3 GB，利用率 100%，内存 10.4 GB。M2000 完成 7/39（长流在前）；GPU 队列还有 TabDPT 的 81 条流。
