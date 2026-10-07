@@ -312,3 +312,9 @@ h2_airlines hddma+hedge acc=0.6966 resets=10 new_calls=1721 time=30s
 h2_airlines hddmw acc=0.6815 resets=75 new_calls=1920 time=83s
 h2_airlines hddmw+half acc=0.6953 resets=68 new_calls=2360 time=188s
 h2_airlines hddmw+hedge acc=0.6947 resets=71 new_calls=2550 time=80s
+h2_airlines adwin acc=0.6960 resets=11 new_calls=2650 time=52s
+h2_airlines adwin+half acc=0.6967 resets=11 new_calls=2723 time=42s
+h2_airlines adwin+hedge acc=0.6964 resets=11 new_calls=2723 time=0s
+h2_airlines ph acc=0.6920 resets=27 new_calls=2939 time=137s
+h2_airlines ph+half acc=0.6964 resets=21 new_calls=3056 time=73s
+h2_airlines ph+hedge acc=0.6959 resets=21 new_calls=3201 time=99s

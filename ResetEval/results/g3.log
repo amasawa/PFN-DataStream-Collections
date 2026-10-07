@@ -362,3 +362,34 @@ h3_airlines_c adwin+hedge acc=0.6581 resets=12 new_calls=3356 time=21s
 h3_airlines_c ph acc=0.6521 resets=32 new_calls=3576 time=89s
 h3_airlines_c ph+half acc=0.6576 resets=24 new_calls=3735 time=66s
 h3_airlines_c ph+hedge acc=0.6577 resets=25 new_calls=3898 time=68s
+h3_airlines_c kswin acc=0.6483 resets=70 new_calls=4048 time=117s
+h3_airlines_c kswin+half acc=0.6568 resets=58 new_calls=4237 time=164s
+h3_airlines_c kswin+hedge acc=0.6568 resets=64 new_calls=4331 time=106s
+STREAM_DONE 12:48:43 h3_airlines_c_M2000
+insects_incremental_balanced none acc=0.6814 resets=0 new_calls=559 time=1034s
+insects_incremental_balanced ddmM acc=0.6808 resets=2 new_calls=587 time=30s
+insects_incremental_balanced ddm acc=0.6808 resets=2 new_calls=587 time=0s
+insects_incremental_balanced ddm+half acc=0.6812 resets=2 new_calls=605 time=23s
+insects_incremental_balanced ddm+hedge acc=0.6827 resets=2 new_calls=620 time=14s
+insects_incremental_balanced eddm acc=0.6809 resets=11 new_calls=629 time=12s
+insects_incremental_balanced eddm+half acc=0.6811 resets=28 new_calls=656 time=29s
+insects_incremental_balanced eddm+hedge acc=0.6820 resets=10 new_calls=694 time=32s
+insects_incremental_balanced fhddm acc=0.6746 resets=14 new_calls=864 time=177s
+insects_incremental_balanced fhddm+half acc=0.6805 resets=13 new_calls=980 time=130s
+insects_incremental_balanced fhddm+hedge acc=0.6799 resets=13 new_calls=1020 time=38s
+insects_incremental_balanced hddma acc=0.6807 resets=5 new_calls=1059 time=34s
+insects_incremental_balanced hddma+half acc=0.6815 resets=4 new_calls=1095 time=35s
+insects_incremental_balanced hddma+hedge acc=0.6833 resets=4 new_calls=1116 time=20s
+insects_incremental_balanced hddmw acc=0.6696 resets=25 new_calls=1333 time=209s
+insects_incremental_balanced hddmw+half acc=0.6812 resets=26 new_calls=1522 time=247s
+insects_incremental_balanced hddmw+hedge acc=0.6834 resets=25 new_calls=1615 time=95s
+insects_incremental_balanced adwin acc=0.6788 resets=5 new_calls=1681 time=72s
+insects_incremental_balanced adwin+half acc=0.6812 resets=6 new_calls=1735 time=71s
+insects_incremental_balanced adwin+hedge acc=0.6819 resets=5 new_calls=1757 time=27s
+insects_incremental_balanced ph acc=0.6703 resets=20 new_calls=1878 time=117s
+insects_incremental_balanced ph+half acc=0.6806 resets=11 new_calls=1932 time=70s
+insects_incremental_balanced ph+hedge acc=0.6812 resets=13 new_calls=2046 time=114s
+insects_incremental_balanced kswin acc=0.6799 resets=10 new_calls=2098 time=82s
+insects_incremental_balanced kswin+half acc=0.6824 resets=9 new_calls=2132 time=72s
+insects_incremental_balanced kswin+hedge acc=0.6830 resets=7 new_calls=2159 time=54s
+STREAM_DONE 13:36:02 insects_incremental_balanced_M2000

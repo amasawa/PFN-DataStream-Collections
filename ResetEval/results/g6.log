@@ -233,3 +233,11 @@ h2_poker hddmw+half acc=0.9470 resets=95 new_calls=2974 time=24s
 h2_poker hddmw+hedge acc=0.9498 resets=91 new_calls=3019 time=22s
 h2_poker adwin acc=0.8503 resets=205 new_calls=3066 time=21s
 h2_poker adwin+half acc=0.9451 resets=100 new_calls=3240 time=73s
+h2_poker adwin+hedge acc=0.9487 resets=102 new_calls=3366 time=63s
+h2_poker ph acc=0.8861 resets=112 new_calls=3512 time=81s
+h2_poker ph+half acc=0.9479 resets=51 new_calls=3637 time=85s
+h2_poker ph+hedge acc=0.9520 resets=48 new_calls=3740 time=65s
+h2_poker kswin acc=0.8718 resets=186 new_calls=3776 time=58s
+h2_poker kswin+half acc=0.9476 resets=81 new_calls=3790 time=51s
+h2_poker kswin+hedge acc=0.9502 resets=77 new_calls=3836 time=75s
+STREAM_DONE 12:51:06 h2_poker_M2000

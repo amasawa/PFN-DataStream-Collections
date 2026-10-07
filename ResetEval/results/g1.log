@@ -349,3 +349,33 @@ h3_covertype_b kswin acc=0.9459 resets=43 new_calls=3154 time=59s
 h3_covertype_b kswin+half acc=0.9667 resets=6 new_calls=3155 time=53s
 h3_covertype_b kswin+hedge acc=0.9666 resets=6 new_calls=3155 time=53s
 STREAM_DONE 12:40:35 h3_covertype_b_M2000
+h2_rialto none acc=0.7620 resets=0 new_calls=811 time=904s
+h2_rialto ddmM acc=0.7709 resets=172 new_calls=969 time=137s
+h2_rialto ddm acc=0.7737 resets=158 new_calls=996 time=26s
+h2_rialto ddm+half acc=0.7635 resets=104 new_calls=1217 time=205s
+h2_rialto ddm+hedge acc=0.7771 resets=104 new_calls=1312 time=83s
+h2_rialto eddm acc=0.7833 resets=284 new_calls=1357 time=34s
+h2_rialto eddm+half acc=0.7691 resets=309 new_calls=1733 time=285s
+h2_rialto eddm+hedge acc=0.7993 resets=273 new_calls=1779 time=27s
+h2_rialto fhddm acc=0.7813 resets=100 new_calls=1913 time=98s
+h2_rialto fhddm+half acc=0.7664 resets=95 new_calls=2401 time=342s
+h2_rialto fhddm+hedge acc=0.7922 resets=91 new_calls=2489 time=59s
+h2_rialto hddma acc=0.7756 resets=130 new_calls=2580 time=73s
+h2_rialto hddma+half acc=0.7663 resets=137 new_calls=2793 time=181s
+h2_rialto hddma+hedge acc=0.7856 resets=123 new_calls=2831 time=34s
+h2_rialto hddmw acc=0.7831 resets=150 new_calls=2861 time=25s
+h2_rialto hddmw+half acc=0.7676 resets=142 new_calls=3058 time=168s
+h2_rialto hddmw+hedge acc=0.7925 resets=140 new_calls=3102 time=31s
+h2_rialto adwin acc=0.7744 resets=128 new_calls=3161 time=43s
+h2_rialto adwin+half acc=0.7684 resets=119 new_calls=3472 time=260s
+h2_rialto adwin+hedge acc=0.7933 resets=118 new_calls=3550 time=46s
+h2_rialto ph acc=0.7818 resets=87 new_calls=3636 time=68s
+h2_rialto ph+half acc=0.7670 resets=92 new_calls=3895 time=197s
+h2_rialto ph+hedge acc=0.7895 resets=86 new_calls=3957 time=36s
+h2_rialto kswin acc=0.7828 resets=139 new_calls=4006 time=63s
+h2_rialto kswin+half acc=0.7658 resets=146 new_calls=4132 time=119s
+h2_rialto kswin+hedge acc=0.7916 resets=123 new_calls=4195 time=75s
+STREAM_DONE 13:40:56 h2_rialto_M2000
+elec2 none acc=0.8144 resets=0 new_calls=442 time=231s
+elec2 ddmM acc=0.7983 resets=224 new_calls=455 time=5s
+elec2 ddm acc=0.7983 resets=222 new_calls=455 time=0s
