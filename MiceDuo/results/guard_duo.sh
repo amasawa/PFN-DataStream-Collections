@@ -1,7 +1,7 @@
 #!/bin/bash
 # throttle duo chains: >=4 RETRY in the last 10 min -> pause the chain with most retries (if >=2 run);
 # a paused chain is relaunched when another finishes and the last 10 min had <2 retries
-cd /mnt/c/Users/zhwu9808/Desktop/pfn/MiceDuo/results; Q=paused.txt; touch $Q
+cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1; Q=paused.txt; touch $Q
 launch() { tmux new-session -d -s duo_$1 "cd ../code; export PYTHONWARNINGS=ignore OMP_NUM_THREADS=2; until nice ~/pfn-venvs/venv/bin/python -u check_duo.py $1 >> ../results/console_$1.txt 2>&1; do echo RETRY \$(date +%T) >> ../results/console_$1.txt; sleep 45; done; echo DONE \$(date +%T) >> ../results/console_$1.txt"; }
 recent() { now=$(date +%s); for f in console_*.txt; do grep -h '^RETRY' $f 2>/dev/null | while read _ t; do [ $((now - $(date -d "$t" +%s))) -lt 600 ] && echo "$f"; done; done; }
 until grep -q CHECK_DONE console.txt; do
