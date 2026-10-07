@@ -23,6 +23,7 @@ def main():
     parser.add_argument('--max-workers', type=int, choices=range(1, 11), default=1)
     parser.add_argument('--breaker', type=int, default=6,
                         help='multi-worker failures within ten minutes that stop the run')
+    parser.add_argument('--no-publish', action='store_true', help='do not append to project logs or push')
     args = parser.parse_args()
     root, repo = Path(args.root), Path(args.repo)
     lock = (root / 'supervisor.lock').open('w')
@@ -201,13 +202,14 @@ def main():
                             reason=(root / 'STOP').read_text().strip() if (root / 'STOP').exists() else 'finished or interrupted')
         atomic_json(status_path, final_status)
         event('STOP: results/checkpoints retained; resume with launch.sh')
-        for project in ('MICE', 'MiceDuo'):
+        for project in (() if args.no_publish else ('MICE', 'MiceDuo')):
             with (repo / project / 'logs/OVERNIGHT_20261007.md').open('a') as handle:
                 handle.write(f'\n- {datetime.now().astimezone().isoformat(timespec="seconds")}: 调度器结束；'
                              f'总完成 {sum((root / "done" / (t["id"] + ".json")).exists() for t in tasks)}/{len(tasks)}，'
                              f'失败阻塞 {sum(s["blocked"] for s in state.values())}。详细事件与资源曲线：`{root}`。\n')
-        try: publish()
-        except Exception as error: event('Final publication failed: ' + repr(error))
+        if not args.no_publish:
+            try: publish()
+            except Exception as error: event('Final publication failed: ' + repr(error))
         telemetry.close()
 
 
