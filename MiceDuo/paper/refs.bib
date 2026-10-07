@@ -1,0 +1,249 @@
+% Venue strings (same convention as the AgDR bibliography)
+@string{ICLR = "Proc. ICLR"}
+@string{ICML = "Proc. ICML"}
+@string{NeurIPS = "Proc. NeurIPS"}
+@string{AAAI = "Proc. AAAI"}
+@string{KDD = "Proc. ACM SIGKDD"}
+@string{TKDE = "IEEE Trans. Knowl. Data Eng."}
+@string{CSUR = "ACM Comput. Surv."}
+@string{TMLR = "Trans. Mach. Learn. Res."}
+@string{MLJ = "Mach. Learn."}
+@string{Nature = "Nature"}
+@string{CORR = "CoRR"}
+
+% ---- concept drift
+@article{lu2019learning,
+  author    = {Jie Lu and Anjin Liu and Fan Dong and Feng Gu and Jo{\~{a}}o Gama and Guangquan Zhang},
+  title     = {Learning under Concept Drift: {A} Review},
+  journal   = TKDE,
+  volume    = {31},
+  number    = {12},
+  pages     = {2346--2363},
+  year      = {2019}
+}
+
+@article{gama2014survey,
+  author    = {Jo{\~{a}}o Gama and Indr{\.{e}} {\v{Z}}liobait{\.{e}} and Albert Bifet and Mykola Pechenizkiy and Abdelhamid Bouchachia},
+  title     = {A Survey on Concept Drift Adaptation},
+  journal   = CSUR,
+  volume    = {46},
+  number    = {4},
+  pages     = {44:1--44:37},
+  year      = {2014}
+}
+
+% ---- concept drift for new model families (research template we follow; cite where an idea is taken)
+@inproceedings{yang2025adapting,
+  author    = {Xiaoyu Yang and Jie Lu and En Yu},
+  title     = {Adapting Multi-Modal Large Language Model to Concept Drift from Pre-Training Onwards},
+  booktitle = ICLR,
+  year      = {2025}
+}
+
+@article{yang2025walking,
+  author    = {Xiaoyu Yang and Jie Lu and En Yu},
+  title     = {Walking the Tightrope: Disentangling Beneficial and Detrimental Drifts in Non-Stationary Custom-Tuning},
+  journal   = CORR,
+  volume    = {abs/2505.13081},
+  year      = {2025}
+}
+
+@inproceedings{yang2026turning,
+  author    = {Xiaoyu Yang and En Yu and Wei Duan and Jie Lu},
+  title     = {Turning Drift into Constraint: Robust Reasoning Alignment in Non-Stationary Multi-Stream Environments},
+  booktitle = ICML,
+  year      = {2026}
+}
+
+% ---- competitors (TFMs under drift)
+@inproceedings{helli2024drift,
+  author    = {Kai Helli and David Schnurr and Noah Hollmann and Samuel M{\"{u}}ller and Frank Hutter},
+  title     = {Drift-Resilient {TabPFN}: In-Context Learning Temporal Distribution Shifts on Tabular Data},
+  booktitle = NeurIPS,
+  pages     = {98742--98781},
+  year      = {2024}
+}
+
+@inproceedings{lourenco2026streams,
+  author    = {Afonso Louren{\c{c}}o and Jo{\~{a}}o Gama and Eric P. Xing and Goreti Marreiros},
+  title     = {In-Context Learning of Evolving Data Streams with Tabular Foundational Models},
+  booktitle = KDD,
+  year      = {2026}
+}
+
+% ---- tabular foundation models
+@inproceedings{muller2022pfn,
+  author    = {Samuel M{\"{u}}ller and Noah Hollmann and Sebastian Pineda{-}Arango and Josif Grabocka and Frank Hutter},
+  title     = {Transformers Can Do {Bayesian} Inference},
+  booktitle = ICLR,
+  year      = {2022}
+}
+
+@inproceedings{nagler2023statistical,
+  author    = {Thomas Nagler},
+  title     = {Statistical Foundations of Prior-Data Fitted Networks},
+  booktitle = ICML,
+  pages     = {25660--25676},
+  year      = {2023}
+}
+
+@article{hollmann2025tabpfn,
+  author    = {Noah Hollmann and Samuel M{\"{u}}ller and Lennart Purucker and Arjun Krishnakumar and Max K{\"{o}}rfer and Shi Bin Hoo and Robin Tibor Schirrmeister and Frank Hutter},
+  title     = {Accurate Predictions on Small Data with a Tabular Foundation Model},
+  journal   = Nature,
+  volume    = {637},
+  number    = {8045},
+  pages     = {319--326},
+  year      = {2025}
+}
+
+@inproceedings{qu2025tabicl,
+  author    = {Jingang Qu and David Holzm{\"{u}}ller and Ga{\"{e}}l Varoquaux and Marine Le Morvan},
+  title     = {{TabICL}: {A} Tabular Foundation Model for In-Context Learning on Large Data},
+  booktitle = ICML,
+  pages     = {50817--50847},
+  year      = {2025}
+}
+
+% ---- theory we build on (Zhao, Cao and colleagues)
+@inproceedings{zhao2024idiv,
+  author    = {Zhilin Zhao and Longbing Cao and Xuhui Fan and Wei-Shi Zheng},
+  title     = {Revealing Distribution Discrepancy by Sampling Transfer in Unlabeled Data},
+  booktitle = NeurIPS,
+  year      = {2024}
+}
+
+@inproceedings{zhao2023rdiv,
+  author    = {Zhilin Zhao and Longbing Cao},
+  title     = {{R}-Divergence for Estimating Model-Oriented Distribution Discrepancy},
+  booktitle = NeurIPS,
+  year      = {2023}
+}
+
+@inproceedings{zhao2025mooe,
+  author    = {Zhilin Zhao and Longbing Cao and Yuanyu Wan},
+  title     = {Mixture of Online and Offline Experts for Non-Stationary Time Series},
+  booktitle = AAAI,
+  year      = {2025}
+}
+
+@article{zhao2023drl,
+  author    = {Zhilin Zhao and Longbing Cao},
+  title     = {Dual Representation Learning for Out-of-Distribution Detection},
+  journal   = TMLR,
+  year      = {2023}
+}
+
+@article{zhao2024wnb,
+  author    = {Zhilin Zhao and Longbing Cao},
+  title     = {Weighting Non-{IID} Batches for Out-of-Distribution Detection},
+  journal   = MLJ,
+  volume    = {113},
+  number    = {10},
+  pages     = {7371--7391},
+  year      = {2024}
+}
+
+% ---- recurring concepts (verified 2026-10-04 via web search; pages of the KAIS paper not confirmed, omitted)
+@article{goncalves2013rcd,
+  author    = {Gon{\c{c}}alves, Jr., Paulo Mauricio and de Barros, Roberto Souto Maior},
+  title     = {{RCD}: {A} Recurring Concept Drift Framework},
+  journal   = {Pattern Recognit. Lett.},
+  volume    = {34},
+  pages     = {1018--1025},
+  year      = {2013}
+}
+
+@article{gama2014recurrent,
+  author    = {Jo{\~{a}}o Gama and Petr Kosina},
+  title     = {Recurrent Concepts in Data Streams Classification},
+  journal   = {Knowl. Inf. Syst.},
+  volume    = {40},
+  year      = {2014},
+  doi       = {10.1007/s10115-013-0654-6}
+}
+
+
+%%%% ---- Added 2026-10-05 for the full draft. Authors, venue, volume and pages of the nine papers below were checked
+%%%% on 2026-10-05 against publisher, institutional-repository or JMLR pages found by web search (DBLP itself was not
+%%%% reachable from this machine). The book of Cesa-Bianchi and Lugosi was not looked up.
+@inproceedings{gama2004ddm,
+  author = {Jo{\~a}o Gama and Pedro Medas and Gladys Castillo and Pedro Rodrigues},
+  title = {Learning with Drift Detection},
+  booktitle = {Advances in Artificial Intelligence -- SBIA 2004},
+  series = {Lecture Notes in Computer Science},
+  volume = {3171},
+  pages = {286--295},
+  publisher = {Springer},
+  year = {2004}
+}
+@article{gomes2017arf,
+  author = {Heitor Murilo Gomes and Albert Bifet and Jesse Read and Jean Paul Barddal and Fabr{\'i}cio Enembreck and Bernhard Pfahringer and Geoff Holmes and Talel Abdessalem},
+  title = {Adaptive Random Forests for Evolving Data Stream Classification},
+  journal = MLJ,
+  volume = {106},
+  number = {9--10},
+  pages = {1469--1495},
+  year = {2017}
+}
+@inproceedings{gomes2019srp,
+  author = {Heitor Murilo Gomes and Jesse Read and Albert Bifet},
+  title = {Streaming Random Patches for Evolving Data Stream Classification},
+  booktitle = {Proc. IEEE International Conference on Data Mining (ICDM)},
+  pages = {240--249},
+  year = {2019}
+}
+@inproceedings{bifet2009hat,
+  author = {Albert Bifet and Ricard Gavald{\`a}},
+  title = {Adaptive Learning from Evolving Data Streams},
+  booktitle = {Proc. International Symposium on Intelligent Data Analysis (IDA)},
+  pages = {249--260},
+  year = {2009}
+}
+@inproceedings{bifet2010levbag,
+  author = {Albert Bifet and Geoff Holmes and Bernhard Pfahringer},
+  title = {Leveraging Bagging for Evolving Data Streams},
+  booktitle = {Proc. ECML PKDD},
+  pages = {135--150},
+  year = {2010}
+}
+@article{elwell2011nse,
+  author = {Ryan Elwell and Robi Polikar},
+  title = {Incremental Learning of Concept Drift in Nonstationary Environments},
+  journal = {IEEE Trans. Neural Networks},
+  volume = {22},
+  number = {10},
+  pages = {1517--1531},
+  year = {2011}
+}
+@article{souza2020insects,
+  author = {Vinicius M. A. Souza and Denis M. dos Reis and Andr{\'e} G. Maletzke and Gustavo E. A. P. A. Batista},
+  title = {Challenges in Benchmarking Stream Learning Algorithms with Real-World Data},
+  journal = {Data Mining and Knowledge Discovery},
+  volume = {34},
+  number = {6},
+  pages = {1805--1858},
+  year = {2020}
+}
+@article{montiel2021river,
+  author = {Jacob Montiel and Max Halford and Saulo Martiello Mastelini and Geoffrey Bolmier and Rapha{\"e}l Sourty and Robin Vaysse and Adil Zouitine and Heitor Murilo Gomes and Jesse Read and Talel Abdessalem and Albert Bifet},
+  title = {River: Machine Learning for Streaming Data in {P}ython},
+  journal = {J. Mach. Learn. Res.},
+  volume = {22},
+  number = {110},
+  year = {2021}
+}
+@book{cesabianchi2006prediction,
+  author = {Nicol{\`o} Cesa-Bianchi and G{\'a}bor Lugosi},
+  title = {Prediction, Learning, and Games},
+  publisher = {Cambridge University Press},
+  year = {2006}
+}
+@article{hazan2007log,
+  author = {Elad Hazan and Amit Agarwal and Satyen Kale},
+  title = {Logarithmic Regret Algorithms for Online Convex Optimization},
+  journal = MLJ,
+  volume = {69},
+  pages = {169--192},
+  year = {2007}
+}
