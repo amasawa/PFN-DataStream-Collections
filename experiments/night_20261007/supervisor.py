@@ -134,15 +134,16 @@ def main():
                 event(f'ANALYSIS {reports["stage"]} exit={code}')
                 if code: (root / 'reports' / (reports['stage'] + '.failed')).write_text(str(code))
                 reports = None
-                try: publish()
-                except Exception as error: event('PUBLISH error: ' + repr(error))
+                if not args.no_publish:
+                    try: publish()
+                    except Exception as error: event('PUBLISH error: ' + repr(error))
             done = {t['id'] for t in tasks if (root / 'done' / (t['id'] + '.json')).exists()}
             if reports is None:
                 for stage in ('k2', 'duo_dev', 'duo_replicates'):
                     members = [t for t in tasks if t['stage'] == stage]
                     marker = root / 'reports' / (stage + '.done')
                     failed = root / 'reports' / (stage + '.failed')
-                    if all(t['id'] in done for t in members) and not marker.exists() and not failed.exists():
+                    if members and all(t['id'] in done for t in members) and not marker.exists() and not failed.exists():
                         handle = (root / 'logs' / (stage + '_analysis.log')).open('a')
                         p = subprocess.Popen([sys.executable, str(controller / 'analyse.py'), str(root), str(repo), stage],
                                              env=env, stdout=handle, stderr=subprocess.STDOUT)
