@@ -1,0 +1,50 @@
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of min will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+/mnt/c/Users/zhwu9808/Desktop/pfn/ResetEval/code/analyse_backbone.py:64: Pandas4Warning: Starting with pandas version 4.0 all arguments of max will be keyword-only.
+  tail = {v or "full": (src.loc[[x + v for x in DETS]].min(1).mean(), src.loc[[x + v for x in DETS]].max(1).mean())
+PARTIAL syn: 0/42 streams complete; missing: ['agrawal_s10', 'agrawal_s11', 'agrawal_s12', 'agrawal_s13', 'agrawal_s14', 'grid_c100_b2000_s10', 'grid_c100_b2000_s11', 'grid_c100_b500_s10', 'grid_c100_b500_s11', 'grid_c30_b2000_s10', 'grid_c30_b2000_s11', 'grid_c30_b500_s10', 'grid_c30_b500_s11', 'grid_c5_b2000_s10', 'grid_c5_b2000_s11', 'grid_c5_b500_s10', 'grid_c5_b500_s11', 'hyperplane_s10', 'hyperplane_s11', 'hyperplane_s12', 'hyperplane_s13', 'hyperplane_s14', 'rbf_s10', 'rbf_s11', 'rbf_s12', 'rbf_s13', 'rbf_s14', 'sea_s10', 'sea_s11', 'sea_s12', 'sea_s13', 'sea_s14', 'sine_s10', 'sine_s11', 'sine_s12', 'sine_s13', 'sine_s14', 'stagger_s10', 'stagger_s11', 'stagger_s12', 'stagger_s13', 'stagger_s14']
+
+== tabdpt, real: source-weighted mean of d (points), 95% source bootstrap, Wilcoxon over sources, Holm over 8
+             sources  mean  median  pos  neg  ci_lo  ci_hi       p  p_holm
+pol                                                                       
+ddm               19 -2.30   -0.09    6   11  -5.87   0.32  0.1626  0.6196
+eddm              19 -3.91   -0.30    5   13  -8.40  -0.44  0.0582  0.4653
+fhddm             19 -3.49   -0.48    6   12  -7.44  -0.48  0.0582  0.4653
+hddma             19 -3.88   -0.12    5   12  -8.81  -0.03  0.1239  0.6196
+hddmw             19 -3.50   -0.83    5   13  -7.94  -0.05  0.0707  0.4653
+adwin             19 -3.37   -0.12    6   11  -7.82   0.06  0.1488  0.6196
+ph                19 -2.65   -0.21    6   12  -6.45   0.21  0.2145  0.6196
+kswin             19 -3.38   -0.30    5   12  -7.70   0.04  0.1488  0.6196
+ddm+half          19 -0.66    0.00    8    8  -1.93   0.17  0.8361  1.0000
+eddm+half         19 -0.91   -0.02    7   11  -2.58   0.07  0.3958  1.0000
+fhddm+half        19 -0.59   -0.02    7   10  -1.84   0.13  0.8684  1.0000
+hddma+half        19 -1.08    0.00    7    9  -2.89   0.08  0.7960  1.0000
+hddmw+half        19 -0.82    0.00    9    9  -2.47   0.12  0.8789  1.0000
+adwin+half        19 -0.79    0.00    9    8  -2.16   0.07  0.8684  1.0000
+ph+half           19 -0.66   -0.03    7   11  -2.09   0.17  0.4460  1.0000
+kswin+half        19 -0.73    0.00    9    8  -2.25   0.14  0.9434  1.0000
+ddm+hedge         19  0.21   -0.03    6   11  -0.48   1.10  0.7226  1.0000
+eddm+hedge        19  0.27   -0.04    7   11  -0.39   1.11  0.7439  1.0000
+fhddm+hedge       19  0.09   -0.01    8   10  -0.50   0.72  0.9133  1.0000
+hddma+hedge       19  0.24   -0.03    6   11  -0.43   1.10  0.7946  1.0000
+hddmw+hedge       19  0.28   -0.03    7   11  -0.34   1.06  0.9826  1.0000
+adwin+hedge       19  0.29    0.00    8    9  -0.31   1.02  0.8313  1.0000
+ph+hedge          19  0.46   -0.02    8   10  -0.02   1.15  0.7112  1.0000
+kswin+hedge       19  0.20   -0.00    7   10  -0.44   0.97  0.9811  1.0000
+no complete synthetic stream: H2', H3' (synthetic part) and H4' (synthetic part) cannot be judged
+
+H1' full below none on real: 8/8 (need >= 6) -> holds
+H2' full above none on synthetic: 0/8 (need >= 6) -> fails
+H3' real: 87.3% of 28913 non-zero resets are losses; synthetic: nan% of 0 resets are wins (need > 50% each) -> fails
+H4' per detector 0/8; detector average: real +hedge 0.25 (need >= -0.2), synthetic +hedge nan vs half of full nan -> fails
+tail over 19 real sources, detector-averaged (worst, best): {'full': (np.float64(-31.1), np.float64(6.13)), '+half': (np.float64(-12.99), np.float64(0.91)), '+hedge': (np.float64(-2.09), np.float64(5.63))}
+T1 worst source: +hedge - full = 29.01 (need >= 10) -> holds
+T2 best source: +hedge 5.63 vs half of full 3.06 -> holds

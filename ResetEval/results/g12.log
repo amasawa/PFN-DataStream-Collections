@@ -206,3 +206,44 @@ insects_incremental_balanced hddma acc=0.6805 resets=1 new_calls=760 time=5s
 insects_incremental_balanced hddma+half acc=0.6808 resets=1 new_calls=765 time=4s
 insects_incremental_balanced hddma+hedge acc=0.6809 resets=1 new_calls=765 time=0s
 insects_incremental_balanced hddmw acc=0.6736 resets=24 new_calls=942 time=94s
+insects_incremental_balanced hddmw+half acc=0.6799 resets=21 new_calls=1037 time=52s
+insects_incremental_balanced hddmw+hedge acc=0.6809 resets=21 new_calls=1075 time=20s
+insects_incremental_balanced adwin acc=0.6792 resets=4 new_calls=1097 time=11s
+insects_incremental_balanced adwin+half acc=0.6811 resets=3 new_calls=1112 time=8s
+insects_incremental_balanced adwin+hedge acc=0.6811 resets=3 new_calls=1130 time=9s
+insects_incremental_balanced ph acc=0.6769 resets=12 new_calls=1215 time=42s
+insects_incremental_balanced ph+half acc=0.6804 resets=9 new_calls=1245 time=14s
+insects_incremental_balanced ph+hedge acc=0.6814 resets=9 new_calls=1281 time=20s
+insects_incremental_balanced kswin acc=0.6796 resets=4 new_calls=1299 time=40s
+insects_incremental_balanced kswin+half acc=0.6810 resets=4 new_calls=1314 time=33s
+insects_incremental_balanced kswin+hedge acc=0.6810 resets=4 new_calls=1314 time=31s
+STREAM_DONE 17:47:38 insects_incremental_balanced_tabdpt
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+elec2 none acc=0.7988 resets=0 new_calls=452 time=179s
+elec2 ddmM acc=0.8000 resets=97 new_calls=649 time=96s
+elec2 ddm acc=0.7976 resets=118 new_calls=695 time=26s
+elec2 ddm+half acc=0.8038 resets=201 new_calls=1032 time=158s
+elec2 ddm+hedge acc=0.8015 resets=236 new_calls=1306 time=135s
+elec2 eddm acc=0.7916 resets=203 new_calls=1559 time=125s
+elec2 eddm+half acc=0.8009 resets=191 new_calls=1831 time=92s
+elec2 eddm+hedge acc=0.8052 resets=187 new_calls=1931 time=44s
+elec2 fhddm acc=0.7999 resets=73 new_calls=2185 time=115s
+elec2 fhddm+half acc=0.8020 resets=77 new_calls=2428 time=107s
+elec2 fhddm+hedge acc=0.8069 resets=73 new_calls=2504 time=31s
+elec2 hddma acc=0.7879 resets=206 new_calls=2588 time=32s
+elec2 hddma+half acc=0.8015 resets=212 new_calls=2663 time=22s
+elec2 hddma+hedge acc=0.8013 resets=207 new_calls=2684 time=5s
+elec2 hddmw acc=0.7897 resets=166 new_calls=2734 time=12s
+elec2 hddmw+half acc=0.8023 resets=150 new_calls=2796 time=13s
+elec2 hddmw+hedge acc=0.8014 resets=153 new_calls=2839 time=8s
+elec2 adwin acc=0.7994 resets=62 new_calls=2962 time=19s
+elec2 adwin+half acc=0.8019 resets=60 new_calls=3053 time=15s
+elec2 adwin+hedge acc=0.8032 resets=57 new_calls=3122 time=11s
+elec2 ph acc=0.7985 resets=41 new_calls=3189 time=11s
+elec2 ph+half acc=0.7983 resets=47 new_calls=3254 time=10s
+elec2 ph+hedge acc=0.8050 resets=38 new_calls=3304 time=8s
+elec2 kswin acc=0.7950 resets=119 new_calls=3331 time=16s
+elec2 kswin+half acc=0.8026 resets=118 new_calls=3372 time=18s
+elec2 kswin+hedge acc=0.8027 resets=120 new_calls=3385 time=13s
+STREAM_DONE 18:09:41 elec2_tabdpt
+CHAIN_DONE 18:09:43

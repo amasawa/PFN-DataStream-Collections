@@ -331,3 +331,14 @@
 - **15:40 检查**：利用率 94–97%，显存 4.9 GB，内存 7.0 GB，5 条 TabDPT 链。TabDPT 完成 5/39，正在跑 h4 的 poker、covertype、airlines 段。每个策略在 10 万行的段上要 2–5 分钟（每个策略 3000–4000 次新调用），比 TabPFN 慢，15:16 的估计（16:30–17:30）过于乐观，修正为 19:00–21:00 结束。GPU 已经饱和，所以不加链。用户说过"跑完了告诉我，然后开始拆repo"，所以 TabDPT 之后不再追加任务。
 - **16:40 检查**：利用率 94–96%，显存 4.9 GB，内存 7.0 GB，5 条链，没有新的重试。TabDPT 完成 13/39，5 条在跑，21 条未领；最长的流已经跑完，预计 18:30–20:00 结束。
 - **17:40 检查**：利用率 92–96%，显存 4.9 GB，内存 6.9 GB，5 条链，没有新的重试。TabDPT 完成 22/39，5 条在跑，12 条未领；最近一小时完成 9 条，预计 19:00 前后结束。
+
+## 2026-10-07 起的无人值守运行：queue_tabdpt 全部完成，10-07 18:13 自动分析（自动写入，未经人工核对）
+- PARTIAL syn: 0/42 streams complete; missing: ['agrawal_s10', 'agrawal_s11', 'agrawal_s12', 'agrawal_s13', 'agrawal_s14', 'grid_c100_b2000_s10', 'grid_c100_b2000_s11', 'grid_c100_b500_s10', 'grid_c100_b500_s11', 'grid_c30_b2000_s10', 'grid_c30_b2000_s11', 'grid_c30_b500_s10', 'grid_c30_b500_s11', 'grid_c5_b2000_s10', 'grid_c5_b2000_s11', 'grid_c5_b500_s10', 'grid_c5_b500_s11', 'hyperplane_s10', 'hyperplane_s11', 'hyperplane_s12', 'hyperplane_s13', 'hyperplane_s14', 'rbf_s10', 'rbf_s11', 'rbf_s12', 'rbf_s13', 'rbf_s14', 'sea_s10', 'sea_s11', 'sea_s12', 'sea_s13', 'sea_s14', 'sine_s10', 'sine_s11', 'sine_s12', 'sine_s13', 'sine_s14', 'stagger_s10', 'stagger_s11', 'stagger_s12', 'stagger_s13', 'stagger_s14']
+- H1' full below none on real: 8/8 (need >= 6) -> holds
+- H2' full above none on synthetic: 0/8 (need >= 6) -> fails
+- H3' real: 87.3% of 28913 non-zero resets are losses; synthetic: nan% of 0 resets are wins (need > 50% each) -> fails
+- H4' per detector 0/8; detector average: real +hedge 0.25 (need >= -0.2), synthetic +hedge nan vs half of full nan -> fails
+- tail over 19 real sources, detector-averaged (worst, best): {'full': (np.float64(-31.1), np.float64(6.13)), '+half': (np.float64(-12.99), np.float64(0.91)), '+hedge': (np.float64(-2.09), np.float64(5.63))}
+- T1 worst source: +hedge - full = 29.01 (need >= 10) -> holds
+- T2 best source: +hedge 5.63 vs half of full 3.06 -> holds
+- 完整输出：`results/console_queue_tabdpt.txt`。
