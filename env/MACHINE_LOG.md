@@ -94,3 +94,7 @@ file modification times.
 - Symptom: every new TabPFN process started with this setting failed at model load with `RuntimeError: CUDA driver error: unknown error` (ResetEval c1–c5 logs). Processes without it ran normally on the same GPU at the same time.
 - Fix: removed the setting from `ResetEval/code/run_queue3.sh` and restarted the chains. Do not use expandable segments on this machine.
 - Also: the supervisor's first version died after 5 min (`(( ) / 0`): `${a[@]: -5}` on an array shorter than 5 elements is empty. Fixed 06:38.
+
+## 2026-10-07 18:34 repository split (local only, nothing pushed)
+- `Desktop/pfn-split/ood` (AgDR, GOR) and `Desktop/pfn-split/dataStream` (MICE, DriftTriage, GrayContext, ResetEval, MiceDuo, FeatEvo, Emergence, InterTFM), each with its own history via `git filter-repo` (tool in `~/pfn-venvs/tools`); `pdfs/`, `env/`, `skills/`, `SETUP.md` in both. Untracked data copied with rsync (12 min for 10 GB). No remote set yet. `Desktop/pfn` and `oodpfn` unchanged.
+- Checked: file counts match the joint repo (2328 / 500); `git status` clean after the copy; ResetEval's analyses reproduce in the new location (TabDPT T1 = 29.01).
