@@ -31,6 +31,7 @@ refs/
 *.out
 *.synctex.gz
 **/overleaf/**/main.log
+**/overleaf/**/build.log
 # local tool settings
 .claude/settings.local.json
 # raw downloads for ResetEval streams (see ResetEval/code/streams_new.py)
