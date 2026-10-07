@@ -126,3 +126,5 @@ Seed 0 is exploratory. Independent backbone seeds check stability on these same 
 - 2026-10-08T04:14+11:00（成簇失败）：04:11:36–04:11:57 的 21 秒内 4 个 worker 先后报 `unspecified launch failure`（duo_s1_a5_h2_phishing、a5_elec2、a5_h2_rialto、a3_h2_spam）。此前失败都是孤立的，这次多进程几乎同时失败，更像一次设备级（驱动/WSL）事件，而非各进程独立故障；WSL dmesg 无新记录，失败后 GPU 正常（74°C、203 W、2700 MHz）。调度器逐次冷却，目标并发 6→4→3→2，剩余 2 个 worker 未受影响、继续运行；4 个任务检查点均有推进，冷却后按利用率逐步回升并从检查点重跑。累计失败 12 次；当前 10 分钟窗口内已有 4 次，再有 2 次将触发全局熔断（预期的安全行为）。未读取或改动 Windows 侧事件、TDR 与驱动设置。
 
 - 2026-10-08T04:22+11:00：成簇失败后已恢复。04:12:31 duo_s1_a5_h2_poker 又失败一次（共 5 次集中在 04:11:36–04:12:31，累计 13 次），目标并发一度降到 1；唯一剩余的 worker（a5_h2_airlines）正常推进并于 04:15 完成，说明设备已恢复，属于暂态事件。04:15:30 冷却结束后逐步回升，04:17 恢复到 5 worker；5 个失败任务均已从检查点重跑。期间（04:12–04:16）利用率跌到 18–67%；04:17:30 后均值 99.6%（0 次 <90%），显存峰值 8386 MiB（26%），RAM 可用 ≥23.5 GB。进度 51/86。熔断窗口已过，无需人工处理。
+
+- 2026-10-08T04:32+11:00：进度 55/86。seed1 DUO anchor=3 7/7 完成（h2_spam 重跑后成功）；anchor=5 完成 elec2、h2_phishing、h2_poker（剩 rialto、spam、weather）。seed2 MICE 参考开始（elec2、h2_airlines）。本窗口无新失败（累计 13 次）。5 worker 下 GPU 利用率均值 98.9%（2 次 <90%），显存峰值 11700 MiB（36%），RAM 可用 ≥23.4 GB。剩 31 个任务（seed2 的 7 个 MICE 参考 + 21 个 DUO + 3 个 seed1 a5），预计约 06:30 完成。
