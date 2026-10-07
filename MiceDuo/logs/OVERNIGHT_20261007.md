@@ -106,3 +106,5 @@ Seed 0 is exploratory. Independent backbone seeds check stability on these same 
 <!-- stage:duo_dev:complete -->
 
 - 2026-10-08T03:09+11:00（duo_dev 解读）：seed0 开发集上，增大强制近期锚点没有带来改进，两种候选都未达预注册晋级标准。anchor=300 的 DUO 比 MICE 低 0.12 个点（2/7 胜），safe 低 0.22 个点；anchor=500 更差（DUO −0.60、safe −0.58，2/7 胜，单流最差比 FIFO 低 0.44–0.46 个点，超出 −0.30 容忍）。原始 anchor=100 的 DUO 仍是最好的 DUO 变体，但也只比 MICE 高 0.02 个点（3/7 胜），同样未达标。趋势是锚点越大越接近 FIFO、选择收益越小。按冻结计划，晋级要求每个 seed 都满足，所以这两个候选已不可能被推荐；seed1/2 复现仍按预注册照常运行并全部报告，不改动队列。仅为开发集结果，22 条 held-out 流未使用。
+
+- 2026-10-08T03:12+11:00：进度 31/86。duo_dev 阶段 14/14 完成并已自动分析发布（解读见上条）。seed1 MICE 参考完成 h2_phishing、h2_airlines，其余 5 条在跑。本窗口无失败（累计 4 次）。GPU 利用率均值 96.6%（19 次 <90%，集中在 03:05–03:08 多任务同时切换），显存峰值 10688 MiB（33%），RAM 可用 ≥21.9 GB；维持 6 worker。
