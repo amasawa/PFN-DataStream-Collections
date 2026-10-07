@@ -217,7 +217,7 @@ def budget_table():
     write("budget", r"""\begin{table}[t]
 \centering
 \caption{TabPFN with three context budgets, accuracy minus FIFO in points (detector average; real: 19 sources).
-$H-1$ is the number of batches a reset can affect (\cref{prop:memory}). $M=2000$ was run on real streams only.}
+$H-1$ is the number of batches a reset can affect (\cref{prop:memory}).}
 \label{tab:budget}
 \small
 \begin{tabular}{rr rrrr r rrr}

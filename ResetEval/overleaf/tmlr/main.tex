@@ -348,8 +348,7 @@ The average hides where the risk is. \Cref{tab:tails} reports, for each backbone
 each action. A full reset loses 26 to 31 points on the worst source and gains 5 to 8 on the best. The loss is not a
 property of one model: covertype and wall are the two worst sources for all three TFMs. At the level of single resets
 (\cref{prop:memory}), 88.1\% (TabPFN), 88.3\% (TabICL) and 87.3\% (TabDPT) of the resets that change the accuracy of
-the batches they affect are net losses on real streams, against 16\% (TabPFN) and 12\% (TabICL) on synthetic
-streams.
+the batches they affect are net losses on real streams, against 12--16\% on synthetic streams.
 
 \subsection{Why: a FIFO window already forgets}
 
@@ -369,8 +368,10 @@ starting point (\cref{app:learners}).
 
 The context budget moves the cap. With $M=500$ the best-source gain of a full reset shrinks to 4.4 points and its
 worst-source loss to $-17.6$; with $M=2000$ the gain grows to 7.7 while the loss stays at $-26.6$ (\cref{tab:budget}).
-The gain side follows \cref{prop:memory}(iii); the loss side does not grow beyond $M=1000$, plausibly because on the
-worst sources a reset at $M=1000$ already discards nearly all useful context.
+On synthetic streams, where alarms are mostly correct, the gain grows from 3.5 to 8.0 to 14.6 points. The gain side
+follows \cref{prop:memory}(iii): a longer window forgets more slowly, so a correct reset stays ahead for longer. The
+loss side does not grow beyond $M=1000$, plausibly because on the worst sources a reset at $M=1000$ already discards
+nearly all useful context. The hedge keeps the synthetic gain at every budget ($+14.3$ at $M=2000$).
 
 \subsection{The hedge removes the tail}
 
