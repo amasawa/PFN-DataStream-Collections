@@ -1,0 +1,74 @@
+{
+  "single_current_2354": {
+    "config": {
+      "tag": "single_current_2354",
+      "stream": "h3_insects_b",
+      "start": 140,
+      "batches": 40,
+      "allocator_mib": 1792,
+      "sdpa": "default"
+    },
+    "launch_blocking": "1",
+    "started": 1791377711.957768,
+    "calls": 120,
+    "passed": true,
+    "last": [
+      179,
+      1000
+    ],
+    "elapsed": 61.564692974090576
+  },
+  "single_nvml3": {
+    "config": {
+      "tag": "single_nvml3",
+      "workers": 1,
+      "poll": 3,
+      "batches": 120,
+      "blocking": "1"
+    },
+    "started": "2026-10-07T23:57:21.911701+11:00",
+    "failed": false,
+    "codes": [
+      0
+    ],
+    "elapsed": 172.813312292099,
+    "max_gpu_mib": 1791,
+    "mean_sampled_util": 17.436363636363637
+  },
+  "two_nvml3": {
+    "config": {
+      "tag": "two_nvml3",
+      "workers": 2,
+      "poll": 3,
+      "batches": 120,
+      "blocking": "1"
+    },
+    "started": "2026-10-08T00:00:44.713113+11:00",
+    "failed": true,
+    "reason": "worker failed",
+    "codes": [
+      -15,
+      1
+    ],
+    "elapsed": 22.10291886329651,
+    "max_gpu_mib": 2669,
+    "mean_sampled_util": 62.8
+  },
+  "single_long": {
+    "config": {
+      "tag": "single_long",
+      "workers": 1,
+      "poll": 3,
+      "batches": 360,
+      "blocking": "1"
+    },
+    "started": "2026-10-08T00:03:40.911046+11:00",
+    "failed": false,
+    "codes": [
+      0
+    ],
+    "elapsed": 478.53352999687195,
+    "max_gpu_mib": 1791,
+    "mean_sampled_util": 19.032467532467532
+  }
+}

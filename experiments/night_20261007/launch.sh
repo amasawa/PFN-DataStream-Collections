@@ -22,7 +22,7 @@ if [ -f "$root/STOP" ]; then mv "$root/STOP" "$root/STOP.previous"; fi
 if tmux has-session -t pfn-night-20261007 2>/dev/null; then
   echo 'Supervisor tmux session already exists.'
 else
-  tmux new-session -d -s pfn-night-20261007 "exec '$py' -u '$root/controller/supervisor.py' '$root' '$repo' --hours 8 >> '$root/supervisor-console.log' 2>&1"
+  tmux new-session -d -s pfn-night-20261007 "exec '$py' -u '$root/controller/supervisor.py' '$root' '$repo' --hours 8 --max-workers ${MAX_WORKERS:-6} >> '$root/supervisor-console.log' 2>&1"
 fi
 echo "Status: $root/status.json"
 echo "Events: $root/events.log"

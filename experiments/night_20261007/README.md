@@ -35,16 +35,20 @@ Raw results, snapshots, locks and checkpoints are in `~/pfn-runs/night-20261007/
 Existing repository experiment files are only read. Small new reports and per-project overnight
 logs are versioned; raw probabilities/checkpoints are not committed.
 
-The controller starts four workers, grows to at most ten when utilization is below target, and
-samples every three seconds. Each worker's PyTorch allocator is limited to 1792 MiB. The controller
+The controller now defaults to a single worker and samples every three seconds. A controlled
+two-process probe failed after 22 seconds, whereas single-process probes passed; increasing
+concurrency to chase the 90% target is suspended pending further diagnosis. The supervisor exposes
+`--max-workers` (1–10) for future controlled validation; the launcher uses the safe default of one.
+Each worker's PyTorch allocator is limited to 1792 MiB. The controller
 pauses workers at 22000 MiB total device use (about 23.1 GB), with emergency termination at 23200 MiB
 (about 24.3 GB), leaving headroom below 25 GB. These are observed-resource controls; they cannot
 guarantee instantaneous device-wide use if external jobs allocate between samples. RAM admission
 requires >6500 MiB available; <4096 MiB triggers a pause. Two successive failed jobs lower concurrency;
 Four failures without checkpoint progress (or twenty total failures) block a task and retain its
 logs. Productive checkpoint recovery does not exhaust the four-failure allowance. No expandable_segments setting is used.
-Following the reported crash, a global circuit breaker now stops the entire run after four worker
-failures in ten minutes. A STOP marker requires explicit `launch.sh --resume`; automatic re-escalation
+Following the reported crash, a global circuit breaker stops the single-worker run on its first
+worker failure (four failures in ten minutes for explicitly enabled multi-worker runs).
+A STOP marker requires explicit `launch.sh --resume`; automatic re-escalation
 after repeated device errors is no longer allowed. This guard was added after the 23:33 incident stop.
 After recurring launch failures during startup, CUDA_LAUNCH_BLOCKING=1 is enabled as a Linux-side
 diagnostic/mitigation attempt. It changes synchronization, not the experiment's prediction rules;

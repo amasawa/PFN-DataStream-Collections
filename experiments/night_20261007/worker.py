@@ -113,7 +113,7 @@ def main():
     torch.set_num_threads(1)
     torch.set_num_interop_threads(1)
     total = torch.cuda.get_device_properties(0).total_memory
-    torch.cuda.set_per_process_memory_fraction(1792 * 1024**2 / total)
+    torch.cuda.set_per_process_memory_fraction(int(os.environ.get('MICE_ALLOC_MIB', '1792')) * 1024**2 / total)
     sys.path.insert(0, str(root / 'source' / 'MICE'))
     import run
     seed = task.get('seed', 2)

@@ -56,3 +56,24 @@ MICE 原来的每 20 批断点保留。调度器改为四次“无断点进展�
 - Windows GPU 超时恢复（TDR）只是待核实假设；Microsoft 文档说明这类恢复会记入 Windows
   Event Viewer。没有读取 Windows 事件、没有修改 TDR/驱动/安全软件，不能归因给 Cortex XDR。
   文档：https://learn.microsoft.com/en-us/windows-hardware/drivers/display/timeout-detection-and-recovery
+
+## 2026-10-08 单进程/并发对照与恢复策略
+
+用户要求继续迭代后，在同一环境、同一 TabPFN v2 模型、seed=2、insects_b batch 140 起，
+每批依次预测 100/300/1000 行上下文。各测试均 CUDA_LAUNCH_BLOCKING=1；未修改依赖、精度或模型。
+
+- `single_current_2354`：单进程，不采样 NVML，120 次预测通过，61.56 秒。
+- `single_nvml3`：单进程，每 3 秒采样 NVML，360 次预测通过，172.81 秒（套件总时间）；
+  显存峰值 1791 MiB，采样平均 GPU 利用率约 17.4%。前 120 次概率与上一组逐元素完全一致。
+- `two_nvml3`：两进程，其余设置相同，22.10 秒内失败，峰值 2669 MiB；worker1 第 6 次预测
+  在 layer_norm 报 CUDA illegal memory access。套件立即终止另一进程。
+- 这些证据支持优先排查并发相关问题，不能证明驱动/TDR/Cortex XDR 中哪一个是根因，
+  也不能由短测证明单进程长期稳定。更长单进程测试正在进行。
+- 调度器默认硬上限改为 1 个 worker；此模式首次失败即写 STOP 并停机。旧的按低利用率
+  自动增加并发现在也受此上限约束。暂时不满足 >=90% 利用率目标，优先取得可靠实验结果。
+- 原 DUO 等价性、3 个 anchor 断点恢复/无未来标签选择，以及 FIFO/DDM/window 中断恢复测试全部通过。
+- 诊断原始日志和概率：`~/pfn-runs/night-20261007/diagnostics/`；这些不是新的论文结果。
+
+长测 `single_long` 全部通过：1080 次预测，套件用时 478.53 秒，显存峰值 1791 MiB，采样平均利用率 19.0%。即将以默认单进程从原断点恢复；这仍不能保证长期无故障。
+
+- 2026-10-08T01:03:30+11:00: 调度器结束；总完成 3/86，失败阻塞 0。详细事件与资源曲线：`/home/zhwu9808/pfn-runs/night-20261007`。

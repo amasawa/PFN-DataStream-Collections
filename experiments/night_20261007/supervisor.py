@@ -20,6 +20,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('root'); parser.add_argument('repo')
     parser.add_argument('--hours', type=float, default=8)
+    parser.add_argument('--max-workers', type=int, choices=range(1, 11), default=1)
+    parser.add_argument('--breaker', type=int, default=6,
+                        help='multi-worker failures within ten minutes that stop the run')
     args = parser.parse_args()
     root, repo = Path(args.root), Path(args.repo)
     lock = (root / 'supervisor.lock').open('w')
@@ -36,7 +39,8 @@ def main():
     running, history, recent_failures = {}, deque(maxlen=20), deque()
     reports = None
     started, last_launch, cooldown = time.time(), 0, 0
-    target, cap, consecutive_gpu_errors = 4, 10, 0
+    cap = args.max_workers
+    target, consecutive_gpu_errors = cap, 0
     allowed_paths = ['experiments/night_20261007', 'MICE/logs/OVERNIGHT_20261007.md',
                      'MiceDuo/logs/OVERNIGHT_20261007.md', 'MICE/results/night_20261007',
                      'MiceDuo/results/night_20261007']
@@ -75,13 +79,13 @@ def main():
     env = os.environ.copy()
     env.update(OMP_NUM_THREADS='1', MKL_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1', NUMEXPR_NUM_THREADS='1',
                PYTHONDONTWRITEBYTECODE='1', MICE_CKPT_EVERY='20',
-               CUDA_LAUNCH_BLOCKING='1',
+               CUDA_LAUNCH_BLOCKING='0', MICE_ALLOC_MIB='4096',
                TABPFN_MODEL_CACHE_DIR=str(Path.home() / 'pfn-venvs/cache/tabpfn'),
                HF_HUB_OFFLINE='1', TABPFN_DISABLE_TELEMETRY='1')
     env.pop('PYTORCH_CUDA_ALLOC_CONF', None)
     telemetry = (root / 'gpu.csv').open('a', buffering=1)
     if telemetry.tell() == 0: telemetry.write('time,utilization,gpu_mib,ram_available_mib,running,target,done,blocked\n')
-    event('START: GPU target >=90%, pause at 22000 MiB, emergency 23200 MiB, cap 10, allocator cap 1792 MiB/worker; CUDA_LAUNCH_BLOCKING=1')
+    event(f'START: GPU target >=90% subject to stability cap {cap}; pause at 22000 MiB, emergency 23200 MiB, allocator cap 4096 MiB/worker; CUDA_LAUNCH_BLOCKING=0; breaker {args.breaker}/10min')
     try:
         while not STOP and time.time() - started < args.hours * 3600:
             now = time.time()
@@ -114,9 +118,11 @@ def main():
                     recent_failures.append(now)
                     while recent_failures and recent_failures[0] < now - 600:
                         recent_failures.popleft()
-                    if len(recent_failures) >= 4:
-                        (root / 'STOP').write_text('Circuit breaker: four worker failures within ten minutes; investigate before resuming.\n')
-                        event('CIRCUIT BREAKER: four failures in ten minutes; stopping this run')
+                    failure_limit = 1 if cap == 1 else args.breaker
+                    if len(recent_failures) >= failure_limit:
+                        reason = f'Circuit breaker: {failure_limit} worker failure(s) within ten minutes; investigate before resuming.'
+                        (root / 'STOP').write_text(reason + '\n')
+                        event('CIRCUIT BREAKER: ' + reason)
                     event(f'RETRY {job_id} exit={code} failures={item["failures"]} checkpoint_advanced={advanced} blocked={item["blocked"]}')
                     if consecutive_gpu_errors >= 2:
                         target = max(1, len(running)); cooldown = now + 180
