@@ -99,3 +99,5 @@ MICE 原来的每 20 批断点保留。调度器改为四次“无断点进展�
 - 2026-10-08T03:02+11:00：进度 27/86。DUO a5 完成 h2_poker、h2_weather（a5 剩 rialto、spam）；duo_replicates 的 seed1 MICE 参考已启动 elec2、h2_airlines、h2_phishing。本窗口无失败（累计 4 次）。GPU 利用率均值 98.6%（3 次 <90%），显存峰值 9280 MiB（28%），RAM 可用 ≥22 GB；维持 6 worker。
 
 - 2026-10-08T03:12+11:00：进度 31/86。duo_dev 阶段 14/14 完成并已自动分析发布（解读见上条）。seed1 MICE 参考完成 h2_phishing、h2_airlines，其余 5 条在跑。本窗口无失败（累计 4 次）。GPU 利用率均值 96.6%（19 次 <90%，集中在 03:05–03:08 多任务同时切换），显存峰值 10688 MiB（33%），RAM 可用 ≥21.9 GB；维持 6 worker。
+
+- 2026-10-08T03:22+11:00：进度 33/86。seed1 MICE 参考完成 elec2、h2_weather（剩 poker、rialto、spam）；seed1 DUO anchor=1 复现开始。两次单进程 `launch failure`：03:11 covertype_b micev（该任务第 5 次；检查点已到 840/1000 批，恢复点依次 161→241→401→461→840，净推进正常，03:21 已从 840 恢复），03:21 duo_s1_a1_h2_airlines（首次，退避后从检查点重跑）。自 01:20 起全局 6 次失败，约 1 次/20 分钟，均孤立、无连锁，未达熔断阈值，不降并发。GPU 利用率均值 98.6%（5 次 <90%），显存峰值 9120 MiB（28%），RAM 可用 ≥21.9 GB；维持 6 worker。

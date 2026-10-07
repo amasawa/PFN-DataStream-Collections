@@ -108,3 +108,5 @@ Seed 0 is exploratory. Independent backbone seeds check stability on these same 
 - 2026-10-08T03:09+11:00（duo_dev 解读）：seed0 开发集上，增大强制近期锚点没有带来改进，两种候选都未达预注册晋级标准。anchor=300 的 DUO 比 MICE 低 0.12 个点（2/7 胜），safe 低 0.22 个点；anchor=500 更差（DUO −0.60、safe −0.58，2/7 胜，单流最差比 FIFO 低 0.44–0.46 个点，超出 −0.30 容忍）。原始 anchor=100 的 DUO 仍是最好的 DUO 变体，但也只比 MICE 高 0.02 个点（3/7 胜），同样未达标。趋势是锚点越大越接近 FIFO、选择收益越小。按冻结计划，晋级要求每个 seed 都满足，所以这两个候选已不可能被推荐；seed1/2 复现仍按预注册照常运行并全部报告，不改动队列。仅为开发集结果，22 条 held-out 流未使用。
 
 - 2026-10-08T03:12+11:00：进度 31/86。duo_dev 阶段 14/14 完成并已自动分析发布（解读见上条）。seed1 MICE 参考完成 h2_phishing、h2_airlines，其余 5 条在跑。本窗口无失败（累计 4 次）。GPU 利用率均值 96.6%（19 次 <90%，集中在 03:05–03:08 多任务同时切换），显存峰值 10688 MiB（33%），RAM 可用 ≥21.9 GB；维持 6 worker。
+
+- 2026-10-08T03:22+11:00：进度 33/86。seed1 MICE 参考完成 elec2、h2_weather（剩 poker、rialto、spam）；seed1 DUO anchor=1 复现开始。两次单进程 `launch failure`：03:11 covertype_b micev（该任务第 5 次；检查点已到 840/1000 批，恢复点依次 161→241→401→461→840，净推进正常，03:21 已从 840 恢复），03:21 duo_s1_a1_h2_airlines（首次，退避后从检查点重跑）。自 01:20 起全局 6 次失败，约 1 次/20 分钟，均孤立、无连锁，未达熔断阈值，不降并发。GPU 利用率均值 98.6%（5 次 <90%），显存峰值 9120 MiB（28%），RAM 可用 ≥21.9 GB；维持 6 worker。
