@@ -156,3 +156,5 @@ h3_poker_b      0.825826  0.576577  0.998999
 - 2026-10-08T04:52+11:00：进度 62/86。seed1 DUO 复现（a1/a3/a5 共 21 个）全部完成；seed2 MICE 参考完成 h2_phishing、h2_airlines、h2_weather、elec2（剩 poker、rialto、spam）；seed2 DUO anchor=1 开始。本窗口无新失败（累计 13 次）。6 worker 下 GPU 利用率均值 97.5%（13 次 <90%），显存峰值 10672 MiB（33%），RAM 可用 ≥22 GB。剩 24 个任务，预计约 06:15–06:30 完成。
 
 - 2026-10-08T05:02+11:00：进度 65/86。seed2 MICE 参考完成 h2_poker（剩 rialto、spam）；seed2 DUO anchor=1 完成 elec2、h2_phishing。本窗口无新失败（累计 13 次）。6 worker 下 GPU 利用率均值 99.0%（3 次 <90%），显存峰值 8292 MiB（25%），RAM 可用 ≥22 GB。
+
+- 2026-10-08T05:22+11:00：进度 70/86（含 05:12 未能写入的检查：当时 67/86，GPU 均值 99.2%，显存峰值 11316 MiB）。seed2 的 7 条 MICE 参考全部完成；seed2 DUO anchor=1 完成 h2_weather、h2_poker（剩 rialto、spam），anchor=3 已开始 4 条。05:02 以来无新失败（累计 13 次）。05:11–05:21 GPU 利用率均值 99.3%（0 次 <90%），显存峰值 9424 MiB（29%），RAM 可用 ≥22 GB；维持 6 worker。剩 16 个 DUO 任务，预计约 06:00–06:15 全部完成并自动运行 duo_replicates 分析。
