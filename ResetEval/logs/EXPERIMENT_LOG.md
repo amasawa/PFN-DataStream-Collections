@@ -342,3 +342,10 @@
 - T1 worst source: +hedge - full = 29.01 (need >= 10) -> holds
 - T2 best source: +hedge 5.63 vs half of full 3.06 -> holds
 - 完整输出：`results/console_queue_tabdpt.txt`。
+- **18:15 人工核对（queue_tabdpt，18:13 完成，只有真实流）**：39 条都齐。合成流部分按 10:07 的设计和 TabDPT 只跑真实流的决定不作判定。
+  - H1' 8/8 成立；87.3% 的非零重置是净亏；+hedge 的真实流平均 +0.25（8 个检测器为 +0.09 到 +0.46）。
+  - 尾部（检测器平均）：完全重置最差来源 −31.1、最好来源 +6.1；+half −13.0/+0.9；+hedge −2.1/+5.6。T1 = 29.0、T2 成立。
+  - **D1 成立**（T1、T2 都成立）；**D2 成立**（完全重置的真实流平均在 −2.30 到 −3.91 之间，全部为负；净亏 87.3% > 70%）。
+  - Holm 校正后完全重置全部不显著（p_holm ≥ 0.47），与 TabPFN、TabICL 一样。
+  - **结论**：在 TabPFN、TabICL、TabDPT 三个 backbone 上，"完全重置有重的左尾，+hedge 几乎不付代价就能去掉它"都成立。TabDPT 的左尾最重（−31.1，TabPFN 为 −26.2）。
+- **18:15 无人值守运行结束**：停掉 supervisor、gpu_sampler3、after_gas；没有剩下的 GPU 进程。按用户的安排（"跑完了告诉我，然后开始拆repo"），不再追加任务。
