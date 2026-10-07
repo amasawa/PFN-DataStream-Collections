@@ -212,3 +212,5 @@ Seed 0 is exploratory. Independent backbone seeds check stability on these same 
 Variants meeting all criteria on every seed: []. No held-out evaluation was launched.
 ```
 <!-- stage:duo_replicates:complete -->
+
+- 2026-10-08T06:04:48+11:00: 调度器结束；总完成 86/86，失败阻塞 0。详细事件与资源曲线：`/home/zhwu9808/pfn-runs/night-20261007`。
