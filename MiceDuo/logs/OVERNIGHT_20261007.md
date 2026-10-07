@@ -73,3 +73,34 @@ MICE 阶段共 14 次 CUDA 失败，315 次资源采样显存峰值约 7.5 GB、
 - 2026-10-08T02:52+11:00：进度 25/86。DUO a5 已完成 elec2、h2_airlines、h2_phishing；duo_replicates 阶段开始（duo_ref_s1_elec2：seed1 下在开发前缀上重算 MICE 参考）。本窗口无失败（累计 4 次）。GPU 利用率均值 99.5%（0 次 <90%），显存峰值 10324 MiB（32%），RAM 可用 ≥22 GB；维持 6 worker。
 
 - 2026-10-08T03:02+11:00：进度 27/86。DUO a5 完成 h2_poker、h2_weather（a5 剩 rialto、spam）；duo_replicates 的 seed1 MICE 参考已启动 elec2、h2_airlines、h2_phishing。本窗口无失败（累计 4 次）。GPU 利用率均值 98.6%（3 次 <90%），显存峰值 9280 MiB（28%），RAM 可用 ≥22 GB；维持 6 worker。
+
+## 2026-10-08T03:06:55+11:00 — duo_dev 完成
+
+全部任务完成后自动核验；原始数据与旧结果保持只读。以下含全部判定，包括不成立项。
+
+```text
+DEVELOPMENT ONLY: all pre-specified variants reported; the 22 held-out streams remain untouched.
+                        acc  macro_f1      auc     ece  logloss
+seed anchor method                                             
+0    1      duo     84.5855   78.5438  90.5309  2.0300   0.3866
+            fifo    83.6592   77.4918  89.3193  1.9687   0.4220
+            sel     82.9293   77.1744  89.0368  4.8421   0.4894
+     3      duo     84.4412   78.6801  89.6846  1.8087   0.3937
+            fifo    83.6592   77.4918  89.3215  1.9703   0.4218
+            safe    84.3416   78.6119  89.6608  1.9345   0.3969
+            sel     83.3237   77.5830  89.0814  3.8276   0.4466
+     5      duo     83.9692   77.9253  89.4869  1.9476   0.4066
+            fifo    83.6592   77.4918  89.3215  1.9703   0.4218
+            safe    83.9851   77.9467  89.4828  1.9438   0.4078
+            sel     83.0613   77.0910  89.0877  3.5512   0.4398
+
+ADVANCEMENT RULE: mean >= MICE +0.50 points, >=5/7 wins over MICE, every stream >= FIFO -0.30 points.
+ seed  anchor method  delta_mice  wins_mice  worst_fifo    go
+    0       1    duo    0.020598          3   -0.550000 False
+    0       3    duo   -0.123750          2   -0.194444 False
+    0       3   safe   -0.223354          3   -0.211111 False
+    0       5    duo   -0.595758          2   -0.444816 False
+    0       5   safe   -0.579843          2   -0.458194 False
+Seed 0 is exploratory. Independent backbone seeds check stability on these same development data.
+```
+<!-- stage:duo_dev:complete -->

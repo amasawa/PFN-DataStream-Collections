@@ -1,0 +1,23 @@
+DEVELOPMENT ONLY: all pre-specified variants reported; the 22 held-out streams remain untouched.
+                        acc  macro_f1      auc     ece  logloss
+seed anchor method                                             
+0    1      duo     84.5855   78.5438  90.5309  2.0300   0.3866
+            fifo    83.6592   77.4918  89.3193  1.9687   0.4220
+            sel     82.9293   77.1744  89.0368  4.8421   0.4894
+     3      duo     84.4412   78.6801  89.6846  1.8087   0.3937
+            fifo    83.6592   77.4918  89.3215  1.9703   0.4218
+            safe    84.3416   78.6119  89.6608  1.9345   0.3969
+            sel     83.3237   77.5830  89.0814  3.8276   0.4466
+     5      duo     83.9692   77.9253  89.4869  1.9476   0.4066
+            fifo    83.6592   77.4918  89.3215  1.9703   0.4218
+            safe    83.9851   77.9467  89.4828  1.9438   0.4078
+            sel     83.0613   77.0910  89.0877  3.5512   0.4398
+
+ADVANCEMENT RULE: mean >= MICE +0.50 points, >=5/7 wins over MICE, every stream >= FIFO -0.30 points.
+ seed  anchor method  delta_mice  wins_mice  worst_fifo    go
+    0       1    duo    0.020598          3   -0.550000 False
+    0       3    duo   -0.123750          2   -0.194444 False
+    0       3   safe   -0.223354          3   -0.211111 False
+    0       5    duo   -0.595758          2   -0.444816 False
+    0       5   safe   -0.579843          2   -0.458194 False
+Seed 0 is exploratory. Independent backbone seeds check stability on these same development data.
