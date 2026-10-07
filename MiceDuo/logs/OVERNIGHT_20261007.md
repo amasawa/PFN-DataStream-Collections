@@ -118,3 +118,5 @@ Seed 0 is exploratory. Independent backbone seeds check stability on these same 
 - 2026-10-08T03:42+11:00：进度 40/86。seed1 的 7 条 MICE 参考全部完成；seed1 DUO anchor=1 完成 h2_airlines（重跑后成功）、h2_poker，anchor=3 开始。本窗口无新失败（累计 6 次）。GPU 利用率均值 99.3%（1 次 <90%），显存峰值 10254 MiB（31%），RAM 可用 ≥21.9 GB；维持 6 worker。过去 1 小时完成 17 个任务，剩 46 个，预计约 06:15–06:45 完成。
 
 - 2026-10-08T03:52+11:00：进度 43/86。K2 阶段 16/16 完成并已自动分析（解读见上条）；seed1 DUO anchor=1 完成 h2_weather。03:48 duo_s1_a3_h2_airlines 与 03:49 duo_s1_a1_h2_spam 相隔 1 分钟各失败一次（累计 8 次，近 30 分钟 3 次），调度器自动冷却 3 分钟、目标并发降为 5，期间实际 4 个 worker，GPU 仍为 98%；冷却结束后会按利用率自动回升到 6。两任务检查点均有推进，退避后从检查点重跑。03:41–03:51 GPU 利用率均值 98.5%，显存峰值 9514 MiB（29%），RAM 可用 ≥22 GB。若失败继续成簇出现，将把上限降为 5 worker。
+
+- 2026-10-08T04:02+11:00：进度 46/86。seed1 DUO anchor=1 7/7 完成（h2_spam 重跑后成功）；anchor=3 完成 elec2、h2_phishing。冷却后并发停留在 5：调度器仅在利用率 <94% 时加 worker，而 5 worker 已维持 98.4% 均值（194 次采样仅 3 次 <90%），所以保持 5，同时减少并发失败机会。本窗口无新失败（累计 8 次）。显存峰值 8881 MiB（27%），RAM 可用 ≥23.5 GB。
