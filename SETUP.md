@@ -4,10 +4,15 @@ Code, logs and small result tables are in git. Data, `.npz` results and caches a
 
 ## 1. Code
 ```bash
-git clone git@github.com:amasawa/oodpfn.git pfn && cd pfn
+git clone git@github.com:amasawa/PFN-DataStream-Collections.git dataStream && cd dataStream
 ```
 
 ## 2. Data
+**Since the split (2026-10-07):** All untracked files of this repository (MICE/data, ResetEval results and caches, ...) are in `datastream-data.tar`
+(OneDrive, University of Sydney, `datastream-data/`, with `SHA256SUMS`, `setup.sh` and `README-WJD02YF4.txt`).
+`setup.sh` makes a deploy key, clones the repository and unpacks the archive; it was used on WJD02YF4 on 2026-10-07.
+The description below is of the joint repository `oodpfn` before the split.
+
 The untracked files under `AgDR/data/`, `GOR/data/`, `MICE/data/` and `DriftTriage/data/` (283 files, 3.4 GB) are
 packed in `pfn-data.tar`, kept in OneDrive (University of Sydney) under `pfn-data/`, next to `SHA256SUMS`.
 Unpack in the repository root; the archive stores paths relative to it:
