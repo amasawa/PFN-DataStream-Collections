@@ -257,3 +257,20 @@ h4_airlines_e hddma+half acc=0.6658 resets=7 new_calls=2057 time=49s
 h4_airlines_e hddma+hedge acc=0.6659 resets=9 new_calls=2130 time=58s
 h4_airlines_e hddmw acc=0.6376 resets=110 new_calls=2372 time=177s
 h4_airlines_e hddmw+half acc=0.6616 resets=113 new_calls=2910 time=374s
+h4_airlines_e hddmw+hedge acc=0.6616 resets=106 new_calls=3144 time=170s
+h4_airlines_e adwin acc=0.6642 resets=10 new_calls=3271 time=91s
+h4_airlines_e adwin+half acc=0.6656 resets=10 new_calls=3344 time=55s
+h4_airlines_e adwin+hedge acc=0.6657 resets=10 new_calls=3390 time=34s
+h4_airlines_e ph acc=0.6538 resets=35 new_calls=3694 time=215s
+h4_airlines_e ph+half acc=0.6646 resets=25 new_calls=3875 time=135s
+h4_airlines_e ph+hedge acc=0.6654 resets=22 new_calls=4057 time=126s
+h4_airlines_e kswin acc=0.6548 resets=43 new_calls=4148 time=107s
+h4_airlines_e kswin+half acc=0.6650 resets=37 new_calls=4287 time=145s
+h4_airlines_e kswin+hedge acc=0.6639 resets=39 new_calls=4395 time=121s
+STREAM_DONE 11:16:49 h4_airlines_e_M2000
+h3_poker_b none acc=0.9407 resets=0 new_calls=989 time=850s
+h3_poker_b ddmM acc=0.8533 resets=372 new_calls=1100 time=82s
+h3_poker_b ddm acc=0.8509 resets=376 new_calls=1107 time=5s
+h3_poker_b ddm+half acc=0.9375 resets=167 new_calls=1608 time=367s
+h3_poker_b ddm+hedge acc=0.9346 resets=167 new_calls=1774 time=119s
+h3_poker_b eddm acc=0.8251 resets=319 new_calls=1801 time=21s

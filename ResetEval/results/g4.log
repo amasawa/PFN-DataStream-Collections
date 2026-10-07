@@ -274,3 +274,24 @@ h4_covertype_d ddm acc=0.9074 resets=86 new_calls=998 time=0s
 h4_covertype_d ddm+half acc=0.9644 resets=153 new_calls=1237 time=292s
 h4_covertype_d ddm+hedge acc=0.9657 resets=7 new_calls=1246 time=10s
 h4_covertype_d eddm acc=0.8693 resets=151 new_calls=1255 time=10s
+h4_covertype_d eddm+half acc=0.9641 resets=97 new_calls=1923 time=817s
+h4_covertype_d eddm+hedge acc=0.9651 resets=93 new_calls=2206 time=274s
+h4_covertype_d fhddm acc=0.6264 resets=278 new_calls=2207 time=1s
+h4_covertype_d fhddm+half acc=0.9658 resets=4 new_calls=2225 time=22s
+h4_covertype_d fhddm+hedge acc=0.9655 resets=4 new_calls=2250 time=28s
+h4_covertype_d hddma acc=0.5736 resets=645 new_calls=2282 time=32s
+h4_covertype_d hddma+half acc=0.9648 resets=68 new_calls=2540 time=284s
+h4_covertype_d hddma+hedge acc=0.9648 resets=70 new_calls=2691 time=184s
+h4_covertype_d hddmw acc=0.5527 resets=589 new_calls=2710 time=25s
+h4_covertype_d hddmw+half acc=0.9652 resets=23 new_calls=2749 time=58s
+h4_covertype_d hddmw+hedge acc=0.9656 resets=22 new_calls=2833 time=108s
+h4_covertype_d adwin acc=0.5481 resets=446 new_calls=2833 time=0s
+h4_covertype_d adwin+half acc=0.9654 resets=20 new_calls=2872 time=51s
+h4_covertype_d adwin+hedge acc=0.9655 resets=19 new_calls=2942 time=91s
+h4_covertype_d ph acc=0.6221 resets=217 new_calls=2942 time=0s
+h4_covertype_d ph+half acc=0.9657 resets=6 new_calls=2961 time=26s
+h4_covertype_d ph+hedge acc=0.9655 resets=7 new_calls=3006 time=55s
+h4_covertype_d kswin acc=0.6004 resets=456 new_calls=3006 time=15s
+h4_covertype_d kswin+half acc=0.9655 resets=13 new_calls=3009 time=51s
+h4_covertype_d kswin+hedge acc=0.9655 resets=13 new_calls=3009 time=48s
+STREAM_DONE 11:27:41 h4_covertype_d_M2000

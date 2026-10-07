@@ -295,3 +295,28 @@ For debugging consider passing CUDA_LAUNCH_BLOCKING=1
 
 RETRY 10:50:45 h4_poker_e_M2000
 h4_poker_e fhddm+half acc=0.9327 resets=82 new_calls=430 time=315s
+h4_poker_e fhddm+hedge acc=0.9316 resets=84 new_calls=590 time=119s
+h4_poker_e hddma acc=0.8098 resets=462 new_calls=599 time=7s
+h4_poker_e hddma+half acc=0.9291 resets=175 new_calls=675 time=58s
+h4_poker_e hddma+hedge acc=0.9284 resets=179 new_calls=732 time=42s
+h4_poker_e hddmw acc=0.8173 resets=315 new_calls=748 time=12s
+h4_poker_e hddmw+half acc=0.9306 resets=132 new_calls=791 time=34s
+h4_poker_e hddmw+hedge acc=0.9306 resets=117 new_calls=815 time=20s
+h4_poker_e adwin acc=0.8260 resets=249 new_calls=818 time=2s
+h4_poker_e adwin+half acc=0.9281 resets=140 new_calls=1016 time=149s
+h4_poker_e adwin+hedge acc=0.9310 resets=137 new_calls=1094 time=55s
+h4_poker_e ph acc=0.8536 resets=141 new_calls=1129 time=25s
+h4_poker_e ph+half acc=0.9301 resets=78 new_calls=1387 time=199s
+h4_poker_e ph+hedge acc=0.9316 resets=83 new_calls=1530 time=100s
+h4_poker_e kswin acc=0.8341 resets=250 new_calls=1558 time=50s
+h4_poker_e kswin+half acc=0.9329 resets=115 new_calls=1572 time=51s
+h4_poker_e kswin+hedge acc=0.9320 resets=118 new_calls=1577 time=44s
+STREAM_DONE 11:12:56 h4_poker_e_M2000
+h3_poker_c none acc=0.9348 resets=0 new_calls=989 time=833s
+h3_poker_c ddmM acc=0.8403 resets=386 new_calls=1067 time=49s
+h3_poker_c ddm acc=0.8397 resets=383 new_calls=1068 time=1s
+h3_poker_c ddm+half acc=0.9193 resets=232 new_calls=1602 time=395s
+h3_poker_c ddm+hedge acc=0.9254 resets=218 new_calls=1756 time=111s
+h3_poker_c eddm acc=0.8168 resets=344 new_calls=1777 time=15s
+h3_poker_c eddm+half acc=0.9294 resets=125 new_calls=2132 time=265s
+h3_poker_c eddm+hedge acc=0.9306 resets=124 new_calls=2288 time=115s

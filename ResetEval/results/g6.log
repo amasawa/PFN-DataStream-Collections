@@ -175,3 +175,15 @@ h4_airlines_d hddma acc=0.6663 resets=5 new_calls=2070 time=43s
 h4_airlines_d hddma+half acc=0.6669 resets=14 new_calls=2162 time=71s
 h4_airlines_d hddma+hedge acc=0.6667 resets=16 new_calls=2280 time=87s
 h4_airlines_d hddmw acc=0.6331 resets=152 new_calls=2399 time=87s
+h4_airlines_d hddmw+half acc=0.6622 resets=153 new_calls=3027 time=437s
+h4_airlines_d hddmw+hedge acc=0.6613 resets=162 new_calls=3199 time=121s
+h4_airlines_d adwin acc=0.6661 resets=9 new_calls=3267 time=50s
+h4_airlines_d adwin+half acc=0.6675 resets=8 new_calls=3339 time=55s
+h4_airlines_d adwin+hedge acc=0.6674 resets=9 new_calls=3387 time=35s
+h4_airlines_d ph acc=0.6568 resets=32 new_calls=3642 time=183s
+h4_airlines_d ph+half acc=0.6657 resets=24 new_calls=3793 time=113s
+h4_airlines_d ph+hedge acc=0.6663 resets=23 new_calls=3916 time=91s
+h4_airlines_d kswin acc=0.6481 resets=91 new_calls=4058 time=138s
+h4_airlines_d kswin+half acc=0.6638 resets=91 new_calls=4334 time=223s
+h4_airlines_d kswin+hedge acc=0.6643 resets=69 new_calls=4451 time=123s
+STREAM_DONE 11:17:12 h4_airlines_d_M2000

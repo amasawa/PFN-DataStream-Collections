@@ -241,3 +241,24 @@ stagger_s14 kswin acc=0.9675 resets=7 new_calls=239 time=11s
 stagger_s14 kswin+half acc=0.9416 resets=10 new_calls=239 time=11s
 stagger_s14 kswin+hedge acc=0.9672 resets=7 new_calls=239 time=10s
 STREAM_DONE 10:13:19 stagger_s14_M500
+insects_abrupt_imbalanced none acc=0.7958 resets=0 new_calls=1489 time=3436s
+insects_abrupt_imbalanced ddmM acc=0.8017 resets=6 new_calls=1556 time=85s
+insects_abrupt_imbalanced ddm acc=0.8017 resets=6 new_calls=1556 time=0s
+insects_abrupt_imbalanced ddm+half acc=0.7975 resets=6 new_calls=1601 time=58s
+insects_abrupt_imbalanced ddm+hedge acc=0.8017 resets=6 new_calls=1621 time=23s
+insects_abrupt_imbalanced eddm acc=0.7952 resets=9 new_calls=1639 time=19s
+insects_abrupt_imbalanced eddm+half acc=0.7957 resets=14 new_calls=1660 time=29s
+insects_abrupt_imbalanced eddm+hedge acc=0.7958 resets=18 new_calls=1699 time=41s
+insects_abrupt_imbalanced fhddm acc=0.7981 resets=13 new_calls=1871 time=223s
+insects_abrupt_imbalanced fhddm+half acc=0.7978 resets=13 new_calls=1988 time=203s
+insects_abrupt_imbalanced fhddm+hedge acc=0.7992 resets=12 new_calls=1988 time=0s
+insects_abrupt_imbalanced hddma acc=0.8035 resets=8 new_calls=2064 time=122s
+insects_abrupt_imbalanced hddma+half acc=0.7971 resets=7 new_calls=2127 time=107s
+insects_abrupt_imbalanced hddma+hedge acc=0.8034 resets=9 new_calls=2144 time=19s
+insects_abrupt_imbalanced hddmw acc=0.8035 resets=15 new_calls=2248 time=144s
+insects_abrupt_imbalanced hddmw+half acc=0.7981 resets=17 new_calls=2353 time=181s
+insects_abrupt_imbalanced hddmw+hedge acc=0.8042 resets=15 new_calls=2353 time=1s
+insects_abrupt_imbalanced adwin acc=0.8044 resets=8 new_calls=2401 time=70s
+insects_abrupt_imbalanced adwin+half acc=0.7987 resets=11 new_calls=2454 time=88s
+insects_abrupt_imbalanced adwin+hedge acc=0.8039 resets=9 new_calls=2472 time=30s
+insects_abrupt_imbalanced ph acc=0.8015 resets=22 new_calls=2736 time=356s
