@@ -122,3 +122,5 @@ Seed 0 is exploratory. Independent backbone seeds check stability on these same 
 - 2026-10-08T04:02+11:00：进度 46/86。seed1 DUO anchor=1 7/7 完成（h2_spam 重跑后成功）；anchor=3 完成 elec2、h2_phishing。冷却后并发停留在 5：调度器仅在利用率 <94% 时加 worker，而 5 worker 已维持 98.4% 均值（194 次采样仅 3 次 <90%），所以保持 5，同时减少并发失败机会。本窗口无新失败（累计 8 次）。显存峰值 8881 MiB（27%），RAM 可用 ≥23.5 GB。
 
 - 2026-10-08T04:12+11:00：进度 50/86。seed1 DUO anchor=3 完成 h2_airlines（重跑后成功）、h2_poker、h2_weather、h2_rialto（仅剩 h2_spam）；anchor=5 已开始 4 条。本窗口无新失败（累计 8 次）。5 worker 下 GPU 利用率均值 98.6%（4 次 <90%），显存峰值 9869 MiB（30%），RAM 可用 ≥23.5 GB。剩余 36 个任务，按近 1 小时速率预计约 06:15 前后完成。
+
+- 2026-10-08T04:14+11:00（成簇失败）：04:11:36–04:11:57 的 21 秒内 4 个 worker 先后报 `unspecified launch failure`（duo_s1_a5_h2_phishing、a5_elec2、a5_h2_rialto、a3_h2_spam）。此前失败都是孤立的，这次多进程几乎同时失败，更像一次设备级（驱动/WSL）事件，而非各进程独立故障；WSL dmesg 无新记录，失败后 GPU 正常（74°C、203 W、2700 MHz）。调度器逐次冷却，目标并发 6→4→3→2，剩余 2 个 worker 未受影响、继续运行；4 个任务检查点均有推进，冷却后按利用率逐步回升并从检查点重跑。累计失败 12 次；当前 10 分钟窗口内已有 4 次，再有 2 次将触发全局熔断（预期的安全行为）。未读取或改动 Windows 侧事件、TDR 与驱动设置。
