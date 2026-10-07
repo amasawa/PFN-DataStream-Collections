@@ -71,3 +71,5 @@ MICE 阶段共 14 次 CUDA 失败，315 次资源采样显存峰值约 7.5 GB、
 - 2026-10-08T02:42+11:00：进度 23/86。DUO 开发阶段 seed0 anchor=300（a3）7 条流全部完成；a5 进行中（h2_phishing 已完成）。K2 仅剩 covertype_b micev。本窗口无新失败（累计 4 次）。GPU 利用率均值 99.3%（195 次采样 0 次 <90%），显存峰值 11258 MiB（34%），RAM 可用 ≥22 GB；维持 6 worker。近 30 分钟约 3 任务/10 分钟，剩 63 个任务，粗估约 06:00–06:30 完成（MICE replicate 任务较长，估计偏乐观）。
 
 - 2026-10-08T02:52+11:00：进度 25/86。DUO a5 已完成 elec2、h2_airlines、h2_phishing；duo_replicates 阶段开始（duo_ref_s1_elec2：seed1 下在开发前缀上重算 MICE 参考）。本窗口无失败（累计 4 次）。GPU 利用率均值 99.5%（0 次 <90%），显存峰值 10324 MiB（32%），RAM 可用 ≥22 GB；维持 6 worker。
+
+- 2026-10-08T03:02+11:00：进度 27/86。DUO a5 完成 h2_poker、h2_weather（a5 剩 rialto、spam）；duo_replicates 的 seed1 MICE 参考已启动 elec2、h2_airlines、h2_phishing。本窗口无失败（累计 4 次）。GPU 利用率均值 98.6%（3 次 <90%），显存峰值 9280 MiB（28%），RAM 可用 ≥22 GB；维持 6 worker。
