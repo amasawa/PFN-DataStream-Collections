@@ -82,5 +82,4 @@ was submitted or pushed by this iteration.
    first batch (-0.4 to -0.9), which the pre-registration table had omitted.
 6. **Grid description corrected.** The grid streams have three concepts on RBF mixtures with 5/30/100 centroids, not
    "5, 30 or 100 concepts". Proposition 1 proof: the equivalence keeps the max with 0 (warm-up), as a necessary condition.
-Open: reproducibility appendix (reviewer items 9-11: dataset versions and construction, synthetic generator
-configurations, implementation details such as zero-probability handling of absent classes and dropped incomplete batches).
+7. **Reproducibility appendix (items 9-11)** added as `overleaf/tmlr/repro.tex`, written from the code (each fact cites its file in a comment): real-stream construction and sources (UCI ids), synthetic generators and seeds, package versions, zero probability for absent classes, float16 cache, dropped incomplete batch, detector lifecycle. Drafted without Codex to save quota.

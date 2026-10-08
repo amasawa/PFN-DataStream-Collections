@@ -1,0 +1,59 @@
+% Reproducibility details. Every statement is taken from the code named in the comment (paths relative to the repo).
+\section{Reproducibility details}
+\label{app:repro}
+
+\paragraph{Real streams.} All streams are stored as feature matrix, integer label and (unknown) concept index; rows keep
+the order of the source, labels are numbered in sorted order, categorical columns are integer-coded, and time columns
+are used only for ordering. Before any model was run, each held-out and added stream was checked with a sliding random
+forest against the majority-class rate; for the ten added sources a majority rate of at least 0.98 was a pre-set
+exclusion rule, which excluded none.
+% MICE/code/streams.py, streams_heldout{,2,3,4}.py; ResetEval/code/streams_new.py (docstrings, encode(), main())
+\begin{itemize}
+\item \emph{Electricity} and the seven \emph{INSECTS} variants \citep{souza2020insects}: the \texttt{river} 0.26.1
+  datasets \texttt{Elec2} and \texttt{Insects}, INSECTS features parsed as numbers, used in full except that covertype
+  and the INSECTS abrupt and gradual imbalanced streams are cut to their first 150\,000 rows. % MICE/code/streams.py real(); streams_heldout.py (CAP)
+\item \emph{airlines, phishing, poker, rialto, spam, weather} (prefix \texttt{h2\_}): every real stream of the
+  \texttt{ogozuacik/concept-drift-datasets-scikit-multiflow} collection with at least 5\,000 rows and at most 10
+  classes not used before, in file order, cut to the first 100\,000 rows. % streams_heldout2.py
+\item Later \emph{segments} of the long streams, rows never used before: airlines and poker rows
+  $[100\mathrm{k},200\mathrm{k})$, $[200\mathrm{k},300\mathrm{k})$, $[300\mathrm{k},400\mathrm{k})$,
+  $[400\mathrm{k},500\mathrm{k})$; covertype rows $[150\mathrm{k},250\mathrm{k})$, $[250\mathrm{k},350\mathrm{k})$,
+  $[350\mathrm{k},450\mathrm{k})$, $[450\mathrm{k},550\mathrm{k})$; INSECTS abrupt-imbalanced rows
+  $[150\mathrm{k},250\mathrm{k})$, $[250\mathrm{k},350\mathrm{k})$. % streams_heldout3.py, streams_heldout4.py
+\item The ten added sources, in time order and cut to the first 100\,000 rows: Gas Sensor Array Drift (UCI 224,
+  batches 1--10), Occupancy Detection (UCI 357), Room Occupancy Estimation (UCI 864), Bank Marketing (UCI 222,
+  file order, \texttt{duration} removed), KDD Cup 1999 10\% (via \texttt{scikit-learn}, labels grouped into normal and
+  the four attack families), EEG Eye State (UCI 264), Online News Popularity (UCI 332, oldest article first, label
+  $\text{shares}\ge1400$), Gas Sensors for Home Activity Monitoring (UCI 362, recordings in calendar order, rows while
+  the stimulus is present), Wall-Following Robot Navigation (UCI 194, 24 sensors) and the Single Chest-Mounted
+  Accelerometer data (UCI 287, subjects 1--15 concatenated, unlabelled rows removed).
+  % ResetEval/code/streams_new.py gas()...chest(), KDD map, CAP = 100_000
+\end{itemize}
+A source's value is the mean over its streams (\cref{tab:data}).
+
+\paragraph{Synthetic streams.} Recurring \texttt{river} streams visit $K$ fixed concept generators in blocks of 2\,000
+rows and cycle through them three times; a recurring concept continues its own random stream, so it has the same
+distribution but new rows. Test seeds 10--14 (generator seeds $10s+k$). SEA (variants 0--2, $K=3$, 18\,000 rows),
+STAGGER (functions 0--2, $K=3$, 18\,000), Agrawal (functions 0, 2, 4, 6, $K=4$, 24\,000), sine (functions 0--3,
+$K=4$, 24\,000) change only the labelling function; RBF (20 centroids, 4 classes, 10 features, $K=3$, 18\,000) and
+hyperplane (10 features, 5\% noise, $K=3$, 18\,000) change both inputs and labels. The twelve grid streams have three
+concepts that share an RBF mixture of 5, 30 or 100 centroids in 10 dimensions with 4 classes and differ only in the
+label of each centroid; blocks of 500 or 2\,000 rows, three cycles, seeds 10 and 11.
+% MICE/code/streams.py families(), recurring(), --block 2000 --cycles 3; MICE/code/grid_streams.py
+
+\paragraph{Models.} TabPFN v2 (\texttt{tabpfn} 9.0.0, default v2 classifier checkpoint, \texttt{n\_estimators=4},
+\texttt{ignore\_pretraining\_limits}), TabICL (\texttt{tabicl} 2.2.0, \texttt{n\_estimators=4}) and TabDPT
+(\texttt{tabdpt} 1.3.1, four ensemble members), all with PyTorch 2.14 on one GPU; backbone seed 0 (\texttt{random\_state})
+unless stated. Trained learners and detectors use \texttt{river} 0.26.1. % ResetEval/code/reset_eval.py TFM; env/requirements*.txt
+
+\paragraph{Prediction details.} Classes absent from a context receive probability 0; a context with a single class
+predicts that class with probability 1. These cases violate \cref{ass:positive}; log-losses are computed with
+probabilities clipped at $10^{-6}$. Predictions are cached in half precision per (context start, batch) and the
+mixture of the hedge is renormalised before scoring. Batch 0 is not scored, and a final incomplete batch is dropped.
+% reset_eval.py TFM.predict, Cache.get (float16), run() (np.clip 1e-6, P / P.sum, T = len(y)//B)
+
+\paragraph{Detectors.} One detector object per policy run, default parameters (KSWIN with \texttt{seed=0}). After the
+labels of a batch arrive, it receives the per-row 0/1 errors of the policy's own final prediction (for \hedge, the
+mixture); feeding stops at the first alarm in a batch, and \texttt{river} re-initialises the detector's statistics at
+its next update. On an alarm, \hedge{} sets the discounted loss of the reset expert to that of FIFO, so both weights
+become $1/2$. % reset_eval.py run(); river/drift/*.py (_reset on the update after drift_detected)
