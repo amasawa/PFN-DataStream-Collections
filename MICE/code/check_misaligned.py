@@ -103,5 +103,24 @@ def main(root):
           f"MICE - FIFO mean {m.d_fifo.mean():+.3f}; MICE - winens mean {m.d_winens.mean():+.3f}")
 
 
+
+
+def snap_exploratory(root):
+    """Exploratory (added after the round-4 results; not registered): storage-matched snapshot control on the
+    12 misaligned streams, following MiMo's round-4 finding F2. Writes ../results_paper/misaligned_snap.csv."""
+    m = pd.read_csv("../results_paper/misaligned.csv")
+    rows = []
+    for s in m.stream:
+        t, mice, _ = replay(f"{root}/mis/{s}__micev1000_500.pkl")
+        ts, snap, _ = replay(f"{root}/mis/{s}__snap1000_500.pkl")
+        assert (ts == t).all(), s
+        rows.append(dict(stream=s, snap=snap.mean(), d_snap=(mice - snap).mean()))
+    r = m[["stream", "cond", "nc", "mice", "arch", "d_arch"]].merge(pd.DataFrame(rows), on="stream")
+    r.to_csv("../results_paper/misaligned_snap.csv", index=False)
+    print(r.round(2).to_string(index=False))
+    print(f"EXPLORATORY MICE - snap: mean {r.d_snap.mean():+.3f}, positive {int((r.d_snap > 0).sum())}/12, "
+          f"range {r.d_snap.min():+.2f}..{r.d_snap.max():+.2f}")
+
+
 if __name__ == "__main__":
-    main(sys.argv[1])
+    snap_exploratory(sys.argv[1]) if sys.argv[2:] == ["snap"] else main(sys.argv[1])
