@@ -69,3 +69,18 @@ was submitted or pushed by this iteration.
 3. Tails table caption: removed the obsolete "TabDPT was run on real streams only"; states that the harm column pools
    all resets. Figure 1 caption: its detector-averaged worst source (covertype -23.1) differs from the worst-source
    statistic (-26.2, detector-wise minima averaged).
+4. **Claims tightened (reviewer items 2, 3, 4, 5, 7, 12, 14).** Per-reset Δ_j is described as an exact allocation of the
+   realised difference to FIFO, not a counterfactual effect; the finite-memory bound is presented as an explanation
+   consistent with the results (it is symmetric in gains and losses and alarms are not known to be correct);
+   "removes the tail/losses" and "safe" replaced by "substantially reduces"; the guarantee is attached to η<=1,
+   γ=1 and the batch-mean log-loss (row-summed allowance BNln2/η); the unsupported "followed within a few batches"
+   removed; significance phrased as the Holm-corrected signed-rank null, with test details (two-sided, zeros dropped,
+   10 000 percentile bootstrap resamples, pointwise); hedge sensitivity described as one-factor-at-a-time on TabPFN.
+5. **Data selection disclosed as sequential.** The ten added sources came in two batches after the first analyses
+   (EXPERIMENT_LOG 2026-10-06 23:09-23:30); the paper now says so, reports the batches separately (first batch: full
+   reset -1.8 to -2.5, 4-5/5 sources negative; second: helps on 3/5), and states that the hedge fails H4 on the
+   first batch (-0.4 to -0.9), which the pre-registration table had omitted.
+6. **Grid description corrected.** The grid streams have three concepts on RBF mixtures with 5/30/100 centroids, not
+   "5, 30 or 100 concepts". Proposition 1 proof: the equivalence keeps the max with 0 (warm-up), as a necessary condition.
+Open: reproducibility appendix (reviewer items 9-11: dataset versions and construction, synthetic generator
+configurations, implementation details such as zero-probability handling of absent classes and dropped incomplete batches).

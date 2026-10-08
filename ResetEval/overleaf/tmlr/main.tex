@@ -54,15 +54,17 @@ alarm, discards the past. We ask whether this practice transfers to in-context l
 independent sources and 42 synthetic streams, with eight detectors, three reset actions and three TFMs, we find that a
 full context reset is a \emph{tail risk}: averaged over detectors it loses 26--31 accuracy points on the worst source
 while gaining only about 5--6 on the best. Most single resets that change the outcome on real streams are net losses:
-87--88\% of all such resets, and the majority on 15 of the 19 sources. Averaged over sources the effect is not significant after correction for multiple testing, so the
-practice is neither uniformly harmful nor useful; its risk sits in the tail. Two facts explain the asymmetry. Under a
-FIFO budget, the effect of a reset is confined to the next $\lceil M/B\rceil-1$ batches (we prove this and use it for
-exact per-reset accounting), so the window already forgets and leaves a reset little to gain; trained incremental
+87--88\% of all such resets, and the majority on 15 of the 19 sources. Over sources, no detector rejects the signed-rank null after Holm correction, so the
+practice is neither uniformly harmful nor useful; its risk sits in the tail. Two observations are consistent with the
+asymmetry. Under a FIFO budget, a reset changes the context of at most the next $\lceil M/B\rceil-1$ batches (we prove
+this and use it for an exact per-reset allocation of the difference to FIFO), so the window already forgets and leaves a
+reset little to gain; trained incremental
 learners, which never forget, gain from the same resets (+1.8 and +7.3 points on average). We then show that hedging
-the reset context against the FIFO context with exponential weights removes the tail at almost no cost: we prove a
-log-loss guarantee of at most $\ln 2/\eta$ per detection relative to FIFO for the undiscounted variant with
-$0<\eta\le1$, and empirically the worst source improves to
-about $-2$ points while 90\% of the best-source gain and the synthetic gains are kept. The findings hold across
+the reset context against the FIFO context with exponential weights substantially reduces the tail at little cost: we
+prove a cumulative log-loss guarantee of at most $\ln 2/\eta$ per detection relative to FIFO for the undiscounted
+variant with $0<\eta\le1$, and empirically the worst source improves to about $-2$ points while 90\% of the
+best-source gain and the synthetic gains are kept; on one of the two batches of added sources the hedge still loses
+0.4--0.9 points on average. The findings hold across
 backbones, backbone seeds, context budgets and hedge hyperparameters.
 \end{abstract}
 
@@ -74,7 +76,7 @@ backbones, backbone seeds, context budgets and hedge hyperparameters.
 \includegraphics[width=\linewidth]{figs/fig_sources.pdf}
 \caption{Effect of the three actions on detection, per real source and averaged over the eight detectors, as accuracy
 minus FIFO with the same TFM ($M=1000$). A full reset (orange) loses heavily on a few sources (covertype, wall, poker,
-gas) and gains on a few others (eeg, chest, home); hedging against FIFO (blue) removes the losses and keeps the gains.
+gas) and gains on a few others (eeg, chest, home); hedging against FIFO (blue) reduces the losses to at most a few points and keeps most of the gains.
 Sources are ordered by the full-reset effect on TabPFN. The figure averages over detectors first (covertype:
 $-23.1$ for TabPFN); the worst-source statistic of the text and \cref{tab:tails} takes each detector's worst source
 and then averages ($-26.2$), so the two need not coincide.}
@@ -115,7 +117,7 @@ that change the accuracy of the batches they affect, 87--88\% are net losses on 
 \begin{observation}[The average hides the tail]
 \label{obs:average}
 Over the 19 real sources the mean effect of a full reset is negative for every detector and backbone, but no detector
-is significant after Holm correction, and resets help on several sources (eeg, chest, home). On synthetic streams with
+rejects the signed-rank null after Holm correction, and resets help on several sources (eeg, chest, home). On synthetic streams with
 abrupt, recurring concepts resets help by about 8 points.
 \end{observation}
 
@@ -127,9 +129,10 @@ several times more (eeg: $+28.5$ and $+39.2$ against $+6.3$). For TabPFN the bes
 $M=500,1000,2000$).
 \end{observation}
 
-These observations reframe the question. A detector is useful when it fires on a real change and costly when it fires
-on noise; a FIFO window already captures most of the benefit of the first case, while a reset pays the full cost of the
-second. The practical question is therefore not whether drift detection is good or bad for TFMs, but
+These observations suggest a reading of the question. A detector is useful when it fires on a real change and costly
+when it fires on noise; a FIFO window plausibly captures much of the benefit of the first case, while a reset pays the
+full cost of the second. We do not observe which alarms on real streams are correct, so this is an interpretation
+consistent with the results rather than an identified mechanism. The practical question is therefore not whether drift detection is good or bad for TFMs, but
 
 \begin{center}
 \fbox{\parbox{0.86\linewidth}{\centering\emph{How can an in-context learner on a stream act on a drift alarm without
@@ -139,27 +142,28 @@ exposing itself to the tail risk of a false one?}}}
 \begin{remark}
 We do not propose a new detector or a new stream learner, and we do not claim state-of-the-art accuracy. Our objective
 is to establish, with controlled comparisons and source-level statistics, what error-driven resets do to tabular
-in-context learners, why, and which minimal change makes them safe to use.
+in-context learners, what plausibly explains it, and which minimal change makes them much safer to use.
 \end{remark}
 
 Our answer is to keep the FIFO context alive next to the reset one and to mix their predictions with exponential
-weights on their recent log-loss \citep{vovk1990aggregating,cesabianchi2006prediction}. A false alarm then costs at
-most a constant, while a real change is followed within a few batches.
+weights on their recent log-loss \citep{vovk1990aggregating,cesabianchi2006prediction}. For the undiscounted variant a false alarm then costs
+at most a constant in cumulative log-loss, while the weights move to the reset context when it predicts better.
 
 \paragraph{Contributions.}
 \begin{enumerate}
 \item \textbf{A protocol with exact accounting.} We show that under a FIFO budget a reset changes the context of at
-  most $\lceil M/B\rceil-1$ batches (\cref{prop:memory}), so the effect of each single reset can be measured exactly
-  and the total effect decomposes into per-reset effects.
+  most $\lceil M/B\rceil-1$ batches (\cref{prop:memory}), so the realised difference to FIFO decomposes
+  exactly into per-reset contributions.
 \item \textbf{A large controlled evaluation.} Eight detectors $\times$ three actions $\times$ three TFMs on 81 streams,
   with backbone seeds, context budgets and two trained learners, and tests clustered by source
   (\cref{sec:results}). Code, streams and all cached predictions will be released with the paper.
-\item \textbf{A finding and its mechanism.} Error-driven resets are a tail risk for TFMs, not a uniform loss
-  (\cref{obs:tail,obs:average}); a FIFO window absorbs most of what a reset could gain (\cref{obs:fifo},
-  \cref{prop:memory}).
-\item \textbf{A minimal remedy with a guarantee.} Hedging the reset context against FIFO is never worse than FIFO by
-  more than $\ln 2/\eta$ per detection in cumulative log-loss (\cref{thm:hedge}); empirically it removes the tail on
-  all three backbones while keeping almost all of the gains, and it is insensitive to its two hyperparameters.
+\item \textbf{A finding and a plausible explanation.} Error-driven resets are a tail risk for TFMs, not a uniform
+  loss (\cref{obs:tail,obs:average}); the evidence is consistent with a FIFO window absorbing much of what a reset
+  could gain (\cref{obs:fifo}, \cref{prop:memory}).
+\item \textbf{A minimal remedy with a guarantee.} For $\eta\le1$ without discounting, hedging the reset context against
+  FIFO is never worse than FIFO by more than $\ln 2/\eta$ per detection in cumulative log-loss (\cref{thm:hedge});
+  empirically it reduces the worst-source loss from 26--31 to about 2 points on all three backbones while keeping most
+  of the gains, and the tested TabPFN configurations of its two hyperparameters behave alike.
 \end{enumerate}
 
 % ---------------------------------------------------------------------------------------------------------------------
@@ -240,8 +244,11 @@ Under \cref{ass:frozen}, consider the \full{} policy with detections at batches 
 \end{proposition}
 
 \begin{remark}
-Part (ii) is what makes the per-reset statistics of \cref{sec:results} exact rather than estimated: the effect of a
-reset is read off from the FIFO run on the same batches. Part (iii) is the mechanism behind \cref{obs:fifo}. A reset
+Part (ii) makes the per-reset statistics of \cref{sec:results} an exact allocation of the realised difference to FIFO
+rather than an estimate: each $\Delta_j$ is read off from the FIFO run on the same batches. It is not the
+counterfactual effect of removing alarm $j$ alone, which could change later errors, detector states and alarms. Part
+(iii) offers an explanation for \cref{obs:fifo}; the bound is symmetric in gains and losses, so it does not by itself
+explain their asymmetry. A reset
 can only be ahead of FIFO for $H-1$ batches; after that the window has forgotten the old concept on its own. A trained
 learner that never forgets has no such cap, so the same correct alarm is worth more to it. The cap grows with $M$,
 which matches the growth of the best-source gain with the budget. A false alarm also costs at most $H-1$ batches, but
@@ -292,7 +299,8 @@ Under \cref{ass:frozen,ass:positive}, let $\eta\in(0,1]$ and $\gamma=1$. Then:
 
 \begin{remark}
 The first bound in (ii) is the safety guarantee: whatever the detector does, the hedge loses at most a constant per
-alarm relative to never resetting in cumulative log-loss. This bound grows with the number of alarms and does not
+alarm relative to never resetting in cumulative log-loss. Here $\ell$ is the mean log-loss of a batch, so in log-loss
+summed over rows the allowance is $BN\ln2/\eta$. This bound grows with the number of alarms and does not
 guarantee a small accuracy loss; the accuracy-tail reduction is an empirical finding. The second bound is the
 benefit: on segments where the reset context is better, the hedge follows it up to the same constant. The proof
 (\cref{app:proofs}) is the aggregating-algorithm argument \citep{vovk1990aggregating} with one change: the weights are
@@ -310,12 +318,14 @@ variant on these streams, not a proof that clipping preserves the bound on arbit
 
 \paragraph{Streams.} The 39 real streams come from 19 sources (\cref{app:data}): covertype, poker, airlines (each also as
 several contiguous segments), the INSECTS streams \citep{souza2020insects}, electricity \citep{harries1999elec2},
-phishing, rialto, spam, weather, and ten further public sources chosen before running anything (gas, occupancy, room,
-bank, kdd, eeg, news, home, wall, chest). Segments of one data set are not independent, so all statistics on real
+phishing, rialto, spam, weather, and ten further public sources added after the first analyses in two batches of five (gas, occupancy,
+room, bank, kdd; then eeg, news, home, wall, chest). For each batch the selection rule and preprocessing were fixed
+before download, but the second batch was added after seeing the first, so tests over all 19 sources are sequential
+and exploratory; we report the batches separately as well (\cref{sec:results,app:prereg}). Segments of one data set are not independent, so all statistics on real
 streams are computed over the 19 sources: a source's value is the mean over its streams. The 42 synthetic streams are
 the test seeds of six \texttt{river} generators (Agrawal, hyperplane, RBF, SEA, sine, STAGGER; five seeds each) and
-twelve grid streams with abrupt, recurring block concepts (5, 30 or 100 concepts, blocks of 500 or 2000 rows, two
-seeds); synthetic values are averaged per generator family.
+twelve grid streams with three abrupt, recurring block concepts (RBF mixtures with 5, 30 or 100 centroids whose
+labels are permuted between concepts, blocks of 500 or 2000 rows, two seeds); synthetic values are averaged per generator family.
 
 \paragraph{Models.} TabPFN v2 \citep{hollmann2025tabpfn}, TabICL \citep{qu2025tabicl} and TabDPT \citep{ma2024tabdpt},
 each with four ensemble members, $M=1000$ unless stated otherwise. As trained learners we use the \texttt{river}
@@ -324,8 +334,10 @@ by a fresh one that learns from the latest labelled batch on, and their hedge mi
 with the same rule.
 
 \paragraph{Measures.} For a policy and a stream, $d$ is its accuracy minus the accuracy of FIFO with the same model,
-in points. We report source-weighted means over the 19 real sources with 95\% cluster-bootstrap intervals and Wilcoxon
-signed-rank tests over sources with Holm correction over the eight detectors \citep{holm1979}. Because the risk of
+in points. We report source-weighted means over the 19 real sources with 95\% cluster-bootstrap percentile intervals
+(10\,000 resamples of sources, pointwise and not adjusted for multiplicity) and two-sided Wilcoxon signed-rank tests
+over source means (zero differences dropped) with Holm correction over the eight detectors of each action
+\citep{holm1979}. The signed-rank test concerns the median-type location of the source effects, not their mean. Because the risk of
 resets is in the tail, we also report the \emph{worst} and \emph{best} source (for each detector the minimum and maximum
 over sources, averaged over detectors). Single-reset effects are $\Delta_j$ of \cref{prop:memory}. Beyond accuracy we
 report macro-F1, macro one-vs-rest ROC AUC, expected calibration error (ECE, 15 bins), log-loss and Brier score,
@@ -344,8 +356,10 @@ recovered by replaying each policy from the cached predictions (\cref{app:metric
 
 \Cref{tab:main} gives the source-weighted effect of every detector and action for TabPFN. On real streams a full
 reset is worse than FIFO on average for all eight detectors, between $-0.8$ and $-3.9$ points, but the bootstrap
-intervals are wide, five or six of the 19 sources benefit, and after Holm correction no detector is significant
-($p_{\mathrm{Holm}}\ge0.36$). On synthetic streams the picture is reversed: full resets gain up to 9.4 points
+intervals are wide, five or six of the 19 sources benefit, and after Holm correction no detector rejects the
+signed-rank null ($p_{\mathrm{Holm}}\ge0.36$). The two batches of added sources differ: on the first (gas, occupancy,
+room, bank, kdd) a full reset loses on four or five of the five sources for every detector ($-1.8$ to $-2.5$ points),
+on the second (eeg, news, home, wall, chest) it helps on three of the five (detector means from $-4.7$ to $+1.6$). On synthetic streams the picture is reversed: full resets gain up to 9.4 points
 (8.0 averaged over detectors; FHDDM, which fires least, gains 0.9), because the concepts change abruptly and recur,
 which is the situation detectors were designed for.
 
@@ -361,7 +375,7 @@ all resets of all streams and detectors, so sources with many alarms weigh more.
 81.6\% and 90.7\% for every detector and backbone. For TabPFN, 25\,699 resets lose, 3\,460 gain and 1\,057 leave the accuracy
 unchanged.
 
-\subsection{Why: a FIFO window already forgets}
+\subsection{A FIFO window already forgets: evidence from trained learners}
 
 \input{tables/learners.tex}
 
@@ -392,7 +406,9 @@ Keeping FIFO next to the reset context changes the picture on every backbone (\c
 improves from $-26$ to $-31$ points to about $-2$, the best source keeps 90\% of the gain of a full reset or more
 (e.g.\ $+6.0$ vs.\ $+6.3$ for TabPFN), and on synthetic streams the hedge keeps essentially all of the gain of a full
 reset ($+7.9$ vs.\ $+8.0$). Its average on real streams is small and positive ($+0.2$ to $+0.3$ points on the three backbones), not
-significantly different from FIFO; its value is the substantial reduction of the observed worst-source loss. Keeping half of the window (\half) is a weaker
+significantly different from FIFO; its value is the substantial reduction of the observed worst-source loss. It is
+not free everywhere: on the first batch of added sources (gas, occupancy, room, bank, kdd) its source-weighted mean is
+$-0.4$ to $-0.9$ points, below the pre-registered $-0.2$ (\cref{app:prereg}). Keeping half of the window (\half) is a weaker
 compromise: it shortens the tail to $-4.3$, $-5.4$ and $-13.0$ points but gives up most of the gain (best source
 below $+1$). The hedge helps the
 trained learners as well (\cref{tab:learners}), so it is a general way to act on an alarm, not a fix specific to TFMs.
@@ -414,7 +430,8 @@ backbone only; the variability of the data is covered by the 19 sources and the 
 
 \paragraph{Hedge hyperparameters.}
 \input{tables/hsens.tex}
-Over $\eta\in\{0.5,1,2,4,8\}$ and $\gamma\in\{0.25,0.5,0.75,0.9\}$ the hedge's real-stream mean stays between $+0.24$
+Varying one hyperparameter at a time around the default, $\eta\in\{0.5,1,2,4,8\}$ with $\gamma=0.5$ and
+$\gamma\in\{0.25,0.5,0.75,0.9\}$ with $\eta=2$ (TabPFN only), the hedge's real-stream mean stays between $+0.24$
 and $+0.29$, its worst source between $-1.58$ and $-1.73$, and its synthetic gain between $+7.86$ and $+7.93$
 (\cref{tab:hsens}). The variant covered by \cref{thm:hedge} ($\eta=1$, $\gamma=1$) behaves the same ($+0.27$,
 $-1.59$, $+7.90$). For this variant we also checked the bound of \cref{thm:hedge}(ii) on every stream and detector:
@@ -472,8 +489,9 @@ the two contexts differ.
 
 \subsection{Proof of \cref{prop:memory}}
 Fix a segment $\tau_j\le t<\tau_{j+1}$. By the definition of \full, $\mathrm{lo}_t=\max(s_{\tau_j},\mathrm{lo}^F_t)$ with
-$s_{\tau_j}=(\tau_j-1)B$, so $\mathrm{lo}_t\ne\mathrm{lo}^F_t$ exactly when $tB-M<(\tau_j-1)B$, that is
-$t<\tau_j-1+M/B$, which for integer $t$ means $t\le\tau_j+H-2$. This proves (i). By \cref{ass:frozen} the prediction
+$s_{\tau_j}=(\tau_j-1)B$, so $\mathrm{lo}_t\ne\mathrm{lo}^F_t$ exactly when $s_{\tau_j}>\max(0,tB-M)$. This requires $tB-M<(\tau_j-1)B$, that is
+$t<\tau_j-1+M/B$, which for integer $t$ means $t\le\tau_j+H-2$ (the condition is necessary, not sufficient: during warm-up both
+contexts can start at row 0). This proves (i). By \cref{ass:frozen} the prediction
 of batch $t$ depends only on $(\mathrm{lo}_t,t)$, so $a_t=a^F_t$ whenever the contexts agree. Summing $a_t-a^F_t$ over
 each segment, only the batches $\tau_j\le t\le\min(\tau_j+H-1,\tau_{j+1})-1$ contribute, which gives (ii); before
 $\tau_1$ the two policies coincide. Each $\Delta_j$ is a sum of at most $H-1$ differences of accuracies in $[0,1]$,
