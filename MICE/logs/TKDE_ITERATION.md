@@ -172,3 +172,4 @@ Codex 与 MiMo 的原始输出存放在 `MICE/logs/tkde_review/`（`roundN_codex
 - 2026-10-09T09:29+11:00：arch_h4_poker_e 完成（106/113），0 次重试，GPU 均值 76%，显存峰值 6.4 GB。正在运行：h3_poker_c 910/1000、h4_poker_d 800/1000、h3_poker_b 720/1000、h2_spam 10/62。
 - 2026-10-09T09:39+11:00：arch_h3_poker_c 完成（107/113），0 次重试，GPU 均值 79%，显存峰值 7.1 GB。
 - 2026-10-09T09:49+11:00：10 分钟内完成 4 条真实流的 arch（h4_poker_d、h2_weather、h2_spam、h3_poker_b）和 3 个探索性 snap 任务；计划内任务 111/113，只剩 arch_h2_poker、arch_h2_phishing。0 次重试，GPU 均值 77%，显存峰值 5.0 GB。
+- 2026-10-09T10:01+11:00：计划内任务 112/113（arch_h2_phishing 完成），只剩 arch_h2_poker；探索性 snap 任务完成 7/12。12 分钟内重试 8 次、完成 5 个，重试多于完成，按此前定的规则从 4 个 worker 退回 3 个。重试集中在启动频繁的短 snap 任务上，检查点都在推进，没有阻塞。GPU 均值 81%，显存峰值 4.2 GB。
