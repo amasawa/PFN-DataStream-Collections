@@ -38,6 +38,13 @@ def main():
         state[task['id']].setdefault('stalled_failures', 0)
         state[task['id']].setdefault('checkpoint_mtime', 0)
     running, history, recent_failures = {}, deque(maxlen=20), deque()
+    # A restart must not reset the circuit breaker: reload worker failures of the last ten minutes.
+    if (root / 'events.log').exists():
+        for line in (root / 'events.log').read_text().splitlines():
+            if ' RETRY ' in line:
+                try: stamp = datetime.fromisoformat(line.split()[0]).timestamp()
+                except ValueError: continue
+                if stamp > time.time() - 600: recent_failures.append(stamp)
     reports = None
     started, last_launch, cooldown = time.time(), 0, 0
     cap = args.max_workers
