@@ -67,11 +67,46 @@ def anchor_table():
     (HERE / 'tab_anchor_rows.tex').write_text('\n'.join(rows) + '\n')
 
 
+def heldout_tables():
+    """Frozen held-out evaluation (experiments/duo_heldout_20261008): source table, per-seed verdicts, cost notes."""
+    D = REPO / 'experiments/duo_heldout_20261008/results'
+    r = pd.read_csv(D / 'heldout_results.csv')
+    name = {'airlines': 'Airlines', 'covertype': 'Covertype', 'insects': 'INSECTS', 'poker': 'Poker'}
+    rows = []
+    for src, g in r.groupby('source'):
+        per_seed = g.groupby('seed')[['fifo_acc', 'mice_acc', 'method_acc', 'd_mice']].mean()
+        m = per_seed.mean()
+        rows.append(f"{name[src]} & {g.stream.nunique()} & {m.fifo_acc:.2f} & {m.mice_acc:.2f} & {m.method_acc:.2f} & "
+                    f"{m.d_mice:+.2f} & [{per_seed.d_mice.min():+.2f}, {per_seed.d_mice.max():+.2f}] & "
+                    f"{g.d_mice.min():+.2f} \\\\")
+    s = pd.read_csv(D / 'heldout_source_means.csv')
+    m = s[['fifo_acc', 'mice_acc', 'method_acc', 'd_mice']].mean()
+    rows += ['\\midrule', f"Sources & 22 & {m.fifo_acc:.2f} & {m.mice_acc:.2f} & {m.method_acc:.2f} & {m.d_mice:+.2f} & "
+             f"[{s.d_mice.min():+.2f}, {s.d_mice.max():+.2f}] & {r.d_mice.min():+.2f} \\\\"]
+    (HERE / 'tab_heldout_rows.tex').write_text('\n'.join(rows) + '\n')
+    v = pd.read_csv(D / 'heldout_verdicts.csv')
+    vr = [f"{x.seed} & {x.gain:+.3f} & {x.worst_mice:+.3f} & {x.worst_fifo:+.3f} & {x.negative}/22 & {x.d_ll:+.4f} & "
+          f"{'yes' if x.passed else 'no'} \\\\" for x in v.itertuples()]
+    (HERE / 'tab_heldout_verdict_rows.tex').write_text('\n'.join(vr) + '\n')
+    calls = (r.selection_logical_calls / r.mice_logical_calls)
+    notes = [f"selection logical calls / MICE logical calls: mean {calls.mean():.3f} min {calls.min():.3f} max {calls.max():.3f}",
+             f"component time ratio (1 + selection s / MICE s per batch): mean {r.component_time_ratio.mean():.2f} "
+             f"min {r.component_time_ratio.min():.2f} max {r.component_time_ratio.max():.2f}",
+             f"selection fits per stream mean {r.selection_fits.mean():.0f}; forward calls mean {r.selection_forward_calls.mean():.0f}",
+             f"source-mean d_mice per seed: {', '.join(f'{x:+.3f}' for x in s.d_mice)}; d_fifo: {', '.join(f'{x:+.3f}' for x in s.d_fifo)}",
+             f"streams with d_mice<0 per seed: {r.groupby('seed').d_mice.apply(lambda x: int((x < 0).sum())).tolist()}"]
+    (HERE / 'heldout_numbers.txt').write_text('\n'.join(notes) + '\n')
+
+
 if __name__ == '__main__':
     dev_table()
     verdict_table()
     mech_table()
     anchor_table()
+    heldout_tables()
+    print((HERE / 'tab_heldout_rows.tex').read_text())
+    print((HERE / 'tab_heldout_verdict_rows.tex').read_text())
+    print((HERE / 'heldout_numbers.txt').read_text())
     print((HERE / 'tab_mech_rows.tex').read_text())
     print((HERE / 'mech_numbers.txt').read_text())
     print((HERE / 'tab_dev_rows.tex').read_text())

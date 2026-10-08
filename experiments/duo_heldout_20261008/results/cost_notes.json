@@ -1,0 +1,6 @@
+{
+  "device_peak_mib": 11349,
+  "timing": "Component estimate, not deployed end-to-end latency. Model initialization excluded.",
+  "retries": "Batch costs keep the last completed execution per batch; attempt times include replayed work. SIGKILL can prevent an attempt record; events.log is authoritative for all launches/failures.",
+  "concurrency": 1
+}

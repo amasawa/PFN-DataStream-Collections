@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "verdicts": [
+    {
+      "seed": 0,
+      "per_stream_mice": true,
+      "per_stream_fifo": true,
+      "mean_gain": true,
+      "logloss": true,
+      "passed": true,
+      "gain": 0.059781975271104286,
+      "worst_mice": -0.13377926421405562,
+      "worst_fifo": -0.0869565217391397,
+      "negative": 5,
+      "ties": 0,
+      "d_ll": -0.0008419265158030862
+    },
+    {
+      "seed": 1,
+      "per_stream_mice": true,
+      "per_stream_fifo": true,
+      "mean_gain": true,
+      "logloss": true,
+      "passed": true,
+      "gain": 0.07768318637883648,
+      "worst_mice": -0.04013377926420958,
+      "worst_fifo": -0.14046822742474774,
+      "negative": 5,
+      "ties": 1,
+      "d_ll": -0.0012084860371549986
+    },
+    {
+      "seed": 2,
+      "per_stream_mice": true,
+      "per_stream_fifo": true,
+      "mean_gain": true,
+      "logloss": true,
+      "passed": true,
+      "gain": 0.04841010438836497,
+      "worst_mice": -0.0769230769230802,
+      "worst_fifo": -0.13043478260868824,
+      "negative": 5,
+      "ties": 1,
+      "d_ll": -0.0009869228783107088
+    }
+  ]
+}

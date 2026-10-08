@@ -1,0 +1,5 @@
+selection logical calls / MICE logical calls: mean 0.301 min 0.120 max 0.433
+component time ratio (1 + selection s / MICE s per batch): mean 1.92 min 1.24 max 3.94
+selection fits per stream mean 571; forward calls mean 2714
+source-mean d_mice per seed: +0.067, +0.083, +0.047; d_fifo: +0.501, +0.588, +0.552
+streams with d_mice<0 per seed: [5, 5, 5]

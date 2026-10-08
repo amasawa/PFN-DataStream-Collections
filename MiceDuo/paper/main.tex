@@ -1,4 +1,4 @@
-%% MICE-DUO draft. Numbers in tables come from make_tables.py; \todo marks results not yet run.
+%% MICE-DUO draft. Numbers in tables come from make_tables.py.
 \documentclass{article}
 
 \usepackage{microtype}
@@ -62,7 +62,10 @@ context inherits \mice{}'s any-time regret bound against the plain window, and e
 eighteen fresh synthetic streams with controlled recurrence, a pre-registered test is consistent with a recurrence-based explanation: the gain
 over \mice{} grows with how often concepts recur ($+0.28$, $+0.15$ and $+0.01$ points for concepts that appear five
 times, three times and once), is largest for concepts that are hard to learn, and is never below $-0.01$ points on
-any stream (rounded). \todo{Held-out confirmation on real-stream prefixes is running under the frozen plan.}
+any stream (rounded). A frozen evaluation on 22 held-out real-stream prefixes and three backbone seeds passes the
+same no-negative-effect criterion on every seed: \method{} is at most 0.141 points below \mice{} or FIFO on
+any stream and is $+0.05$ to $+0.08$ points above \mice{} on average, so its value on real streams is safety at a
+small gain.
 \end{abstract}
 
 % =====================================================================================================
@@ -113,7 +116,8 @@ window safeguard intact.
 \textbf{(3)}~Pre-registered evidence: on development streams the plug-in reduces the losses of selection to within a
 pre-specified tolerance; on
 eighteen fresh streams with controlled recurrence its gain over \mice{} grows with recurrence and with the difficulty
-of the concept, and no stream loses more than about 0.01 points (\cref{sec:exp-mech}). \todo{Frozen held-out evaluation.}
+of the concept, and no stream loses more than about 0.01 points (\cref{sec:exp-mech}); on 22 held-out real-stream prefixes the
+frozen criterion holds on all three backbone seeds (\cref{sec:exp-heldout}).
 
 % =====================================================================================================
 \section{Setting and Background}
@@ -172,7 +176,9 @@ in a stream, when there are at most $M/B-a$ older candidates, all are kept witho
 discounted log-losses ($\eta=2$, $\gamma=0.5$) and uses $a=1$ (an anchor of one batch).
 
 \textbf{Cost.} Scoring takes one TFM call with up to $(H-a)B$ query rows, evaluated in chunks; predicting takes one
-call with $B$ query rows. \todo{Measured wall-clock cost per batch relative to \mice{}.}
+call with $B$ query rows. On the held-out streams the selection expert adds 30\% to \mice{}'s logical TFM calls on
+average (12\% to 43\%), but its scoring call is large, and the measured time per batch of \method{} is 1.9 times that
+of \mice{} on average (1.2 to 3.9; \cref{sec:exp-heldout}).
 
 % =====================================================================================================
 \section{\method{}: Selection as an Expert}
@@ -333,7 +339,61 @@ that every stream lose at most 0.30 accuracy points against both \mice{} and FIF
 We report every stream and seed, including failures. The streams form only four source groups
 (Airlines, Covertype, Poker and INSECTS); source summaries average streams within source before averaging
 the four sources. Neither the 22 streams nor the 66 stream--seed pairs are independent replications.
-The evaluation also records the incremental selection cost. \todo{Insert validated frozen results and cost table.}
+The evaluation also records the incremental selection cost.
+
+\textbf{Results.} The frozen criterion holds on every seed (\cref{tab:heldout-verdict}). Over the 22 streams
+\method{} is $+0.060$, $+0.078$ and $+0.048$ points above \mice{} on average for seeds 0, 1 and 2, no stream is more
+than 0.134 points below \mice{} or 0.140 below FIFO, five streams per seed are below \mice{}, and the mean log-loss is
+0.0008 to 0.0012 lower. By source (\cref{tab:heldout}) the gain is largest on Poker ($+0.15$) and positive on Airlines
+and INSECTS ($+0.07$, $+0.06$); on Covertype \method{} is consistently but negligibly below \mice{} (between $-0.02$ and
+$-0.01$ on every seed). Averaged over sources, \method{} is $+0.07$ points above \mice{} and $+0.50$ to $+0.59$ above FIFO. These
+results confirm the development finding on unseen streams: selection as an expert does no measurable harm and adds a
+small gain; they do not show a large gain on real streams.
+
+\textbf{Cost.} The selection expert adds 30\% to \mice{}'s logical TFM calls on average (12\% to 43\% across
+streams), with 571 fits and 2\,714 forward calls per stream on average. Its scoring call predicts up to $(H-a)B$ rows,
+so time grows faster than calls: the measured time per batch of \method{} is 1.9 times that of \mice{} on average
+(1.2 to 3.9). These times were measured with up to eight concurrent processes on one GPU and include contention; they
+describe this run, not an isolated latency benchmark.
+
+\textbf{Execution.} The run used one, then up to eight, then two or three concurrent workers because of
+intermittent CUDA failures on our machine; each change was recorded as a dated amendment before any score was
+inspected, the snapshot, tasks, data and evaluator were unchanged, and failed batches were recomputed from checkpoints
+in new processes. Predictions are bit-identical across concurrency levels.
+
+\begin{table}[t]
+  \centering
+  \caption{Held-out real-stream prefixes: accuracy (\%) per source, mean over three backbone seeds. $\Delta$:
+  \method{} minus \mice{} (mean, range over seeds); worst: lowest stream--seed difference.}
+  \label{tab:heldout}
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{lrcccrcr}
+    \toprule
+    Source & str. & FIFO & \mice{} & \method{} & $\Delta$ & range & worst \\
+    \midrule
+    \rowinput{tab_heldout_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \caption{Frozen held-out criterion per backbone seed (22 streams). Differences in accuracy points; $\Delta$LL:
+  mean log-loss minus \mice{}'s.}
+  \label{tab:heldout-verdict}
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{rrrrrrc}
+    \toprule
+    seed & mean vs \mice{} & worst vs \mice{} & worst vs FIFO & $<0$ & $\Delta$LL & pass \\
+    \midrule
+    \rowinput{tab_heldout_verdict_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table}
 
 % =====================================================================================================
 \section{Related Work}
@@ -366,7 +426,9 @@ Changing the number of concepts changes both recurrence frequency and return int
 not isolate their individual effects. Real-stream confirmation concerns 300-batch prefixes from four sources.
 The safeguard is against the window, not against \mice{}; the small observed losses against \mice{} satisfy
 an empirical tolerance criterion, not a guarantee of non-decreasing accuracy.
-Selection costs extra TFM calls per batch. \todo{Held-out results and measured cost.}
+Selection costs extra TFM calls per batch (30\% more calls and about twice the time per batch in our held-out
+run). On held-out real streams the gain over \mice{} is $+0.05$ to $+0.08$ points on average and slightly negative on
+one source (Covertype).
 
 \section{Conclusion}
 
@@ -374,7 +436,7 @@ Relevance selection gives an in-context learner the right past rows when concept
 do not. As an expert of a mixture with a window safeguard, the first property is kept and the second is contained:
 on these controlled streams the gain is larger for frequent recurrence and harder concepts, and is approximately
 zero on average without recurrence. Individual losses remain within the pre-specified tolerance.
-\todo{Final claim after held-out results.}
+On 22 held-out real-stream prefixes this holds on every backbone seed: no measurable harm and a small gain.
 
 \bibliography{refs}
 \bibliographystyle{icml2026}
