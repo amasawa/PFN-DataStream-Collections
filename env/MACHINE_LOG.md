@@ -17,6 +17,10 @@ file modification times.
 ## Faults and fixes
 
 ### 1. CUDA "unspecified launch failure" / "illegal memory access" (recurring since 2026-10-05)
+- **Open hypothesis (2026-10-08, not yet tested)**: failures cluster after process start. Time from LAUNCH to failure:
+  6/25 within 60 s on 2026-10-08 and 8/27 on 2026-10-07 (median 170 s and 220 s), against about 10% expected for tasks
+  of about 10 minutes if the hazard were constant. A staggered or serialised start (one process initialising at a time)
+  is the candidate mitigation; it has not been tried. Single-process reruns of failed tasks pass.
 - **Symptom**: a TabPFN/TabICL process dies inside `torch.cuda.synchronize`; nothing points at our code.
 - **Known triggers** (on/off tests, MICE log 2026-10-05): CPU-heavy jobs running beside GPU chains (River / trained
   stream baselines: 6–7 failures in 6 min with them on, 0 with them off, also at 2 workers with `nice 19`); headless
