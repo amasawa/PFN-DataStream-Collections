@@ -143,3 +143,4 @@
 - 2026-10-09T04:49+11:00：arch_insects_abrupt_imbalanced 完成（86/113），10 分钟内 0 次重试，GPU 均值 83%，显存峰值 3.9 GB。
 - 2026-10-09T04:59+11:00：arch_insects_gradual_imbalanced 完成（87/113），0 次重试，GPU 均值 82%，显存峰值 4.5 GB。
 - 2026-10-09T05:09+11:00：arch_h3_insects_b 完成（88/113），0 次重试，GPU 均值 81%，显存峰值 5.0 GB。
+- 2026-10-09T05:39+11:00：insects_incremental_reoccurring_balanced 和 insects_incremental_abrupt_balanced 的 arch 完成（90/113），0 次重试，GPU 均值 81%，显存峰值 5.1 GB。
