@@ -53,3 +53,20 @@ Written before any held-out score was inspected.
   1 worker from this restart), reported as in amendment 1.
 
 State before restart: {"time":"2026-10-08T15:51:58.183363+11:00","utilization":15,"gpu_mib":1493,"ram_available_mib":28599,"target":1,"running":{},"done":12,"total":132,"blocked":0,"state":"stopped","stopped_at":"2026-10-08T15:51:59.051936+11:00","reason":"Circuitbreaker:6workerfailure(s)withintenminutes;investigatebeforeresuming."}
+
+## Amendment 3 — two workers at the user's request (2026-10-08T19:08:14+11:00)
+
+Written before any held-out score was inspected.
+
+- **Decision:** the user chose two workers ("2 worker 吧") after being told the trade-off: about 8–9 h remaining
+  with one worker at 30–50% GPU utilisation, versus a faster run with an unvalidated concurrency level (Amendment 2
+  recorded that two workers had not been shown to be stable).
+- **Execution:** the single-worker run is drained gracefully; the run resumes through `finish_concurrent.py` (now
+  taking workers and breaker as arguments, SHA-256 `430a493ec8a91e1b8d1a391415c83f6e5ad34d8885b0e8dfe81624ca4b4546ed`)
+  with **2 workers** and a breaker of **3 failures in ten minutes**. Snapshot, tasks, order, data, method, criteria and
+  the frozen evaluator are unchanged; hashes are verified before the run and before evaluation.
+- **Fallback, decided now:** if this breaker trips, the run returns to one worker with the original frozen
+  `controller/finish.py` (stop on first failure), as in Amendment 2; no escalation beyond two workers.
+- **Cost reporting:** a fourth concurrency phase (2 workers from this restart), reported as in amendment 1.
+
+State before switch: {"time":"2026-10-08T19:08:11.946327+11:00","utilization":47,"gpu_mib":2343,"ram_available_mib":28715,"target":1,"running":{"duo_s0_h3_insects_b":311536},"done":41,"total":132,"blocked":0}

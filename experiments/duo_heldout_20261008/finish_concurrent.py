@@ -34,13 +34,15 @@ def recent_failures(root, window=600):
 
 
 root, repo = map(Path, sys.argv[1:3])
+workers = int(sys.argv[3]) if len(sys.argv) > 3 else 4      # amendment 3: 2
+breaker = int(sys.argv[4]) if len(sys.argv) > 4 else 6      # amendment 3: 3
 verify(root)
 if (root / 'STOP').exists():
     raise SystemExit('STOP present: inspect the reason and rename it deliberately before resuming.')
-if recent_failures(root) >= 6:
-    raise SystemExit('Breaker window already at 6 failures in ten minutes; wait or investigate.')
+if recent_failures(root) >= breaker:
+    raise SystemExit(f'Breaker window already at {breaker} failures in ten minutes; wait or investigate.')
 subprocess.run([sys.executable, str(root / 'controller/supervisor.py'), str(root), str(repo),
-                '--hours', '24', '--max-workers', '4', '--breaker', '6', '--no-publish'], check=True)
+                '--hours', '24', '--max-workers', str(workers), '--breaker', str(breaker), '--no-publish'], check=True)
 tasks = json.loads((root / 'tasks.json').read_text())
 if not all((root / 'done' / (task['id'] + '.json')).exists() for task in tasks):
     raise SystemExit('INCOMPLETE: inspect status/events; no held-out results evaluated.')
