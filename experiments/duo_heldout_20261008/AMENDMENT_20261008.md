@@ -70,3 +70,28 @@ Written before any held-out score was inspected.
 - **Cost reporting:** a fourth concurrency phase (2 workers from this restart), reported as in amendment 1.
 
 State before switch: {"time":"2026-10-08T19:08:11.946327+11:00","utilization":47,"gpu_mib":2343,"ram_available_mib":28715,"target":1,"running":{"duo_s0_h3_insects_b":311536},"done":41,"total":132,"blocked":0}
+
+## Amendment 4 — resource-scaled concurrency, no failure-rate breaker (2026-10-08T20:58:58+11:00)
+
+Written before any held-out score was inspected. User instruction: adopt the strategy proven on another run of this
+machine (10 workers, 99% utilisation): scale workers by resources, not by failure counts.
+
+- **Why the breaker goes:** worker failures do not change results (each retry is a fresh process resuming from an
+  atomically written checkpoint; predictions are bit-identical across concurrency levels). Of the six failures in the
+  4-worker phase, five advanced their checkpoints. A failure-rate breaker therefore protects procedure, not results,
+  at the cost of an under-used GPU.
+- **New rules** (`finish_resource.py`, SHA-256 `92debe0278d151e62f280020eff27e86fd21fe1b944238fe8781e91ac1923a1a`;
+  repository supervisor `experiments/night_20261007/supervisor.py`, SHA-256
+  `0ca8e3e7d2bc2f465076364b83d170932188ec7c84d8c42aab7f3a11bbcda56f`, `--resource-mode`): start with 4 workers,
+  add workers while mean utilisation < 94% up to 8; no failure-rate breaker and no error cooldown; every failed task
+  is retried in a new process after a back-off, and a task is blocked only after 4 failures without checkpoint
+  progress (or 20 in total); memory guards unchanged (pause at 22 000 MiB, emergency 23 200 MiB, RAM < 4 GB);
+  **stop only** if no worker writes progress for 15 minutes or nvidia-smi is unresponsive for 5 minutes.
+- **Unchanged:** the frozen worker (`RUN_ROOT/controller/worker.py`, launched via `--worker-dir`), tasks, order,
+  data, method, criteria and the frozen evaluator; hashes verified before the run and before evaluation;
+  `OMP_NUM_THREADS=1` (more BLAS threads could change floating-point summation order relative to the 66 tasks
+  already completed).
+- **Check after completion:** rerun 2–3 completed tasks alone and confirm bit-identical predictions; report it.
+- **Smoke test:** a fake worker failing three times per task completed all tasks with no breaker or cooldown.
+
+State before switch: {"time":"2026-10-08T20:49:48.642509+11:00","utilization":16,"gpu_mib":1365,"ram_available_mib":28703,"target":2,"running":{},"done":67,"total":132,"blocked":0,"state":"stopped","stopped_at":"2026-10-08T20:49:50.265843+11:00","reason":"Circuitbreaker:3workerfailure(s)withintenminutes;investigatebeforeresuming."}

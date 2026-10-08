@@ -24,6 +24,12 @@ def main():
     parser.add_argument('--breaker', type=int, default=6,
                         help='multi-worker failures within ten minutes that stop the run')
     parser.add_argument('--no-publish', action='store_true', help='do not append to project logs or push')
+    parser.add_argument('--worker-dir', default=None, help='directory of worker.py (default: this controller)')
+    parser.add_argument('--resource-mode', action='store_true',
+                        help='scale by resources only: no failure-rate breaker, no error cooldown; stop only if no '
+                             'worker reports progress for --stall-minutes or nvidia-smi keeps failing')
+    parser.add_argument('--stall-minutes', type=float, default=15)
+    parser.add_argument('--start-workers', type=int, default=0, help='initial target (default: the cap)')
     args = parser.parse_args()
     root, repo = Path(args.root), Path(args.repo)
     lock = (root / 'supervisor.lock').open('w')
@@ -47,8 +53,9 @@ def main():
                 if stamp > time.time() - 600: recent_failures.append(stamp)
     reports = None
     started, last_launch, cooldown = time.time(), 0, 0
+    gpu_fail_since = 0
     cap = args.max_workers
-    target, consecutive_gpu_errors = cap, 0
+    target, consecutive_gpu_errors = min(cap, args.start_workers or cap), 0
     allowed_paths = ['experiments/night_20261007', 'MICE/logs/OVERNIGHT_20261007.md',
                      'MiceDuo/logs/OVERNIGHT_20261007.md', 'MICE/results/night_20261007',
                      'MiceDuo/results/night_20261007']
@@ -127,12 +134,12 @@ def main():
                     while recent_failures and recent_failures[0] < now - 600:
                         recent_failures.popleft()
                     failure_limit = 1 if cap == 1 else args.breaker
-                    if len(recent_failures) >= failure_limit:
+                    if not args.resource_mode and len(recent_failures) >= failure_limit:
                         reason = f'Circuit breaker: {failure_limit} worker failure(s) within ten minutes; investigate before resuming.'
                         (root / 'STOP').write_text(reason + '\n')
                         event('CIRCUIT BREAKER: ' + reason)
                     event(f'RETRY {job_id} exit={code} failures={item["failures"]} checkpoint_advanced={advanced} blocked={item["blocked"]}')
-                    if consecutive_gpu_errors >= 2:
+                    if consecutive_gpu_errors >= 2 and not args.resource_mode:
                         target = max(1, len(running)); cooldown = now + 180
                         event(f'COOLDOWN after errors; target={target}')
                 atomic_json(state_path, state)
@@ -156,11 +163,20 @@ def main():
                                              env=env, stdout=handle, stderr=subprocess.STDOUT)
                         reports = dict(p=p, handle=handle, stage=stage)
                         event('ANALYSIS start ' + stage); break
-            sample = subprocess.run(['nvidia-smi', '--query-gpu=utilization.gpu,memory.used',
-                                     '--format=csv,noheader,nounits'], capture_output=True, text=True, timeout=10)
-            if sample.returncode:
+            try:
+                sample = subprocess.run(['nvidia-smi', '--query-gpu=utilization.gpu,memory.used',
+                                         '--format=csv,noheader,nounits'], capture_output=True, text=True, timeout=10)
+                gpu_ok = sample.returncode == 0
+            except subprocess.TimeoutExpired:
+                gpu_ok = False
+            if not gpu_ok:
+                gpu_fail_since = gpu_fail_since or now
+                if args.resource_mode and now - gpu_fail_since > 300:
+                    (root / 'STOP').write_text('nvidia-smi unresponsive for 5 minutes.\n'); event('GPU STOP: nvidia-smi unresponsive')
+                    break
                 for job_id in list(running): stop_job(job_id, 'GPU query failed')
                 cooldown = now + 90; event('GPU query failed; pausing owned workers'); time.sleep(3); continue
+            gpu_fail_since = 0
             util, memory = map(int, sample.stdout.strip().splitlines()[0].split(','))
             meminfo = dict(line.split(':', 1) for line in Path('/proc/meminfo').read_text().splitlines())
             available = int(meminfo['MemAvailable'].split()[0]) // 1024
@@ -181,7 +197,7 @@ def main():
                     task = pending[0]; job_id = task['id']; item = state[job_id]
                     item['attempts'] += 1
                     handle = (root / 'logs' / (job_id + '.log')).open('a', buffering=1)
-                    p = subprocess.Popen([sys.executable, '-u', str(controller / 'worker.py'), str(root), job_id],
+                    p = subprocess.Popen([sys.executable, '-u', str(Path(args.worker_dir or controller) / 'worker.py'), str(root), job_id],
                                          env=env, stdout=handle, stderr=subprocess.STDOUT, start_new_session=True)
                     running[job_id] = dict(p=p, handle=handle, start=now)
                     last_launch = now; event(f'LAUNCH {job_id} pid={p.pid} target={target}')
@@ -189,6 +205,12 @@ def main():
             atomic_json(root / 'status.json', dict(time=datetime.now().astimezone().isoformat(),
                         utilization=util, gpu_mib=memory, ram_available_mib=available, target=target,
                         running={k:v['p'].pid for k,v in running.items()}, done=len(done), total=len(tasks), blocked=blocked))
+            if args.resource_mode and running:
+                # Global stall: no worker has written progress for --stall-minutes (each writes about every 20 s).
+                marks = [p.stat().st_mtime for p in (root / 'progress').glob('*.json')] + [v['start'] for v in running.values()]
+                if now - max(marks) > 60 * args.stall_minutes:
+                    (root / 'STOP').write_text(f'Stall: no progress from any worker for {args.stall_minutes} minutes.\n')
+                    event('STALL STOP: no worker progress')
             if (root / 'STOP').exists():
                 event('STOP file requested graceful shutdown'); break
             if len(done) + blocked == len(tasks) and not running and reports is None: break
