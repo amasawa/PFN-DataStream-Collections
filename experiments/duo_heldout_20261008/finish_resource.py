@@ -26,7 +26,7 @@ verify(root)
 if (root / 'STOP').exists():
     raise SystemExit('STOP present: inspect the reason and rename it deliberately before resuming.')
 subprocess.run([sys.executable, str(HERE.parent / 'night_20261007/supervisor.py'), str(root), str(repo),
-                '--hours', '24', '--max-workers', '8', '--start-workers', '4', '--breaker', '0', '--resource-mode',
+                '--hours', '24', '--max-workers', sys.argv[3] if len(sys.argv) > 3 else '8', '--start-workers', sys.argv[4] if len(sys.argv) > 4 else '4', '--breaker', '0', '--resource-mode',
                 '--stall-minutes', '15', '--worker-dir', str(root / 'controller'), '--no-publish'], check=True)
 tasks = json.loads((root / 'tasks.json').read_text())
 if not all((root / 'done' / (task['id'] + '.json')).exists() for task in tasks):

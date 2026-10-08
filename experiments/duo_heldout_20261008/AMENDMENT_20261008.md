@@ -95,3 +95,16 @@ machine (10 workers, 99% utilisation): scale workers by resources, not by failur
 - **Smoke test:** a fake worker failing three times per task completed all tasks with no breaker or cooldown.
 
 State before switch: {"time":"2026-10-08T20:49:48.642509+11:00","utilization":16,"gpu_mib":1365,"ram_available_mib":28703,"target":2,"running":{},"done":67,"total":132,"blocked":0,"state":"stopped","stopped_at":"2026-10-08T20:49:50.265843+11:00","reason":"Circuitbreaker:3workerfailure(s)withintenminutes;investigatebeforeresuming."}
+
+## Amendment 5 — cap three workers in resource mode (2026-10-08T21:32:29+11:00)
+
+Written before any held-out score was inspected.
+
+- **Observation:** under Amendment 4 the run scaled to 7–8 workers at 97–99% utilisation, but from 21:01 to now there
+  were 20 worker failures (16 in the last ten minutes, mostly INSECTS tasks) and only 3 tasks completed in 30 minutes
+  (70/132). Compute went into crashes, restarts and replayed batches. Throughput was 12–13 tasks/hour with one or two
+  workers. The strategy that ran 10 workers without failures on another workload does not transfer to this one.
+- **Decision:** keep resource mode (no failure-rate breaker, retries in new processes, stop only on a global stall or an
+  unresponsive nvidia-smi) but cap at **3 workers** (start 3), between two (mostly stable) and four (failure clusters).
+  `finish_resource.py` now takes the cap and start count as arguments (SHA-256 `6f38a06bf3ac7f54104174f4d7f269244c52af56fa484b95b7c5d081ebf93c29`). Everything frozen is unchanged.
+- **If three workers still fail in clusters without completions,** the cap goes to two in a further amendment.
