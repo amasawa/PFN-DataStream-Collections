@@ -31,7 +31,7 @@ constraints specific to this repository.
   compile main.tex` (XeTeX falls back from Times; the venue build is pdfLaTeX on Overleaf).
 - Tables are generated from result CSVs by each paper's `make_tables.py`; check every number in the text against the
   CSVs before committing.
-- MICE is submitted; MICE-DUO (`MiceDuo/paper/`) and ResetEval (`ResetEval/overleaf/tmlr/`) are in progress.
+- MICE is not yet submitted (corrected 2026-10-09); MICE-DUO (`MiceDuo/paper/`) and ResetEval (`ResetEval/overleaf/tmlr/`) are in progress.
 
 ## Consultations in this repo
 - Codex runs on the user's ChatGPT quota: bounded questions, evidence inline, diffs instead of whole files, at most
