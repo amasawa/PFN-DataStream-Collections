@@ -152,8 +152,7 @@ $\sum_{t\le T}\gamma^{T-t}\bigl(\ell_t(p_t)-\ell_{t,k}\bigr)\le\ln K/\eta_2$.
 \textbf{Motivation.} \citet{zhao2024wnb} bound the risk of a learner trained on a weighted set of non-IID batches by a
 term in the discrepancy between each batch and the target distribution, weighted by the batch's share, plus a term
 that decreases with the effective sample size. Small batches are individually far from the target; a large set of
-them is close only if they are relevant. A TFM does not accept sample weights, and duplicating rows to emulate them
-hurts \todo{cite our ResetEval negative results or drop}. We therefore implement the weights as a hard selection.
+them is close only if they are relevant. A TFM does not accept sample weights, so we implement the weights as a hard selection.
 
 \textbf{Rule.} At step $t$ the candidates are the labelled batches $t-H,\dots,t-1$ with $H=100$. A recent anchor
 $\mathcal A_t$ of the last $a$ batches is always kept. Every older candidate $b$ is scored by the mean log-loss of
@@ -222,7 +221,7 @@ data replicates.
 Seven real streams (Elec2 and six streams used in \citet{mice2026}'s evaluation), first 300 batches, backbone seeds 1
 and 2. \Cref{tab:dev} reports accuracy. The selected context alone is the least accurate learner on average, yet on Rialto, whose concepts recur, it is
 6.3 points above FIFO and 1.2 above \mice{}. \duo{} matches \mice{} on average but is 0.50 and 0.47 points below it
-on Airlines and Weather. \method{} keeps the average and removes these losses.
+on Airlines and Weather. \method{} keeps the average and shrinks these losses to $-0.08$ and $-0.01$ points.
 
 \begin{table}[t]
   \centering
