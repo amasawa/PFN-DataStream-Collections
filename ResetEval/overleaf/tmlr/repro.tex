@@ -24,8 +24,8 @@ exclusion rule, which excluded none.
   batches 1--10), Occupancy Detection (UCI 357), Room Occupancy Estimation (UCI 864), Bank Marketing (UCI 222,
   file order, \texttt{duration} removed), KDD Cup 1999 10\% (via \texttt{scikit-learn}, labels grouped into normal and
   the four attack families), EEG Eye State (UCI 264), Online News Popularity (UCI 332, oldest article first, label
-  $\text{shares}\ge1400$), Gas Sensors for Home Activity Monitoring (UCI 362, recordings in calendar order, rows while
-  the stimulus is present), Wall-Following Robot Navigation (UCI 194, 24 sensors) and the Single Chest-Mounted
+  $\text{shares}\ge1400$), Gas Sensors for Home Activity Monitoring (UCI 362, recordings in calendar order, all rows kept;
+  rows outside the stimulus interval are labelled background), Wall-Following Robot Navigation (UCI 194, 24 sensors) and the Single Chest-Mounted
   Accelerometer data (UCI 287, subjects 1--15 concatenated, unlabelled rows removed).
   % ResetEval/code/streams_new.py gas()...chest(), KDD map, CAP = 100_000
 \end{itemize}
@@ -33,7 +33,8 @@ A source's value is the mean over its streams (\cref{tab:data}).
 
 \paragraph{Synthetic streams.} Recurring \texttt{river} streams visit $K$ fixed concept generators in blocks of 2\,000
 rows and cycle through them three times; a recurring concept continues its own random stream, so it has the same
-distribution but new rows. Test seeds 10--14 (generator seeds $10s+k$). SEA (variants 0--2, $K=3$, 18\,000 rows),
+distribution but new rows. Test seeds $s=10,\dots,14$; each concept generator is seeded with $10s$ plus its variant or function index
+(for Agrawal the functions 0, 2, 4, 6; for RBF and hyperplane the concept index). SEA (variants 0--2, $K=3$, 18\,000 rows),
 STAGGER (functions 0--2, $K=3$, 18\,000), Agrawal (functions 0, 2, 4, 6, $K=4$, 24\,000), sine (functions 0--3,
 $K=4$, 24\,000) change only the labelling function; RBF (20 centroids, 4 classes, 10 features, $K=3$, 18\,000) and
 hyperplane (10 features, 5\% noise, $K=3$, 18\,000) change both inputs and labels. The twelve grid streams have three
@@ -43,8 +44,8 @@ label of each centroid; blocks of 500 or 2\,000 rows, three cycles, seeds 10 and
 
 \paragraph{Models.} TabPFN v2 (\texttt{tabpfn} 9.0.0, default v2 classifier checkpoint, \texttt{n\_estimators=4},
 \texttt{ignore\_pretraining\_limits}), TabICL (\texttt{tabicl} 2.2.0, \texttt{n\_estimators=4}) and TabDPT
-(\texttt{tabdpt} 1.3.1, four ensemble members), all with PyTorch 2.14 on one GPU; backbone seed 0 (\texttt{random\_state})
-unless stated. Trained learners and detectors use \texttt{river} 0.26.1. % ResetEval/code/reset_eval.py TFM; env/requirements*.txt
+(\texttt{tabdpt} 1.3.1, four ensemble members), all with PyTorch 2.14 on one GPU; backbone seed 0 unless stated, passed as
+\texttt{random\_state} to TabPFN and TabICL and as the ensemble seed of \texttt{ensemble\_predict\_proba} to TabDPT. Trained learners and detectors use \texttt{river} 0.26.1. % ResetEval/code/reset_eval.py TFM; env/requirements*.txt
 
 \paragraph{Prediction details.} Classes absent from a context receive probability 0; a context with a single class
 predicts that class with probability 1. These cases violate \cref{ass:positive}; log-losses are computed with
