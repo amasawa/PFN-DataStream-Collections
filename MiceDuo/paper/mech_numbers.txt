@@ -1,0 +1,2 @@
+mice+sel1: gain K3 +0.282, K5 +0.154, K15 +0.011; wins K3 6/6; worst vs MICE -0.010; worst vs FIFO +6.355; dLL -0.0015; H1 True H2 True H3 True
+mice+sel3: gain K3 +0.219, K5 +0.142, K15 +0.050; wins K3 6/6; worst vs MICE +0.000; worst vs FIFO +6.455; dLL -0.0002; H1 True H2 True H3 True

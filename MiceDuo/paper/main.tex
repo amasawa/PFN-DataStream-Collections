@@ -58,8 +58,11 @@ We find that relevance selection is a high-variance learner. On seven developmen
 some streams and, used alone, up to 4.6 points to a plain window. We show that this variance is not a reason to drop
 selection but a reason to treat it as an expert. Inserted as one more expert into \mice{}, unchanged, the selected
 context inherits \mice{}'s any-time regret bound against the plain window, and empirically it costs at most
-0.15 points against \mice{} on every development stream while keeping most of its gain where concepts recur.
-\todo{Mechanism result on controlled recurrence and held-out confirmation, after the pre-registered runs.}
+0.15 points against \mice{} on every development stream while keeping most of its gain where concepts recur. On
+eighteen fresh synthetic streams with controlled recurrence, a pre-registered test confirms the mechanism: the gain
+over \mice{} grows with how often concepts recur ($+0.28$, $+0.15$ and $+0.01$ points for concepts that appear five
+times, three times and once), is largest for concepts that are hard to learn, and is never below $-0.01$ points on
+any stream. \todo{Held-out confirmation on real streams, after approval.}
 \end{abstract}
 
 % =====================================================================================================
@@ -107,8 +110,9 @@ learner is never more than 0.15 points below \mice{} on any stream and seed and 
 trade-off of non-IID batches, and the observation that it is a high-variance learner.
 \textbf{(2)}~A plug-in construction that turns any context-selection rule into an expert of \mice{} with the
 window safeguard intact.
-\textbf{(3)}~Pre-registered evidence: development streams, a controlled test of when selection helps, and a frozen
-held-out evaluation. \todo{(3) depends on the pending runs.}
+\textbf{(3)}~Pre-registered evidence: on development streams the plug-in removes the losses of selection; on
+eighteen fresh streams with controlled recurrence its gain over \mice{} grows with recurrence and with the difficulty
+of the concept, and no stream loses more than 0.01 points (\cref{sec:exp-mech}). \todo{Frozen held-out evaluation.}
 
 % =====================================================================================================
 \section{Setting and Background}
@@ -277,7 +281,34 @@ concept appears 5 times, 3 times, or once; 30 or 100 centroids; three data seeds
 (H1) no negative effect when concepts never recur; (H2) no negative effect anywhere; (H3) the gain over \mice{}
 increases with recurrence ($K=3>K=5>K=15$) and is positive on at least 5 of 6 streams at $K=3$. Before the results we
 noted that with blocks of 20 batches and $H=100$, a concept with $K=5$ returns exactly at the edge of the selection
-horizon. \todo{Results: running.}
+horizon, and predicted that the gain at $K=5$ might be close to that at $K=15$.
+
+\textbf{Results.} \Cref{tab:mech} reports accuracy by recurrence and difficulty. All three hypotheses hold for the
+primary variant. The mean gain over \mice{} is $+0.28$ points when each concept appears five times, $+0.15$ when it
+appears three times and $+0.01$ when it never recurs; at $K=3$ it is positive on all six streams. No stream is more
+than 0.01 points below \mice{}, every stream is above FIFO, and the mean log-loss is 0.0015 lower than \mice{}'s. Our
+prediction for $K=5$ was wrong: its gain is about half of that at $K=3$, well above $K=15$, so the selection horizon
+did not cancel the benefit of recurrence. The gain concentrates on hard concepts: with 100 centroids it is $+0.46$,
+$+0.26$ and $+0.02$, with 30 centroids $+0.10$, $+0.04$ and $+0.01$. This matches the learning-curve account of
+\citet{mice2026}: recalling rows pays when a concept takes many rows to relearn. The anchor-300 selection, reported as
+a secondary variant, passes the same checks. The increment is small next to \mice{}'s own gain over FIFO on these
+streams (6.3 to 14.5 points): selection refines a memory that already recalls most of what can be recalled.
+
+\begin{table}[t]
+  \centering
+  \caption{Controlled recurrence: accuracy (\%), mean over three data seeds per cell. $\Delta$: \method{} minus
+  \mice{}; min: worst stream; last column: streams with $\Delta>0$.}
+  \label{tab:mech}
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{lrccccrr}
+    \toprule
+    Concept appears & cent. & FIFO & \mice{} & \method{} & $\Delta$ & min & $>0$ \\
+    \midrule
+    \rowinput{tab_mech_rows.tex}
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \subsection{Held-Out Real Streams}
 \label{sec:exp-heldout}
@@ -308,15 +339,19 @@ make adding an expert cheap in regret; \cref{cor:safe} is an instance at the lev
 % =====================================================================================================
 \section{Limitations}
 
-The development gain of \method{} over \mice{} is small (+0.15 points) and comes mostly from one stream. The safeguard
-is against the window, not against \mice{}. Selection costs extra TFM calls per batch. Backbone seeds share data.
-\todo{Update after mechanism and held-out results.}
+The gain of \method{} over \mice{} is small: $+0.15$ points on the development streams, mostly from one stream, and at
+most about half a point on the synthetic streams, where \mice{} itself gains 6.3 to 14.5 points over the window. The
+synthetic streams are pure real drift with a fixed input distribution, cleaner than real streams. The mechanism test
+uses one backbone seed (with three independent data seeds), and the development backbone seeds share data. The
+safeguard is against the window, not against \mice{}; the absence of losses against \mice{} is measured, not proved.
+Selection costs extra TFM calls per batch. \todo{Held-out results and measured cost.}
 
 \section{Conclusion}
 
 Relevance selection gives an in-context learner the right past rows when concepts recur and the wrong ones when they
-do not. As an expert of a mixture with a window safeguard, the first property is kept and the second is contained.
-\todo{Final claim after pending results.}
+do not. As an expert of a mixture with a window safeguard, the first property is kept and the second is contained:
+on streams with controlled recurrence the gain grows with how often and how hard the concept recurs, and is zero,
+not negative, when nothing recurs. \todo{Final claim after held-out results.}
 
 \bibliography{refs}
 \bibliographystyle{icml2026}

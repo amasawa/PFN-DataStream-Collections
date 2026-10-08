@@ -37,8 +37,32 @@ def verdict_table():
     (HERE / 'tab_verdict_rows.tex').write_text('\n'.join(rows) + '\n')
 
 
+def mech_table():
+    """Controlled recurrence: mean accuracy per recurrence level and concept difficulty (3 data seeds each)."""
+    r = pd.read_csv(REPO / 'experiments/duo_safe_20261008/mechanism_results.csv')
+    r['d'] = r['mice+sel1'] - r.mice
+    level = {'k3': '5 times', 'k5': '3 times', 'k15': 'once'}
+    rows = []
+    for lvl in ('k3', 'k5', 'k15'):
+        for c in (30, 100):
+            g = r[(r.level == lvl) & (r.centroids == c)]
+            rows.append(f"{level[lvl]} & {c} & {g.fifo.mean():.2f} & {g.mice.mean():.2f} & {g['mice+sel1'].mean():.2f} & "
+                        f"{g.d.mean():+.2f} & {g.d.min():+.2f} & {int((g.d > 0).sum())}/{len(g)} \\\\")
+        if lvl != 'k15':
+            rows.append('\\addlinespace')
+    (HERE / 'tab_mech_rows.tex').write_text('\n'.join(rows) + '\n')
+    v = pd.read_csv(REPO / 'experiments/duo_safe_20261008/mechanism_verdicts.csv')
+    lines = [f"{r.variant}: gain K3 {r.gain_k3:+.3f}, K5 {r.gain_k5:+.3f}, K15 {r.gain_k15:+.3f}; wins K3 {r.wins_k3}/6; "
+             f"worst vs MICE {r.worst_vs_mice:+.3f}; worst vs FIFO {r.worst_vs_fifo:+.3f}; dLL {r.d_logloss:+.4f}; "
+             f"H1 {r.H1} H2 {r.H2} H3 {r.H3}" for r in v.itertuples()]
+    (HERE / 'mech_numbers.txt').write_text('\n'.join(lines) + '\n')
+
+
 if __name__ == '__main__':
     dev_table()
     verdict_table()
+    mech_table()
+    print((HERE / 'tab_mech_rows.tex').read_text())
+    print((HERE / 'mech_numbers.txt').read_text())
     print((HERE / 'tab_dev_rows.tex').read_text())
     print((HERE / 'tab_verdict_rows.tex').read_text())
