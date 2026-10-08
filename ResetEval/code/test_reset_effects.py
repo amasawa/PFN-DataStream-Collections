@@ -20,4 +20,7 @@ except AssertionError:
 else:
     raise AssertionError('Out-of-horizon difference must fail exact accounting')
 assert effects(actual,base,np.array([2]),100,None) == [0.0]
-print('PASS: exact attribution for 500/1000/2000/non-multiple budgets; detects truncation; trained local window explicit')
+# A zero effect built from float batch accuracies must be exactly zero (no 1e-17 residue).
+base=np.array([.5,.37,.29,.71,.5,.5]); actual=base.copy(); actual[1]+=.01; actual[2]-=.01
+assert effects(actual,base,np.array([1]),100,500) == [0.0]
+print('PASS: exact attribution for 500/1000/2000/non-multiple budgets; detects truncation; trained local window explicit; exact zero effects')

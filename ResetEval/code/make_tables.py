@@ -45,7 +45,7 @@ def d_table(d, pols, base="none", groups=("real", "syn")):
                 if "+" not in p and p in DETS:
                     r = z["resets"]
                     for gain in effects(a, a0, r, int(z['B']), int(z['M']) if 'M' in z else None):
-                        rr.append(dict(group=grp, det=p, gain=gain))
+                        rr.append(dict(group=grp, det=p, src=source(s), gain=gain))
     return pd.DataFrame(rows), pd.DataFrame(rr)
 
 
@@ -60,6 +60,20 @@ def tail(S, v, grp="real"):
 def harmful(R, grp="real"):
     z = R[(R.group == grp) & (R.gain != 0)]
     return 100 * (z.gain < 0).mean() if len(z) else np.nan
+
+
+def harmful_detail(R, name, grp="real"):
+    """The pooled share weights sources by their number of resets; report counts and stratified shares too."""
+    z = R[R.group == grp]
+    say(f"{name} {grp} resets negative/positive/zero", (int((z.gain < 0).sum()), int((z.gain > 0).sum()),
+                                                        int((z.gain == 0).sum())))
+    nz = z[z.gain != 0]
+    by_src = nz.groupby("src").gain.apply(lambda g: 100 * (g < 0).mean())
+    say(f"{name} {grp} harmful share by source median/min/max, sources >50% of n",
+        (round(by_src.median(), 1), round(by_src.min(), 1), round(by_src.max(), 1), int((by_src > 50).sum()), len(by_src)))
+    say(f"{name} {grp} source-weighted harmful share", round(by_src.mean(), 1))
+    by_det = nz.groupby("det").gain.apply(lambda g: 100 * (g < 0).mean())
+    say(f"{name} {grp} harmful share by detector min/max", (round(by_det.min(), 1), round(by_det.max(), 1)))
 
 
 def write(name, body):
@@ -114,6 +128,7 @@ def tails_table():
             say(f"{name} {v or 'full'} real mean/worst/best", tuple(round(t[v][x], 2) for x in ("mean", "worst", "best")))
         say(f"{name} worst sources (mode, second)", (t[""]["worst_src"], t[""]["second_src"]))
         say(f"{name} harmful share real/syn", (round(h, 1), round(hs, 1) if not np.isnan(hs) else None))
+        harmful_detail(R, name)
         say(f"{name} syn full/hedge", (round(sy[""], 2), round(sy["+hedge"], 2)))
         lines.append(f"{name} & {f(t[''][  'worst'])} & {f(t['']['best'])} & {f(t['+half']['worst'])} & {f(t['+half']['best'])} & "
                      f"{f(t['+hedge']['worst'])} & {f(t['+hedge']['best'])} & {f(t['']['mean'])} & {f(t['+hedge']['mean'])} & "
@@ -122,8 +137,8 @@ def tails_table():
 \centering
 \caption{The tail of resets on three TFMs ($M=1000$), accuracy minus FIFO in points. Worst/best: for each detector the
 worst/best of the 19 real sources, averaged over the 8 detectors. Harm: share (\%) of the single resets with a
-non-zero effect $\Delta_j$ (\cref{prop:memory}) that are net losses, on real streams. TabDPT was run on real streams
-only.}
+non-zero effect $\Delta_j$ (\cref{prop:memory}) that are net losses, on real streams, pooled over all resets of all
+streams and detectors (source-weighted shares are in the text).}
 \label{tab:tails}
 \small
 \setlength{\tabcolsep}{4pt}

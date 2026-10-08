@@ -2,8 +2,8 @@
 \centering
 \caption{The tail of resets on three TFMs ($M=1000$), accuracy minus FIFO in points. Worst/best: for each detector the
 worst/best of the 19 real sources, averaged over the 8 detectors. Harm: share (\%) of the single resets with a
-non-zero effect $\Delta_j$ (\cref{prop:memory}) that are net losses, on real streams. TabDPT was run on real streams
-only.}
+non-zero effect $\Delta_j$ (\cref{prop:memory}) that are net losses, on real streams, pooled over all resets of all
+streams and detectors (source-weighted shares are in the text).}
 \label{tab:tails}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -14,7 +14,7 @@ only.}
 Model & worst & best & worst & best & worst & best & \full & \hedge & Harm & \full & \hedge \\
 \midrule
 TabPFN & $-$26.2 & +6.3 & $-$4.3 & +0.6 & $-$1.6 & +6.0 & $-$2.8 & +0.3 & 88.1 & +8.0 & +7.9 \\
-TabICL & $-$26.5 & +4.8 & $-$5.4 & +0.9 & $-$1.7 & +4.6 & $-$3.1 & +0.2 & 88.3 & +8.4 & +8.3 \\
+TabICL & $-$26.5 & +4.8 & $-$5.4 & +0.9 & $-$1.7 & +4.6 & $-$3.1 & +0.2 & 88.4 & +8.4 & +8.3 \\
 TabDPT & $-$31.1 & +6.1 & $-$13.0 & +0.9 & $-$2.1 & +5.6 & $-$3.3 & +0.3 & 87.3 & +8.2 & +8.1 \\
 \bottomrule
 \end{tabular}

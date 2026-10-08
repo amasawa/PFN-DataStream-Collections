@@ -53,3 +53,19 @@ full bibliography/source verification beyond the entries above, final editorial 
 causal/mechanistic language and pooled reset statistics, and review of the compiled manuscript.
 The manuscript and anonymized artifacts must be reviewed before an external submission. No paper
 was submitted or pushed by this iteration.
+
+## Second pass (Claude Code, 2026-10-08, from a Codex reviewer audit)
+
+1. **Zero effects were misclassified by floating-point residue.** `reset_effects.effects` summed float batch accuracies,
+   so effects that are exactly zero left residues of about 1e-17 and counted as non-zero. Effects are now summed as
+   integer counts of correctly predicted rows (`test_reset_effects.py` has an exact-zero case). Changes: TabICL real
+   harm 88.3 -> **88.4%**, TabPFN synthetic 15.5 -> **15.4%**, TabICL synthetic 11.6 -> **11.5%**, M=500 80.4 -> **80.5%**,
+   and M=2000 back to **88.1%**: the first pass's 88.1 -> 88.0 change was itself this artefact.
+2. **The pooled harmful share is event-weighted.** It pools all resets of all streams and detectors, so sources with
+   many alarms weigh more. Now reported alongside: source-weighted 69.5/72.9/68.8% (TabPFN/TabICL/TabDPT), majority
+   harmful on 15/19 sources for every backbone, per-detector 81.6-90.7%, and the counts (TabPFN 25 699 losses, 3 460
+   gains, 1 057 zero). Abstract, Observation 1 and Section 5.1 revised; the claim "most resets that change the outcome
+   are net losses" stands at source level.
+3. Tails table caption: removed the obsolete "TabDPT was run on real streams only"; states that the harm column pools
+   all resets. Figure 1 caption: its detector-averaged worst source (covertype -23.1) differs from the worst-source
+   statistic (-26.2, detector-wise minima averaged).

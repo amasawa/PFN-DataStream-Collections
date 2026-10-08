@@ -53,8 +53,8 @@ already a form of adaptation. A long line of stream-learning work adds an error-
 alarm, discards the past. We ask whether this practice transfers to in-context learners. On 39 real streams from 19
 independent sources and 42 synthetic streams, with eight detectors, three reset actions and three TFMs, we find that a
 full context reset is a \emph{tail risk}: averaged over detectors it loses 26--31 accuracy points on the worst source
-while gaining only about 5--6 on the best, and 87--88\% of the single resets that change the outcome on real streams are
-net losses. Averaged over sources the effect is not significant after correction for multiple testing, so the
+while gaining only about 5--6 on the best. Most single resets that change the outcome on real streams are net losses:
+87--88\% of all such resets, and the majority on 15 of the 19 sources. Averaged over sources the effect is not significant after correction for multiple testing, so the
 practice is neither uniformly harmful nor useful; its risk sits in the tail. Two facts explain the asymmetry. Under a
 FIFO budget, the effect of a reset is confined to the next $\lceil M/B\rceil-1$ batches (we prove this and use it for
 exact per-reset accounting), so the window already forgets and leaves a reset little to gain; trained incremental
@@ -75,7 +75,9 @@ backbones, backbone seeds, context budgets and hedge hyperparameters.
 \caption{Effect of the three actions on detection, per real source and averaged over the eight detectors, as accuracy
 minus FIFO with the same TFM ($M=1000$). A full reset (orange) loses heavily on a few sources (covertype, wall, poker,
 gas) and gains on a few others (eeg, chest, home); hedging against FIFO (blue) removes the losses and keeps the gains.
-Sources are ordered by the full-reset effect on TabPFN.}
+Sources are ordered by the full-reset effect on TabPFN. The figure averages over detectors first (covertype:
+$-23.1$ for TabPFN); the worst-source statistic of the text and \cref{tab:tails} takes each detector's worst source
+and then averages ($-26.2$), so the two need not coincide.}
 \label{fig:sources}
 \end{figure}
 
@@ -106,7 +108,8 @@ observations stand out (\cref{fig:sources}).
 \label{obs:tail}
 Averaged over the eight detectors, a full reset loses 26.2, 26.5 and 31.1 accuracy points against FIFO on the worst
 real source for TabPFN, TabICL and TabDPT, and gains at most 6.3, 4.8 and 6.1 points on the best. Of the single resets
-that change the accuracy of the batches they affect, 87--88\% are net losses on real streams.
+that change the accuracy of the batches they affect, 87--88\% are net losses on real streams (pooled over all resets;
+69--73\% when each source is weighted equally, and more than half on 15 of 19 sources).
 \end{observation}
 
 \begin{observation}[The average hides the tail]
@@ -351,8 +354,12 @@ which is the situation detectors were designed for.
 The average hides where the risk is. \Cref{tab:tails} reports, for each backbone, the worst and the best source of
 each action. A full reset loses 26 to 31 points on the worst source and gains approximately 5 to 6 on the best. The loss is not a
 property of one model: covertype and wall are the two worst sources for all three TFMs. At the level of single resets
-(\cref{prop:memory}), 88.1\% (TabPFN), 88.3\% (TabICL) and 87.3\% (TabDPT) of the resets that change the accuracy of
-the batches they affect are net losses on real streams, against 12--16\% on synthetic streams.
+(\cref{prop:memory}), 88.1\% (TabPFN), 88.4\% (TabICL) and 87.3\% (TabDPT) of the resets that change the accuracy of
+the batches they affect are net losses on real streams, against 11.5--15.4\% on synthetic streams. These shares pool
+all resets of all streams and detectors, so sources with many alarms weigh more. Weighting each source equally gives
+69.5\%, 72.9\% and 68.8\%; the share exceeds one half on 15 of the 19 sources for every backbone, and it lies between
+81.6\% and 90.7\% for every detector and backbone. For TabPFN, 25\,699 resets lose, 3\,460 gain and 1\,057 leave the accuracy
+unchanged.
 
 \subsection{Why: a FIFO window already forgets}
 
