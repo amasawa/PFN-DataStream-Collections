@@ -58,7 +58,9 @@ when the experts are separated by a margin; the slow level has a discounted regr
 the plain window at any time, with no assumption on the stream. On a pre-registered grid of recurring concepts, the
 gain predicted from learning curves measured beforehand ranks the observed gains with Spearman 0.94, and \method{}
 exceeds a reset detector on every stream with hard concepts, by 8.5 points on the hardest cell, and a sliding
-window by 24 points on average. On 29 real streams \method{} is more accurate than all four in-context baselines on
+window by 24 points on average. These grid concepts are aligned with \method{}'s segments; when they are not, the
+gain over reset falls to 0.5 points on average and a plain archive of past segments is more accurate than
+\method{}. On 29 real streams \method{} is more accurate than all four in-context baselines on
 23 and never more than 0.25 points below the plain window; its one-sided 95\% block-bootstrap lower bound on the difference to the window
 is above $-0.3$ points on 28 of the 29 streams (backbone seed 0), the remaining one being too short to decide, and a pre-registered test on six held-out segments confirms both.
 \end{abstract}
@@ -528,6 +530,22 @@ safeguard. Stream learners that train a model are far behind when a concept must
 thirty generator streams \method{} matches reset (95.0 against 94.8), and the forgetting of \cref{obs:forget} is
 repaired: 0.82--0.89 in the five batches after a recurrence against 0.17--0.51 for FIFO.
 
+\textbf{Misaligned boundaries.} Every grid concept above lasts 500 or 2\,000 rows from row zero, so each closed
+segment of 500 rows holds one concept. In response to review we ran a further test, registered before it was run, on
+twelve new streams of the same generator (data seeds 30 and 31, 30 or 100 centroids, three concepts in nine
+blocks) whose blocks are 700 rows, 1\,300 rows, or drawn from 500 to 2\,500 rows, so that most segments straddle a
+boundary. The registered criterion, \method{} above reset on at least 10 of the 12 streams with a mean gain of at
+least one point, \emph{fails}: \method{} is above reset on 8 of the 12, by $+0.47$ points on average. The loss is
+concentrated on easy concepts. With 100 centroids \method{} stays above reset on all six streams ($+0.8$ to
+$+1.9$ points; $+7.1$ to $+10.9$ in the five batches after a recurrence), but far below the $+8.5$ and $+2.5$ of the
+aligned cells; with 30 centroids it is between $-0.7$ and $+0.3$. \method{} remains above the window ensemble on all
+twelve streams ($+3.0$ on average) and far above FIFO. We also ran, under the same rule and constants, a pool that
+keeps each closed segment as its own expert, without the discrepancy test and without merging (an \emph{archive}). On all twelve misaligned
+streams the archive is more accurate than \method{}, by 0.2 to 1.8 points (0.9 on average; 0.6 to 4.3, 2.6 on average, in the five
+batches after a recurrence). When boundaries are unknown, merging segments by discrepancy can thus combine rows of
+different concepts, and keeping the segments apart recalls better. The recall gain of \method{} is therefore
+established for stored segments that are nearly pure, and the grid results above are an upper end.
+
 \subsection{RQ3: Real Streams}
 \label{sec:rq3}
 
@@ -675,13 +693,16 @@ For an in-context learner, memory of a past concept is free to store and free to
 between the learning curve and the accuracy of the stored context. \method{} turns this into a method with one
 component per result: an excess-risk discrepancy decides which contexts share a concept, a fast meta expert
 identifies a recurring concept in one batch, and a slow meta expert guarantees, at any time and for any stream,
-that following it costs little against the plain window. When concepts recur and are costly to learn, \method{}
-exceeds reset detection, window ensembles and trained experts by a wide margin; on 29 real streams it is the most
+that following it costs little against the plain window. When concepts recur in blocks that match its segments
+and are costly to learn, \method{} exceeds reset detection, window ensembles and trained experts by a wide margin;
+with misaligned blocks its gain over reset shrinks to half a point and an archive without merging recalls better; on 29 real streams it is the most
 accurate in-context policy on 23 and never more than 0.25 points below a sliding window, where reset detection
 loses up to 9.6 points.
 
 \textbf{Limitations.} The gains on real streams other than Rialto are below two points; the claim there is safety
-with a small average gain, and the large gains are for recurring concepts with steep learning curves.
+with a small average gain, and the large gains are for recurring concepts with steep learning curves whose
+blocks are aligned with the segments. With misaligned blocks the registered robustness criterion failed, and merging
+by discrepancy was less accurate than keeping segments apart.
 The confirmatory real segments come from three streams whose earlier segments were used in development; ten
 segments were repeated with a second seed and the others have one run. \Cref{prop:outer} bounds the half Brier score rather than the accuracy, its step costs calibration when
 concepts recur (\cref{tab:metrics}), and
