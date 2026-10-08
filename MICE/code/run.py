@@ -222,6 +222,30 @@ class MiceV1(Mice):
         return sum(wi * P for wi, P in zip(w, preds.values())), None
 
 
+class PoolControl(MiceV1):
+    """Review control for TKDE (2026-10-09): MiceV1 with the concept-organising step removed, same windows, pool size,
+    aggregation and constants. mode="arch": every closed segment becomes its own expert (no discrepancy test, no
+    merging); mode="snap": every closed segment stores a snapshot of the latest M rows. Oldest expert evicted beyond
+    kmax. Isolates the value of merging by discrepancy from the value of keeping past contexts."""
+
+    def __init__(self, tfm, M, mode, **kw):
+        super().__init__(tfm, M, **kw)
+        self.mode, self.Xall, self.yall = mode, None, None
+
+    def step(self, X, y, t, B):
+        self.Xall, self.yall = X, y
+        return super().step(X, y, t, B)
+
+    def _merge_or_add(self, Xs, ys, now):
+        if self.mode == "snap":
+            end = self.closed + self.seg
+            Xs, ys = self.Xall[max(0, end - self.M):end], self.yall[max(0, end - self.M):end]
+        self.uid += 1
+        self.experts.append(dict(X=Xs[-self.M:], y=ys[-self.M:], loss=self.online["loss"], last=now, uid=self.uid))
+        if len(self.experts) > self.kmax:
+            self.experts.pop(0)
+
+
 def two_sample_auc(Xa, Xb):
     """Label-free discrepancy: AUROC of a 2-fold kNN classifier separating context rows from the query batch."""
     from sklearn.metrics import roc_auc_score
@@ -246,12 +270,13 @@ def run(stream, method, B, out):
     kind, M = m.group(1), int(m.group(2))
     pol = (LTM(M, int(m.group(3)) / 100) if kind == "ltm" else Mice(f, M) if kind == "mice"
            else Mice(f, M, cache_px=True) if kind == "micecache" else DDMReset(M) if kind == "ddm"
-           else MiceV1(f, M, seg=int(m.group(3)) if m.group(3) else 1000) if kind == "micev" else None)
+           else MiceV1(f, M, seg=int(m.group(3)) if m.group(3) else 1000) if kind == "micev"
+           else PoolControl(f, M, kind, seg=int(m.group(3)) if m.group(3) else 1000) if kind in ("arch", "snap") else None)
     Lw = {}  # winens: discounted losses of the window experts
     errs, Pw_last = None, None
     # micev runs take hours and the machine restarts: its state is saved every CK batches and picked up on restart
     ck, CK, t0_ = dst[:-4] + ".ckpt", int(os.environ.get("MICE_CKPT_EVERY", 100)), 1
-    if kind == "micev" and os.path.exists(ck):
+    if kind in ("micev", "arch", "snap") and os.path.exists(ck):
         st = pickle.load(open(ck, "rb"))
         pol.__dict__.update(st["pol"])
         acc, ll, wt, f.calls, t0_ = st["acc"], st["ll"], st["wt"], st["calls"], st["t"] + 1
@@ -268,7 +293,7 @@ def run(stream, method, B, out):
             if concept[0] < 0:
                 return
             P = f.predict(*oracle(X, y, concept, t, B, M), Xq)
-        elif kind in ("mice", "micecache", "micev"):
+        elif kind in ("mice", "micecache", "micev", "arch", "snap"):
             P, _ = pol.step(X, y, t, B)
         elif kind == "ddm":
             if errs is not None:
@@ -287,13 +312,13 @@ def run(stream, method, B, out):
         acc[t] = (P.argmax(1) == yq).mean()
         ll[t] = -np.log(np.clip(P[np.arange(len(yq)), yq], 1e-6, 1)).mean()
         wt[t] = time.time() - t0
-        if kind == "micev" and t % CK == 0:
-            pickle.dump(dict(pol={k: v for k, v in pol.__dict__.items() if k != "f"}, acc=acc, ll=ll, wt=wt,
+        if kind in ("micev", "arch", "snap") and t % CK == 0:
+            pickle.dump(dict(pol={k: v for k, v in pol.__dict__.items() if k not in ("f", "Xall", "yall")}, acc=acc, ll=ll, wt=wt,
                              calls=f.calls, t=t), open(ck + ".tmp", "wb"))
             os.replace(ck + ".tmp", ck)
     np.savez_compressed(dst, acc=acc, ll=ll, wt=wt, B=B, concept=concept, calls=f.calls,
-                        n_experts=len(pol.experts) if kind in ("mice", "micecache", "micev") else 0)
-    if kind in ("micecache", "micev"):
+                        n_experts=len(pol.experts) if kind in ("mice", "micecache", "micev", "arch", "snap") else 0)
+    if kind in ("micecache", "micev", "arch", "snap"):
         pickle.dump(dict(cache=pol.cache, y=y, B=B, concept=concept, K=K), open(dst[:-4] + ".pkl", "wb"))
         if os.path.exists(ck):
             os.remove(ck)

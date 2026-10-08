@@ -294,8 +294,9 @@ $n_c=\min(M,(c-1)L)$ rows. The \emph{relearning} learner resets its context at t
 \citet{zhao2025mooe} it is the online expert, and the stored context is an offline expert that needed no training.
 
 \begin{theorem}[Recall versus relearn]\label{prop:recall}
-Let \cref{ass:margin} hold on every labelled batch of the block for the better of the stored expert and the window,
-with $e^\kappa-1$ below the top-two gap of that expert. On the $c$-th visit of concept $k$, the expected accuracy of
+Let \cref{ass:margin} hold on every labelled batch of the block for the expert with the larger learning-curve
+value, that is, the stored expert if $a_k(n_c)\ge a_k(\min(jB,M))$ and the window otherwise, with $e^\kappa-1$ below
+the top-two gap of that expert. On the $c$-th visit of concept $k$, the expected accuracy of
 the mixture minus that of relearning, averaged over the block, is
 \begin{equation}\label{eq:area}
   \Delta_{k,c}(L)=\frac1J\sum_{j=1}^{J-1}\Bigl[a_k(n_c)-a_k\bigl(\min(jB,M)\bigr)\Bigr]_+ \;+\;\varepsilon_{k,c},
@@ -306,8 +307,8 @@ the sum the \emph{area term}.
 \end{theorem}
 
 \begin{corollary}[When memory pays]\label{cor:flat}
-The area term of \eqref{eq:area} is zero on the first visit and whenever the learning curve is flat,
-$a_k(B)=a_k(M)$, and in general
+On the first visit there is no stored expert of the concept, so $\Delta_{k,1}(L)=0$; on later visits the area
+term of \eqref{eq:area} is zero whenever the learning curve is flat, $a_k(B)=a_k(M)$, and in general
 \[
   \Delta_{k,c}(L)\;\le\;\frac{M}{L}\,\bigl(a_k(M)-a_k(B)\bigr)+\frac1J .
 \]
@@ -760,7 +761,7 @@ the first batch gives $\varepsilon_{k,c}$.
 \begin{proof}[Proof of \cref{cor:flat}]
 On the first visit the pool holds no expert of the concept, so the mixture and the relearning learner use the same
 rows. Since $a_k$ is non-decreasing and $n_c\le M$, every term of the area term is at most $a_k(M)-a_k(B)$, which
-is zero for a flat curve, and the terms with $jB\ge M$ vanish. At most $M/B$ of the $J=L/B$ terms are non-zero,
+is zero for a flat curve, and the terms with $jB\ge M$ vanish. At most $M/B$ of the $J-1$ terms are non-zero (only those with $jB<n_c\le M$),
 which with $|\varepsilon_{k,c}|\le1/J$ gives the bound.
 \end{proof}
 
