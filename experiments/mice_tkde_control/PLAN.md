@@ -25,3 +25,19 @@ Paired difference MICE − control in accuracy points; expert calls per batch an
 - If the first criterion fails, the paper's claims about concept identification are narrowed to "a pool of past
   contexts under the two-level rule", and the discrepancy-based merging is described as one way to organise the
   pool, not as the source of the gain. Results are reported either way.
+
+## Round 4 addition (frozen before running): boundaries not aligned with the 500-row segments
+
+Codex reviewer, round 4: every controlled grid concept lasts 500 or 2000 rows from row 0, so each closed segment
+holds one concept. Streams (`make_misaligned.py`, fresh data seeds 30 and 31, 30 or 100 centroids): fixed blocks of
+700 rows, fixed blocks of 1300 rows, and variable blocks drawn from {500, 600, ..., 2500} rows; K=3 concepts, nine
+blocks; 12 streams. Methods: micev1000_500 (MICE, two-level rule replayed as in the paper), arch1000_500,
+ddm1000, fifo1000, winens1000; backbone seed 0.
+
+Decision, fixed now:
+- **Recall survives misalignment** if MICE − DDM is positive on at least 10 of 12 streams and its mean is at least
+  +1.0 point.
+- Reported regardless: MICE − FIFO, MICE − window ensemble, MICE − arch, per condition and centroid count, next to
+  the aligned grid (seeds 20 and 21) for comparison; accuracy in the first five batches after each recurring switch.
+- If the criterion fails, the contribution is restricted in the paper to conditions where stored segments are
+  sufficiently pure, and the misaligned results are reported as a limitation.
