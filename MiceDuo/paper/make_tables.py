@@ -58,10 +58,20 @@ def mech_table():
     (HERE / 'mech_numbers.txt').write_text('\n'.join(lines) + '\n')
 
 
+def anchor_table():
+    """Appendix: every pre-registered anchor variant of standalone DUO, per backbone seed (overnight run)."""
+    v = pd.read_csv(REPO / 'MiceDuo/results/night_20261007/duo_replicates_verdicts.csv')
+    name = {'duo': '\\duo{}', 'safe': 'safe mixture'}
+    rows = [f"{r.seed} & {100 * r.anchor} & {name[r.method]} & {r.delta_mice:+.2f} & {r.wins_mice}/7 & "
+            f"{r.worst_fifo:+.2f} & {'yes' if r.go else 'no'} \\\\" for r in v.itertuples()]
+    (HERE / 'tab_anchor_rows.tex').write_text('\n'.join(rows) + '\n')
+
+
 if __name__ == '__main__':
     dev_table()
     verdict_table()
     mech_table()
+    anchor_table()
     print((HERE / 'tab_mech_rows.tex').read_text())
     print((HERE / 'mech_numbers.txt').read_text())
     print((HERE / 'tab_dev_rows.tex').read_text())

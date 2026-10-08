@@ -132,8 +132,10 @@ where $\ell^{\log}_{t-1,k}$ is the log-loss of expert $k$ on the last labelled b
 level} mixes the fast mixture $p^{\mathrm{fast}}_t$ with the $M$-row window $p^{\mathrm{win}}_t$ by exponential
 weights on discounted half Brier scores $\ell_{t,k}\in[0,1]$,
 \begin{equation}\label{eq:slow}
-  L_{t,k}=\gamma L_{t-1,k}+\ell_{t,k},\quad v_{t,k}\propto e^{-\eta_2\gamma L_{t-1,k}},\quad
-  p_t=v_{t,0}\,p^{\mathrm{win}}_t+v_{t,1}\,p^{\mathrm{fast}}_t,
+  \begin{aligned}
+  L_{t,k}&=\gamma L_{t-1,k}+\ell_{t,k},\qquad v_{t,k}\propto e^{-\eta_2\gamma L_{t-1,k}},\\
+  p_t&=v_{t,0}\,p^{\mathrm{win}}_t+v_{t,1}\,p^{\mathrm{fast}}_t,
+  \end{aligned}
 \end{equation}
 with $\gamma=0.9$ and $\eta_2=\tfrac12$.
 
@@ -229,13 +231,14 @@ on Airlines and Weather. \method{} keeps the average and removes these losses.
   \label{tab:dev}
   \small
   \setlength{\tabcolsep}{3.5pt}
+  \resizebox{\columnwidth}{!}{%
   \begin{tabular}{lcccccr}
     \toprule
     Stream & FIFO & sel & \duo{} & \mice{} & \method{} & $\Delta$ \\
     \midrule
     \rowinput{tab_dev_rows.tex}
     \bottomrule
-  \end{tabular}
+  \end{tabular}}
 \end{table}
 
 The pre-registered criterion for \method{} asks for no negative effect: on every stream at most 0.30 points below
@@ -269,7 +272,7 @@ at least 0.5 points, wins on at least 5 of 7 streams and no stream more than 0.3
 on any seed. Larger anchors moved \duo{} towards FIFO: they reduced the worst loss against FIFO (from about $-0.55$ to
 $-0.19$ with anchor 300) and removed the gain on Rialto (from $+1.35$ to $-0.47$ against \mice{}). Even an oracle that
 picks the better of \duo{} and \mice{} per stream after the fact is only 0.23--0.28 points above \mice{}.
-\todo{Move the full table to the appendix (\texttt{MiceDuo/results/night\_20261007/}).}
+\Cref{tab:anchor} in \cref{app:anchor} lists every variant and seed.
 
 \subsection{When Does Selection Help? Controlled Recurrence}
 \label{sec:exp-mech}
@@ -301,13 +304,14 @@ streams (6.3 to 14.5 points): selection refines a memory that already recalls mo
   \label{tab:mech}
   \small
   \setlength{\tabcolsep}{3pt}
+  \resizebox{\columnwidth}{!}{%
   \begin{tabular}{lrccccrr}
     \toprule
     Concept appears & cent. & FIFO & \mice{} & \method{} & $\Delta$ & min & $>0$ \\
     \midrule
     \rowinput{tab_mech_rows.tex}
     \bottomrule
-  \end{tabular}
+  \end{tabular}}
 \end{table}
 
 \subsection{Held-Out Real Streams}
@@ -367,5 +371,29 @@ zero on average without recurrence. Individual losses remain within the pre-spec
 
 \bibliography{refs}
 \bibliographystyle{icml2026}
+
+\newpage
+\appendix
+\onecolumn
+
+\section{Standalone Selection with Larger Anchors}
+\label{app:anchor}
+
+\begin{table}[h]
+  \centering
+  \caption{Pre-registered search over the recent anchor for standalone \duo{} on the seven development streams
+  (\cref{sec:exp-anchor}). Criterion: mean gain over \mice{} at least $+0.50$ points, at least 5 of 7 wins, and no
+  stream more than 0.30 points below FIFO, on every seed. Anchor in rows; safe mixture: half-Brier, $\gamma=0.9$,
+  tempered weights. Seed 0 was exploratory; the safe mixture with anchor 100 was not run on seed 0.}
+  \label{tab:anchor}
+  \small
+  \begin{tabular}{rrlrrrc}
+    \toprule
+    seed & anchor & method & mean vs \mice{} & wins & worst vs FIFO & pass \\
+    \midrule
+    \rowinput{tab_anchor_rows.tex}
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \end{document}
