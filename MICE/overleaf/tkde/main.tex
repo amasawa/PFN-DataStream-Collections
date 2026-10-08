@@ -533,8 +533,8 @@ repaired: 0.82--0.89 in the five batches after a recurrence against 0.17--0.51 f
 \textbf{Misaligned boundaries.} Every grid concept above lasts 500 or 2\,000 rows from row zero, so each closed
 segment of 500 rows holds one concept. In response to review we ran a further test, registered before it was run, on
 twelve new streams of the same generator (data seeds 30 and 31, 30 or 100 centroids, three concepts in nine
-blocks) whose blocks are 700 rows, 1\,300 rows, or drawn from 500 to 2\,500 rows, so that most segments straddle a
-boundary. The registered criterion, \method{} above reset on at least 10 of the 12 streams with a mean gain of at
+blocks) whose blocks are 700 rows, 1\,300 rows, or drawn from 500 to 2\,500 rows, so that concept boundaries fall
+inside the 500-row segments rather than on their edges (7 of the 8 boundaries for blocks of 700 and 1\,300 rows). The registered criterion, \method{} above reset on at least 10 of the 12 streams with a mean gain of at
 least one point, \emph{fails}: \method{} is above reset on 8 of the 12, by $+0.47$ points on average. The loss is
 concentrated on easy concepts. With 100 centroids \method{} stays above reset on all six streams ($+0.8$ to
 $+1.9$ points; $+7.1$ to $+10.9$ in the five batches after a recurrence), but far below the $+8.5$ and $+2.5$ of the
@@ -542,8 +542,10 @@ aligned cells; with 30 centroids it is between $-0.7$ and $+0.3$. \method{} rema
 twelve streams ($+3.0$ on average) and far above FIFO. We also ran, under the same rule and constants, a pool that
 keeps each closed segment as its own expert, without the discrepancy test and without merging (an \emph{archive}). On all twelve misaligned
 streams the archive is more accurate than \method{}, by 0.2 to 1.8 points (0.9 on average; 0.6 to 4.3, 2.6 on average, in the five
-batches after a recurrence). When boundaries are unknown, merging segments by discrepancy can thus combine rows of
-different concepts, and keeping the segments apart recalls better. The recall gain of \method{} is therefore
+batches after a recurrence). The archive differs from \method{} in more than merging: its experts hold 500 rows
+rather than up to 1\,000, and it keeps more of them; so these runs show that, under the same rule and constants, an
+unmerged archive was more accurate when boundaries are misaligned, which is consistent with, but does not isolate,
+merges that combine rows of different concepts. The recall gain of \method{} is therefore
 established for stored segments that are nearly pure, and the grid results above are an upper end.
 
 \subsection{RQ3: Real Streams}
@@ -695,14 +697,14 @@ component per result: an excess-risk discrepancy decides which contexts share a 
 identifies a recurring concept in one batch, and a slow meta expert guarantees, at any time and for any stream,
 that following it costs little against the plain window. When concepts recur in blocks that match its segments
 and are costly to learn, \method{} exceeds reset detection, window ensembles and trained experts by a wide margin;
-with misaligned blocks its gain over reset shrinks to half a point and an archive without merging recalls better; on 29 real streams it is the most
+with misaligned blocks its gain over reset shrinks to half a point and an archive without merging was more accurate; on 29 real streams it is the most
 accurate in-context policy on 23 and never more than 0.25 points below a sliding window, where reset detection
 loses up to 9.6 points.
 
 \textbf{Limitations.} The gains on real streams other than Rialto are below two points; the claim there is safety
 with a small average gain, and the large gains are for recurring concepts with steep learning curves whose
-blocks are aligned with the segments. With misaligned blocks the registered robustness criterion failed, and merging
-by discrepancy was less accurate than keeping segments apart.
+blocks are aligned with the segments. With misaligned blocks the registered robustness criterion failed, and an
+archive of unmerged segments was more accurate than \method{}.
 The confirmatory real segments come from three streams whose earlier segments were used in development; ten
 segments were repeated with a second seed and the others have one run. \Cref{prop:outer} bounds the half Brier score rather than the accuracy, its step costs calibration when
 concepts recur (\cref{tab:metrics}), and
