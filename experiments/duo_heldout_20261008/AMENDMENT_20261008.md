@@ -30,3 +30,26 @@ reported descriptively with the concurrency phases, total elapsed and GPU time, 
 amendment. A latency comparison, if needed, requires a separately declared single-worker benchmark.
 
 State at the switch: {"time":"2026-10-08T15:45:58.548424+11:00","utilization":33,"gpu_mib":1493,"ram_available_mib":28754,"target":1,"running":{"mice_s0_h3_airlines_c":255026},"done":12,"total":132,"blocked":0}
+
+## Amendment 2 — back to one worker (2026-10-08T15:56:23+11:00)
+
+Written before any held-out score was inspected.
+
+- **Incident:** after the switch at 15:46:58, six worker failures in five minutes tripped the breaker at 15:51:58
+  (STOP written by the supervisor). All six were on airlines streams (h3_airlines_c, h4_airlines_d; 7 features,
+  2 classes) while several airlines tasks ran together: unspecified launch failure, illegal memory access and one
+  CUBLAS_STATUS_EXECUTION_FAILED; all but one advanced their checkpoint. With one worker, 12 tasks had run for
+  1.5 h without a failure.
+- **Hypothesis, not established:** the failure hazard under concurrency grows with the kernel-launch rate, which is
+  higher on low-dimensional streams (today's 10-feature synthetic streams also failed more often than last
+  night's 33–54-feature streams).
+- **Decision (recommended by Codex, accepted):** run the remaining 120 tasks with **one worker**, using the
+  original frozen `controller/finish.py` (`--max-workers 1`), which also restores the frozen stop-on-first-failure
+  rule. This is an explicit stability exception to the user's >= 90% utilisation goal: expected about 35–40%
+  utilisation for about 17 h. No automatic escalation.
+- **Breaker reset:** deliberate and manual after this review. The STOP file is renamed `STOP.breaker_20261008_1551`;
+  failure history, logs, queue state and checkpoints are kept; all workers had exited.
+- **Cost reporting:** three concurrency phases (1 worker until 15:46:29, 4 workers 15:46:58–15:51:58,
+  1 worker from this restart), reported as in amendment 1.
+
+State before restart: {"time":"2026-10-08T15:51:58.183363+11:00","utilization":15,"gpu_mib":1493,"ram_available_mib":28599,"target":1,"running":{},"done":12,"total":132,"blocked":0,"state":"stopped","stopped_at":"2026-10-08T15:51:59.051936+11:00","reason":"Circuitbreaker:6workerfailure(s)withintenminutes;investigatebeforeresuming."}
