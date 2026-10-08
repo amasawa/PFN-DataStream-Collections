@@ -53,13 +53,13 @@
 A tabular foundation model (TFM) learns a stream through its context, so the choice of which past rows to condition
 on is the learning algorithm. A natural choice is \emph{relevance selection}: at every step, rank recent labelled
 batches by how well they agree with the newest batch and condition on the most relevant ones, not on the most recent.
-We find that relevance selection is a high-variance learner. On seven development streams it matches the accuracy of
+We find that relevance selection performs very unevenly across streams. On seven development streams it matches the accuracy of
 \mice{}, a mixture of in-context experts with a worst-case safeguard, but it loses up to half a point to \mice{} on
 some streams and, used alone, up to 4.6 points to a plain window. We show that this variance is not a reason to drop
 selection but a reason to treat it as an expert. Inserted as one more expert into \mice{}, unchanged, the selected
-context inherits \mice{}'s any-time regret bound against the plain window, and empirically it costs at most
-0.15 points against \mice{} on every development stream while keeping most of its gain where concepts recur. On
-eighteen fresh synthetic streams with controlled recurrence, a pre-registered test confirms the mechanism: the gain
+context inherits \mice{}'s any-time regret bound against the plain window, and empirically it costs at most about
+0.15 points against \mice{} on any development stream while keeping most of its gain where concepts recur. On
+eighteen fresh synthetic streams with controlled recurrence, a pre-registered test is consistent with a recurrence-based explanation: the gain
 over \mice{} grows with how often concepts recur ($+0.28$, $+0.15$ and $+0.01$ points for concepts that appear five
 times, three times and once), is largest for concepts that are hard to learn, and is never below $-0.01$ points on
 any stream (rounded). \todo{Held-out confirmation on real-stream prefixes is running under the frozen plan.}
@@ -90,8 +90,8 @@ conditions on this non-contiguous context. We call the pair of this context and 
 \textbf{The problem.} Relevance selection is attractive and unreliable. On the seven development streams of
 \cref{sec:exp-dev} \duo{} is as accurate as \mice{} on average, gains 1.5 points on a stream whose concepts recur,
 and loses about half a point on two streams where they do not; the selected context alone is 4.6 points below a
-plain window on one stream (\cref{tab:dev}). Tuning the rule does not help: a pre-registered search over the size of
-the recent anchor traded the losses for the gains and passed on no seed (\cref{sec:exp-anchor}).
+plain window on one stream (\cref{tab:dev}). The tested repairs of the rule itself fail: a pre-registered search over the size
+of the recent anchor traded the losses for the gains and passed on no seed (\cref{sec:exp-anchor}).
 
 \textbf{Our answer.} We do not choose between selection and memory. We insert the selected context as one more
 expert of \mice{}, with \mice{} unchanged. The consequence is immediate on the theory side and measurable on the
@@ -99,20 +99,21 @@ empirical side.
 (i)~\mice{}'s slow level is a meta expert over two predictions, the window and the fast mixture; what the fast
 mixture contains does not enter its bound. The any-time discounted regret of the combined learner against the window
 is therefore at most $2\ln 2$, as for \mice{} (\cref{cor:safe}).
-(ii)~\mice{}'s fast level reweights its experts every batch from their last loss, so a selected context that is wrong
-is down-weighted after one labelled batch under a margin, and is otherwise absorbed by the slow level.
+(ii)~\mice{}'s fast level reweights its experts every batch from their last loss, so a selected context that was clearly
+worse on the last labelled batch loses most of its weight; the slow level bounds the cumulative cost otherwise.
 (iii)~Against \mice{} itself there is no guarantee, and we measure it: on the development streams the combined
-learner is never more than 0.15 points below \mice{} on any stream and seed and is above it on average
+learner is at most about 0.15 points below \mice{} on any stream and seed and is above it on average
 (\cref{tab:verdict}).
 
 \textbf{Contributions.}
 \textbf{(1)}~Relevance selection of non-contiguous contexts for TFMs on streams, derived from the discrepancy--size
-trade-off of non-IID batches, and the observation that it is a high-variance learner.
+trade-off of non-IID batches, and the observation that its performance is very uneven across streams.
 \textbf{(2)}~A plug-in construction that turns any context-selection rule into an expert of \mice{} with the
 window safeguard intact.
-\textbf{(3)}~Pre-registered evidence: on development streams the plug-in removes the losses of selection; on
+\textbf{(3)}~Pre-registered evidence: on development streams the plug-in reduces the losses of selection to within a
+pre-specified tolerance; on
 eighteen fresh streams with controlled recurrence its gain over \mice{} grows with recurrence and with the difficulty
-of the concept, and no stream loses more than 0.01 points (\cref{sec:exp-mech}). \todo{Frozen held-out evaluation.}
+of the concept, and no stream loses more than about 0.01 points (\cref{sec:exp-mech}). \todo{Frozen held-out evaluation.}
 
 % =====================================================================================================
 \section{Setting and Background}
@@ -137,7 +138,9 @@ weights on discounted half Brier scores $\ell_{t,k}\in[0,1]$,
   p_t&=v_{t,0}\,p^{\mathrm{win}}_t+v_{t,1}\,p^{\mathrm{fast}}_t,
   \end{aligned}
 \end{equation}
-with $\gamma=0.9$ and $\eta_2=\tfrac12$.
+with $\gamma=0.9$ and $\eta_2=\tfrac12$. In the implementation both discounted losses start at zero, the outer loss
+is $0.5$ times the half Brier score with unit step, and the weights use $\gamma L_{t-1,k}$ (tempered), which is the
+same rule; all results in this paper use these settings.
 
 \begin{theorem}[\citealp{mice2026}, any-time safeguard]\label{thm:outer}
 For $K$ predictions combined by \eqref{eq:slow} with $\eta_2\le\tfrac12$, every sequence of labels and predictions,
@@ -189,15 +192,16 @@ window and the fast mixture over $\mathcal E'$; which experts the fast mixture c
 
 \begin{remark}[What is not guaranteed]
 \Cref{cor:safe} compares \method{} with the window, not with \mice{}. Adding an expert changes the fast mixture, and
-the fast mixture of \mice{} is not one of \method{}'s slow-level experts, so a bound against \mice{} would need a third
-slow-level expert. We keep \mice{} unchanged and measure the difference instead (\cref{sec:exp-dev}).
-An additional slow-level expert containing \mice{}'s output is a possible future extension; it is not evaluated here.
+the fast mixture of \mice{} is not one of \method{}'s slow-level experts, so \cref{cor:safe} says nothing about the difference to \mice{}. One way to obtain an analogous guarantee
+against \mice{} is to include its full output as a third slow-level expert; we do not evaluate this and instead keep
+\mice{} unchanged and measure the difference (\cref{sec:exp-dev}).
 \end{remark}
 
-\begin{remark}[Why a wrong selection is cheap]
-Under \mice{}'s margin assumption, an expert whose loss on the last labelled batch exceeds the best by $\Delta$ has fast
-weight at most $e^{-\eta\Delta}$ by \eqref{eq:fast}; with $\eta=10$, a selected context whose last log-loss exceeds
-the best by 0.3 nats keeps less than 5\% of the fast weight after one labelled batch. When no expert is separated, the slow level decides whether following the fast mixture is worth
+\begin{remark}[Down-weighting after an observed loss gap]
+An expert whose log-loss on the last labelled batch exceeds the best by $\Delta$ has fast weight at most
+$e^{-\eta\Delta}$ by \eqref{eq:fast}; with $\eta=10$, a selected context that was 0.3 nats worse on the last batch
+keeps less than 5\% of the fast weight on the next. This says nothing about the next batch's loss under arbitrary
+drift. When no expert is separated, the slow level decides whether following the fast mixture is worth
 it, which is the case \cref{cor:safe} covers.
 \end{remark}
 
@@ -262,7 +266,7 @@ this pass is exploratory; it licenses the tests of \cref{sec:exp-mech,sec:exp-he
   \end{tabular}
 \end{table*}
 
-\subsection{Tuning Selection Alone Does Not Work}
+\subsection{The Tested Anchor Variants of Selection Alone Fail}
 \label{sec:exp-anchor}
 
 Before \method{} we tried to make \duo{} safe by itself, by enlarging the recent anchor to 300 and 500 rows so that the
@@ -288,13 +292,14 @@ horizon, and predicted that the gain at $K=5$ might be close to that at $K=15$.
 \textbf{Results.} \Cref{tab:mech} reports accuracy by recurrence and difficulty. All three hypotheses hold for the
 primary variant. The mean gain over \mice{} is $+0.28$ points when each concept appears five times, $+0.15$ when it
 appears three times and $+0.01$ when it never recurs; at $K=3$ it is positive on all six streams. No stream is more
-than 0.01 points below \mice{}, every stream is above FIFO, and the mean log-loss is 0.0015 lower than \mice{}'s. Our
+than about 0.01 points below \mice{} ($-0.010$ at worst), every stream is above FIFO, and the mean log-loss is 0.0015 lower than \mice{}'s. Our
 prediction for $K=5$ was wrong: its gain is about half of that at $K=3$, well above $K=15$, so the selection horizon
 did not cancel the benefit of recurrence. The gain concentrates on hard concepts: with 100 centroids it is $+0.46$,
 $+0.26$ and $+0.02$, with 30 centroids $+0.10$, $+0.04$ and $+0.01$. This matches the learning-curve account of
 \citet{mice2026}: recalling rows pays when a concept takes many rows to relearn. The anchor-300 selection, reported as
 a secondary variant, passes the same checks. The increment is small next to \mice{}'s own gain over FIFO on these
-streams (6.3 to 14.5 points): selection refines a memory that already recalls most of what can be recalled.
+streams (6.3 to 14.5 points). We do not measure whether the selected batches belong to the recurring concept, so the
+ordering is consistent with, but does not demonstrate, retrieval of matching concepts.
 
 \begin{table}[t]
   \centering
