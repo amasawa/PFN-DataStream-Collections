@@ -1,5 +1,8 @@
 # Frozen held-out evaluation of MICE-DUO, 2026-10-08
 
+**Not executed (2026-10-08 14:40).** The same evaluation (same method, seeds 0-2) was already running from
+`experiments/duo_heldout_20261008/`; that run is authoritative. See MiceDuo/logs/DUO_SAFE_20261008.md.
+
 Approved by the user ("按照你的想法迭代吧", in reply to the request to run item 1, the held-out evaluation).
 Frozen and pushed before any held-out stream is touched. The method is fixed by `PLAN.md` and was tested in
 `PLAN_mechanism.md` (H1-H3 held). Nothing below may change after the first run starts; every result is reported.
