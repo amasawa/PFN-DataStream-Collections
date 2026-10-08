@@ -165,7 +165,8 @@ the TFM conditioned on the anchor,
 \end{equation}
 a model-oriented discrepancy between batch $b$ and the current concept in the sense of \citet{zhao2023rdiv}. The
 selected context $\cC^{\sel}_t$ is the anchor together with the $M/B-a$ lowest-scoring older batches; its prediction
-is $p^{\sel}_t=f_\Theta(\cdot\mid X_t;\cC^{\sel}_t)$. All scores use labels of batches before $t$ only.
+is $p^{\sel}_t=f_\Theta(\cdot\mid X_t;\cC^{\sel}_t)$. All scores use labels of batches before $t$ only. Early
+in a stream, when there are at most $M/B-a$ older candidates, all are kept without scoring.
 
 \textbf{\duo{}.} The original proposal mixes $p^{\sel}_t$ with the $M$-row window by exponential weights on
 discounted log-losses ($\eta=2$, $\gamma=0.5$) and uses $a=1$ (an anchor of one batch).
@@ -224,7 +225,7 @@ data replicates.
 
 Seven real streams (Elec2 and six streams used in \citet{mice2026}'s evaluation), first 300 batches, backbone seeds 1
 and 2. \Cref{tab:dev} reports accuracy. The selected context alone is the least accurate learner on average, yet on Rialto, whose concepts recur, it is
-6.3 points above FIFO and 1.2 above \mice{}. \duo{} matches \mice{} on average but is 0.50 and 0.47 points below it
+6.32 points above FIFO and 1.24 above \mice{} (computed before rounding). \duo{} matches \mice{} on average but is 0.50 and 0.47 points below it
 on Airlines and Weather. \method{} keeps the average and shrinks these losses to $-0.08$ and $-0.01$ points.
 
 \begin{table}[t]
@@ -273,7 +274,8 @@ Before \method{} we tried to make \duo{} safe by itself, by enlarging the recent
 selection only fills the rest of the context. The rule required, on every backbone seed, a mean gain over \mice{} of
 at least 0.5 points, wins on at least 5 of 7 streams and no stream more than 0.3 points below FIFO. No variant passed
 on any seed. Larger anchors moved \duo{} towards FIFO: they reduced the worst loss against FIFO (from about $-0.55$ to
-$-0.19$ with anchor 300) and removed the gain on Rialto (from $+1.35$ to $-0.47$ against \mice{}). Even an oracle that
+$-0.19$ with anchor 300) and removed the gain on Rialto (from $+1.35$ to $-0.47$ against \mice{}); these figures average backbone seeds
+0--2, whereas \cref{tab:dev} averages seeds 1--2 (Rialto: $+1.47$). Even an oracle that
 picks the better of \duo{} and \mice{} per stream after the fact is only 0.23--0.28 points above \mice{}.
 \Cref{tab:anchor} in \cref{app:anchor} lists every variant and seed.
 
@@ -283,9 +285,10 @@ picks the better of \duo{} and \mice{} per stream after the fact is only 0.23--0
 Eighteen fresh synthetic streams from \mice{}'s grid generator, unused by either method: fifteen blocks of 2000 rows,
 pure real drift (shared inputs, permuted centroid labels), with $K\in\{3,5,15\}$ distinct concepts so that each
 concept appears 5 times, 3 times, or once; 30 or 100 centroids; three data seeds. Pre-registered hypotheses:
-(H1) no loss exceeding the 0.30-point tolerance when concepts never recur; (H2) the same tolerance on every stream,
+(H1) on every stream without recurrence, accuracy at most 0.30 points below \mice{} and at most 0.30 points below
+FIFO; (H2) the same two bounds on every stream,
 with mean log-loss at most 0.005 above \mice{}; (H3) the gain over \mice{}
-increases with recurrence ($K=3>K=5>K=15$) and is positive on at least 5 of 6 streams at $K=3$. Before the results we
+increases with recurrence ($K=3>K=5>K=15$) and is positive on at least 5 of 6 streams at $K=3$. Before the results, in our run log rather than in the frozen plan, we
 noted that with blocks of 20 batches and $H=100$, a concept with $K=5$ returns exactly at the edge of the selection
 horizon, and predicted that the gain at $K=5$ might be close to that at $K=15$.
 
@@ -388,7 +391,8 @@ zero on average without recurrence. Individual losses remain within the pre-spec
   \caption{Pre-registered search over the recent anchor for standalone \duo{} on the seven development streams
   (\cref{sec:exp-anchor}). Criterion: mean gain over \mice{} at least $+0.50$ points, at least 5 of 7 wins, and no
   stream more than 0.30 points below FIFO, on every seed. Anchor in rows; safe mixture: half-Brier, $\gamma=0.9$,
-  tempered weights. Seed 0 was exploratory; the safe mixture with anchor 100 was not run on seed 0.}
+  tempered weights. Seed 0 was exploratory; the safe mixture with anchor 100 was not run on seed 0. The criterion was
+fixed before the runs in the overnight run plan (\texttt{experiments/night\_20261007/README.md}, item 5).}
   \label{tab:anchor}
   \small
   \begin{tabular}{rrlrrrc}
