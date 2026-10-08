@@ -41,3 +41,10 @@ Decision, fixed now:
   the aligned grid (seeds 20 and 21) for comparison; accuracy in the first five batches after each recurring switch.
 - If the criterion fails, the contribution is restricted in the paper to conditions where stored segments are
   sufficiently pure, and the misaligned results are reported as a limitation.
+
+## Exploratory addition (2026-10-09T02:38+11:00, after the round-4 results were seen; not registered)
+
+MiMo's audit of round 4 noted that the archive control keeps 500 rows per expert and more experts than MICE, so its
+advantage on the misaligned streams cannot be attributed to merging alone. We add snap1000_500 (storage-matched:
+1000 rows per expert, no merging) on the same 12 misaligned streams. This is exploratory; it does not change the
+round-4 verdict and will be reported as such.
