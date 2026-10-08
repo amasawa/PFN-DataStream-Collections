@@ -298,15 +298,18 @@ Let \cref{ass:margin} hold on every labelled batch of the block for the better o
 with $e^\kappa-1$ below the top-two gap of that expert. On the $c$-th visit of concept $k$, the expected accuracy of
 the mixture minus that of relearning, averaged over the block, is
 \begin{equation}\label{eq:area}
-  \Delta_{k,c}(L)=\frac1J\sum_{j=1}^{J-1}\Bigl[a_k(n_c)-a_k\bigl(\min(jB,M)\bigr)\Bigr]_+ .
+  \Delta_{k,c}(L)=\frac1J\sum_{j=1}^{J-1}\Bigl[a_k(n_c)-a_k\bigl(\min(jB,M)\bigr)\Bigr]_+ \;+\;\varepsilon_{k,c},
 \end{equation}
+where $\varepsilon_{k,c}=(A^{\mathrm{mix}}_{1}-A^{\mathrm{rel}}_{1})/J$ is the difference on the first batch of the
+block, which both learners predict before any label of the block has arrived, so $|\varepsilon_{k,c}|\le1/J$. We call
+the sum the \emph{area term}.
 \end{theorem}
 
 \begin{corollary}[When memory pays]\label{cor:flat}
-The gain \eqref{eq:area} is zero on the first visit and whenever the learning curve is flat, $a_k(B)=a_k(M)$, and
-in general
+The area term of \eqref{eq:area} is zero on the first visit and whenever the learning curve is flat,
+$a_k(B)=a_k(M)$, and in general
 \[
-  \Delta_{k,c}(L)\;\le\;\frac{M}{L}\,\bigl(a_k(M)-a_k(B)\bigr) .
+  \Delta_{k,c}(L)\;\le\;\frac{M}{L}\,\bigl(a_k(M)-a_k(B)\bigr)+\frac1J .
 \]
 \end{corollary}
 
@@ -454,7 +457,15 @@ then ran the streams. On seeds 10 and 11 the fast level alone exceeds reset on a
 centroids, more for shorter blocks and for harder concepts, as predicted, and the rank correlation between predicted
 and observed gain over the six cells is 0.94; the magnitudes agree as well (0.55 versus 0.53 points, 3.0 versus 2.6,
 10.4 versus 8.6). On the fresh seeds 20 and 21 with the full two-level method the correlation is 0.83
-(\cref{tab:grid,fig:recall}). The six standard generators are the other end of the scale: their learning curves are flat after
+(\cref{tab:grid,fig:recall}). The registered predictions used a simplification of the area term: a stored context of
+$M$ rows on every recurrence, whereas \cref{prop:recall} has $n_c=\min(M,(c-1)L)$, i.e.\ 500 rows on the second visit
+when $L=500$. Recomputed with $n_c$ from the same learning curves, the predictions change only for $L=500$ (100
+centroids: 9.2 instead of 10.4 points; 30 centroids: 1.7 instead of 1.9), the rank correlations are unchanged (0.94
+and 0.83) and the magnitudes agree more closely (9.2 versus 8.6). We report the registered values in
+\cref{tab:grid,fig:recall} because they were fixed before the runs. The theorem idealises relearning as a reset exactly
+at the block boundary and the mixture as identifying the concept under the margin; the observed comparison is
+against DDM, whose detection delay, and the slow level of \method{}, lie outside the theorem, so agreement in
+magnitude is approximate and the first-batch term $\varepsilon_{k,c}$ is not predicted. The six standard generators are the other end of the scale: their learning curves are flat after
 about 200 rows, the predicted gain is at most 0.4 points, and the observed gain of \method{} over reset is 0.1 points
 on average. Recurring-concept memory cannot be evaluated on the standard generators with a TFM; it needs concepts
 that are costly to learn.
@@ -463,7 +474,7 @@ that are costly to learn.
   \centering
   \includegraphics[width=\columnwidth]{fig_recall.pdf}
   \caption{(a) Learning curves of the grid concepts with TabPFN v2, measured before the grid streams were run.
-  (b) Gain of memory over reset per grid cell: predicted from these curves by \cref{prop:recall} against observed, for
+  (b) Gain of memory over reset per grid cell: predicted from these curves (registered values, see \cref{sec:rq1}) against observed, for
   the fast level on seeds 10 and 11 and for \method{} on seeds 20 and 21; the dashed line is equality.}
   \label{fig:recall}
 \end{figure}
@@ -471,8 +482,8 @@ that are costly to learn.
 \begin{table}[t]
   \centering
   \caption{Controlled grid, fresh seeds 20 and 21 (accuracy in \%, mean of two streams per cell). Win.: window ensemble; Fast: the
-  fast level without the slow level. Pred.: gain over reset predicted by \cref{prop:recall} from learning curves
-  measured beforehand; Gain: observed \method{} minus reset, in points.}
+  fast level without the slow level. Pred.: gain over reset predicted from learning curves measured beforehand
+  (registered values, which assume $M$ stored rows on every recurrence; see \cref{sec:rq1}); Gain: observed \method{} minus reset, in points.}
   \label{tab:grid}
   \footnotesize
   \setlength{\tabcolsep}{2.2pt}
@@ -736,18 +747,21 @@ $\ln\bigl(1+(K-1)e^{-\eta g}\bigr)\le(K-1)e^{-\eta g}$. Summing over the $J-1$ l
 \subsection{Proofs of \texorpdfstring{\cref{prop:recall,cor:flat}}{Theorem 1 and Corollary 1}}
 
 \begin{proof}[Proof of \cref{prop:recall}]
-Both learners lose the first batch of the block, whose labels have not arrived. Before batch $j+1$
+The first batch of the block is predicted by both learners before any label of the block has arrived; its
+accuracy difference, divided by $J$, is $\varepsilon_{k,c}$ and is at most $1/J$ in absolute value because
+accuracies lie in $[0,1]$. Before batch $j+1$
 ($j=1,\dots,J-1$) the relearning context holds $\min(jB,M)$ rows of the block, so its expected accuracy is
 $a_k(\min(jB,M))$; the stored expert has expected accuracy $a_k(n_c)$. By \cref{lem:margin}(iii) the mixture
 predicts as the better of the two, so its expected accuracy is the larger of the two values, and the difference to
-relearning is the positive part in \eqref{eq:area}. Averaging over the $J$ batches gives the claim.
+relearning is the positive part in \eqref{eq:area}. Averaging over the $J$ batches gives the area term, and adding
+the first batch gives $\varepsilon_{k,c}$.
 \end{proof}
 
 \begin{proof}[Proof of \cref{cor:flat}]
 On the first visit the pool holds no expert of the concept, so the mixture and the relearning learner use the same
-rows. Since $a_k$ is non-decreasing and $n_c\le M$, every term of \eqref{eq:area} is at most $a_k(M)-a_k(B)$, which
+rows. Since $a_k$ is non-decreasing and $n_c\le M$, every term of the area term is at most $a_k(M)-a_k(B)$, which
 is zero for a flat curve, and the terms with $jB\ge M$ vanish. At most $M/B$ of the $J=L/B$ terms are non-zero,
-which gives the bound.
+which with $|\varepsilon_{k,c}|\le1/J$ gives the bound.
 \end{proof}
 
 \subsection{Proofs of \texorpdfstring{\cref{prop:outer,cor:outer}}{Theorem 2 and Corollary 2}}
