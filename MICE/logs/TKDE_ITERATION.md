@@ -149,3 +149,4 @@
 - 2026-10-09T06:09+11:00：arch_insects_abrupt_balanced 完成（93/113），0 次重试。目前 3 个 worker 都在跑 CoverType（covertype、h4_covertype_e、h3_covertype_c），GPU 均值降到 65%，原因是 CoverType 任务每个 worker 对 GPU 的占用较低，而不是 worker 空闲；内存 21%。项目记录显示 4 个及以上 worker 会出现失败风暴，所以不加并发。
 - 2026-10-09T06:19+11:00：GPU 均值降到 60%。原因：3 个 CoverType worker 各占满 1 个 CPU 核（OMP_NUM_THREADS=1，冻结运行要求保持），GPU 在等 CPU；20 核中 84% 空闲。3 个 worker 已连续 1.5 小时 0 次重试，每 10 批写检查点后失败代价小，所以试用 4 个 worker；如果重试多于完成，就退回 3 个。
 - 2026-10-09T06:29+11:00：改为 4 个 worker 9 分钟后：0 次重试，GPU 均值从 60% 升到 78%，显存峰值 4.5 GB。继续保持 4 个。
+- 2026-10-09T06:59+11:00：arch_h4_covertype_e 完成（94/113）。4 个 worker 已运行 40 分钟，0 次重试，GPU 均值 76%，显存峰值 4.9 GB。
