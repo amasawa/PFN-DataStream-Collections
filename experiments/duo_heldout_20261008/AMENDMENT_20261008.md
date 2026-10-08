@@ -108,3 +108,17 @@ Written before any held-out score was inspected.
   unresponsive nvidia-smi) but cap at **3 workers** (start 3), between two (mostly stable) and four (failure clusters).
   `finish_resource.py` now takes the cap and start count as arguments (SHA-256 `6f38a06bf3ac7f54104174f4d7f269244c52af56fa484b95b7c5d081ebf93c29`). Everything frozen is unchanged.
 - **If three workers still fail in clusters without completions,** the cap goes to two in a further amendment.
+
+## Amendment 6 — two workers for the remaining INSECTS tasks (2026-10-09T01:07:58+11:00)
+
+Written before any held-out score was inspected. Applies the fallback pre-stated in Amendment 5 ("if three workers
+still fail in clusters without completions, the cap goes to two").
+
+- **Observation:** 00:56–01:07, seven worker failures and no completed task (123/132; the nine remaining tasks are
+  seed-2 INSECTS streams of 300 batches). One task (mice_s2_insects_incremental_balanced) resumed twice at batch 101
+  without checkpoint progress; four consecutive failures without progress would block it and leave the run
+  INCOMPLETE, so the frozen evaluator would not run.
+- **Decision:** resource mode unchanged (no failure-rate breaker, retries in new processes), cap and start **2
+  workers** via `finish_resource.py RUN_ROOT REPO 2 2`. Everything frozen is unchanged.
+
+State before switch: {"time":"2026-10-09T01:07:57.010014+11:00","utilization":95,"gpu_mib":4023,"ram_available_mib":24975,"target":3,"running":{"mice_s2_insects_incremental_balanced":416941,"duo_s2_insects_incremental_balanced":417650,"mice_s2_insects_incremental_reoccurring_balanced":418589},"done":123,"total":132,"blocked":0}
