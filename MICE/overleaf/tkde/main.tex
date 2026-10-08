@@ -59,8 +59,9 @@ the plain window at any time, with no assumption on the stream. On a pre-registe
 gain predicted from learning curves measured beforehand ranks the observed gains with Spearman 0.94, and \method{}
 exceeds a reset detector on every stream with hard concepts, by 8.5 points on the hardest cell, and a sliding
 window by 24 points on average. On 29 real streams \method{} is more accurate than all four in-context baselines on
-23 and never more than 0.25 points below the plain window; a pre-registered test on six held-out segments confirms
-both.
+23 and never more than 0.25 points below the plain window; with one-sided 95\% block-bootstrap bounds it is
+non-inferior to the window at a 0.3-point margin on 28 of the 29 streams, the remaining one being too short to
+decide, and a pre-registered test on six held-out segments confirms both.
 \end{abstract}
 \begin{IEEEkeywords}
 Concept drift, recurring concepts, tabular foundation models, in-context learning, data streams, online learning, mixture of experts.
@@ -548,6 +549,18 @@ reset is 9.6 and 8.6 points below. On the third held-out set, \method{} is withi
 segment, has the highest mean (85.2 against 84.9 for FIFO) and is the most accurate policy on five of eight
 segments; the paired difference to FIFO over batches is $+0.30$ points (block-bootstrap 95\% interval
 $[+0.20,+0.40]$), and the registered step of 10 gives the same worst case and five of eight segments.
+
+\textbf{Uncertainty.} The statements above compare observed differences with fixed margins. To account for
+sampling variability and for dependence between consecutive batches, we computed for every real stream the
+one-sided 95\% lower bound of the mean per-batch accuracy difference to FIFO with a moving-block bootstrap over
+batches (blocks of 20 batches, 10\,000 resamples; blocks of 10 and 50 give the same counts). The lower bound is above
+$-0.3$ points on 28 of the 29 streams and above $-0.03$ on all six segments of the fourth held-out set. The
+exception is Spam, which has only 61 batches: its mean difference is $-0.25$ points with a lower bound of $-0.85$, so
+non-inferiority there is undecided rather than refuted. Averaged within each of the nine sources, with every stream
+resampled independently, the lower bound is above $-0.14$ points for eight sources and is $-0.85$ for Spam. These
+bounds concern backbone seed~0 on fixed streams; the second seed below varies the model, not the data, and segments
+of one source are not independent evidence. We therefore claim non-inferiority at a 0.3-point margin for the streams
+where the bound supports it and describe the remaining one as inconclusive.
 
 \textbf{A second seed.} We repeated ten segments with another seed of the backbone, under the same registered
 hypotheses. On the fourth held-out set all four hold again (most accurate on five of six segments, never below
