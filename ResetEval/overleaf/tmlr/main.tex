@@ -53,7 +53,7 @@ already a form of adaptation. A long line of stream-learning work adds an error-
 alarm, discards the past. We ask whether this practice transfers to in-context learners. On 39 real streams from 19
 independent sources and 42 synthetic streams, with eight detectors, three reset actions and three TFMs, we find that a
 full context reset is a \emph{tail risk}: averaged over detectors it loses 26--31 accuracy points on the worst source
-while gaining at most 5--6 on the best, and 87--88\% of the single resets that change the outcome on real streams are
+while gaining only about 5--6 on the best, and 87--88\% of the single resets that change the outcome on real streams are
 net losses. Averaged over sources the effect is not significant after correction for multiple testing, so the
 practice is neither uniformly harmful nor useful; its risk sits in the tail. Two facts explain the asymmetry. Under a
 FIFO budget, the effect of a reset is confined to the next $\lceil M/B\rceil-1$ batches (we prove this and use it for
@@ -150,7 +150,7 @@ most a constant, while a real change is followed within a few batches.
   and the total effect decomposes into per-reset effects.
 \item \textbf{A large controlled evaluation.} Eight detectors $\times$ three actions $\times$ three TFMs on 81 streams,
   with backbone seeds, context budgets and two trained learners, and tests clustered by source
-  (\cref{sec:results}). Code, streams and all cached predictions are released.
+  (\cref{sec:results}). Code, streams and all cached predictions will be released with the paper.
 \item \textbf{A finding and its mechanism.} Error-driven resets are a tail risk for TFMs, not a uniform loss
   (\cref{obs:tail,obs:average}); a FIFO window absorbs most of what a reset could gain (\cref{obs:fifo},
   \cref{prop:memory}).
