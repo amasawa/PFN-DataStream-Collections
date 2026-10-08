@@ -1,0 +1,17 @@
+{
+  "frozen_at": "2026-10-08T03:11:33.570525+00:00",
+  "files": {
+    "source/MICE/run.py": "462f0d5f7bd1256c5e2493cc3dc508e0d7cfa7b2a138f0307cd7304160585a5a",
+    "source/MICE/reweight.py": "fb8c6a9c4a29a24273c813aa13c9f8b2ca866c4210ce6bef755b9039d0d5383a",
+    "controller/base_worker.py": "dcb780a7c648ae3175629dfa7d09b1202b6053025a42b2dc5a1650fae46dd592",
+    "controller/worker.py": "4ea4a913555d5f6430b65969c30cbc36113f5c41625e22e9dd34c4ef6652b305",
+    "controller/evaluate.py": "ef8f4b84302ab6504e0c95de5704c12e3e06e45d37867c90f34a3730abb17d23",
+    "controller/heldout_worker.py": "4ea4a913555d5f6430b65969c30cbc36113f5c41625e22e9dd34c4ef6652b305",
+    "controller/supervisor.py": "cf9ddddeaaf2e43c5a3ab95d4c24a493eb42a27c49a522c9b69455c25b49e00c",
+    "controller/finish.py": "ffcd396d0f2e1a2b628f83d4fc9b52b2d0ab7b4db608120148a808d99ed6532e",
+    "controller/checkpointed_baselines.py": "d4b96bebe63aca2a4a898bd200a5f8b64f5b0b0cfca439df8406a059704540e7",
+    "PLAN.md": "e44d9d7e9da5feb44a34a6f6ca3ff3f41d33cde7600cc2dffd43cce732ddbedd",
+    "tasks.json": "8c864080d74b4fe8d0a1e8a6be9995fe44882d4b51aeae2ce0b389a4e433ac4e",
+    "data_manifest.json": "0a0c92b2c4b2ab39e9c5ccae576e77702b16ef2f46a41aed50032df28d23f331"
+  }
+}

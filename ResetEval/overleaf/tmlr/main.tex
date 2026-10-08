@@ -60,7 +60,8 @@ FIFO budget, the effect of a reset is confined to the next $\lceil M/B\rceil-1$ 
 exact per-reset accounting), so the window already forgets and leaves a reset little to gain; trained incremental
 learners, which never forget, gain from the same resets (+1.8 and +7.3 points on average). We then show that hedging
 the reset context against the FIFO context with exponential weights removes the tail at almost no cost: we prove a
-log-loss guarantee of at most $\ln 2/\eta$ per detection relative to FIFO, and empirically the worst source improves to
+log-loss guarantee of at most $\ln 2/\eta$ per detection relative to FIFO for the undiscounted variant with
+$0<\eta\le1$, and empirically the worst source improves to
 about $-2$ points while 90\% of the best-source gain and the synthetic gains are kept. The findings hold across
 backbones, backbone seeds, context budgets and hedge hyperparameters.
 \end{abstract}
@@ -288,13 +289,16 @@ Under \cref{ass:frozen,ass:positive}, let $\eta\in(0,1]$ and $\gamma=1$. Then:
 
 \begin{remark}
 The first bound in (ii) is the safety guarantee: whatever the detector does, the hedge loses at most a constant per
-alarm relative to never resetting, so false alarms cannot produce the tail of \cref{obs:tail}. The second bound is the
+alarm relative to never resetting in cumulative log-loss. This bound grows with the number of alarms and does not
+guarantee a small accuracy loss; the accuracy-tail reduction is an empirical finding. The second bound is the
 benefit: on segments where the reset context is better, the hedge follows it up to the same constant. The proof
 (\cref{app:proofs}) is the aggregating-algorithm argument \citep{vovk1990aggregating} with one change: the weights are
 updated once per batch rather than once per row, and a generalised H\"older inequality shows that this costs nothing.
 The bound is stated for $\eta\le1$ and no discounting; with $\gamma<1$ the weights forget faster and our argument
 does not give a bound of this form, which is why we also report the variant $\eta=1,\gamma=1$. The implementation clips probabilities
-at $10^{-6}$ for numerical reasons, which \cref{ass:positive} abstracts away.
+at $10^{-6}$ for loss updates and normalizes the cached mixture before scoring. The theorem concerns positive,
+normalized expert probabilities without this clipping; the numerical check below is a check of the implemented
+variant on these streams, not a proof that clipping preserves the bound on arbitrary streams.
 \end{remark}
 
 % ---------------------------------------------------------------------------------------------------------------------
@@ -345,7 +349,7 @@ which is the situation detectors were designed for.
 \input{tables/tails.tex}
 
 The average hides where the risk is. \Cref{tab:tails} reports, for each backbone, the worst and the best source of
-each action. A full reset loses 26 to 31 points on the worst source and gains 5 to 8 on the best. The loss is not a
+each action. A full reset loses 26 to 31 points on the worst source and gains approximately 5 to 6 on the best. The loss is not a
 property of one model: covertype and wall are the two worst sources for all three TFMs. At the level of single resets
 (\cref{prop:memory}), 88.1\% (TabPFN), 88.3\% (TabICL) and 87.3\% (TabDPT) of the resets that change the accuracy of
 the batches they affect are net losses on real streams, against 12--16\% on synthetic streams.
@@ -355,8 +359,10 @@ the batches they affect are net losses on real streams, against 12--16\% on synt
 \input{tables/learners.tex}
 
 \Cref{tab:learners} applies the same detectors to two trained incremental learners. For them resets help on average
-($+1.8$ for the Hoeffding tree, $+7.3$ for naive Bayes), and the share of harmful single resets drops from 88\% to 70\%
-and 49\%. The losses on the worst sources are of the same order for all learners (covertype and wall again); what
+($+1.8$ for the Hoeffding tree, $+7.3$ for naive Bayes). Within the first ten batches after each alarm, cut at the
+next alarm, 70\% and 49\% of their non-zero accuracy differences are negative. These local-window statistics are
+descriptive: unlike TabPFN's exact finite-memory attribution (88\% harmful), they do not capture the full effects
+of trained-model resets, which can persist longer. The losses on the worst sources are of the same order for all learners (covertype and wall again); what
 differs is the gain. On eeg, chest and home, where resets help most, they gain 28.5, 14.5 and 12.5 points for the
 Hoeffding tree, 39.2, 23.4 and 34.1 for naive Bayes, and only 6.3, 1.9 and 1.4 for TabPFN. A learner that never forgets needs the reset to forget; a FIFO window
 does it anyway, and \cref{prop:memory}(iii) caps the advantage a reset can build. The weaker and the less forgetful the
@@ -368,18 +374,18 @@ starting point (\cref{app:learners}).
 
 The context budget moves the cap. With $M=500$ the best-source gain of a full reset shrinks to 4.4 points and its
 worst-source loss to $-17.6$; with $M=2000$ the gain grows to 7.7 while the loss stays at $-26.6$ (\cref{tab:budget}).
-On synthetic streams, where alarms are mostly correct, the gain grows from 3.5 to 8.0 to 14.6 points. The gain side
+On synthetic streams, where most non-zero reset effects are beneficial, the gain grows from 3.5 to 8.0 to 14.6 points. The gain side
 follows \cref{prop:memory}(iii): a longer window forgets more slowly, so a correct reset stays ahead for longer. The
 loss side does not grow beyond $M=1000$, plausibly because on the worst sources a reset at $M=1000$ already discards
 nearly all useful context. The hedge keeps the synthetic gain at every budget ($+14.3$ at $M=2000$).
 
-\subsection{The hedge removes the tail}
+\subsection{The hedge reduces the observed tail}
 
 Keeping FIFO next to the reset context changes the picture on every backbone (\cref{tab:tails}): the worst source
 improves from $-26$ to $-31$ points to about $-2$, the best source keeps 90\% of the gain of a full reset or more
 (e.g.\ $+6.0$ vs.\ $+6.3$ for TabPFN), and on synthetic streams the hedge keeps essentially all of the gain of a full
 reset ($+7.9$ vs.\ $+8.0$). Its average on real streams is small and positive ($+0.2$ to $+0.3$ points on the three backbones), not
-significantly different from FIFO; its value is that it no longer has a tail. Keeping half of the window (\half) is a weaker
+significantly different from FIFO; its value is the substantial reduction of the observed worst-source loss. Keeping half of the window (\half) is a weaker
 compromise: it shortens the tail to $-4.3$, $-5.4$ and $-13.0$ points but gives up most of the gain (best source
 below $+1$). The hedge helps the
 trained learners as well (\cref{tab:learners}), so it is a general way to act on an alarm, not a fix specific to TFMs.
@@ -433,8 +439,10 @@ model fixed and study what the stream controller around it should do.
 
 The average effect of resets over real sources is not significant, so we do not claim that resets are harmful in
 general; the claim is about the tail. The real streams are fixed sequences, so the backbone seeds do not vary the data;
-we rely on 19 sources and synthetic seeds for that. Detectors use default parameters; tuned detectors would fire less
-often, which would shrink both the tail and the gain. The hedge doubles the number of TFM calls after an alarm.
+we rely on 19 sources and synthetic seeds for that. Detectors use default parameters; tuning could change alarm
+frequency and the tradeoff between gains and losses, which we have not evaluated. The hedge requires up to twice
+as many distinct context predictions while the reset and FIFO contexts differ; identical contexts share their
+cached prediction.
 Its theorem covers $\eta\le1$ without discounting, while the default uses $\eta=2,\gamma=0.5$; we show empirically that
 the choice does not matter here, but the guarantee is for the idealised variant. The trained learners have no
 probability-based metrics in our study.
@@ -443,7 +451,9 @@ probability-based metrics in our study.
 
 A FIFO window already makes a tabular in-context learner forget. Adding an error-driven reset on top of it buys little
 and occasionally costs a great deal. Keeping the FIFO context and hedging against it keeps what the detector is good
-for and removes what it is bad at, with a guarantee and at the price of a second forward pass.
+for and substantially reduces the observed losses. The undiscounted variant has a cumulative log-loss guarantee;
+the default discounted variant has empirical support here, at the cost of an additional context prediction while
+the two contexts differ.
 
 \bibliography{refs}
 \bibliographystyle{tmlr}

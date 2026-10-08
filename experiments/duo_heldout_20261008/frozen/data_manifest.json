@@ -1,0 +1,178 @@
+[
+  {
+    "stream": "covertype",
+    "source": "covertype",
+    "input_rows": 150000,
+    "rows": 30000,
+    "input_sha256": "5be2a8042cf7df10f21cae9a0a2a37b90b593044acdfdf10c1cf22a30d0ae18b",
+    "prefix_sha256": "2657b2aa223d69e30b42d22891525cfb42cb662e8075b1e76871756461012d51"
+  },
+  {
+    "stream": "h3_covertype_b",
+    "source": "covertype",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "f1beeee448be7f7763b9afb96e6c8578bbb5a8b384a4b9821a62796a1466392b",
+    "prefix_sha256": "e27d3b7024cfe667967239e9ce4530fd4d89d775b3289f4e93d407179ba34e81"
+  },
+  {
+    "stream": "h3_covertype_c",
+    "source": "covertype",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "457fa6eb6823148c47bbee9e7adf8bffdacc553b6eaee492d3c9ff52eda5c9a2",
+    "prefix_sha256": "42c5344f8757800f1b4f7fc46aa90f2ba27de96374ab2308d8c9c44dbbb611ff"
+  },
+  {
+    "stream": "h4_covertype_d",
+    "source": "covertype",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "d94ba70ab1657aa1eb51109cb212e7a69cec00d0dae2c0fae33bfcb736e1151c",
+    "prefix_sha256": "fd96d9aaf3234351d3e069f5d6afa02146302ef7f376bf4617f652398a0136fa"
+  },
+  {
+    "stream": "h4_covertype_e",
+    "source": "covertype",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "9fec3a73c5a85add8a0229f560beef1e1ebb1b46285b6e2d5a7d1580c3c7a87c",
+    "prefix_sha256": "0c95a569f99462ac4f919b77d81e4c1b8beb86d77ca948397244990eaa4a9d15"
+  },
+  {
+    "stream": "h3_airlines_b",
+    "source": "airlines",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "a58c92c8d98ec54e55af3224b3932b6512eabc70d4bd915c7614dce819d219c2",
+    "prefix_sha256": "ca1d1d2873b67b0e3d5faeee1d002e90a860fd3bb76a3a579e2d8de70a1edfd4"
+  },
+  {
+    "stream": "h3_airlines_c",
+    "source": "airlines",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "1f66dc6d64f1dee035d6af6664e5ee2985462908f1e11f159c869f8b72b5c8fb",
+    "prefix_sha256": "d583760b50f39488f9fc1e5eb578d96f733fab1f4b890f722d3bf456e20c5406"
+  },
+  {
+    "stream": "h4_airlines_d",
+    "source": "airlines",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "e12a63f572294b8a624c884215f50878401f83e1f9e16ebe94de99059dd34866",
+    "prefix_sha256": "5557a730c412618752c72bc28abcb19f2740b19ef23aa0cb3d9cb70728d3372c"
+  },
+  {
+    "stream": "h4_airlines_e",
+    "source": "airlines",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "3ee7f0224c7b2042b5bc382086838dd191fa8e0fba556d729c5cf40b94a42482",
+    "prefix_sha256": "43d3ed722b9e123ab5bbf86fb02604ca30dcf6f83c026f1eb2c44b3cb6308551"
+  },
+  {
+    "stream": "h3_poker_b",
+    "source": "poker",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "a05392169c248a31a00417158e7b5f46a89403fb57fac9a4755e85547487850a",
+    "prefix_sha256": "2881d5a2f73150f5f64caa65e7ca788bd886a4464759705cf9a7b0e843e490c2"
+  },
+  {
+    "stream": "h3_poker_c",
+    "source": "poker",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "1c807edd37cc1fca582311f1ae07cbfaa83fd8e9eb79068e193f36430ba49709",
+    "prefix_sha256": "1b1bf492162be9329565ee070da0669ae3905d82b5d9cfaa54963be01b301b20"
+  },
+  {
+    "stream": "h4_poker_d",
+    "source": "poker",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "a47f1dda14a8a07978f7881d0f53d2386db665a4c50ff162d0b35da0df864f53",
+    "prefix_sha256": "0bfe4fcfa4593b175c9f47531c6e6ff5cd25c4433f9fb3adb6167635cb006ede"
+  },
+  {
+    "stream": "h4_poker_e",
+    "source": "poker",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "529ee359f10fd71c4b66d27a9822b2efdbd52d0c958e0486f4ee10f72ac4433f",
+    "prefix_sha256": "f80331823fb740fb2539972d63db9a61d9a492b7e6be9c79d417b4c080aa1b1e"
+  },
+  {
+    "stream": "insects_abrupt_balanced",
+    "source": "insects",
+    "input_rows": 52848,
+    "rows": 30000,
+    "input_sha256": "da78512498da336badf60bcef8b44282879be41c0a0abaf2033fa72da7725709",
+    "prefix_sha256": "837d42b39e4c10b3f6b644891ddc5f15c6871e94105e6f84c1a2d0f0d6d1e44c"
+  },
+  {
+    "stream": "insects_abrupt_imbalanced",
+    "source": "insects",
+    "input_rows": 150000,
+    "rows": 30000,
+    "input_sha256": "d4472598be59f6e60dbb963737927d9b785f8bd121d8e30178d8310b5e42f454",
+    "prefix_sha256": "bd0bbae19ae1b7844c2f811757b29022f20ea3f7bf0ad1c300de39f69ef8fa64"
+  },
+  {
+    "stream": "insects_gradual_balanced",
+    "source": "insects",
+    "input_rows": 24150,
+    "rows": 24100,
+    "input_sha256": "ea3634135e1ea4863197a96a55661e767edc18374badcccdf42d970fcdee6f6d",
+    "prefix_sha256": "edecad6e9250f2fc2673e6702c6306275c513fa20f1747a127daa458e05ce44c"
+  },
+  {
+    "stream": "insects_gradual_imbalanced",
+    "source": "insects",
+    "input_rows": 143323,
+    "rows": 30000,
+    "input_sha256": "0a7cb0c77d5f99a201e8910a7dcb7850d1928539a476859b775f7ec7fad3b503",
+    "prefix_sha256": "37936e3ebca8005a706c052f55cbfe86fdbf2a0ba3150a8866cae7c64fee80d5"
+  },
+  {
+    "stream": "insects_incremental_abrupt_balanced",
+    "source": "insects",
+    "input_rows": 79986,
+    "rows": 30000,
+    "input_sha256": "0ec04baa084e52a09e82db47884216d43977356df312cab7706f9cc112e0203a",
+    "prefix_sha256": "a75fd5a1709a26f2803a322b6f0e28154a4c977ec25095cfad4cad409fa776c8"
+  },
+  {
+    "stream": "insects_incremental_balanced",
+    "source": "insects",
+    "input_rows": 57018,
+    "rows": 30000,
+    "input_sha256": "200bfbf37de9b0e2268161ee360d097786196a08e3a035c43baff4bfa041919b",
+    "prefix_sha256": "c82ae35c441543a6adb107852479ae0074742701c9f305a4875ee5483468fd99"
+  },
+  {
+    "stream": "insects_incremental_reoccurring_balanced",
+    "source": "insects",
+    "input_rows": 79986,
+    "rows": 30000,
+    "input_sha256": "8c84f87cabc93187762c932a394d644104c74233e93a674b33ae6b2d2adc3352",
+    "prefix_sha256": "1716ab1a6d40616e4366a11158ded8736d5d58cc90911a2f0f54fdfe357adbc7"
+  },
+  {
+    "stream": "h3_insects_b",
+    "source": "insects",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "175cb41fbd83ee0b93a288ed774f3e6efce2b48f7d10b5c4a8850741ed5b7f95",
+    "prefix_sha256": "bacf37aa1897812b7c083119ec3e719c3d9360138801342d8c2d8ed4fc8c8c4a"
+  },
+  {
+    "stream": "h3_insects_c",
+    "source": "insects",
+    "input_rows": 100000,
+    "rows": 30000,
+    "input_sha256": "adf17f801071f199ea3d6bc49d12d4665321ba363dbe1c1c0e8e2100f0ed0114",
+    "prefix_sha256": "70bafd887b5deb0fa15ab3265ac02402a6d4e182efc9e91e4e60ed1da6e49cb2"
+  }
+]

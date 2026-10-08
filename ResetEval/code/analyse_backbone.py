@@ -16,6 +16,7 @@ import pandas as pd
 
 from analyse_stage1 import DETS, POLS, REAL, RES, SYN
 from cluster_tests import holm, source, tests
+from reset_effects import effects
 
 NEW = ["gas", "occupancy", "room", "bank", "kdd", "eeg", "news", "home", "wall", "chest"]
 
@@ -34,9 +35,8 @@ def main(bb):
                 rows.append(dict(group=grp, stream=s, pol=p, acc=100 * np.nanmean(a), resets=len(r),
                                  d_acc=100 * (np.nanmean(a) - np.nanmean(a0))))
                 if p in DETS:
-                    for i, t in enumerate(r):
-                        end = min(t + 10, r[i + 1] if i + 1 < len(r) else len(a), len(a))
-                        rr.append(dict(group=grp, stream=s, det=p, gain=100 * np.nansum(a[t:end] - a0[t:end])))
+                    for gain in effects(a, a0, r, int(z['B']), int(z['M']) if 'M' in z else None):
+                        rr.append(dict(group=grp, stream=s, det=p, gain=gain))
     S = pd.DataFrame(rows); S["src"] = S.stream.map(source); R = pd.DataFrame(rr)
     S.to_csv(f"{RES}/stage2_{bb}_summary.csv", index=False)
     out = []

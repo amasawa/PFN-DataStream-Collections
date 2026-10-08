@@ -62,7 +62,7 @@ context inherits \mice{}'s any-time regret bound against the plain window, and e
 eighteen fresh synthetic streams with controlled recurrence, a pre-registered test confirms the mechanism: the gain
 over \mice{} grows with how often concepts recur ($+0.28$, $+0.15$ and $+0.01$ points for concepts that appear five
 times, three times and once), is largest for concepts that are hard to learn, and is never below $-0.01$ points on
-any stream. \todo{Held-out confirmation on real streams, after approval.}
+any stream (rounded). \todo{Held-out confirmation on real-stream prefixes is running under the frozen plan.}
 \end{abstract}
 
 % =====================================================================================================
@@ -190,8 +190,7 @@ window and the fast mixture over $\mathcal E'$; which experts the fast mixture c
 \Cref{cor:safe} compares \method{} with the window, not with \mice{}. Adding an expert changes the fast mixture, and
 the fast mixture of \mice{} is not one of \method{}'s slow-level experts, so a bound against \mice{} would need a third
 slow-level expert. We keep \mice{} unchanged and measure the difference instead (\cref{sec:exp-dev}).
-\todo{Optionally evaluate the nested variant whose slow level also contains \mice{}'s output, which has a
-$\ln3/\eta_2$ bound against \mice{}; pre-register before computing.}
+An additional slow-level expert containing \mice{}'s output is a possible future extension; it is not evaluated here.
 \end{remark}
 
 \begin{remark}[Why a wrong selection is cheap]
@@ -212,7 +211,7 @@ batches, stored contexts recover older concepts at the granularity of segments.
 \textbf{Protocol.} As \mice{}: $B=100$, $M=1000$, labels one batch late, TabPFN v2 with four estimators. Every
 comparison is on the same batches with the same backbone seed. All decision rules were written and committed before
 the corresponding runs; we report every pre-specified variant, including failures. The 22 real streams not used in
-development are held out and untouched. Backbone seeds change model randomness on fixed data and are not independent
+development are reserved for frozen confirmation. Backbone seeds change model randomness on fixed data and are not independent
 data replicates.
 
 \subsection{Development Streams: Selection Alone and as an Expert}
@@ -278,7 +277,8 @@ picks the better of \duo{} and \mice{} per stream after the fact is only 0.23--0
 Eighteen fresh synthetic streams from \mice{}'s grid generator, unused by either method: fifteen blocks of 2000 rows,
 pure real drift (shared inputs, permuted centroid labels), with $K\in\{3,5,15\}$ distinct concepts so that each
 concept appears 5 times, 3 times, or once; 30 or 100 centroids; three data seeds. Pre-registered hypotheses:
-(H1) no negative effect when concepts never recur; (H2) no negative effect anywhere; (H3) the gain over \mice{}
+(H1) no loss exceeding the 0.30-point tolerance when concepts never recur; (H2) the same tolerance on every stream,
+with mean log-loss at most 0.005 above \mice{}; (H3) the gain over \mice{}
 increases with recurrence ($K=3>K=5>K=15$) and is positive on at least 5 of 6 streams at $K=3$. Before the results we
 noted that with blocks of 20 batches and $H=100$, a concept with $K=5$ returns exactly at the edge of the selection
 horizon, and predicted that the gain at $K=5$ might be close to that at $K=15$.
@@ -313,8 +313,16 @@ streams (6.3 to 14.5 points): selection refines a memory that already recalls mo
 \subsection{Held-Out Real Streams}
 \label{sec:exp-heldout}
 
-\todo{Frozen evaluation on the 22 held-out real streams, only if \cref{sec:exp-mech} supports H1--H2; requires
-explicit approval before running.}
+Following the mechanism test, we froze a confirmation on 22 real-stream prefixes not used to develop
+\method{}, although they were previously used to evaluate \mice{}. We use the first 300 complete batches
+(or all complete batches for shorter streams), with batch 0 reserved for warm-up, and backbone seeds 0, 1 and 2.
+The primary method and all constants remain unchanged. The decision requires, separately for each seed,
+that every stream lose at most 0.30 accuracy points against both \mice{} and FIFO, that mean gain over
+\mice{} be non-negative, and that mean log-loss be at most 0.005 above \mice{}.
+We report every stream and seed, including failures. The streams form only four source groups
+(Airlines, Covertype, Poker and INSECTS); source summaries average streams within source before averaging
+the four sources. Neither the 22 streams nor the 66 stream--seed pairs are independent replications.
+The evaluation also records the incremental selection cost. \todo{Insert validated frozen results and cost table.}
 
 % =====================================================================================================
 \section{Related Work}
@@ -342,16 +350,20 @@ make adding an expert cheap in regret; \cref{cor:safe} is an instance at the lev
 The gain of \method{} over \mice{} is small: $+0.15$ points on the development streams, mostly from one stream, and at
 most about half a point on the synthetic streams, where \mice{} itself gains 6.3 to 14.5 points over the window. The
 synthetic streams are pure real drift with a fixed input distribution, cleaner than real streams. The mechanism test
-uses one backbone seed (with three independent data seeds), and the development backbone seeds share data. The
-safeguard is against the window, not against \mice{}; the absence of losses against \mice{} is measured, not proved.
+uses one backbone seed (with three independent data seeds), and the development backbone seeds share data.
+Changing the number of concepts changes both recurrence frequency and return interval, so this experiment does
+not isolate their individual effects. Real-stream confirmation concerns 300-batch prefixes from four sources.
+The safeguard is against the window, not against \mice{}; the small observed losses against \mice{} satisfy
+an empirical tolerance criterion, not a guarantee of non-decreasing accuracy.
 Selection costs extra TFM calls per batch. \todo{Held-out results and measured cost.}
 
 \section{Conclusion}
 
 Relevance selection gives an in-context learner the right past rows when concepts recur and the wrong ones when they
 do not. As an expert of a mixture with a window safeguard, the first property is kept and the second is contained:
-on streams with controlled recurrence the gain grows with how often and how hard the concept recurs, and is zero,
-not negative, when nothing recurs. \todo{Final claim after held-out results.}
+on these controlled streams the gain is larger for frequent recurrence and harder concepts, and is approximately
+zero on average without recurrence. Individual losses remain within the pre-specified tolerance.
+\todo{Final claim after held-out results.}
 
 \bibliography{refs}
 \bibliographystyle{icml2026}

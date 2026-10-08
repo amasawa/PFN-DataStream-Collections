@@ -1,0 +1,1256 @@
+[
+  {
+    "id": "mice_s0_covertype",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "covertype",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_covertype",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "covertype",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/covertype.npz"
+  },
+  {
+    "id": "mice_s0_h3_covertype_b",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_covertype_b",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h3_covertype_b",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_covertype_b",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h3_covertype_b.npz"
+  },
+  {
+    "id": "mice_s0_h3_covertype_c",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_covertype_c",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h3_covertype_c",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_covertype_c",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h3_covertype_c.npz"
+  },
+  {
+    "id": "mice_s0_h4_covertype_d",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_covertype_d",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h4_covertype_d",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_covertype_d",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h4_covertype_d.npz"
+  },
+  {
+    "id": "mice_s0_h4_covertype_e",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_covertype_e",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h4_covertype_e",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_covertype_e",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h4_covertype_e.npz"
+  },
+  {
+    "id": "mice_s0_h3_airlines_b",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_airlines_b",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h3_airlines_b",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_airlines_b",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h3_airlines_b.npz"
+  },
+  {
+    "id": "mice_s0_h3_airlines_c",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_airlines_c",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h3_airlines_c",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_airlines_c",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h3_airlines_c.npz"
+  },
+  {
+    "id": "mice_s0_h4_airlines_d",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_airlines_d",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h4_airlines_d",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_airlines_d",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h4_airlines_d.npz"
+  },
+  {
+    "id": "mice_s0_h4_airlines_e",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_airlines_e",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h4_airlines_e",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_airlines_e",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h4_airlines_e.npz"
+  },
+  {
+    "id": "mice_s0_h3_poker_b",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_poker_b",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h3_poker_b",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_poker_b",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h3_poker_b.npz"
+  },
+  {
+    "id": "mice_s0_h3_poker_c",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_poker_c",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h3_poker_c",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_poker_c",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h3_poker_c.npz"
+  },
+  {
+    "id": "mice_s0_h4_poker_d",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_poker_d",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h4_poker_d",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_poker_d",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h4_poker_d.npz"
+  },
+  {
+    "id": "mice_s0_h4_poker_e",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_poker_e",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h4_poker_e",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_poker_e",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h4_poker_e.npz"
+  },
+  {
+    "id": "mice_s0_insects_abrupt_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_abrupt_balanced",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_insects_abrupt_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_abrupt_balanced",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/insects_abrupt_balanced.npz"
+  },
+  {
+    "id": "mice_s0_insects_abrupt_imbalanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_abrupt_imbalanced",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_insects_abrupt_imbalanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_abrupt_imbalanced",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/insects_abrupt_imbalanced.npz"
+  },
+  {
+    "id": "mice_s0_insects_gradual_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_gradual_balanced",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_insects_gradual_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_gradual_balanced",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/insects_gradual_balanced.npz"
+  },
+  {
+    "id": "mice_s0_insects_gradual_imbalanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_gradual_imbalanced",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_insects_gradual_imbalanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_gradual_imbalanced",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/insects_gradual_imbalanced.npz"
+  },
+  {
+    "id": "mice_s0_insects_incremental_abrupt_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_incremental_abrupt_balanced",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_insects_incremental_abrupt_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_incremental_abrupt_balanced",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/insects_incremental_abrupt_balanced.npz"
+  },
+  {
+    "id": "mice_s0_insects_incremental_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_incremental_balanced",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_insects_incremental_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_incremental_balanced",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/insects_incremental_balanced.npz"
+  },
+  {
+    "id": "mice_s0_insects_incremental_reoccurring_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_incremental_reoccurring_balanced",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_insects_incremental_reoccurring_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_incremental_reoccurring_balanced",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/insects_incremental_reoccurring_balanced.npz"
+  },
+  {
+    "id": "mice_s0_h3_insects_b",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_insects_b",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h3_insects_b",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_insects_b",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h3_insects_b.npz"
+  },
+  {
+    "id": "mice_s0_h3_insects_c",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_insects_c",
+    "seed": 0,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s0"
+  },
+  {
+    "id": "duo_s0_h3_insects_c",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_insects_c",
+    "seed": 0,
+    "anchor": 1,
+    "out": "duo/s0/h3_insects_c.npz"
+  },
+  {
+    "id": "mice_s1_covertype",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "covertype",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_covertype",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "covertype",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/covertype.npz"
+  },
+  {
+    "id": "mice_s1_h3_covertype_b",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_covertype_b",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h3_covertype_b",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_covertype_b",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h3_covertype_b.npz"
+  },
+  {
+    "id": "mice_s1_h3_covertype_c",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_covertype_c",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h3_covertype_c",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_covertype_c",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h3_covertype_c.npz"
+  },
+  {
+    "id": "mice_s1_h4_covertype_d",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_covertype_d",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h4_covertype_d",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_covertype_d",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h4_covertype_d.npz"
+  },
+  {
+    "id": "mice_s1_h4_covertype_e",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_covertype_e",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h4_covertype_e",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_covertype_e",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h4_covertype_e.npz"
+  },
+  {
+    "id": "mice_s1_h3_airlines_b",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_airlines_b",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h3_airlines_b",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_airlines_b",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h3_airlines_b.npz"
+  },
+  {
+    "id": "mice_s1_h3_airlines_c",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_airlines_c",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h3_airlines_c",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_airlines_c",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h3_airlines_c.npz"
+  },
+  {
+    "id": "mice_s1_h4_airlines_d",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_airlines_d",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h4_airlines_d",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_airlines_d",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h4_airlines_d.npz"
+  },
+  {
+    "id": "mice_s1_h4_airlines_e",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_airlines_e",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h4_airlines_e",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_airlines_e",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h4_airlines_e.npz"
+  },
+  {
+    "id": "mice_s1_h3_poker_b",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_poker_b",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h3_poker_b",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_poker_b",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h3_poker_b.npz"
+  },
+  {
+    "id": "mice_s1_h3_poker_c",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_poker_c",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h3_poker_c",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_poker_c",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h3_poker_c.npz"
+  },
+  {
+    "id": "mice_s1_h4_poker_d",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_poker_d",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h4_poker_d",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_poker_d",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h4_poker_d.npz"
+  },
+  {
+    "id": "mice_s1_h4_poker_e",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_poker_e",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h4_poker_e",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_poker_e",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h4_poker_e.npz"
+  },
+  {
+    "id": "mice_s1_insects_abrupt_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_abrupt_balanced",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_insects_abrupt_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_abrupt_balanced",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/insects_abrupt_balanced.npz"
+  },
+  {
+    "id": "mice_s1_insects_abrupt_imbalanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_abrupt_imbalanced",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_insects_abrupt_imbalanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_abrupt_imbalanced",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/insects_abrupt_imbalanced.npz"
+  },
+  {
+    "id": "mice_s1_insects_gradual_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_gradual_balanced",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_insects_gradual_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_gradual_balanced",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/insects_gradual_balanced.npz"
+  },
+  {
+    "id": "mice_s1_insects_gradual_imbalanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_gradual_imbalanced",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_insects_gradual_imbalanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_gradual_imbalanced",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/insects_gradual_imbalanced.npz"
+  },
+  {
+    "id": "mice_s1_insects_incremental_abrupt_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_incremental_abrupt_balanced",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_insects_incremental_abrupt_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_incremental_abrupt_balanced",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/insects_incremental_abrupt_balanced.npz"
+  },
+  {
+    "id": "mice_s1_insects_incremental_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_incremental_balanced",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_insects_incremental_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_incremental_balanced",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/insects_incremental_balanced.npz"
+  },
+  {
+    "id": "mice_s1_insects_incremental_reoccurring_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_incremental_reoccurring_balanced",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_insects_incremental_reoccurring_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_incremental_reoccurring_balanced",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/insects_incremental_reoccurring_balanced.npz"
+  },
+  {
+    "id": "mice_s1_h3_insects_b",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_insects_b",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h3_insects_b",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_insects_b",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h3_insects_b.npz"
+  },
+  {
+    "id": "mice_s1_h3_insects_c",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_insects_c",
+    "seed": 1,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s1"
+  },
+  {
+    "id": "duo_s1_h3_insects_c",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_insects_c",
+    "seed": 1,
+    "anchor": 1,
+    "out": "duo/s1/h3_insects_c.npz"
+  },
+  {
+    "id": "mice_s2_covertype",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "covertype",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_covertype",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "covertype",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/covertype.npz"
+  },
+  {
+    "id": "mice_s2_h3_covertype_b",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_covertype_b",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h3_covertype_b",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_covertype_b",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h3_covertype_b.npz"
+  },
+  {
+    "id": "mice_s2_h3_covertype_c",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_covertype_c",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h3_covertype_c",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_covertype_c",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h3_covertype_c.npz"
+  },
+  {
+    "id": "mice_s2_h4_covertype_d",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_covertype_d",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h4_covertype_d",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_covertype_d",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h4_covertype_d.npz"
+  },
+  {
+    "id": "mice_s2_h4_covertype_e",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_covertype_e",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h4_covertype_e",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_covertype_e",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h4_covertype_e.npz"
+  },
+  {
+    "id": "mice_s2_h3_airlines_b",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_airlines_b",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h3_airlines_b",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_airlines_b",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h3_airlines_b.npz"
+  },
+  {
+    "id": "mice_s2_h3_airlines_c",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_airlines_c",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h3_airlines_c",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_airlines_c",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h3_airlines_c.npz"
+  },
+  {
+    "id": "mice_s2_h4_airlines_d",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_airlines_d",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h4_airlines_d",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_airlines_d",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h4_airlines_d.npz"
+  },
+  {
+    "id": "mice_s2_h4_airlines_e",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_airlines_e",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h4_airlines_e",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_airlines_e",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h4_airlines_e.npz"
+  },
+  {
+    "id": "mice_s2_h3_poker_b",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_poker_b",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h3_poker_b",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_poker_b",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h3_poker_b.npz"
+  },
+  {
+    "id": "mice_s2_h3_poker_c",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_poker_c",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h3_poker_c",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_poker_c",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h3_poker_c.npz"
+  },
+  {
+    "id": "mice_s2_h4_poker_d",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_poker_d",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h4_poker_d",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_poker_d",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h4_poker_d.npz"
+  },
+  {
+    "id": "mice_s2_h4_poker_e",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h4_poker_e",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h4_poker_e",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h4_poker_e",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h4_poker_e.npz"
+  },
+  {
+    "id": "mice_s2_insects_abrupt_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_abrupt_balanced",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_insects_abrupt_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_abrupt_balanced",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/insects_abrupt_balanced.npz"
+  },
+  {
+    "id": "mice_s2_insects_abrupt_imbalanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_abrupt_imbalanced",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_insects_abrupt_imbalanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_abrupt_imbalanced",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/insects_abrupt_imbalanced.npz"
+  },
+  {
+    "id": "mice_s2_insects_gradual_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_gradual_balanced",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_insects_gradual_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_gradual_balanced",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/insects_gradual_balanced.npz"
+  },
+  {
+    "id": "mice_s2_insects_gradual_imbalanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_gradual_imbalanced",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_insects_gradual_imbalanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_gradual_imbalanced",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/insects_gradual_imbalanced.npz"
+  },
+  {
+    "id": "mice_s2_insects_incremental_abrupt_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_incremental_abrupt_balanced",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_insects_incremental_abrupt_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_incremental_abrupt_balanced",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/insects_incremental_abrupt_balanced.npz"
+  },
+  {
+    "id": "mice_s2_insects_incremental_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_incremental_balanced",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_insects_incremental_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_incremental_balanced",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/insects_incremental_balanced.npz"
+  },
+  {
+    "id": "mice_s2_insects_incremental_reoccurring_balanced",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "insects_incremental_reoccurring_balanced",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_insects_incremental_reoccurring_balanced",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "insects_incremental_reoccurring_balanced",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/insects_incremental_reoccurring_balanced.npz"
+  },
+  {
+    "id": "mice_s2_h3_insects_b",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_insects_b",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h3_insects_b",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_insects_b",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h3_insects_b.npz"
+  },
+  {
+    "id": "mice_s2_h3_insects_c",
+    "stage": "heldout",
+    "kind": "mice",
+    "stream": "h3_insects_c",
+    "seed": 2,
+    "anchor": 1,
+    "method": "micev1000_500",
+    "out": "mice/s2"
+  },
+  {
+    "id": "duo_s2_h3_insects_c",
+    "stage": "heldout",
+    "kind": "duo",
+    "stream": "h3_insects_c",
+    "seed": 2,
+    "anchor": 1,
+    "out": "duo/s2/h3_insects_c.npz"
+  }
+]

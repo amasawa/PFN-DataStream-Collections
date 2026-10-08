@@ -11,6 +11,7 @@ import pandas as pd
 
 from analyse_stage1 import DETS, REAL, RES, SYN
 from cluster_tests import source
+from reset_effects import effects
 
 NEW = ["gas", "occupancy", "room", "bank", "kdd", "eeg", "news", "home", "wall", "chest"]
 REALS = REAL + NEW
@@ -43,9 +44,8 @@ def d_table(d, pols, base="none", groups=("real", "syn")):
                 rows.append(dict(group=grp, stream=s, src=source(s), pol=p, d=100 * (np.nanmean(a) - np.nanmean(a0))))
                 if "+" not in p and p in DETS:
                     r = z["resets"]
-                    for i, t in enumerate(r):
-                        end = min(t + 10, r[i + 1] if i + 1 < len(r) else len(a), len(a))
-                        rr.append(dict(group=grp, det=p, gain=100 * np.nansum(a[t:end] - a0[t:end])))
+                    for gain in effects(a, a0, r, int(z['B']), int(z['M']) if 'M' in z else None):
+                        rr.append(dict(group=grp, det=p, gain=gain))
     return pd.DataFrame(rows), pd.DataFrame(rr)
 
 
@@ -157,7 +157,9 @@ def learners_table():
     write("learners", r"""\begin{table}[t]
 \centering
 \caption{The same detectors on trained incremental learners and on TabPFN (all 81 streams), accuracy minus the
-never-reset learner in points, averaged over the 8 detectors. Harm as in \cref{tab:tails}.}
+never-reset learner in points, averaged over the 8 detectors. For trained learners, Harm measures negative
+non-zero differences within the first ten batches after an alarm (cut at the next alarm), not the full
+effect of the reset. For TabPFN, Harm uses the exact finite-memory attribution in \cref{tab:tails}.}
 \label{tab:learners}
 \small
 \begin{tabular}{l rrrr r rrrr}

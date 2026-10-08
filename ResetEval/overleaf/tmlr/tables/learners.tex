@@ -1,7 +1,9 @@
 \begin{table}[t]
 \centering
 \caption{The same detectors on trained incremental learners and on TabPFN (all 81 streams), accuracy minus the
-never-reset learner in points, averaged over the 8 detectors. Harm as in \cref{tab:tails}.}
+never-reset learner in points, averaged over the 8 detectors. For trained learners, Harm measures negative
+non-zero differences within the first ten batches after an alarm (cut at the next alarm), not the full
+effect of the reset. For TabPFN, Harm uses the exact finite-memory attribution in \cref{tab:tails}.}
 \label{tab:learners}
 \small
 \begin{tabular}{l rrrr r rrrr}
