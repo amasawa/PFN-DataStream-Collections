@@ -146,3 +146,4 @@
 - 2026-10-09T05:39+11:00：insects_incremental_reoccurring_balanced 和 insects_incremental_abrupt_balanced 的 arch 完成（90/113），0 次重试，GPU 均值 81%，显存峰值 5.1 GB。
 - 2026-10-09T05:49+11:00：arch_insects_incremental_balanced 完成（91/113），0 次重试，GPU 均值 78%，显存峰值 5.5 GB。
 - 2026-10-09T05:59+11:00：arch_insects_gradual_balanced 完成（92/113），0 次重试，显存峰值 5.5 GB。GPU 均值降到 73%（任务切换期间），但项目记录显示 4 个及以上 worker 会出现失败风暴，所以仍保持 3 个。
+- 2026-10-09T06:09+11:00：arch_insects_abrupt_balanced 完成（93/113），0 次重试。目前 3 个 worker 都在跑 CoverType（covertype、h4_covertype_e、h3_covertype_c），GPU 均值降到 65%，原因是 CoverType 任务每个 worker 对 GPU 的占用较低，而不是 worker 空闲；内存 21%。项目记录显示 4 个及以上 worker 会出现失败风暴，所以不加并发。
