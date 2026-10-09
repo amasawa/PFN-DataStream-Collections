@@ -212,3 +212,4 @@ Codex 与 MiMo 的原始输出存放在 `MICE/logs/tkde_review/`（`roundN_codex
 - 2026-10-09T13:58+11:00：snapshot 对照第一条真实流（insects_incremental_reoccurring_balanced）完成，进度 1/29；20 分钟内重试 3 次，无阻塞，GPU 均值 91%，显存峰值 3.5 GB。同时：第 4 轮已结束（审稿人：已回答，4/8）；第 6 轮已开始（审稿人 4/8，问题是损失计算时机没写清楚），论文已修改，MiMo 正在对照代码核实。
 - 2026-10-09T14:09+11:00：snapreal_h3_insects_b 完成（2/29），0 次重试，GPU 均值 93%，显存峰值 3.5 GB。
 - 2026-10-09T14:22+11:00：**MiMo 异常**：第 6 轮的 MiMo 审计（auditor，Pro high）返回了一份与请求无关的晶体管抽认卡 JSON，没有读任何附件。原因：MiMo 会导入 ~/.claude/projects 下的 Claude Code 会话，auditor 的 History 工具可以读到这台机器上其他项目的会话。处理：auditor 禁用 History（剩 Read/Glob/Grep/SkillSearch/Skill，已验证），全局协议已同步更新；这次审计作废（原文保留为 mimo_r6_attempt1_unrelated.txt），已重跑。
+- 2026-10-09T14:23+11:00：snapshot 对照 2/29。14:09–14:23 重试 6 次、完成 0 个（任务都很长）；大多数重试时检查点在推进，但 h3_insects_c 已失败 6 次，检查点停在第 300/1000 批近 15 分钟。重试多于完成，按规则从 3 个 worker 降到 2 个（平稳重启，检查点每 10 批一次）。
