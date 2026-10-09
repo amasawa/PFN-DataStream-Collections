@@ -105,3 +105,7 @@ file modification times.
 - `Desktop/pfn-split/ood` (AgDR, GOR) and `Desktop/pfn-split/dataStream` (MICE, DriftTriage, GrayContext, ResetEval, MiceDuo, FeatEvo, Emergence, InterTFM), each with its own history via `git filter-repo` (tool in `~/pfn-venvs/tools`); `pdfs/`, `env/`, `skills/`, `SETUP.md` in both. Untracked data copied with rsync (12 min for 10 GB). No remote set yet. `Desktop/pfn` and `oodpfn` unchanged.
 - Checked: file counts match the joint repo (2328 / 500); `git status` clean after the copy; ResetEval's analyses reproduce in the new location (TabDPT T1 = 29.01).
 - 2026-10-07 21:13 pushed: `pfn-split/ood` -> github.com/amasawa/PFN-OOD-Collections, `pfn-split/dataStream` -> github.com/amasawa/PFN-DataStream-Collections, each over its own write-enabled deploy key (`~/.ssh/id_ed25519_ood`, `id_ed25519_datastream`; host aliases `github-ood`, `github-datastream` in `~/.ssh/config`). The old key `id_ed25519_oodpfn` is a deploy key of `oodpfn` only.
+
+## 2026-10-09T14:22+11:00 MiMo auditor 的 History 工具泄露/污染
+- 第 6 轮审计返回了与请求无关的抽认卡 JSON。mimo session list 显示 MiMo 导入了 Claude Code 会话，History 工具可以读到其他项目的会话。
+- 处理：在 ~/.config/mimocode/mimocode.jsonc 的 auditor 中禁用 history（tools 为 false，permission 为 deny），已验证工具列表里不再有 History。
