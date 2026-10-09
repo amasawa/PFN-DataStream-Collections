@@ -786,7 +786,9 @@ snapshot spans two concepts (the grid snapshot pool was registered as a secondar
 archive runs, the grid criterion above and the real-stream criterion for the archive below were registered before the
 runs. On the 29 real streams (\cref{tab:poolreal}) the registered criterion for the archive,
 a mean difference of at least $-0.1$ points, holds ($+0.07$, above it on 18 streams), and so does the registered
-descriptive threshold for the snapshot pool ($-0.08$, above it on 11). The one-sided 95\% block-bootstrap lower bounds
+descriptive threshold for the snapshot pool (at least $-0.1$ points; observed $-0.08$, above it on 11); the snapshot pool
+and this threshold were registered later, after the 29 streams and the \method{} results had been examined, so this
+comparison is a review-added control and not an independent confirmation. The one-sided 95\% block-bootstrap lower bounds
 (blocks of 20 batches; pointwise, conditional on the streams and backbone seed 0; the bounds against the archive are
 retrospective, not registered) are above $-0.3$ points on 17 streams against the snapshot pool and on 23 against
 the archive. These thresholds are descriptive; passing them is not equivalence, and individual streams lose up to
