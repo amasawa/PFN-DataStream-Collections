@@ -68,8 +68,8 @@ required); on real streams \method{} is within 0.1 points of each control on ave
 active experts and TFM calls. On 29 real streams \method{} is more accurate than all four in-context baselines on
 23 and never more than 0.25 points below the plain window; its one-sided 95\% block-bootstrap lower bound on the difference to the window
 is above $-0.3$ points on 28 of the 29 streams (backbone seed 0), the remaining one being too short to decide, and a pre-registered test on six held-out segments confirms both. These comparisons use contexts of at most 1000 rows. A plain window of 3000 rows, about 2.5
-times cheaper per batch than \method{} in an isolated benchmark, is more accurate than \method{} on 21 of the 29 real
-streams; \method{} keeps a small mean advantage over it ($+0.31$ points, 95\% interval $[+0.09,+0.49]$) only because of
+times cheaper per batch than \method{} on three benchmark prefixes, is more accurate than \method{} on 21 of the 29
+real streams (an accuracy comparison; cost was measured on the prefixes only); \method{} keeps a small mean advantage over it ($+0.31$ points, 95\% interval $[+0.09,+0.49]$) only because of
 large gains on strongly drifting INSECTS streams and Rialto, and on the Airlines and CoverType benchmark prefixes a
 larger window is more accurate at lower cost.
 \end{abstract}
@@ -97,7 +97,7 @@ training.
 
 TFMs have already replaced incremental trees as stream learners: with a sliding memory they outperform adaptive tree
 ensembles on non-stationary benchmarks \citep{lourenco2026streams}, and a prior with drifting causal models improves
-them under temporal shift \citep{helli2024drift}. Neither line uses the free memory. A sliding context forgets a
+them under temporal shift \citep{helli2024drift}. Neither line reuses past contexts without additional training. A sliding context forgets a
 concept once it leaves the window, and a drift-extrapolating prior models a trend rather than a return. Three
 observations show what an in-context stream learner is missing, and what a remedy has to respect.
 
@@ -866,11 +866,11 @@ cost-matched: FIFO 3000 is about 2.5 times cheaper. On the 29 real streams (\cre
 $[+0.09,+0.49]$), but only on 8 of the 29 streams; the paired 95\% interval lies below zero on 14 streams and above on
 6. The mean advantage comes from strongly drifting streams (four INSECTS streams with $+3.3$ to $+5.5$ points, Rialto
 $+6.9$); on Airlines ($-1.1$ points on average over its segments), PokerHand ($-1.5$), Phishing ($-1.4$) and Weather
-($-0.5$) a larger plain window is more accurate at lower cost, and on Spam and Electricity the point estimates favour
-it within intervals that include zero. On the benchmark prefixes the same holds for
+($-0.5$) the 3000-row window is more accurate, and on Spam and Electricity the point estimates favour it within
+intervals that include zero; these are accuracy comparisons, and cost was measured only on the three prefixes. On the benchmark prefixes the same holds for
 Airlines and CoverType, while \method{} is the most accurate policy on the INSECTS prefix, where larger windows lose up
-to 14.6 points. A practitioner with a stationary or slowly drifting stream should therefore prefer a larger window;
-\method{} pays off where concepts drift sharply or recur.
+to 14.6 points. In these data a larger window was the better choice on the streams without sharp drift, and \method{} paid off
+on the sharply drifting or recurring ones; whether the same holds for other streams and hardware was not tested.
 
 \begin{table*}[t]
   \centering
@@ -951,7 +951,7 @@ with its segments and are costly to learn, \method{} exceeds reset detection, wi
 a wide margin; when the boundaries fall inside its segments, the average advantage fails both registered robustness
 criteria, recall right after a recurrence helps only in some tested settings, and an archive without merging is more
 accurate; on 29 real streams it is more accurate than the four original in-context baselines on 23 and never more than 0.25 points below a sliding window, where reset detection
-loses up to 9.6 points. A plain window of 3000 rows, about 2.5 times cheaper, is nevertheless more accurate than
+loses up to 9.6 points. A plain window of 3000 rows, about 2.5 times cheaper on the benchmark prefixes, is nevertheless more accurate than
 \method{} on 21 of the 29 real streams, and on the Airlines and CoverType benchmark prefixes; \method{}'s value on
 real streams lies in sharply drifting or recurring streams, not in general.
 
@@ -1160,7 +1160,7 @@ centroids: all held. The step $\tfrac12$ is 0.23 points lower on average and sat
 \begin{table}[t]
   \centering
   \caption{\method{} versus FIFO with 3000 rows (fixed beforehand from timings; about 2.5 times cheaper than
-  \method{}) on the 29 real streams: accuracy (\%), difference (points) and paired two-sided 95\% moving-block
+  \method{} on the three benchmark prefixes, cost not measured on these streams) on the 29 real streams: accuracy (\%), difference (points) and paired two-sided 95\% moving-block
   bootstrap interval (blocks of 20 batches; aggregate over independently resampled streams).}
   \label{tab:fifo3000}
   \small
