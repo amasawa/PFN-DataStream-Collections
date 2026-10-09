@@ -68,6 +68,10 @@
 
 ## 6. 已知的坑
 
+- supervisor 给每个 worker 的显存配额是 `MICE_ALLOC_MIB=4096`。高维流（如 Spam）配大窗口（FIFO 3000 及以上）时会因配额
+  不足而反复显存不足、被阻塞（2026-10-10）。大上下文任务先估算显存，必要时只给这个任务提高配额（总量仍不超过 28 GB）。
+  独立基准脚本则要自己设上限（`set_per_process_memory_fraction`），否则 WSL 会把显存超额映射到内存，计时无效。
+
 - `pkill -f <模式>` / `pgrep -f` 会匹配到自己的 shell 命令行并把它杀掉（2026-10-09 又犯过一次）。改用
   `ps -eo pid,args | grep "[x]模式"` 取 pid 后再 kill。
 - `ps | grep -c worker.py` 也会把自己的命令行算进去；判断 GPU 上有没有进程，以 `nvidia-smi --query-compute-apps` 为准。
