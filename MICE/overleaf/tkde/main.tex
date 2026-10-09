@@ -568,8 +568,10 @@ above it. The 200 prepended rows also add initial history, so this is the sensit
 shift rather than a pure effect of mixed segments.
 
 Both tests point the same way: the large average recall gains of \method{} were demonstrated on grids whose concept
-boundaries coincide with its segment boundaries; recall right after a recurrence still helps on hard concepts when
-they do not, but no longer pays on average. When a boundary falls inside a segment, the segment mixes two
+boundaries coincide with its segment boundaries. When they do not, recall right after a recurrence still helps in
+some tested settings (hard concepts in the misaligned schedules, and the shifted 2\,000-row blocks with 100
+centroids) but not in others (the shifted 500-row blocks, $-3.9$ and $-6.3$ points with 100 centroids), and the
+average advantage fails both registered robustness criteria; in test (a) it remains small and positive. When a boundary falls inside a segment, the segment mixes two
 concepts, and merging it into a stored expert can corrupt that expert; with 500-row blocks every segment is mixed and
 \method{} falls below reset, with 2\,000-row blocks one segment in four is mixed and it loses 1.0 to 3.0 points of
 its advantage. An archive, which never merges, is more robust to this. The real streams of \cref{sec:rq3}, whose
@@ -762,8 +764,9 @@ component per result: an excess-risk discrepancy decides which contexts share a 
 identifies a recurring concept in one batch, and a slow meta expert guarantees, at any time and for any stream,
 that following it costs little against the plain window. When concepts recur in blocks whose boundaries coincide
 with its segments and are costly to learn, \method{} exceeds reset detection, window ensembles and trained experts by
-a wide margin; when the boundaries fall inside its segments, this average advantage disappears, recall helps only
-right after a recurrence of a hard concept, and an archive without merging is more accurate; on 29 real streams it is the most
+a wide margin; when the boundaries fall inside its segments, the average advantage fails both registered robustness
+criteria, recall right after a recurrence helps only in some tested settings, and an archive without merging is more
+accurate; on 29 real streams it is the most
 accurate in-context policy on 23 and never more than 0.25 points below a sliding window, where reset detection
 loses up to 9.6 points.
 
