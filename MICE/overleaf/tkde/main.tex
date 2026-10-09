@@ -388,7 +388,8 @@ lets one confidently wrong batch after a switch dominate the slow level for the 
 cover concepts that are new or cheap to learn. \emph{Stored concepts} are contexts kept in a pool. Every 500 labelled
 rows close a segment $S$. The segment joins the stored expert $\cC_k$ that minimises the estimated recall regret
 $\widehat{\Div}_T(S\,|\,\cC_k)=\hat\epsilon_S(\cC_k)-\hat\epsilon_S(S)$ if this is at most $\delta=0.02$, where
-$\hat\epsilon_S(S)$ is cross-fitted in two folds because an in-context learner memorises its context; otherwise it
+$\hat\epsilon$ is the 0-1 risk (one minus accuracy, as in \cref{prop:blind}(iii)) and $\hat\epsilon_S(S)$ is
+cross-fitted in two folds because an in-context learner memorises its context; otherwise it
 founds a new stored expert (\cref{prop:blind}). A stored expert keeps its last $M$ rows, and the pool holds at most
 12 experts (least recently used out).
 
@@ -407,10 +408,13 @@ a merged expert keeps its identity and its losses. At $t=1$ the fast weights are
 weights are uniform. The slow level is scored on the default and fast predictions actually issued, with the mean half
 Brier score in $[0,1]$; these are the two adaptive prediction sequences of \cref{prop:outer}, whose bound needs
 $\eta_2\le\tfrac12$ for the half Brier score. It therefore covers the method as run, but not the variants we report
-with the log-loss or with the registered step $\eta_2=10$. All reported numbers for \method{} come from one
-replay of this two-level rule over the cached expert predictions (\texttt{simulate2} in the released code), which uses
-the labels of earlier batches only and therefore issues the same predictions an online run would; the
-runs that produced the cache emitted a different, single-level mixture, which we do not report.
+with the log-loss or with the registered step $\eta_2=10$. The cache holds every expert's prediction for every
+batch; the fast mixture of batch $t$ is formed from these with weights that depend on the labels of earlier batches
+only, so replaying the rule over the cache issues the same predictions an online run would. All reported numbers
+for \method{} come from such replays: the method above with $\eta_2=\tfrac12$ (\texttt{simulate2(outer='brier',
+scale=0.5, temper=True)} in the released code, frozen on 2026-10-05), and the stated variants with the log-loss or
+with $\eta_2=10$ as replays of the same rule with those parameters. The runs that produced the cache emitted a
+different, single-level mixture, which we do not report.
 
 
 The cost is one TFM call per expert and batch, at most 15, plus three calls when a segment closes. All constants
@@ -433,7 +437,8 @@ were set on synthetic development streams; none was tuned on a real stream.
        $\hat p^{\mathrm{fast}}_t\leftarrow\sum_k w_k\hat p_{t,k}$ with $w_k\propto e^{-\eta\ell_k}$;
        $\hat p^{\mathrm{def}}_t\leftarrow\hat p_{t,M}$ (the $M$-row window)
 \STATE \textbf{Output and cache:} $\hat p_t=v_0\,\hat p^{\mathrm{def}}_t+v_1\,\hat p^{\mathrm{fast}}_t$ with
-       $v_k\propto e^{-\eta_2\gamma L_{t-1,k}}$; cache $\hat p_{t,k}$, $\hat p^{\mathrm{fast}}_t$, $\hat p^{\mathrm{def}}_t$
+       $v_k\propto e^{-\eta_2\gamma L_{t-1,k}}$; cache the expert predictions $\hat p_{t,k}$ (with
+       $\hat p^{\mathrm{def}}_t=\hat p_{t,M}$; $\hat p^{\mathrm{fast}}_t$ is a function of them and of earlier labels)
 \end{algorithmic}
 \end{algorithm}
 
