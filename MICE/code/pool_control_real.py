@@ -49,7 +49,7 @@ def snap_rows(t, B):
 
 
 def lower_bounds(d, rng):
-    n, out = len(d), {}
+    n, out = len(next(iter(d.values()))), {}
     for b in BLOCKS:
         b_ = b if n >= 2 * b else n // 2
         k = int(np.ceil(n / b_))
