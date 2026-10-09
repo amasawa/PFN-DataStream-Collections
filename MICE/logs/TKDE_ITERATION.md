@@ -324,3 +324,4 @@ Codex 与 MiMo 的原始输出存放在 `MICE/logs/tkde_review/`（`roundN_codex
 - 2026-10-09T15:02+11:00：snapreal_insects_incremental_balanced 完成（3/29），13 分钟内重试 1 次，GPU 均值 74%，显存峰值 2.7 GB。
 - 2026-10-09T15:29+11:00：snapreal_insects_gradual_imbalanced 完成（4/29）。自 15:00 起 28 分钟没有失败，GPU 均值 78%，两个 worker 都受 CPU 限制（各约占 100% 单核）。按 env/EXPERIMENT_SCHEDULING.md 的升级规则加到 3 个 worker（平稳重启）；如果重试多于完成，再退回 2 个。
 - 2026-10-09T15:47+11:00：3 个 worker 运行 17 分钟，0 次重试，GPU 均值 93%（达到目标），显存峰值 4.5 GB；snapshot 对照 4/29（剩下的都是长流）。
+- 2026-10-09T16:25+11:00：snapreal_h3_insects_c 完成（5/29，此前在第 300 批卡过）。16:10–16:25 重试 5 次（检查点都在推进），没有任务完成，重试多于完成，按规则从 3 个 worker 降到 2 个。另外，16:2x 我做第 9 轮基准的冒烟测试时，GPU 上临时多了 1 个进程（约 1 分钟），可能促成了其中一两次失败。GPU 均值 89%，显存峰值 5.4 GB。
