@@ -8,6 +8,7 @@ Every later boundary then falls 200 rows into a 500-row segment, while batch bou
 all recurring blocks keep their length. Offset batch t+2 holds exactly the rows of aligned batch t.
 Writes <root>/data/off_c<nc>_b<block>_s<seed>.npz with X, y, concept.
 """
+import hashlib
 from pathlib import Path
 import sys
 
@@ -39,8 +40,14 @@ def main(root):
     for name in names():
         _, c, b, s = name.split("_")
         X, y, concept = offset_stream(int(c[1:]), int(b[1:]), int(s[1:]))
+        z = np.load(out / f"grid_{c}_{b}_{s}.npz")            # the aligned file the existing results were computed on
+        assert all(np.array_equal(a, z[k]) for a, k in ((X[OFFSET:], "X"), (y[OFFSET:], "y"), (concept[OFFSET:], "concept"))), name
+        assert OFFSET % 100 == 0 and int(b[1:]) % 100 == 0                     # batch size B=100 frozen for 4.b
         np.savez_compressed(out / f"{name}.npz", X=X, y=y, concept=concept)
-        print(name, X.shape)
+        digest = hashlib.sha256((out / f"{name}.npz").read_bytes()).hexdigest()
+        with open(out / "offset_manifest.txt", "a") as fh:
+            fh.write(f"{name} sha256={digest} numpy={np.__version__} aligned=grid_{c}_{b}_{s}.npz rows_200+_identical=True\n")
+        print(name, X.shape, digest[:12])
 
 
 if __name__ == "__main__":
