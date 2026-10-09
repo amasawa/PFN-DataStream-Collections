@@ -404,8 +404,9 @@ with $\gamma=0.9$ and $\eta_2=\tfrac12$ (\cref{prop:outer,cor:outer}).
 come one batch later the cached predictions are scored; contexts are updated only afterwards, so no expert is scored
 on rows it already holds. The fast level uses the log-loss of the last labelled batch only. A stored expert created
 at a segment close has issued no prediction for that batch and starts with the median of the other experts' losses;
-a merged expert keeps its identity and its losses. At $t=1$ the fast weights are uniform and $L_{0,k}=0$, so the slow
-weights are uniform. The slow level is scored on the default and fast predictions actually issued, with the mean half
+a merged expert keeps its identity and its losses. Batch 0 only fills the windows and counts towards the first
+segment; at $t=1$ nothing has been issued yet, so the fast weights are uniform and $L_{0,k}=0$ makes the slow weights
+uniform, and scoring of cached predictions begins at $t=2$, where $L_{1,k}=\gamma L_{0,k}+\ell_{1,k}$. The slow level is scored on the default and fast predictions actually issued, with the mean half
 Brier score in $[0,1]$; these are the two adaptive prediction sequences of \cref{prop:outer}, whose bound needs
 $\eta_2\le\tfrac12$ for the half Brier score. It therefore covers the method as run, but not the variants we report
 with the log-loss or with the registered step $\eta_2=10$. The cache holds every expert's prediction for every
@@ -421,12 +422,18 @@ The cost is one TFM call per expert and batch, at most 15, plus three calls when
 were set on synthetic development streams; none was tuned on a real stream.
 
 \begin{algorithm}[tb]
-\caption{\method{} for one batch $t\ge1$ (batch 0 is warm-up)}\label{alg:mice}
+\caption{\method{} for one batch $t\ge1$}\label{alg:mice}
 \begin{algorithmic}[1]
+\STATE \textbf{Initialisation} (before $t=1$): batch 0 is observed with its labels and predicted by no one; the windows
+       hold its rows, the pool is empty, and its rows count towards the first 500-row segment
+       (rows are counted from the first row of the stream)
 \STATE \textbf{Input:} unlabelled batch $X_t$; labels $y_{t-1}$ of batch $t-1$; windows $\mathcal W$; pool $\mathcal P$;
        cached predictions $\hat p_{t-1,k}$ of every expert $k$, $\hat p^{\mathrm{fast}}_{t-1}$ and
        $\hat p^{\mathrm{def}}_{t-1}$, all issued for batch $t-1$ before $y_{t-1}$ arrived
-\STATE \emph{Score issued predictions:} $\ell_k\leftarrow$ mean log-loss of $\hat p_{t-1,k}$ on $y_{t-1}$;
+\STATE \textbf{if} $t=1$: no prediction has been issued; set $\ell_k\leftarrow0$ for every expert (uniform fast
+       weights) and $L_{0,\mathrm{def}}=L_{0,\mathrm{fast}}\leftarrow0$ (uniform slow weights), and go to the context
+       update
+\STATE \emph{Score issued predictions} ($t\ge2$): $\ell_k\leftarrow$ mean log-loss of $\hat p_{t-1,k}$ on $y_{t-1}$;
        $\ell^{\mathrm{def}},\ell^{\mathrm{fast}}\leftarrow$ mean half Brier score of $\hat p^{\mathrm{def}}_{t-1}$,
        $\hat p^{\mathrm{fast}}_{t-1}$; $L_{t-1,k}\leftarrow\gamma L_{t-2,k}+\ell^{k}$ for $k\in\{\mathrm{def},\mathrm{fast}\}$
 \STATE \emph{Update contexts:} add batch $t-1$ to the windows; if 500 new labelled rows: close a segment $S$ and merge
