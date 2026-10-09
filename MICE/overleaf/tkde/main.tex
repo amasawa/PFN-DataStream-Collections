@@ -779,8 +779,9 @@ snapshot pool hold at most 1000 rows per stored expert (at most 13\,400 context 
 7\,400); only \method{} adds discrepancy calls when a segment closes (two cross-fitted calls and one per stored
 expert). On the aligned grid (\cref{tab:poolgrid}) the registered criterion, \method{} above the archive by at least 0.5 points on average over the
 eight streams with 30 or 100 centroids and on at least six of them, \emph{fails}: \method{} is above it on seven, by
-$+0.30$ points on average (moving-block bootstrap over batches, blocks of 10, streams resampled independently,
-retrospective: 95\% interval $[+0.12,+0.41]$, so the difference is positive but below the required $+0.5$; per
+$+0.30$ points on average (moving-block bootstrap of the aligned per-batch differences, the same resampled batch
+indices for both policies of a stream, blocks of 10; the eight-stream aggregate is the mean of independently resampled
+streams; retrospective: 95\% interval $[+0.12,+0.41]$, so the difference is positive but below the required $+0.5$; per
 stream the interval excludes zero on three of the eight); it is $+3.3$ points above the snapshot pool, mostly on 500-row blocks, where a 1000-row
 snapshot spans two concepts (the grid snapshot pool was registered as a secondary control without a criterion). The
 archive runs, the grid criterion above and the real-stream criterion for the archive below were registered before the
@@ -809,15 +810,16 @@ source of the recall gain.
   \centering
   \caption{Pool controls on the aligned grid (seeds 20, 21; archive registered with a criterion, snapshot pool as a
   secondary control without one): accuracy (\%), \method{} minus archive and
-  minus snapshot pool (points) with retrospective 95\% moving-block bootstrap intervals, and TFM calls per batch (\method{}, including its
-  discrepancy calls / archive; the snapshot pool has the archive's call counts on every grid stream).}
+  minus snapshot pool (points) with retrospective 95\% moving-block bootstrap intervals, TFM calls per batch (\method{} including its discrepancy
+  calls / archive / snapshot), and stored rows per batch in thousands (\method{}: bound from the 500/1000-row caps;
+  archive and snapshot: reconstructed exactly).}
   \label{tab:poolgrid}
   \small
   \setlength{\tabcolsep}{2pt}
   \resizebox{\columnwidth}{!}{%
-  \begin{tabular}{rrrrrrrrrrrr}
+  \begin{tabular}{rrrrrrrrrrrrrrrr}
     \toprule
-    cent. & block & seed & \method{} & Archive & Snapshot & $-$Arch. & 95\% CI & $-$Snap. & 95\% CI & calls & (arch.) \\
+    cent. & block & seed & \method{} & Archive & Snapshot & $-$Arch. & 95\% CI & $-$Snap. & 95\% CI & calls & (arch.) & (snap.) & rows, k & (arch.) & (snap.) \\
     \midrule
     \rowinput{tab_pool_grid_rows.tex}
     \bottomrule
@@ -828,16 +830,16 @@ source of the recall gain.
   \centering
   \caption{Pool controls on the 29 real streams: \method{} accuracy (\%), difference to the archive and to the
   snapshot pool (points) with one-sided 95\% block-bootstrap lower bounds (LB; archive comparison and criterion
-  registered, archive bounds retrospective; snapshot comparison registered after the streams had been examined), active experts and TFM calls per batch (\method{}, calls including its discrepancy calls / archive; the snapshot
-  pool has the archive's experts and its calls within 0.6), and stored rows per batch in thousands (\method{}: bound from the 500/1000-row caps;
+  registered, archive bounds retrospective; snapshot comparison registered after the streams had been examined), active experts per batch (\method{} / archive; the snapshot pool has the archive's), TFM calls per batch
+  (\method{} including its discrepancy calls / archive / snapshot), and stored rows per batch in thousands (\method{}: bound from the 500/1000-row caps;
   archive and snapshot: reconstructed exactly).}
   \label{tab:poolreal}
   \small
   \setlength{\tabcolsep}{3pt}
   \resizebox{\textwidth}{!}{%
-  \begin{tabular}{lrrrrrrrrrrrrr}
+  \begin{tabular}{lrrrrrrrrrrrrrr}
     \toprule
-    Stream & batches & \method{} & $-$Arch. & LB & $-$Snap. & LB & experts & (arch.) & calls & (arch.) & rows, k & (arch.) & (snap.) \\
+    Stream & batches & \method{} & $-$Arch. & LB & $-$Snap. & LB & experts & (arch.) & calls & (arch.) & (snap.) & rows, k & (arch.) & (snap.) \\
     \midrule
     \rowinput{tab_pool_real_rows.tex}
     \bottomrule
