@@ -374,3 +374,4 @@ Codex 与 MiMo 的原始输出存放在 `MICE/logs/tkde_review/`（`roundN_codex
 - 2026-10-09T21:59+11:00：snapreal_h2_phishing、snapreal_h2_spam 完成（27/29），只剩 h3_poker_b 和 h2_poker 两个任务，所以只有 2 个 worker 在跑，10 分钟平均利用率降到 62.3%，这是收尾阶段的正常现象。
 - 2026-10-09T22:09+11:00：snapreal_h3_poker_b 完成（28/29），只剩 h2_poker（单 worker，约 400/1000 批），预计 40–50 分钟后完成。
 - 2026-10-09T22:31+11:00：snapshot 对照 29/29 完成（22:25），第 9 轮独占 GPU 基准随后自动启动。第 2 轮登记分析（`pool_control_real.py` → `results_paper/pool_control_real_full.csv`）：MICE − snap 均值 −0.078（描述性门槛 ≥ −0.1，满足），11/29 为正，范围 −0.52 到 +0.40；块 bootstrap 下界 ≥ −0.3 的流：snap 17/29，arch 23/29（事后分析）；资源：每批活跃专家 MICE 8.4、arch/snap 14.2，调用 9.7 对 14.0，记忆池行数 MICE 2.7k–5.4k、arch 5.6k、snap 11.1k。注意：第一次运行时 bootstrap 下界全是 0，原因是脚本中 n 取成了字典键数（2）而不是序列长度；已改正后重跑，上面是改正后的数字。
+- 2026-10-09T23:46+11:00：第 9 轮基准 20/72，全部成功。FIFO-13400 在 h4_covertype_d 的 300 批上用了 1203 秒（独占 GPU，约 4 秒/批），在 h4_airlines_d 上 234 秒；MICE 在这两条流上分别为 291 秒和 251 秒。按目前速度，每轮重复约 1.5 小时，预计 03:00 左右完成。
