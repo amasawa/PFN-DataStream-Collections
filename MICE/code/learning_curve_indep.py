@@ -2,7 +2,7 @@
 curves of the frozen TFM measured on rows drawn independently of every evaluated grid stream.
 
 Concept definitions (centroids, weights, labels) come from default_rng(seed) exactly as in grid_streams.stream; the
-rows come from default_rng(20_000 + seed). Protocol otherwise as learning_curve.py. Writes
+rows come from default_rng([20_000 + seed, m, k]), one generator per seed, centroid count m and concept k. Protocol otherwise as learning_curve.py. Writes
 ../results_grid_test/learning_curve_indep.csv and ../results_grid_test/predicted_indep.csv."""
 import os
 import sys
