@@ -82,3 +82,30 @@ stay as they are.
   archive exactly 500 per stored expert, snapshot exactly min(1000, rows so far) per stored expert, MICE at most 1000
   per stored expert and at most 12 000 rows in the pool (per-expert row counts were not recorded for MICE; reported as
   a missing measurement). Wall time only as a description (shared GPU).
+
+## Round 4, attempt 4.b — boundary alignment at fixed block length (registered 2026-10-09T12:54+11:00, before the run)
+
+Provenance: the reviewer's rebuttal review (MICE/logs/tkde_review/round4_rebuttal.md, item 1) found that 4.a changes
+block length and alignment together and so cannot isolate alignment; design corrected by the Codex expert
+(round4_expert_a1.md); approved by the user on 2026-10-09 before execution. The 4.a verdict (FAIL) stands unchanged.
+
+- **Streams** (`make_offset.py`): the 8 aligned confirmatory grid streams of the paper (data seeds 20, 21; 30 and 100
+  centroids; blocks of 500 and 2000 rows; K=3; three cycles) with their observations unchanged, preceded by 200 rows of
+  the first concept drawn with default_rng(10 000 + seed) from the same centroids, weights and labels. Every concept
+  boundary then lies 200 rows into a 500-row segment and on a 100-row batch boundary; recurring blocks keep their
+  length. Verified before the run: rows 200.. equal the aligned stream bit for bit.
+- **Policies:** micev1000_500 (MICE), arch1000_500, ddm1000, fifo1000, winens1000; backbone seed 0; method, rule and
+  constants frozen. Aligned values: the existing seed-20/21 results (MICE replayed from MICE/results_grid_test3; the
+  archive from this control run).
+- **Matched batches:** offset batch t+2 holds exactly the rows of aligned batch t. Accuracies are averaged over the
+  matched batches t = 1..T_aligned-1 (offset batches 3..T_aligned+1); full-stream accuracy is reported separately.
+  Recurrence windows: the first five batches of each of the six recurring blocks (blocks 4-9), indexed in aligned
+  batches and shifted by +2 in the offset stream. Unweighted means over streams; all batches have 100 rows.
+- **Primary contrast:** Delta_i = (MICE - DDM)_offset,i - (MICE - DDM)_aligned,i on matched batches, for the 8 streams:
+  all values, the unweighted mean, and breakdowns by block length, centroid count and seed. Descriptive; no
+  preservation or non-inferiority claim (no margin was fixed).
+- **Descriptive criterion (same form as 4.a):** MICE - DDM on the offset streams positive on >= 7 of 8 and mean >= +1.0.
+- **Also reported:** MICE - FIFO, - window ensemble, - archive (offset and aligned), overall and in recurrence windows.
+- **Limits stated in advance:** the extra 200 rows add initial history; two data seeds and one backbone seed; the 8
+  configurations are not independent replications; the result is sensitivity to this phase shift, not a pure causal
+  effect of segment impurity.
