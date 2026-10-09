@@ -67,7 +67,10 @@ by discrepancy did not meet our registered improvement criterion on aligned conc
 required); on real streams \method{} is within 0.1 points of each control on average ($+0.07$ and $-0.08$), with fewer
 active experts and TFM calls. On 29 real streams \method{} is more accurate than all four in-context baselines on
 23 and never more than 0.25 points below the plain window; its one-sided 95\% block-bootstrap lower bound on the difference to the window
-is above $-0.3$ points on 28 of the 29 streams (backbone seed 0), the remaining one being too short to decide, and a pre-registered test on six held-out segments confirms both.
+is above $-0.3$ points on 28 of the 29 streams (backbone seed 0), the remaining one being too short to decide, and a pre-registered test on six held-out segments confirms both. These comparisons use contexts of at most 1000 rows. A plain window of 3000 rows, about 2.5
+times cheaper per batch than \method{} in an isolated benchmark, is more accurate than \method{} on 21 of the 29 real
+streams; \method{} keeps a small mean advantage over it ($+0.31$ points, 95\% interval $[+0.09,+0.49]$) only because of
+large gains on strongly drifting INSECTS streams and Rialto.
 \end{abstract}
 \begin{IEEEkeywords}
 Concept drift, recurring concepts, tabular foundation models, in-context learning, data streams, online learning, mixture of experts.
@@ -846,6 +849,48 @@ source of the recall gain.
   \end{tabular}}
 \end{table*}
 
+\textbf{Cost and a larger window.} The pool raises the cost per batch, and the baselines above use contexts of at most
+1000 rows. We measured cost in an isolated benchmark registered before it was run (one process alone on an NVIDIA RTX
+5000 Ada with 32\,GB under WSL2, TabPFN v2 with four estimators, GPU memory capped at 28\,GB; the first 300 batches
+of an Airlines, a CoverType and an INSECTS segment; three repetitions in rotated order; costs are claimed for these
+prefixes only). \Cref{tab:cost} reports seconds per batch including segment processing and, for \method{}, its
+two-level rule; rows per second; peak allocated and reserved GPU memory and peak process memory; and accuracy on the
+same prefixes. \method{} takes 1.07\,s per batch on average (0.91 on batches that close no segment, 1.69 on those that
+do), against 0.22\,s for FIFO with 1000 rows, 0.42\,s with 3000 rows and 1.91\,s with 13\,400 rows, the capacity
+\method{} may retain; its expert predictions in the benchmark are bit-identical to those behind every reported number.
+To compare at similar cost, we fixed beforehand, from timings alone, the FIFO size among 1500, 2000 and 3000 rows whose
+cost is within a factor 1.25 of \method{}'s; none is, so the closest, 3000 rows, was used, and the comparison is not
+cost-matched: FIFO 3000 is about 2.5 times cheaper. On the 29 real streams (\cref{tab:fifo3000} in
+\cref{app:details}), \method{} is above FIFO 3000 by $+0.31$ points on average (moving-block bootstrap, 95\% interval
+$[+0.09,+0.49]$), but only on 8 of the 29 streams; the paired 95\% interval lies below zero on 14 streams and above on
+6. The mean advantage comes from strongly drifting streams (four INSECTS streams with $+3.3$ to $+5.5$ points, Rialto
+$+6.9$); on Airlines ($-1.1$ points on average over its segments), PokerHand ($-1.6$), Phishing ($-1.5$) and Weather
+($-0.5$) a larger plain window is more accurate at lower cost, and on Spam and Electricity the point estimates favour
+it within intervals that include zero. On the benchmark prefixes the same holds for
+Airlines and CoverType, while \method{} is the most accurate policy on the INSECTS prefix, where larger windows lose up
+to 14.6 points. A practitioner with a stationary or slowly drifting stream should therefore prefer a larger window;
+\method{} pays off where concepts drift sharply or recur.
+
+\begin{table*}[t]
+  \centering
+  \caption{Isolated resource benchmark (registered; one process on an RTX 5000 Ada, GPU memory capped at 28\,GB;
+  first 300 batches of three real segments; mean over the three prefixes of the mean over three repetitions).
+  Seconds per batch (\method{} including its two-level rule and segment processing), rows per second, peak allocated
+  and reserved GPU memory and peak process memory (GB), and accuracy (\%) on the same prefixes.}
+  \label{tab:cost}
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{lrrrrrrrrrrr}
+    \toprule
+    & \multicolumn{4}{c}{seconds per batch} & & \multicolumn{3}{c}{memory, GB} & \multicolumn{3}{c}{accuracy} \\
+    \cmidrule(lr){2-5}\cmidrule(lr){7-9}\cmidrule(lr){10-12}
+    Policy & mean & median & p95 & max & rows/s & alloc. & reserved & process & Airlines & CoverType & INSECTS \\
+    \midrule
+    \rowinput{tab_cost_rows.tex}
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
 \textbf{Slow level.} It leaves the recall regime almost
 unchanged (grid: 86.5 against 86.9 for the fast level alone) and removes the losses on real streams (worst case
 $-0.25$ against $-2.3$; \cref{tab:real}). With the log-loss in place of the half Brier score, one grid stream falls
@@ -905,7 +950,9 @@ with its segments and are costly to learn, \method{} exceeds reset detection, wi
 a wide margin; when the boundaries fall inside its segments, the average advantage fails both registered robustness
 criteria, recall right after a recurrence helps only in some tested settings, and an archive without merging is more
 accurate; on 29 real streams it is more accurate than the four original in-context baselines on 23 and never more than 0.25 points below a sliding window, where reset detection
-loses up to 9.6 points.
+loses up to 9.6 points. A plain window of 3000 rows, about 2.5 times cheaper, is nevertheless more accurate than
+\method{} on 21 of the 29 real streams; \method{}'s value on real streams lies in sharply drifting or recurring
+streams, not in general.
 
 \textbf{Limitations.} The gains on real streams other than Rialto are below two points; the claim there is safety
 with a small average gain, and the large gains are for recurring concepts with steep learning curves whose
@@ -918,7 +965,9 @@ The confirmatory real segments come from three streams whose earlier segments we
 segments were repeated with a second seed and the others have one run. \Cref{prop:outer} bounds the half Brier score rather than the accuracy, its step costs calibration when
 concepts recur (\cref{tab:metrics}), and
 \cref{prop:blind} holds under \cref{ass:ppd}, and \cref{prop:recall} under \cref{ass:margin}. \method{} calls the TFM once per
-expert, 5--18 times the time of a single context in our runs.
+expert; in an isolated benchmark it took 1.07\,s per batch, about five times a 1000-row window and 2.5 times a
+3000-row window, and the 3000-row window was more accurate on 21 of the 29 real streams (\cref{tab:cost,tab:fifo3000}).
+Costs were measured on three 300-batch prefixes on one GPU only.
 
 \bibliography{refs}
 \bibliographystyle{IEEEtranN}
@@ -1106,6 +1155,24 @@ centroids: all held. The step $\tfrac12$ is 0.23 points lower on average and sat
 
 \section{Experimental Details and Full Results}
 \label{app:details}
+
+\begin{table}[t]
+  \centering
+  \caption{\method{} versus FIFO with 3000 rows (fixed beforehand from timings; about 2.5 times cheaper than
+  \method{}) on the 29 real streams: accuracy (\%), difference (points) and paired two-sided 95\% moving-block
+  bootstrap interval (blocks of 20 batches; aggregate over independently resampled streams).}
+  \label{tab:fifo3000}
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{lrrrrr}
+    \toprule
+    Stream & batches & \method{} & FIFO 3000 & $\Delta$ & 95\% CI \\
+    \midrule
+    \rowinput{tab_fifo3000_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table}
 
 \subsection{Controlled Grid and Learning Curves}
 \label{app:grid}
