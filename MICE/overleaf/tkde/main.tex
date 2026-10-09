@@ -62,9 +62,10 @@ window by 24 points on average. These grid concepts are aligned with \method{}'s
 are shifted so that every boundary falls inside a segment, \method{}'s advantage over reset disappears (it is below
 reset on 7 of 8 shifted streams), and an archive of unmerged past segments is more accurate than \method{}; the
 large average recall gains therefore hold only when concept boundaries coincide with segment boundaries. Against
-pools that keep past segments without merging them, organising the pool by discrepancy did not meet our registered
-improvement criterion on aligned concepts ($+0.3$ points where $+0.5$ was required); on real streams the three pools
-are within 0.1 points on average, with \method{} using fewer experts and less storage. On 29 real streams \method{} is more accurate than all four in-context baselines on
+pools that keep past contexts without merging them (an archive of segments and a snapshot pool), organising the pool
+by discrepancy did not meet our registered improvement criterion on aligned concepts ($+0.3$ points where $+0.5$ was
+required); on real streams \method{} is within 0.1 points of each control on average ($+0.07$ and $-0.08$), with fewer
+active experts and TFM calls. On 29 real streams \method{} is more accurate than all four in-context baselines on
 23 and never more than 0.25 points below the plain window; its one-sided 95\% block-bootstrap lower bound on the difference to the window
 is above $-0.3$ points on 28 of the 29 streams (backbone seed 0), the remaining one being too short to decide, and a pre-registered test on six held-out segments confirms both.
 \end{abstract}
@@ -769,30 +770,35 @@ experts as a generator stream has concepts.
 
 \textbf{Pool controls.} Removing the pool shows that adding stored contexts improved the tested configuration; it does
 not show that organising them by discrepancy matters. In response to review we compared \method{}, under the same
-windows, pool size of 12, two-level rule and constants, with two pools that never merge (registered before the runs):
+windows, pool size of 12, two-level rule and constants, with two pools that never merge, added in response to review:
 an \emph{archive} that keeps every closed 500-row segment as its own expert, and a \emph{snapshot} pool that stores
 the latest $\min(1000,\text{rows so far})$ rows at every segment close (the same per-expert row cap as \method{}).
 These are differences between complete policies, not isolated effects of merging. On the aligned grid
 (\cref{tab:poolgrid}) the registered criterion, \method{} above the archive by at least 0.5 points on average over the
 eight streams with 30 or 100 centroids and on at least six of them, \emph{fails}: \method{} is above it on seven, by
 $+0.30$ points on average; it is $+3.3$ points above the snapshot pool, mostly on 500-row blocks, where a 1000-row
-snapshot spans two concepts. On the 29 real streams (\cref{tab:poolreal}) the registered criterion for the archive,
+snapshot spans two concepts (the grid snapshot pool was registered as a secondary control without a criterion). The
+archive runs and both criteria below were registered before the runs; the snapshot pool on the real streams was
+registered later, after the 29 streams and the \method{} results had been examined, so it is a review-added control
+and not an independent confirmation. On the 29 real streams (\cref{tab:poolreal}) the registered criterion for the archive,
 a mean difference of at least $-0.1$ points, holds ($+0.07$, above it on 18 streams), and so does the registered
 descriptive threshold for the snapshot pool ($-0.08$, above it on 11). The one-sided 95\% block-bootstrap lower bounds
-(blocks of 20 batches; pointwise, conditional on the streams and backbone seed 0; the bounds against the archive were
-computed after its registration) are above $-0.3$ points on 17 streams against the snapshot pool and on 23 against
+(blocks of 20 batches; pointwise, conditional on the streams and backbone seed 0; the bounds against the archive are
+retrospective, not registered) are above $-0.3$ points on 17 streams against the snapshot pool and on 23 against
 the archive. These thresholds are descriptive; passing them is not equivalence, and individual streams lose up to
-0.5 points. \method{} uses fewer resources than both controls: 8.4 active experts per batch on average against 14.2,
+0.52 points. On average \method{} uses fewer active experts and calls than both controls: 8.4 active experts per batch against 14.2,
 9.7 TFM calls per batch against 14.0 (fewer on 25 of the 29 streams; including its discrepancy calls), and between
 2\,700 and 5\,400 stored rows per batch on average (per-expert row counts were not recorded; the range is between 500
-and 1000 rows per stored expert) against 5\,600 for the archive and 11\,100 for the snapshot pool. Together with the
+and 1000 rows per stored expert) against 5\,600 for the archive and 11\,100 for the snapshot pool, so its storage is
+lower on average only as bounded from these caps, and at the upper cap it can exceed the archive on single streams. Together with the
 misaligned tests above, where the archive was more accurate, the evidence supports keeping past contexts under the
 two-level rule, and describes merging by discrepancy as one way to organise the pool that keeps it small, not as the
 source of the recall gain.
 
 \begin{table}[t]
   \centering
-  \caption{Pool controls on the aligned grid (seeds 20, 21; registered): accuracy (\%), \method{} minus archive and
+  \caption{Pool controls on the aligned grid (seeds 20, 21; archive registered with a criterion, snapshot pool as a
+  secondary control without one): accuracy (\%), \method{} minus archive and
   minus snapshot pool (points), and TFM calls per batch.}
   \label{tab:poolgrid}
   \small
@@ -810,8 +816,7 @@ source of the recall gain.
 \begin{table*}[t]
   \centering
   \caption{Pool controls on the 29 real streams: \method{} accuracy (\%), difference to the archive and to the
-  snapshot pool (points) with one-sided 95\% block-bootstrap lower bounds (LB; archive bounds computed after
-  registration), active experts and TFM calls per batch (\method{} / archive; the snapshot pool has the archive's
+  snapshot pool (points) with one-sided 95\% block-bootstrap lower bounds (LB; archive bounds retrospective), active experts and TFM calls per batch (\method{} / archive; the snapshot pool has the archive's
   values within 0.6).}
   \label{tab:poolreal}
   \small
