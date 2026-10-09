@@ -329,3 +329,4 @@ Codex 与 MiMo 的原始输出存放在 `MICE/logs/tkde_review/`（`roundN_codex
 - 2026-10-09T16:49+11:00：2 个 worker 运行 24 分钟，0 次重试，GPU 均值 66%，两个 worker 各占满 1 个 CPU 核。满足升级条件，加到 3 个 worker（平稳重启）；如果重试多于完成，再退回 2 个。snapshot 对照 6/29。
 - 2026-10-09T16:59+11:00：snapreal_insects_abrupt_balanced 完成（7/29）。3 个 worker 运行 10 分钟，0 次重试，GPU 均值 88%，显存峰值 3.4 GB。
 - 2026-10-09T17:09+11:00：snapreal_insects_gradual_balanced 完成（8/29），10 分钟内重试 1 次，GPU 均值 85%，显存峰值 3.5 GB。
+- 2026-10-09T17:19+11:00：snapreal_insects_abrupt_imbalanced 完成（9/29，此前失败 6 次，检查点一直在推进）。10 分钟内重试 1 次，GPU 均值 84%，显存峰值 3.7 GB。
