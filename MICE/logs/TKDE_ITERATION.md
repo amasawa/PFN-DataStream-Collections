@@ -261,3 +261,4 @@ Codex 与 MiMo 的原始输出存放在 `MICE/logs/tkde_review/`（`roundN_codex
 - 2026-10-09T14:49+11:00：2 个 worker 运行 24 分钟：重试 2 次（检查点都在推进），snapshot 对照仍为 2/29。正在跑的 insects_incremental_balanced 430/570、insects_gradual_imbalanced 950/1433；等待中的 insects_abrupt_imbalanced 770/1500、h3_insects_c 300/1000。GPU 均值 76%（2 个 worker 时的正常水平），显存峰值 2.6 GB。按目前速度，29 条全部完成还要约 8–10 小时。
 - 2026-10-09T15:01+11:00：Codex 额度用完（恢复时间 15:31），按 v3 等待，第 8 轮将在 15:34 开始。
 - 2026-10-09T15:02+11:00：snapreal_insects_incremental_balanced 完成（3/29），13 分钟内重试 1 次，GPU 均值 74%，显存峰值 2.7 GB。
+- 2026-10-09T15:29+11:00：snapreal_insects_gradual_imbalanced 完成（4/29）。自 15:00 起 28 分钟没有失败，GPU 均值 78%，两个 worker 都受 CPU 限制（各约占 100% 单核）。按 env/EXPERIMENT_SCHEDULING.md 的升级规则加到 3 个 worker（平稳重启）；如果重试多于完成，再退回 2 个。
