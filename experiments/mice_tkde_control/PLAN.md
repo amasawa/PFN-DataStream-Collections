@@ -171,3 +171,9 @@ insects_abrupt_balanced ran for almost two hours at 31.9 GB. From now on every c
 (torch.cuda.set_per_process_memory_fraction); a configuration that runs out of memory under the cap is recorded as
 "infeasible within 28 GB" and not retried. The invalid h4_covertype_d fifo13400 result is discarded and rerun under
 the cap. Completed runs below the cap (all others, peak reserved at most 23 946 MiB) are kept.
+
+**Round 9, M* fixed (2026-10-10T04:52+11:00, from timings only; no accuracy examined):** isolated benchmark, amortised mean seconds per
+batch over the three prefixes: MICE 1.067 (two-level replay included); FIFO 1500 0.263, 2000 0.312, 3000 0.423. None
+is within a factor 1.25 of MICE, so by rule B M* = 3000 (closest) and the 29-stream comparison is reported as not
+cost-matched: FIFO 3000 is about 2.5 times cheaper than MICE. On the prefixes, FIFO 5000 (0.674) and FIFO 13 400
+(1.907) bracket MICE's cost. Files: MICE/results_paper/bench/.
