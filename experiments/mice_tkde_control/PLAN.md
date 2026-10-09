@@ -109,3 +109,22 @@ block length and alignment together and so cannot isolate alignment; design corr
 - **Limits stated in advance:** the extra 200 rows add initial history; two data seeds and one backbone seed; the 8
   configurations are not independent replications; the result is sensitivity to this phase shift, not a pure causal
   effect of segment impurity.
+
+## Round 8 addition — learning curves from independent rows (registered 2026-10-09T15:41+11:00, before the run)
+
+Provenance: while documenting the grid for the TKDE reviewer (round 8), we found that the registered learning curves
+(MICE/code/learning_curve.py, data seeds 10 and 11) re-initialise the same NumPy generator as the evaluated seed-10/11
+grid streams: the first block's centroid draws coincide (labels 100% equal) and some rows are bit-identical (0 to
+1887 per stream). The seed-20/21 evaluation shares no rows with the curves. This addition is a sensitivity analysis
+under the standing authorisation of 2026-10-09; the registered predictions and their verdicts stay as they are.
+
+- **Curves:** same protocol as learning_curve.py (one block of 4000 rows per concept; rows 1-3000 context pool, rows
+  3001-4000 test; n in {50, 100, 200, 500, 1000, 2000}; three contexts per n with generator seeds 0, 1, 2; TabPFN v2,
+  4 estimators, random state = data seed), but the rows are drawn from default_rng(20 000 + seed) given the concept
+  definitions (centroids, weights, labels) of default_rng(seed). Verified before the run: no row of the new curve data
+  equals a row of any evaluated grid stream of seeds 10, 11, 20, 21.
+- **Predictions:** registered form (M rows on every recurrence) and theorem form (n_c = min(M, (c-1)L)), aggregated
+  exactly as before (curve averaged over 2 seeds x 3 concepts x 3 repetitions, interpolated in log n; visits 2 and 3
+  with weight 1/3; per cell the mean of the two streams; Spearman over the six cells).
+- **Reported:** Spearman with the observed fast-level gains (seeds 10, 11) and with the full method (seeds 20, 21),
+  for the original and the independent curves, side by side. No criterion; descriptive sensitivity.
