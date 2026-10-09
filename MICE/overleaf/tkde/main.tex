@@ -810,8 +810,8 @@ source of the recall gain.
   \centering
   \caption{Pool controls on the aligned grid (seeds 20, 21; archive registered with a criterion, snapshot pool as a
   secondary control without one): accuracy (\%), \method{} minus archive and
-  minus snapshot pool (points) with retrospective 95\% moving-block bootstrap intervals, TFM calls per batch (\method{} including its discrepancy
-  calls / archive / snapshot), and stored rows per batch in thousands (\method{}: bound from the 500/1000-row caps;
+  minus snapshot pool (points) with retrospective 95\% moving-block bootstrap intervals, TFM calls per batch (measured by the call counter of each run; \method{} including its
+  discrepancy calls / archive / snapshot), and stored rows per batch in thousands (\method{}: bound from the 500/1000-row caps;
   archive and snapshot: reconstructed exactly).}
   \label{tab:poolgrid}
   \small
@@ -831,7 +831,7 @@ source of the recall gain.
   \caption{Pool controls on the 29 real streams: \method{} accuracy (\%), difference to the archive and to the
   snapshot pool (points) with one-sided 95\% block-bootstrap lower bounds (LB; archive comparison and criterion
   registered, archive bounds retrospective; snapshot comparison registered after the streams had been examined), active experts per batch (\method{} / archive; the snapshot pool has the archive's), TFM calls per batch
-  (\method{} including its discrepancy calls / archive / snapshot), and stored rows per batch in thousands (\method{}: bound from the 500/1000-row caps;
+  (measured by the call counter of each run; \method{} including its discrepancy calls / archive / snapshot), and stored rows per batch in thousands (\method{}: bound from the 500/1000-row caps;
   archive and snapshot: reconstructed exactly).}
   \label{tab:poolreal}
   \small
