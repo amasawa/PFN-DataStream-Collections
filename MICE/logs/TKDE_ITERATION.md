@@ -340,3 +340,4 @@ Codex 与 MiMo 的原始输出存放在 `MICE/logs/tkde_review/`（`roundN_codex
 - 2026-10-09T19:29+11:00：snapreal_h3_covertype_c 完成（12/29）。19:09–19:19 共 4 次重试，检查点都在推进，未触发降级（风暴阈值是 10 分钟 6 次）；最近 10 分钟 0 次重试，平均利用率 88.7%（中位数 95%）。
 - 2026-10-09T19:39+11:00：snapreal_h3_covertype_b、snapreal_h2_rialto 完成（14/29），0 次重试，10 分钟平均利用率 88.0%（中位数 92%）。
 - 2026-10-09T19:49+11:00：snapreal_h4_covertype_d 完成（15/29），0 次重试。10 分钟平均利用率降到 83.3%：CoverType 段都已跑完，剩下的主要是 Airlines、Poker 等流。已经是 4 个 worker 的上限。
+- 2026-10-09T20:19+11:00：snapreal_h4_airlines_e、snapreal_h4_airlines_d 完成（17/29），0 次重试，10 分钟平均利用率 85.0%。
