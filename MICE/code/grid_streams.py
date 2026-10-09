@@ -1,6 +1,6 @@
 """Controlled recall-versus-relearn grid (numpy only; runs in any venv). RBF mixture with n_centroids centroids in d=10
 dimensions and 4 classes; the K=3 concepts share the centroids (so P(x) is identical) and differ only in the class
-assigned to each centroid (a random permutation per concept): a pure real drift whose learning cost grows with the
+assigned to each centroid (an independent uniform class per centroid and concept, not a permutation): a pure real drift whose learning cost grows with the
 number of centroids. Concepts recur in blocks of `block` rows, cycling 3 times.
 Grid: n_centroids in {5, 30, 100} x block in {500, 2000}; dev seeds 0, 1 (test seeds 10, 11 reserved).
 Output: ../data/grid_c<n>_b<block>_s<seed>.npz"""

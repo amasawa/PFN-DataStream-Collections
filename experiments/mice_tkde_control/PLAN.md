@@ -128,3 +128,5 @@ under the standing authorisation of 2026-10-09; the registered predictions and t
   with weight 1/3; per cell the mean of the two streams; Spearman over the six cells).
 - **Reported:** Spearman with the observed fast-level gains (seeds 10, 11) and with the full method (seeds 20, 21),
   for the original and the independent curves, side by side. No criterion; descriptive sensitivity.
+
+**Correction (2026-10-09T16:08+11:00, wording only, after the run):** the rows of the round-8 sensitivity curves were drawn from `default_rng([20000 + seed, m, k])` (one generator per seed, centroid count and concept), as implemented in `learning_curve_indep.py` before the run; the text above wrote `default_rng(20 000 + seed)`. Found by the MiMo audit; the analysis is unchanged.
