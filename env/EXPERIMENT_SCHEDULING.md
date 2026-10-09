@@ -1,0 +1,77 @@
+# 排实验规则（本机）
+
+**每次安排或调整实验前先读这份文件。** 规则来自用户的要求和这台机器上实际踩过的坑；遇到新情况，先把结论补进来再执行。
+最后更新：2026-10-09。故障细节见 `env/MACHINE_LOG.md`；项目约束见 `CLAUDE.md`。
+
+## 1. 机器
+
+- GPU：NVIDIA RTX 5000 Ada，32 760 MiB；系统是 WSL2。
+- CPU：20 核；内存约 31 GB。
+- **间歇性 CUDA 故障**（"unspecified launch failure"、"illegal memory access"）会杀死单个进程，并发越高越常见。
+  不要在进程内捕获后继续跑；应该在新进程里从原子写入的检查点恢复。恢复后的预测逐位一致，已于 2026-10-09
+  用单进程重跑验证（`experiments/duo_heldout_20261008/recheck_amendment4.py`）。
+
+## 2. 硬性约束（用户要求）
+
+| 项目 | 规则 |
+|---|---|
+| GPU 显存 | 不超过 **28 GB**（约 32 GB 的 85–90%）；supervisor 在 22 000 MiB 时暂停新任务，23 200 MiB 时紧急处理 |
+| 内存（RAM） | 不超过 **28 GB**；可用内存低于 4 GB 时不再启动新任务 |
+| GPU 利用率 | 目标 **≥ 90%**；但衡量标准是每小时完成的任务数，不能为了利用率制造失败风暴 |
+| 记录 | 中文；时间用 `date` 取；运行期间约每 10 分钟检查一次，有重要事件才写，没变化不写 |
+| 推送 | 重大代码、实验、论文改动后立即 git push，只 add 明确的路径 |
+
+## 3. 并发：实测经验（TabPFN v2 / MICE 类任务）
+
+| 并发 | 实际表现 |
+|---|---|
+| 1 | 稳定，但 GPU 利用率很低 |
+| 2 | 最稳；长任务利用率约 75–85% |
+| 3 | 多数时候吞吐最高；利用率 80–93%；偶尔出现成串失败 |
+| 4 | 受 CPU 限制的任务（如 CoverType）可把利用率从 60% 提到 78%，前 40 分钟无失败；之后短任务混入时重试多于完成 |
+| 7–8 | 失败风暴（10 分钟 16 次失败、0 完成），不要用 |
+
+- **起步用 3 个 worker。**
+- **降级规则**：10–15 分钟内重试次数多于完成数 → 减 1 个 worker（最少 2 个）；**先写日志，再改**。
+- **升级规则**：持续 20 分钟以上没有失败、利用率低于 90%，并且原因是任务本身 CPU 受限（`top` 中每个 worker
+  约占 100% 单核、其余核空闲）→ 可以加 1 个，最多 4 个；先写日志。
+- 利用率低先查原因：任务很小（网格流每次调用很短）、剩余任务少、或者 CPU 受限（`OMP_NUM_THREADS=1` 时每个
+  worker 只用一个核）。只有最后一种值得加并发。
+
+## 4. 检查点与重试
+
+- 长任务一律使用检查点；**短流（少于 200 批）用 `MICE_CKPT_EVERY=10`**。默认 20 时，任务失败后常常要从头重跑，
+  并且会触发"检查点无进展"阻塞。
+- supervisor 只在"连续 4 次失败且检查点无进展"或"累计 20 次失败"时阻塞一个任务。
+- 某个任务的检查点长时间不动时，先看它是在排队还是在反复失败（events.log 中的 `checkpoint_advanced=False`）。
+
+## 5. 调度做法
+
+- 运行目录放在 Linux 文件系统 `~/pfn-runs/<run>/`，不要放在 `/mnt/c`（mkdir 不是原子的）。创建前先 `test -e`，
+  其他 agent 可能已占用。
+- 统一用 `experiments/night_20261007/supervisor.py --resource-mode`，加 `--worker-dir <run>/controller --no-publish`；
+  环境变量：`OMP_NUM_THREADS=1`（冻结运行必须保持）、`MKL/OPENBLAS_NUM_THREADS=1`、`CUDA_LAUNCH_BLOCKING=0`，
+  不要设置 `PYTORCH_CUDA_ALLOC_CONF=expandable_segments`。
+- **supervisor 只在启动时读取 `tasks.json`**：要追加任务，需要写入 tasks.json，然后平稳重启（写 STOP 文件、等进程
+  退出、移走 STOP、重新启动）。检查点保证不丢进度。
+- 任务排序：小任务、能尽快给出结论的任务放前面；同一阶段内按数据量从小到大排。
+- **需要"单独运行"的检查**（逐位一致性复查、计时）必须独占 GPU：先确认 `nvidia-smi --query-compute-apps` 里没有其他
+  进程，再在单独的运行目录里运行，不要碰冻结的运行目录。
+- 冻结实验：改动先写 amendment 并提交，再执行；不看部分结果；不重置熔断记录，不改快照。
+- 监控：用 Monitor 监听 events.log 中的 `blocked=True|STALL|GPU STOP`，以及完成条件；每 30 分钟到期后重新布置。
+
+## 6. 已知的坑
+
+- `pkill -f <模式>` / `pgrep -f` 会匹配到自己的 shell 命令行并把它杀掉（2026-10-09 又犯过一次）。改用
+  `ps -eo pid,args | grep "[x]模式"` 取 pid 后再 kill。
+- `ps | grep -c worker.py` 也会把自己的命令行算进去；判断 GPU 上有没有进程，以 `nvidia-smi --query-compute-apps` 为准。
+- Codex 需要 `< /dev/null`，否则会一直等待标准输入；Codex 额度用完时等它恢复，不要换模型。
+- MiMo 只能用 `--agent auditor`，在隔离副本中运行；auditor 已禁用 History（它会读到其他项目的会话）。
+
+## 7. 每次排实验前的检查清单
+
+1. 读本文件，以及相关的 PLAN 或 amendment。
+2. `tmux ls`、`nvidia-smi`、`free -g`、`ps -eo pid,args | grep "[w]orker.py"`：确认没有冲突的运行。
+3. `test -e` 运行目录；确认数据和任务表无误；有登记要求的，先提交登记。
+4. 起步 3 个 worker（或按第 3 节的经验调整），短流设 `MICE_CKPT_EVERY=10`。
+5. 布置 Monitor 和 10 分钟检查；在项目日志中写一条"启动"记录并推送。

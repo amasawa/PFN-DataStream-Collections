@@ -12,6 +12,8 @@ constraints specific to this repository.
   (other agents may have uncommitted work in the tree).
 
 ## Experiments
+- **Before scheduling or changing any run, read `env/EXPERIMENT_SCHEDULING.md`** (machine limits, concurrency evidence,
+  checkpoint and restart procedure, checklist) and update it when a new lesson is learned.
 - Raw runs live on Linux storage under `~/pfn-runs/<run>/`; locks and checkpoints must be there, not on `/mnt/c`
   (mkdir is not atomic there). Check `test -e` before creating a run directory: another agent may own it.
 - Frozen evaluations (`experiments/*/PLAN*.md`, `experiments/duo_heldout_20261008/`): plan, criteria and evaluator are
