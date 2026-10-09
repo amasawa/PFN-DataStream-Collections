@@ -428,7 +428,8 @@ with $\eta_2=10$ as replays of the same rule with those parameters. The runs tha
 different, single-level mixture, which we do not report.
 
 
-The cost is one TFM call per expert and batch, at most 15, plus three calls when a segment closes. All constants
+The cost is one TFM call per expert and batch, at most 15, plus, when a segment closes, two cross-fitted calls
+and one call per stored expert (at most 14), so at most 29 calls on a closing batch. All constants
 were set on synthetic development streams; none was tuned on a real stream.
 
 \begin{algorithm}[tb]

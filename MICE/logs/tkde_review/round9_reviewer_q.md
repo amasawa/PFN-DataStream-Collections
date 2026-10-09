@@ -1,3 +1,9 @@
+You are the TKDE reviewer. In this round you raised: "The accuracy-resource tradeoff is not established: no
+latency, throughput or peak memory on stated hardware, no comparison with stronger FIFO/window baselines under
+comparable memory or time; 'free to store and free to recall' overstates." The paper is in this directory. The
+authors propose (wording fix already applied to the closure cost; 'free' will be replaced by 'requires no additional
+training'):
+
 # Round 9 — plan (Claude, 2026-10-09)
 
 Judgement: accepted. The paper states a 5-18x time factor but no measured latency, throughput or memory on stated
@@ -42,3 +48,6 @@ B. Time-matched FIFO on all 29 real streams: M* is chosen before any accuracy is
 C. Definitions fixed now: "matches" = |mean difference| <= 0.1 points; "similar cost" = median seconds per batch within
    a factor 1.25. If FIFO M* is at least as accurate as MICE at similar or lower cost, the abstract and conclusion say
    so. FIFO 5000 and 13 400 are reported only on the benchmark prefixes, as costlier operating points.
+
+Does this plan satisfy your request? Answer: Verdict (Satisfies / Partly satisfies / Does not satisfy); what must be
+added or changed before the authors run it (at most 3 items).

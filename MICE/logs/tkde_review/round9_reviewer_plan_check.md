@@ -1,0 +1,7 @@
+**Verdict: Partly satisfies.** The revised plan substantially addresses the concern, but two changes are needed before execution:
+
+1. **Make the time-matching rule executable and representative of total work.** Benchmark *all* candidate capacities {1500, 2000, 3000}; A currently lists only the already-selected M*. Predefine aggregation across streams and repetitions, and use **amortized mean seconds per batch, including segment closures**, for budget matching. Median latency can conceal recurring closure costs. Retain median/p95 as latency descriptors. Specify a fallback if no candidate meets the 1.25 cost band; the smallest candidate slower than MICE is not necessarily time-matched. Report unmatched or bracketing operating points honestly.
+
+2. **Align the accuracy–cost claim with the measured scope.** Matching time on three 300-batch prefixes does not establish matching across 29 full streams: dimensions, context fill and MICE pool occupancy can change relative cost. Either obtain comparable isolated cost measurements over the evaluation scope supporting the broader claim, or restrict the demonstrated accuracy–resource tradeoff to the three paired prefixes. Describe the 29-stream experiment as accuracy at a *benchmark-calibrated FIFO capacity*, with resource comparability elsewhere unverified. Apply the abstract/conclusion reporting rule within the scope where both accuracy and cost were measured.
+
+Keeping MICE frozen is appropriate; changing its budget is unnecessary to resolve this objection.

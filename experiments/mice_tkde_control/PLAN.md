@@ -130,3 +130,35 @@ under the standing authorisation of 2026-10-09; the registered predictions and t
   for the original and the independent curves, side by side. No criterion; descriptive sensitivity.
 
 **Correction (2026-10-09T16:08+11:00, wording only, after the run):** the rows of the round-8 sensitivity curves were drawn from `default_rng([20000 + seed, m, k])` (one generator per seed, centroid count and concept), as implemented in `learning_curve_indep.py` before the run; the text above wrote `default_rng(20 000 + seed)`. Found by the MiMo audit; the analysis is unchanged.
+
+## Round 9 addition — accuracy-resource tradeoff (registered 2026-10-09T16:20+11:00, before any run)
+
+Provenance: TKDE reviewer round 9 (MICE/logs/tkde_review/round9_codex.md), plan v2 with the expert's corrections
+(round9_expert_a1.md) and the reviewer's plan check (round9_reviewer_plan_check.md); standing user authorisation of
+2026-10-09. Method frozen; existing results and criteria unchanged.
+
+**A. Isolated benchmark** (GPU alone, one process at a time, after the snapshot control finishes):
+- Streams h4_airlines_d, h4_covertype_d, insects_abrupt_balanced, batches 1-300 (data truncated to 301 batches; the
+  policies are causal, so these batches are identical to the full-stream runs). Claims about cost are restricted to
+  these prefixes.
+- Policies: micev1000_500 (MICE), fifo1000, fifo1500, fifo2000, fifo3000, fifo5000, fifo13400, winens1000; backbone
+  seed 0; three fresh-process repetitions, policy order rotated per repetition.
+- Per batch: wall time of prediction and update as recorded by run.py (segment processing included; checkpointing
+  disabled), synchronised by the transfer of predictions to the host. MICE adds its two-level rule: the replay time
+  of simulate2 over the prefix, amortised per batch. Reported: amortised mean, median, p95, max seconds per batch,
+  closing versus non-closing batches for MICE, rows per second; peak allocated and reserved GPU memory and peak process
+  RAM; retained context rows and pool occupancy. Accuracy on the same prefixes, paired. MICE's cached expert
+  predictions are compared bit for bit with the frozen cache.
+- Aggregation: per policy, the mean over the three streams of the per-stream mean over repetitions.
+
+**B. Time-matched FIFO** on the 29 real streams: M* is fixed from A before any accuracy is examined: among
+{1500, 2000, 3000}, the M whose amortised mean seconds per batch is within a factor 1.25 of MICE's (closest if
+several); if none is, M* is the closest one and the comparison is reported as bracketing, not matched. FIFO M* then
+runs on the 29 streams (backbone seed 0). Reported: MICE - FIFO M* per stream and mean, two-sided 95% intervals and
+one-sided block-bootstrap bounds (approximate, fixed streams). Described as "accuracy at a benchmark-calibrated FIFO
+capacity"; cost comparability on the 29 full streams is not claimed.
+
+**C. Definitions fixed now:** "matches" = absolute mean difference at most 0.1 points; "similar cost" = amortised
+mean seconds per batch within a factor 1.25. If on the benchmark prefixes a FIFO is at least as accurate as MICE at
+similar or lower cost, the abstract and conclusion say so. FIFO 5000 and 13 400 are costlier operating points on the
+prefixes only. Every configuration, including any that fails or exceeds limits, is reported.
