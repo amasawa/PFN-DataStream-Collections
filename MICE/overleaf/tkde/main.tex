@@ -61,7 +61,7 @@ exceeds a reset detector on every stream with hard concepts, by 8.5 points on th
 window by 24 points on average. These grid concepts are aligned with \method{}'s segments. When the same concepts
 are shifted so that every boundary falls inside a segment, \method{}'s advantage over reset disappears (it is below
 reset on 7 of 8 shifted streams), and an archive of unmerged past segments is more accurate than \method{}; the
-large recall gains therefore hold only when concept boundaries coincide with segment boundaries. On 29 real streams \method{} is more accurate than all four in-context baselines on
+large average recall gains therefore hold only when concept boundaries coincide with segment boundaries. On 29 real streams \method{} is more accurate than all four in-context baselines on
 23 and never more than 0.25 points below the plain window; its one-sided 95\% block-bootstrap lower bound on the difference to the window
 is above $-0.3$ points on 28 of the 29 streams (backbone seed 0), the remaining one being too short to decide, and a pre-registered test on six held-out segments confirms both.
 \end{abstract}
@@ -136,8 +136,8 @@ formula (\cref{prop:recall}); and an any-time discounted regret bound for the sl
 component corresponds to one of these results.
 \textbf{(4) Evidence.} Pre-registered tests on a controlled grid with concept boundaries aligned to the segments,
 where the learning curve predicts the gain of memory and \method{} exceeds reset detection, window ensembles,
-incremental learners and trained MOOE; registered robustness tests showing that this advantage disappears when the
-boundaries are shifted inside the segments; and 29 real streams, where \method{} is more accurate than all four
+incremental learners and trained MOOE; registered robustness tests showing that this average advantage disappears
+when the boundaries are shifted inside the segments; and 29 real streams, where \method{} is more accurate than all four
 in-context baselines on 23 and stays within 0.25 points of the plain window on all.
 
 % =====================================================================================================
@@ -558,13 +558,18 @@ holds exactly the rows of batch $t$ of its aligned stream, so the two are compar
 leaves FIFO, reset and the window ensemble almost unchanged (within one point) but removes the recall advantage of
 \method{} (\cref{tab:offset}): its gain over reset changes by $-6.8$ points on average ($-1.0$ to $-14.4$; $-12.0$
 in the first five batches of the recurring blocks), and \method{} is below reset on 7 of the 8 shifted streams
-($-3.7$ points on average, down to $-10.8$ with blocks of 500 rows). The archive loses less and is above \method{}
+($-3.7$ points on average, down to $-10.8$ with blocks of 500 rows), so the registered descriptive criterion of
+this test (above reset on at least 7 of the 8 with a mean gain of at least one point) \emph{fails}. On the four
+shifted streams with 500-row blocks \method{} is also below the window ensemble ($-0.9$ to $-8.5$ points); on the four
+with 2\,000-row blocks it stays above it ($+0.2$ to $+1.8$), and in the first five batches of the recurring blocks it
+keeps $+5.7$ and $+7.3$ points over reset with 100 centroids. The archive loses less and is above \method{}
 on all eight shifted streams (by 3.0 points on average), whereas on the aligned streams \method{} is 0.3 points
 above it. The 200 prepended rows also add initial history, so this is the sensitivity of \method{} to this phase
 shift rather than a pure effect of mixed segments.
 
-Both tests point the same way: the large recall gains of \method{} were demonstrated on grids whose concept
-boundaries coincide with its segment boundaries. When a boundary falls inside a segment, the segment mixes two
+Both tests point the same way: the large average recall gains of \method{} were demonstrated on grids whose concept
+boundaries coincide with its segment boundaries; recall right after a recurrence still helps on hard concepts when
+they do not, but no longer pays on average. When a boundary falls inside a segment, the segment mixes two
 concepts, and merging it into a stored expert can corrupt that expert; with 500-row blocks every segment is mixed and
 \method{} falls below reset, with 2\,000-row blocks one segment in four is mixed and it loses 1.0 to 3.0 points of
 its advantage. An archive, which never merges, is more robust to this. The real streams of \cref{sec:rq3}, whose
@@ -757,8 +762,8 @@ component per result: an excess-risk discrepancy decides which contexts share a 
 identifies a recurring concept in one batch, and a slow meta expert guarantees, at any time and for any stream,
 that following it costs little against the plain window. When concepts recur in blocks whose boundaries coincide
 with its segments and are costly to learn, \method{} exceeds reset detection, window ensembles and trained experts by
-a wide margin; when the boundaries fall inside its segments, this advantage disappears and an archive without merging
-is more accurate; on 29 real streams it is the most
+a wide margin; when the boundaries fall inside its segments, this average advantage disappears, recall helps only
+right after a recurrence of a hard concept, and an archive without merging is more accurate; on 29 real streams it is the most
 accurate in-context policy on 23 and never more than 0.25 points below a sliding window, where reset detection
 loses up to 9.6 points.
 
