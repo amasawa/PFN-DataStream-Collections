@@ -783,9 +783,8 @@ $+0.30$ points on average (moving-block bootstrap over batches, blocks of 10, st
 retrospective: 95\% interval $[+0.12,+0.41]$, so the difference is positive but below the required $+0.5$; per
 stream the interval excludes zero on three of the eight); it is $+3.3$ points above the snapshot pool, mostly on 500-row blocks, where a 1000-row
 snapshot spans two concepts (the grid snapshot pool was registered as a secondary control without a criterion). The
-archive runs and both criteria below were registered before the runs; the snapshot pool on the real streams was
-registered later, after the 29 streams and the \method{} results had been examined, so it is a review-added control
-and not an independent confirmation. On the 29 real streams (\cref{tab:poolreal}) the registered criterion for the archive,
+archive runs, the grid criterion above and the real-stream criterion for the archive below were registered before the
+runs. On the 29 real streams (\cref{tab:poolreal}) the registered criterion for the archive,
 a mean difference of at least $-0.1$ points, holds ($+0.07$, above it on 18 streams), and so does the registered
 descriptive threshold for the snapshot pool ($-0.08$, above it on 11). The one-sided 95\% block-bootstrap lower bounds
 (blocks of 20 batches; pointwise, conditional on the streams and backbone seed 0; the bounds against the archive are
@@ -796,8 +795,9 @@ the archive. These thresholds are descriptive; passing them is not equivalence, 
 2\,700 and 5\,400 stored rows per batch on average (a bound, not a measurement: per-expert row counts were not
 recorded, and each stored expert holds 500 to 1000 rows) against 5\,600 for the archive and 11\,100 for the snapshot
 pool (reconstructed exactly from their deterministic storage rules); its calls include about 1.3 discrepancy calls
-per batch on average (0.05 to 2.6; reconstructed as the call counter minus the cached expert predictions, approximate
-because single-class contexts are not counted), so its storage is
+per batch on average (0.05 to 2.6; reconstructed as calls per batch minus active experts per batch in
+\cref{tab:poolreal}, a lower estimate because experts with a single-class context return a prediction without a TFM
+call), so its storage is
 lower on average only as bounded from these caps, and at the upper cap it can exceed the archive on single streams. Together with the
 misaligned tests above, where the archive was more accurate, the evidence supports keeping past contexts under the
 two-level rule, and describes merging by discrepancy as one way to organise the pool that keeps it small, not as the
@@ -807,8 +807,8 @@ source of the recall gain.
   \centering
   \caption{Pool controls on the aligned grid (seeds 20, 21; archive registered with a criterion, snapshot pool as a
   secondary control without one): accuracy (\%), \method{} minus archive and
-  minus snapshot pool (points) with retrospective 95\% moving-block bootstrap intervals, and TFM calls per batch
-  (\method{} / archive).}
+  minus snapshot pool (points) with retrospective 95\% moving-block bootstrap intervals, and TFM calls per batch (\method{}, including its
+  discrepancy calls / archive; the snapshot pool has the archive's call counts on every grid stream).}
   \label{tab:poolgrid}
   \small
   \setlength{\tabcolsep}{2pt}
@@ -826,8 +826,8 @@ source of the recall gain.
   \centering
   \caption{Pool controls on the 29 real streams: \method{} accuracy (\%), difference to the archive and to the
   snapshot pool (points) with one-sided 95\% block-bootstrap lower bounds (LB; archive comparison and criterion
-  registered, archive bounds retrospective; snapshot comparison registered after the streams had been examined), active experts and TFM calls per batch (\method{} / archive; the snapshot pool has the archive's
-  values within 0.6), and stored rows per batch in thousands (\method{}: bound from the 500/1000-row caps;
+  registered, archive bounds retrospective; snapshot comparison registered after the streams had been examined), active experts and TFM calls per batch (\method{}, calls including its discrepancy calls / archive; the snapshot
+  pool has the archive's experts and its calls within 0.6), and stored rows per batch in thousands (\method{}: bound from the 500/1000-row caps;
   archive and snapshot: reconstructed exactly).}
   \label{tab:poolreal}
   \small
