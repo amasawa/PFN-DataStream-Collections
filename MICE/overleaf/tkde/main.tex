@@ -241,8 +241,8 @@ Let \cref{ass:ppd} hold and let $\ell$ be the log-loss.
 R-divergence asks whether the mixture hypothesis treats the two sets \emph{equally}. Under the log-loss, two
 concepts that contradict each other on the same inputs are treated equally badly, so the answer is yes although
 neither context helps the other (\cref{prop:blind}(ii), without further conditions); this is the defining case of
-recurring drift. Under the 0-1 loss the answer depends on how the mixture breaks its ties: it is again zero for
-randomised ties, and otherwise it is not determined by the disagreement mass $\rho$ (\cref{prop:blind}(iii)). Under
+recurring drift. Under the 0-1 loss the answer depends on how the mixture breaks its ties: it is again zero under
+uniform, source-independent random tie-breaking with risks averaged before taking their difference, and otherwise it is not determined by the disagreement mass $\rho$ (\cref{prop:blind}(iii)). Under
 the 0-1 loss the directed form $\Div_T$ equals $\rho$ whatever the tie rule; under the log-loss it is infinite on the
 disagreement region of two deterministic concepts. The excess-risk form asks whether pooling \emph{costs}
 anything. With finite contexts it has a second term: if $P=Q$, pooling doubles the context and changes the risk by
