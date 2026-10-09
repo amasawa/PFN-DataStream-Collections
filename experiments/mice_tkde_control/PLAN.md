@@ -48,3 +48,37 @@ MiMo's audit of round 4 noted that the archive control keeps 500 rows per expert
 advantage on the misaligned streams cannot be attributed to merging alone. We add snap1000_500 (storage-matched:
 1000 rows per expert, no merging) on the same 12 misaligned streams. This is exploratory; it does not change the
 round-4 verdict and will be reported as such.
+
+## Round 2 addition — snapshot control on the 29 real streams (registered 2026-10-09T11:35+11:00, before the run)
+
+Provenance: added in response to the TKDE reviewer's plan check (MICE/logs/tkde_review/round2_reviewer_plan_check.md,
+item 1), wording confirmed by the Codex expert (round2_expert_a2.md), approved by the user on 2026-10-09 before
+execution. The 29 streams and the MICE results were examined before this registration; this run is a review-added
+control, not an independent confirmation. Earlier verdicts (criteria 1 and 2, round 4) and the exploratory labels
+stay as they are.
+
+- **Policy:** snap1000_500 (`PoolControl`, mode "snap", MICE/code/run.py): at every closed 500-row segment, store the
+  latest min(1000, rows so far) labelled rows as a new stored expert; at most 12 stored experts, oldest evicted (MICE
+  evicts its least recently used expert); windows of 100, 300 and 1000 rows; same two-level rule
+  `reweight.simulate2(outer='brier', scale=.5, temper=True)`; batch size 100; each batch is predicted before its
+  labels arrive; batch 0 is warm-up and excluded, as in the paper. Backbone seed 0. MICE values are the paper's
+  existing micev1000_500 caches; no MICE rerun. Failures are retried in a new process from checkpoints written
+  every 10 batches.
+- **Streams:** the 29 real streams of the paper (MICE/code/noninferiority.py: results_test (5 streams: elec2 and four
+  INSECTS), results_heldout, results_heldout2, results_heldout3, results_heldout4).
+- **Accuracy:** within a stream, the mean of per-batch accuracies over batches 1..T-1 (all batches have 100 rows, so
+  this equals the example-weighted accuracy).
+- **Descriptive criterion, fixed now:** the unweighted mean over the 29 streams of the per-stream differences
+  MICE - snapshot, in accuracy points, is >= -0.1. It is a descriptive threshold, not an inferential
+  non-inferiority verdict.
+- **Uncertainty:** per stream, moving-block bootstrap of the batch sequence, resampling the same batch indices for all
+  methods jointly; blocks of 20 batches (10 and 50 as sensitivity), 10 000 resamples, generator seed 0; one-sided 95%
+  percentile lower bound of the mean difference. If a stream has fewer than 2 x block batches, the block is
+  floor(T/2). Bounds are pointwise, conditional on the observed streams and backbone seed 0; they do not cover
+  backbone-seed or source variability. The same analysis applied to MICE - archive is retrospective and labelled so.
+- **Resources reported, measured and caps kept apart:** active experts per batch (number of experts in the cached
+  predictions; mean and maximum); TFM calls per batch (the counter counts every fit and predict, including MICE's
+  discrepancy calls at segment closes, which are reported separately where they can be counted); stored rows:
+  archive exactly 500 per stored expert, snapshot exactly min(1000, rows so far) per stored expert, MICE at most 1000
+  per stored expert and at most 12 000 rows in the pool (per-expert row counts were not recorded for MICE; reported as
+  a missing measurement). Wall time only as a description (shared GPU).
