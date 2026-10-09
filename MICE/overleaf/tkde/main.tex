@@ -61,7 +61,10 @@ exceeds a reset detector on every stream with hard concepts, by 8.5 points on th
 window by 24 points on average. These grid concepts are aligned with \method{}'s segments. When the same concepts
 are shifted so that every boundary falls inside a segment, \method{}'s advantage over reset disappears (it is below
 reset on 7 of 8 shifted streams), and an archive of unmerged past segments is more accurate than \method{}; the
-large average recall gains therefore hold only when concept boundaries coincide with segment boundaries. On 29 real streams \method{} is more accurate than all four in-context baselines on
+large average recall gains therefore hold only when concept boundaries coincide with segment boundaries. Against
+pools that keep past segments without merging them, organising the pool by discrepancy did not meet our registered
+improvement criterion on aligned concepts ($+0.3$ points where $+0.5$ was required); on real streams the three pools
+are within 0.1 points on average, with \method{} using fewer experts and less storage. On 29 real streams \method{} is more accurate than all four in-context baselines on
 23 and never more than 0.25 points below the plain window; its one-sided 95\% block-bootstrap lower bound on the difference to the window
 is above $-0.3$ points on 28 of the 29 streams (backbone seed 0), the remaining one being too short to decide, and a pre-registered test on six held-out segments confirms both.
 \end{abstract}
@@ -130,15 +133,17 @@ representative of the concepts.
 \textbf{Contributions.}
 \textbf{(1) Problem.} Recurring concept drift for in-context learners, where past contexts are experts that require no training
 (\cref{def:recur}), with three observations on forgetting, relearning and resetting.
-\textbf{(2) Theory.} The blind spot of R-divergence under conflicting concepts and its excess-risk repair
-(\cref{prop:blind}); identification in one batch under a margin (\cref{prop:block}); the recall-versus-relearn
+\textbf{(2) Theory.} A blind spot of R-divergence under conflicting concepts and an excess-risk discrepancy that
+resolves it under the stated posterior-predictive assumptions, with supporting evidence on controlled segment pairs
+(\cref{prop:blind}); this is a result about the discrepancy, not evidence that merging improves streaming accuracy; identification in one batch under a margin (\cref{prop:block}); the recall-versus-relearn
 formula (\cref{prop:recall}); and an any-time discounted regret bound for the slow level (\cref{prop:outer}).
-\textbf{(3) Method.} \method{}, a training-free mixture of window and stored in-context experts whose every
-component corresponds to one of these results.
+\textbf{(3) Method.} \method{}, a training-free mixture of window and stored-context experts under a two-level
+aggregation rule, with discrepancy-based organisation of the pool.
 \textbf{(4) Evidence.} Pre-registered tests on a controlled grid with concept boundaries aligned to the segments,
 where the learning curve predicts the gain of memory and \method{} exceeds reset detection, window ensembles,
 incremental learners and trained MOOE; registered robustness tests showing that this average advantage disappears
-when the boundaries are shifted inside the segments; and 29 real streams, where \method{} is more accurate than all four
+when the boundaries are shifted inside the segments; registered pool controls in which discrepancy-based merging
+did not meet its improvement criterion over an unmerged archive; and 29 real streams, where \method{} is more accurate than all four
 in-context baselines on 23 and stays within 0.25 points of the plain window on all.
 
 % =====================================================================================================
@@ -762,6 +767,64 @@ streams as well. Removing the two short windows instead lowers the generator str
 from 86.4 to 81.8 and leaves the real streams within 0.2 points on average; the pool forms exactly as many stored
 experts as a generator stream has concepts.
 
+\textbf{Pool controls.} Removing the pool shows that adding stored contexts improved the tested configuration; it does
+not show that organising them by discrepancy matters. In response to review we compared \method{}, under the same
+windows, pool size of 12, two-level rule and constants, with two pools that never merge (registered before the runs):
+an \emph{archive} that keeps every closed 500-row segment as its own expert, and a \emph{snapshot} pool that stores
+the latest $\min(1000,\text{rows so far})$ rows at every segment close (the same per-expert row cap as \method{}).
+These are differences between complete policies, not isolated effects of merging. On the aligned grid
+(\cref{tab:poolgrid}) the registered criterion, \method{} above the archive by at least 0.5 points on average over the
+eight streams with 30 or 100 centroids and on at least six of them, \emph{fails}: \method{} is above it on seven, by
+$+0.30$ points on average; it is $+3.3$ points above the snapshot pool, mostly on 500-row blocks, where a 1000-row
+snapshot spans two concepts. On the 29 real streams (\cref{tab:poolreal}) the registered criterion for the archive,
+a mean difference of at least $-0.1$ points, holds ($+0.07$, above it on 18 streams), and so does the registered
+descriptive threshold for the snapshot pool ($-0.08$, above it on 11). The one-sided 95\% block-bootstrap lower bounds
+(blocks of 20 batches; pointwise, conditional on the streams and backbone seed 0; the bounds against the archive were
+computed after its registration) are above $-0.3$ points on 17 streams against the snapshot pool and on 23 against
+the archive. These thresholds are descriptive; passing them is not equivalence, and individual streams lose up to
+0.5 points. \method{} uses fewer resources than both controls: 8.4 active experts per batch on average against 14.2,
+9.7 TFM calls per batch against 14.0 (fewer on 25 of the 29 streams; including its discrepancy calls), and between
+2\,700 and 5\,400 stored rows per batch on average (per-expert row counts were not recorded; the range is between 500
+and 1000 rows per stored expert) against 5\,600 for the archive and 11\,100 for the snapshot pool. Together with the
+misaligned tests above, where the archive was more accurate, the evidence supports keeping past contexts under the
+two-level rule, and describes merging by discrepancy as one way to organise the pool that keeps it small, not as the
+source of the recall gain.
+
+\begin{table}[t]
+  \centering
+  \caption{Pool controls on the aligned grid (seeds 20, 21; registered): accuracy (\%), \method{} minus archive and
+  minus snapshot pool (points), and TFM calls per batch.}
+  \label{tab:poolgrid}
+  \small
+  \setlength{\tabcolsep}{2pt}
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{rrrrrrrrrr}
+    \toprule
+    cent. & block & seed & \method{} & Archive & Snapshot & $-$Arch. & $-$Snap. & calls & calls (arch.) \\
+    \midrule
+    \rowinput{tab_pool_grid_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\begin{table*}[t]
+  \centering
+  \caption{Pool controls on the 29 real streams: \method{} accuracy (\%), difference to the archive and to the
+  snapshot pool (points) with one-sided 95\% block-bootstrap lower bounds (LB; archive bounds computed after
+  registration), active experts and TFM calls per batch (\method{} / archive; the snapshot pool has the archive's
+  values within 0.6).}
+  \label{tab:poolreal}
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{lrrrrrrrrrr}
+    \toprule
+    Stream & batches & \method{} & $-$Arch. & LB & $-$Snap. & LB & experts & (arch.) & calls & (arch.) \\
+    \midrule
+    \rowinput{tab_pool_real_rows.tex}
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
 \textbf{Slow level.} It leaves the recall regime almost
 unchanged (grid: 86.5 against 86.9 for the fast level alone) and removes the losses on real streams (worst case
 $-0.25$ against $-2.3$; \cref{tab:real}). With the log-loss in place of the half Brier score, one grid stream falls
@@ -812,10 +875,11 @@ with exp-concave losses and their logarithmic regret are classical \citep{cesabi
 
 For an in-context learner, memory of a past concept requires no additional training to store or recall, although it
 costs storage and one TFM call per stored expert and batch, and its value is the area
-between the learning curve and the accuracy of the stored context. \method{} turns this into a method with one
-component per result: an excess-risk discrepancy decides which contexts share a concept, a fast meta expert
-identifies a recurring concept in one batch, and a slow meta expert guarantees, at any time and for any stream,
-that following it costs little against the plain window. When concepts recur in blocks whose boundaries coincide
+between the learning curve and the accuracy of the stored context. \method{} keeps past contexts as experts next
+to fast windows, organises them by an excess-risk discrepancy, concentrates weight on a leading expert under a
+margin, and uses a slow meta expert that guarantees, at any time and for any stream, that following the mixture costs
+little against the plain window. The evidence supports keeping past contexts within this two-level system; it does
+not establish merging by discrepancy as the source of the gain, which an unmerged archive matched on real streams. When concepts recur in blocks whose boundaries coincide
 with its segments and are costly to learn, \method{} exceeds reset detection, window ensembles and trained experts by
 a wide margin; when the boundaries fall inside its segments, the average advantage fails both registered robustness
 criteria, recall right after a recurrence helps only in some tested settings, and an archive without merging is more
@@ -828,7 +892,8 @@ with a small average gain, and the large gains are for recurring concepts with s
 boundaries coincide with the segment boundaries. The fixed 500-row segmentation is the main weakness of the method:
 with misaligned or shifted boundaries both registered robustness tests failed, \method{} fell below reset on most
 shifted streams, and an archive of unmerged segments was more accurate. Segmenting at detected change points could
-address this but would change the method and is left to future work.
+address this but would change the method and is left to future work. In the pool controls, discrepancy-based merging did not meet its
+registered improvement criterion over an unmerged archive; its measured benefit is a smaller pool.
 The confirmatory real segments come from three streams whose earlier segments were used in development; ten
 segments were repeated with a second seed and the others have one run. \Cref{prop:outer} bounds the half Brier score rather than the accuracy, its step costs calibration when
 concepts recur (\cref{tab:metrics}), and
