@@ -398,22 +398,42 @@ founds a new stored expert (\cref{prop:blind}). A stored expert keeps its last $
 \textbf{Slow level.} The fast mixture and the $M$-row window are mixed by \eqref{eq:outer-loss}--\eqref{eq:outer}
 with $\gamma=0.9$ and $\eta_2=\tfrac12$ (\cref{prop:outer,cor:outer}).
 
+\textbf{Timing.} Every loss scores a prediction that was issued before its labels arrived
+(\cref{alg:mice}): each expert's prediction for a batch is cached when the batch is predicted, and when the labels
+come one batch later the cached predictions are scored; contexts are updated only afterwards, so no expert is scored
+on rows it already holds. The fast level uses the log-loss of the last labelled batch only. A stored expert created
+at a segment close has issued no prediction for that batch and starts with the median of the other experts' losses;
+a merged expert keeps its identity and its losses. At $t=1$ the fast weights are uniform and $L_{0,k}=0$, so the slow
+weights are uniform. The slow level is scored on the default and fast predictions actually issued, with the mean half
+Brier score in $[0,1]$; these are the two adaptive prediction sequences of \cref{prop:outer}, whose bound needs
+$\eta_2\le\tfrac12$ for the half Brier score. It therefore covers the method as run, but not the variants we report
+with the log-loss or with the registered step $\eta_2=10$. All reported numbers for \method{} come from one
+replay of this two-level rule over the cached expert predictions (\texttt{simulate2} in the released code), which uses
+the labels of earlier batches only and therefore issues the same predictions an online run would; the
+runs that produced the cache emitted a different, single-level mixture, which we do not report.
+
 
 The cost is one TFM call per expert and batch, at most 15, plus three calls when a segment closes. All constants
 were set on synthetic development streams; none was tuned on a real stream.
 
 \begin{algorithm}[tb]
-\caption{\method{} for one batch $t$}\label{alg:mice}
+\caption{\method{} for one batch $t\ge1$ (batch 0 is warm-up)}\label{alg:mice}
 \begin{algorithmic}[1]
-\STATE \textbf{Input:} unlabelled batch $X_t$; labels of batch $t-1$; windows $\mathcal W$; pool $\mathcal P$
-\STATE update the windows with batch $t-1$; if 500 new labelled rows: close a segment $S$ and merge it into
-       $\argmin_{k\in\mathcal P}\widehat{\Div}_T(S\,|\,\cC_k)$ if the minimum is at most $\delta$, else add $S$ to
-       $\mathcal P$
-\STATE $\ell_k\leftarrow$ log-loss of expert $k$ on batch $t-1$, for $k\in\mathcal W\cup\mathcal P$
-\STATE $p^{\mathrm{fast}}\leftarrow\sum_k w_k\,f_\Theta(\cdot\mid X_t;\cC_k)$ with $w_k\propto e^{-\eta\ell_k}$
-\STATE $L_k\leftarrow\gamma L_k+{}$half Brier score of $k\in\{\text{default},\text{fast}\}$ on batch $t-1$
-\STATE \textbf{Output:} $v_0\,f_\Theta(\cdot\mid X_t;\cC_{\mathrm{default}})+v_1\,p^{\mathrm{fast}}$ with
-       $v_k\propto e^{-\eta_2\gamma L_k}$
+\STATE \textbf{Input:} unlabelled batch $X_t$; labels $y_{t-1}$ of batch $t-1$; windows $\mathcal W$; pool $\mathcal P$;
+       cached predictions $\hat p_{t-1,k}$ of every expert $k$, $\hat p^{\mathrm{fast}}_{t-1}$ and
+       $\hat p^{\mathrm{def}}_{t-1}$, all issued for batch $t-1$ before $y_{t-1}$ arrived
+\STATE \emph{Score issued predictions:} $\ell_k\leftarrow$ mean log-loss of $\hat p_{t-1,k}$ on $y_{t-1}$;
+       $\ell^{\mathrm{def}},\ell^{\mathrm{fast}}\leftarrow$ mean half Brier score of $\hat p^{\mathrm{def}}_{t-1}$,
+       $\hat p^{\mathrm{fast}}_{t-1}$; $L_{t-1,k}\leftarrow\gamma L_{t-2,k}+\ell^{k}$ for $k\in\{\mathrm{def},\mathrm{fast}\}$
+\STATE \emph{Update contexts:} add batch $t-1$ to the windows; if 500 new labelled rows: close a segment $S$ and merge
+       it into $\argmin_{k\in\mathcal P}\widehat{\Div}_T(S\,|\,\cC_k)$ if the minimum is at most $\delta$ (the expert
+       keeps its identity), else add $S$ to $\mathcal P$ as a new expert $k'$ with $\ell_{k'}\leftarrow$ median of
+       the $\ell_k$
+\STATE \emph{Predict:} $\hat p_{t,k}\leftarrow f_\Theta(\cdot\mid X_t;\cC_k)$ for $k\in\mathcal W\cup\mathcal P$;
+       $\hat p^{\mathrm{fast}}_t\leftarrow\sum_k w_k\hat p_{t,k}$ with $w_k\propto e^{-\eta\ell_k}$;
+       $\hat p^{\mathrm{def}}_t\leftarrow\hat p_{t,M}$ (the $M$-row window)
+\STATE \textbf{Output and cache:} $\hat p_t=v_0\,\hat p^{\mathrm{def}}_t+v_1\,\hat p^{\mathrm{fast}}_t$ with
+       $v_k\propto e^{-\eta_2\gamma L_{t-1,k}}$; cache $\hat p_{t,k}$, $\hat p^{\mathrm{fast}}_t$, $\hat p^{\mathrm{def}}_t$
 \end{algorithmic}
 \end{algorithm}
 
