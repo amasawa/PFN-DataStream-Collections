@@ -128,7 +128,7 @@ the TFM's learning curve, so the value of memory can be estimated before deploym
 representative of the concepts.
 
 \textbf{Contributions.}
-\textbf{(1) Problem.} Recurring concept drift for in-context learners, where past contexts are free experts
+\textbf{(1) Problem.} Recurring concept drift for in-context learners, where past contexts are experts that require no training
 (\cref{def:recur}), with three observations on forgetting, relearning and resetting.
 \textbf{(2) Theory.} The blind spot of R-divergence under conflicting concepts and its excess-risk repair
 (\cref{prop:blind}); identification in one batch under a margin (\cref{prop:block}); the recall-versus-relearn
@@ -810,7 +810,8 @@ with exp-concave losses and their logarithmic regret are classical \citep{cesabi
 \section{Conclusion}
 \label{sec:conclusion}
 
-For an in-context learner, memory of a past concept is free to store and free to recall, and its value is the area
+For an in-context learner, memory of a past concept requires no additional training to store or recall, although it
+costs storage and one TFM call per stored expert and batch, and its value is the area
 between the learning curve and the accuracy of the stored context. \method{} turns this into a method with one
 component per result: an excess-risk discrepancy decides which contexts share a concept, a fast meta expert
 identifies a recurring concept in one batch, and a slow meta expert guarantees, at any time and for any stream,
