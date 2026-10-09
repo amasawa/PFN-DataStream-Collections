@@ -242,13 +242,14 @@ R-divergence asks whether the mixture hypothesis treats the two sets \emph{equal
 concepts that contradict each other on the same inputs are treated equally badly, so the answer is yes although
 neither context helps the other (\cref{prop:blind}(ii), without further conditions); this is the defining case of
 recurring drift. Under the 0-1 loss the answer depends on how the mixture breaks its ties: it is again zero for
-randomised ties, and otherwise it is not determined by the disagreement mass $\rho$ (\cref{prop:blind}(iii)). The
-directed form $\Div_T$ equals $\rho$ in both cases. The excess-risk form asks whether pooling \emph{costs}
+randomised ties, and otherwise it is not determined by the disagreement mass $\rho$ (\cref{prop:blind}(iii)). Under
+the 0-1 loss the directed form $\Div_T$ equals $\rho$ whatever the tie rule; under the log-loss it is infinite on the
+disagreement region of two deterministic concepts. The excess-risk form asks whether pooling \emph{costs}
 anything. With finite contexts it has a second term: if $P=Q$, pooling doubles the context and changes the risk by
-$R_P(2n)-R_P(n)\le0$. The empirical excess is interference minus pooling gain, so merging two contexts when it is at
-most $\delta$ merges exactly when pooling helps more than the concepts interfere. \method{} uses the directed form
-\eqref{eq:transfer} as its merge statistic, which is also the regret that recalling the stored expert would incur
-(\cref{def:recur}).
+$R_P(2n)-R_P(n)\le0$. The empirical excess is interference minus pooling gain, so a rule that pools two contexts
+when the empirical excess is at most $\delta$ does so when the pooling gain is at least the interference minus
+$\delta$ ($\delta=0$ gives the exact equivalence). \method{} instead merges on the directed form \eqref{eq:transfer},
+which bounds the regret that recalling the stored expert would incur on the segment (\cref{def:recur}).
 \end{remark}
 
 \subsection{The Fast Level: Identification under a Margin}
