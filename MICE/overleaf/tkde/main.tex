@@ -70,7 +70,8 @@ active experts and TFM calls. On 29 real streams \method{} is more accurate than
 is above $-0.3$ points on 28 of the 29 streams (backbone seed 0), the remaining one being too short to decide, and a pre-registered test on six held-out segments confirms both. These comparisons use contexts of at most 1000 rows. A plain window of 3000 rows, about 2.5
 times cheaper per batch than \method{} in an isolated benchmark, is more accurate than \method{} on 21 of the 29 real
 streams; \method{} keeps a small mean advantage over it ($+0.31$ points, 95\% interval $[+0.09,+0.49]$) only because of
-large gains on strongly drifting INSECTS streams and Rialto.
+large gains on strongly drifting INSECTS streams and Rialto, and on the Airlines and CoverType benchmark prefixes a
+larger window is more accurate at lower cost.
 \end{abstract}
 \begin{IEEEkeywords}
 Concept drift, recurring concepts, tabular foundation models, in-context learning, data streams, online learning, mixture of experts.
@@ -864,7 +865,7 @@ cost-matched: FIFO 3000 is about 2.5 times cheaper. On the 29 real streams (\cre
 \cref{app:details}), \method{} is above FIFO 3000 by $+0.31$ points on average (moving-block bootstrap, 95\% interval
 $[+0.09,+0.49]$), but only on 8 of the 29 streams; the paired 95\% interval lies below zero on 14 streams and above on
 6. The mean advantage comes from strongly drifting streams (four INSECTS streams with $+3.3$ to $+5.5$ points, Rialto
-$+6.9$); on Airlines ($-1.1$ points on average over its segments), PokerHand ($-1.6$), Phishing ($-1.5$) and Weather
+$+6.9$); on Airlines ($-1.1$ points on average over its segments), PokerHand ($-1.5$), Phishing ($-1.4$) and Weather
 ($-0.5$) a larger plain window is more accurate at lower cost, and on Spam and Electricity the point estimates favour
 it within intervals that include zero. On the benchmark prefixes the same holds for
 Airlines and CoverType, while \method{} is the most accurate policy on the INSECTS prefix, where larger windows lose up
@@ -951,8 +952,8 @@ a wide margin; when the boundaries fall inside its segments, the average advanta
 criteria, recall right after a recurrence helps only in some tested settings, and an archive without merging is more
 accurate; on 29 real streams it is more accurate than the four original in-context baselines on 23 and never more than 0.25 points below a sliding window, where reset detection
 loses up to 9.6 points. A plain window of 3000 rows, about 2.5 times cheaper, is nevertheless more accurate than
-\method{} on 21 of the 29 real streams; \method{}'s value on real streams lies in sharply drifting or recurring
-streams, not in general.
+\method{} on 21 of the 29 real streams, and on the Airlines and CoverType benchmark prefixes; \method{}'s value on
+real streams lies in sharply drifting or recurring streams, not in general.
 
 \textbf{Limitations.} The gains on real streams other than Rialto are below two points; the claim there is safety
 with a small average gain, and the large gains are for recurring concepts with steep learning curves whose
