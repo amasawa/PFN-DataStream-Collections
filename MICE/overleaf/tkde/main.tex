@@ -227,15 +227,23 @@ Let \cref{ass:ppd} hold and let $\ell$ be the log-loss.
   \[
     \Div_R(P\|Q)=0\qquad\text{whereas}\qquad \Div_E(P,Q)=\rho\ln2 .
   \]
-  \item[(iii)] \emph{0-1 loss.} In the setting of (ii) with the 0-1 loss, $\Div_R(P\|Q)=0$ and
-  $\Div_T(Q\,|\,P)=\rho$.
+  \item[(iii)] \emph{0-1 loss.} In the setting of (ii) with the 0-1 loss, $\Div_T(Q\,|\,P)=\rho$ for any rule that
+  breaks ties of $h_U$. If ties are broken uniformly at random between the two maximisers, independently of the source
+  of the query, and each risk is averaged over this randomisation before the difference is taken, then
+  $\Div_R(P\|Q)=\bigl|\E_\xi\epsilon_P(h_U^\xi)-\E_\xi\epsilon_Q(h_U^\xi)\bigr|=0$. Under a deterministic tie rule
+  $c(\vx)$, $\Div_R(P\|Q)=\bigl|\E_\vx\mathbf 1[g_P(\vx)\ne g_Q(\vx)]\bigl(\mathbf 1[c(\vx)\ne g_P(\vx)]-
+  \mathbf 1[c(\vx)\ne g_Q(\vx)]\bigr)\bigr|\le\rho$, which depends on both the disagreement region and the tie choices,
+  is not determined by $\rho$ alone, and can vanish although $\rho>0$.
 \end{enumerate}
 \end{proposition}
 
 \begin{remark}\label{rem:merge}
-R-divergence asks whether the mixture hypothesis treats the two sets \emph{equally}. Two concepts that contradict
-each other on the same inputs are treated equally badly, so the answer is yes although neither context helps the
-other; this is the defining case of recurring drift. The excess-risk form asks whether pooling \emph{costs}
+R-divergence asks whether the mixture hypothesis treats the two sets \emph{equally}. Under the log-loss, two
+concepts that contradict each other on the same inputs are treated equally badly, so the answer is yes although
+neither context helps the other (\cref{prop:blind}(ii), without further conditions); this is the defining case of
+recurring drift. Under the 0-1 loss the answer depends on how the mixture breaks its ties: it is again zero for
+randomised ties, and otherwise it is not determined by the disagreement mass $\rho$ (\cref{prop:blind}(iii)). The
+directed form $\Div_T$ equals $\rho$ in both cases. The excess-risk form asks whether pooling \emph{costs}
 anything. With finite contexts it has a second term: if $P=Q$, pooling doubles the context and changes the risk by
 $R_P(2n)-R_P(n)\le0$. The empirical excess is interference minus pooling gain, so merging two contexts when it is at
 most $\delta$ merges exactly when pooling helps more than the concepts interfere. \method{} uses the directed form
@@ -752,7 +760,9 @@ that batch outweigh the next ten.
 
 \textbf{Discrepancy.} On 144 pairs of grid segments, the recall regret and the
 excess-risk discrepancy separate ``different concept'' from ``same concept'' with AUROC 1.00, and the R-divergence
-estimate with 0.85 (0.42 on the hardest cell), as \cref{prop:blind} predicts; on pairs of the same concept the
+estimate with 0.85 (0.42 on the hardest cell). This is an empirical comparison of the estimators as implemented
+(accuracy-based, finite contexts), consistent with the direction of \cref{prop:blind} but not a consequence of it,
+since the proposition concerns population risks of exact concept predictors; on pairs of the same concept the
 estimated excess is negative, down to $-0.2$ for 100 centroids, the pooling gain.
 
 \textbf{Margin.} On the grid the
@@ -853,10 +863,16 @@ $g_Q(\vx)$ where they differ and mass $1$ where they agree. Hence
 $\KL(p_\vx\|u_\vx)=\KL(q_\vx\|u_\vx)=\ln2\cdot\mathbf 1[g_P(\vx)\neq g_Q(\vx)]$; with $P_X=Q_X$ the two expectations
 cancel, and $\Div_E=\rho\ln2$.
 
-\emph{(iii)} Under the 0-1 loss, with ties of $u_\vx$ broken independently of the source of the query, the prediction
-of $h_U$ at a disagreeing $\vx$ is $g_P(\vx)$ or $g_Q(\vx)$ with probability $\tfrac12$ each. Each risk is therefore
-$\rho/2$ and $\Div_R=0$. The predictor $h_P$ errs on $Q$ exactly where the concepts disagree and $h_Q$ nowhere, so
-$\Div_T(Q\,|\,P)=\rho$.
+\emph{(iii)} The predictor $h_P$ errs on $Q$ exactly where the concepts disagree and $h_Q$ nowhere, so
+$\Div_T(Q\,|\,P)=\rho$ whatever the tie rule of $h_U$. Where the concepts agree, $u_\vx$ has a unique maximiser and
+$h_U$ errs on neither concept. Where they disagree, $u_\vx$ puts $\tfrac12$ on $g_P(\vx)$ and $\tfrac12$ on $g_Q(\vx)$.
+With uniformly random ties $\xi$, $h_U^\xi$ predicts each of the two with probability $\tfrac12$, so
+$\E_\xi\epsilon_P(h_U^\xi)=\E_\xi\epsilon_Q(h_U^\xi)=\rho/2$ and $\Div_R=0$ (this concerns the averaged risks, not
+the expected absolute difference for one sampled predictor). With a deterministic rule $c$, $h_U$ errs on $P$ where
+$c(\vx)\ne g_P(\vx)$ and on $Q$ where $c(\vx)\ne g_Q(\vx)$, restricted to the disagreement region, which gives the
+stated expression; it is at most $\rho$ because the two indicators differ only there, it is zero for example when
+$c$ agrees with each concept on half of the disagreement mass, and it equals $\rho$ for example when that region is a
+single atom.
 \end{proof}
 
 \subsection{Proofs of \texorpdfstring{\cref{lem:margin,prop:block}}{Lemma 1 and Proposition 2}}
