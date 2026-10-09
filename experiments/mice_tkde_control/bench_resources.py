@@ -17,6 +17,7 @@ REPS = 3
 CHILD = r'''
 import json, os, resource, sys, time, torch
 sys.path.insert(0, sys.argv[1]); import run
+torch.cuda.set_per_process_memory_fraction(28 * 1024 / (torch.cuda.get_device_properties(0).total_memory / 2**20))  # 28 GB rule
 run.DATA = sys.argv[2]
 t = time.time(); run.run(sys.argv[3], sys.argv[4], 100, sys.argv[5]); el = time.time() - t
 print("BENCH " + json.dumps(dict(elapsed=el, peak_alloc_mib=torch.cuda.max_memory_allocated() / 2**20,
@@ -63,6 +64,13 @@ def main(root, repo):
                                time=time.time())
                     if rec["ok"]:
                         rec.update(json.loads(line[6:]))
+                    elif "OutOfMemory" in p.stderr or "out of memory" in p.stderr:
+                        rec["infeasible"] = "out of memory under the 28 GB cap"
+                        rec["stderr"] = p.stderr[-300:]
+                        for f in out.glob(f"{s}__{pol}*"):
+                            f.unlink()
+                        log.write(json.dumps(rec) + "\n"); log.flush()
+                        break
                     else:
                         rec["stderr"] = p.stderr[-500:]
                         for f in out.glob(f"{s}__{pol}*"):

@@ -162,3 +162,12 @@ capacity"; cost comparability on the 29 full streams is not claimed.
 mean seconds per batch within a factor 1.25. If on the benchmark prefixes a FIFO is at least as accurate as MICE at
 similar or lower cost, the abstract and conclusion say so. FIFO 5000 and 13 400 are costlier operating points on the
 prefixes only. Every configuration, including any that fails or exceeds limits, is reported.
+
+**Round 9 operational correction (2026-10-10T01:31+11:00, before resuming; no accuracy has been examined):** the benchmark child
+processes ran without a GPU memory cap. fifo13400 on h4_covertype_d recorded 78 900 MiB peak reserved memory on a
+32 760 MiB card, i.e. WSL oversubscribed GPU memory into system RAM, so its timing (1203 s) is not a valid GPU timing
+and the run broke the machine rule of at most 28 GB GPU memory (env/EXPERIMENT_SCHEDULING.md); fifo13400 on
+insects_abrupt_balanced ran for almost two hours at 31.9 GB. From now on every child process is capped at 28 GB
+(torch.cuda.set_per_process_memory_fraction); a configuration that runs out of memory under the cap is recorded as
+"infeasible within 28 GB" and not retried. The invalid h4_covertype_d fifo13400 result is discarded and rerun under
+the cap. Completed runs below the cap (all others, peak reserved at most 23 946 MiB) are kept.
