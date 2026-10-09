@@ -124,7 +124,8 @@ the same inputs, which is the defining case of recurring drift, and that an exce
 (ii)~The meta expert has two time scales. A fast level restarts every batch and identifies a recurring concept in
 one batch under a margin; a slow level decides whether following the fast level is worth it at all, with a
 worst-case guarantee against the plain window. (iii)~The gain of recall over relearning then has a closed form in
-the TFM's learning curve, so the value of memory can be measured before deployment.
+the TFM's learning curve, so the value of memory can be estimated before deployment from labelled data
+representative of the concepts.
 
 \textbf{Contributions.}
 \textbf{(1) Problem.} Recurring concept drift for in-context learners, where past contexts are free experts
@@ -480,8 +481,9 @@ Random Patches \citep{gomes2019srp}, the Hoeffding Adaptive Tree \citep{bifet200
 (\cref{app:details}).
 
 \textbf{Streams.} A controlled grid of recurring concepts: mixtures of 5, 30 or 100 Gaussian
-centroids whose class assignment is permuted between three concepts, so that $P_X$ is fixed and concepts conflict;
-blocks of 500 or 2000 rows; three cycles. Thirty streams from six standard generators (SEA, Stagger, Agrawal, Sine,
+centroids in ten dimensions with four nominal classes, where each of three concepts assigns its own, independently
+drawn class to every centroid, so that $P_X$ is fixed and concepts conflict on the centroids where their classes
+differ; blocks of 500 or 2000 rows; three cycles (\cref{app:grid} gives the full specification). Thirty streams from six standard generators (SEA, Stagger, Agrawal, Sine,
 RBF, Hyperplane) with recurring concepts. Twenty-nine real streams from 13 sources, the long ones in segments
 of 100{,}000 rows: Electricity, seven INSECTS streams \citep{souza2020insects} (one in three segments), Forest
 CoverType, PokerHand and Airlines (five segments each), Rialto, NOAA Weather, Spam and Phishing.
@@ -499,7 +501,7 @@ in \cref{sec:method} as the registered method (\cref{app:prereg}).
 \label{sec:rq1}
 
 We measured the learning curves of the grid concepts, wrote down the gain predicted by \cref{prop:recall}, and only
-then ran the streams. On seeds 10 and 11 the fast level alone exceeds reset on all eight streams with 30 or 100
+then ran the streams (protocol in \cref{app:grid}). On seeds 10 and 11 the fast level alone exceeds reset on all eight streams with 30 or 100
 centroids, more for shorter blocks and for harder concepts, as predicted, and the rank correlation between predicted
 and observed gain over the six cells is 0.94; the magnitudes agree as well (0.55 versus 0.53 points, 3.0 versus 2.6,
 10.4 versus 8.6). On the fresh seeds 20 and 21 with the full two-level method the correlation is 0.83
@@ -511,7 +513,13 @@ and 0.83) and the magnitudes agree more closely (9.2 versus 8.6). We report the 
 \cref{tab:grid,fig:recall} because they were fixed before the runs. The theorem idealises relearning as a reset exactly
 at the block boundary and the mixture as identifying the concept under the margin; the observed comparison is
 against DDM, whose detection delay, and the slow level of \method{}, lie outside the theorem, so agreement in
-magnitude is approximate and the first-batch term $\varepsilon_{k,c}$ is not predicted. The six standard generators are the other end of the scale: their learning curves are flat after
+magnitude is approximate and the first-batch term $\varepsilon_{k,c}$ is not predicted. The two seed pairs answer
+different questions. The curves were measured on the concepts of seeds 10 and 11, so there the prediction is for
+concepts already sampled, using additional labelled data from them; we also found that this data repeats part of the
+random draws of the evaluated seed-10/11 streams (\cref{app:grid}), and curves remeasured on independent rows give the
+same rank correlations (0.94 and 0.83) and predictions within 0.6 points. Seeds 20 and 21 share no data with the
+curves: there the curves of other concept draws from the same generator predict the gains, which is the evidence for
+transfer to new concepts of the same family, with two data seeds. The six standard generators are the other end of the scale: their learning curves are flat after
 about 200 rows, the predicted gain is at most 0.4 points, and the observed gain of \method{} over reset is 0.1 points
 on average. Recurring-concept memory cannot be evaluated on the standard generators with a TFM; it needs concepts
 that are costly to learn.
@@ -1011,6 +1019,65 @@ centroids: all held. The step $\tfrac12$ is 0.23 points lower on average and sat
 
 \section{Experimental Details and Full Results}
 \label{app:details}
+
+\subsection{Controlled Grid and Learning Curves}
+\label{app:grid}
+
+\textbf{Generator.} A stream has $d=10$ features, four nominal classes and $K=3$ concepts. For $m\in\{5,30,100\}$
+centroids, $C_j\sim\mathcal U([0,1]^{10})$ i.i.d.\ and mixture weights $w_j=u_j/\sum_i u_i$ with $u_j\sim\mathcal U(0,1)$.
+Each concept $k$ has its own class vector $\lambda_k(j)\sim\mathcal U\{0,1,2,3\}$, drawn i.i.d.\ over centroids and
+independently across concepts: it is not a permutation, two concepts may agree on a centroid (18\% to 48\% of the
+weight for one pair of concepts on our seeds), and with five centroids a concept can lack some classes (two to four
+present); there is no rejection or coverage constraint, and class priors follow from $w$ and $\lambda_k$. A row of
+concept $k$ draws $j\sim\mathrm{Categorical}(w)$, $\vx=C_j+\mathcal N(0,0.15^2 I_{10})$ and $y=\lambda_k(j)$. Concepts
+appear in the order $1,2,3$ in blocks of $L\in\{500,2000\}$ rows, three cycles, so $P_X$ is the same for all
+concepts. One NumPy generator per data seed draws $C$, $w$ and $\lambda$ first and then the rows. Data seeds: 0 and 1
+for development, 10 and 11 for the registered test, 20 and 21 for confirmation, 30 and 31 for the misaligned
+schedules; the shifted streams reuse seeds 20 and 21 and draw their prefix from a separate generator.
+
+\begin{table}[t]
+  \centering
+  \caption{Controlled grid: parameters.}
+  \label{tab:gridparams}
+  \small
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{ll}
+    \toprule
+    Features, classes, concepts & $d=10$, 4, $K=3$ \\
+    Centroids $m$ & 5, 30, 100; $C_j\sim\mathcal U([0,1]^{10})$ \\
+    Weights & $u_j\sim\mathcal U(0,1)$, normalised \\
+    Class of centroid $j$ in concept $k$ & $\lambda_k(j)\sim\mathcal U\{0,\dots,3\}$, independent \\
+    Noise & isotropic Gaussian, s.d.\ 0.15 \\
+    Block length $L$, cycles & 500 or 2000 rows, 3 \\
+    Batch size, segment, $M$ & 100, 500, 1000 rows \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\textbf{Learning curves.} Measured before the grid test, for data seeds 10 and 11: for each $m$ and concept, one
+block of 4000 rows of that concept from the generator above. Rows 1--3000 form the context pool and rows 3001--4000
+the 1000 test rows, disjoint. For $n\in\{50,100,200,500,1000,2000\}$, three contexts are drawn without replacement from
+the pool (generator seeds 0, 1, 2), so contexts of different sizes and repetitions overlap and the same 1000 test rows
+are used throughout; the frozen TabPFN v2 (four estimators, random state equal to the data seed) predicts the test
+rows. The curve $a(n)$ is the mean accuracy over 2 seeds, 3 concepts and 3 repetitions (18 measurements per $n$, not
+18 independent concept draws), interpolated linearly in $\log n$.
+
+\textbf{From curves to predictions.} The averaged curve is inserted into the area term of \cref{eq:area}; visits 2
+and 3 of a concept recur and enter with weight $\tfrac13$ each (the first visit has no stored expert and contributes
+zero). The registered predictions used $M$ stored rows on every recurrence; \cref{sec:rq1} also reports the form with
+$n_c=\min(M,(c-1)L)$. The observed gain of a cell is the mean over its two streams, and the Spearman correlations are
+over the six cells.
+
+\textbf{Shared randomness.} The curve data of seeds 10 and 11 were generated by re-initialising the generator of the
+same seed with one 4000-row block per concept. They therefore share the concept definitions with the evaluated
+seed-10/11 streams, the first block's centroid draws coincide, and some rows are identical (0 to 1887 per stream).
+The seed-20/21 streams share nothing with the curves. In a sensitivity analysis registered after this was found, we
+remeasured the curves on rows drawn from an independent generator given the same concept definitions (no row in
+common with any evaluated stream). The curves change by at most 0.015 at any $n$, the predictions by at most 0.6
+points (100 centroids, $L=500$: 9.9 instead of 10.4 registered, 8.9 instead of 9.2 with $n_c$), and the rank
+correlations are unchanged (0.94 on seeds 10 and 11, 0.83 on seeds 20 and 21). Stream evaluation uses backbone random
+state 0.
+
 
 \textbf{Streams.} The grid and generator streams are produced by \texttt{code/grid\_streams.py} and
 \texttt{code/streams.py}; generator streams have blocks of 2000 rows and three cycles over three or four concepts.
