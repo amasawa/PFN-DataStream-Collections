@@ -348,3 +348,4 @@ Codex 与 MiMo 的原始输出存放在 `MICE/logs/tkde_review/`（`roundN_codex
 - 2026-10-09T21:39+11:00：snapreal_h3_poker_c、snapreal_h4_poker_d 完成（24/29），0 次重试，10 分钟平均利用率 88.1%。
 - 2026-10-09T21:49+11:00：snapreal_h2_weather 完成（25/29），0 次重试，10 分钟平均利用率 88.9%。
 - 2026-10-09T21:59+11:00：snapreal_h2_phishing、snapreal_h2_spam 完成（27/29），只剩 h3_poker_b 和 h2_poker 两个任务，所以只有 2 个 worker 在跑，10 分钟平均利用率降到 62.3%，这是收尾阶段的正常现象。
+- 2026-10-09T22:09+11:00：snapreal_h3_poker_b 完成（28/29），只剩 h2_poker（单 worker，约 400/1000 批），预计 40–50 分钟后完成。
