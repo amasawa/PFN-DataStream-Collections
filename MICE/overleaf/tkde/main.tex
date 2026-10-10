@@ -4,6 +4,7 @@
 
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{xurl}
 \usepackage{hyperref}
 \newcommand{\theHalgorithm}{\arabic{algorithm}}
 
@@ -90,8 +91,9 @@ concept once it leaves the window, and a drift-extrapolating prior models a tren
 observations show what an in-context stream learner is missing, and what a remedy has to respect.
 
 \begin{observation}[Sliding contexts forget]\label{obs:forget}
-In the five batches after a concept recurs, a TFM with a FIFO context or with the dual memory of
-\citet{lourenco2026streams} reaches 0.17, 0.39 and 0.51 accuracy on Sine, Stagger and Agrawal streams, whereas the
+In the five batches after a concept recurs, a TFM with a first-in-first-out (FIFO) context or with the short- and long-term memory (LTM) of
+\citet{lourenco2026streams} reaches 0.17, 0.39 and 0.51 accuracy on Sine \citep{gama2004ddm}, STAGGER \citep{schlimmer1986stagger} and Agrawal
+\citep{agrawal1993database} streams, whereas the
 same TFM conditioned on the past rows of the recurring concept reaches at least 0.99; in steady state all contexts
 are equally accurate.
 \end{observation}
@@ -156,8 +158,8 @@ $\Div_T(Q\,|\,P)$ is the risk on $Q$ of the expert of $P$ minus that of the expe
 \end{definition}
 
 The definition is model-oriented: a drift is recurring when some stored context serves the new interval as well as
-its own rows would. Three policies are the reference points of this paper. \emph{FIFO} is the plain sliding window: the context is the last $M$ labelled rows, first in, first out. It is the
-simplest context policy and the building block of the short- and long-term memory of \citet{lourenco2026streams}. \emph{Reset} empties the context when the drift detection method (DDM) of
+its own rows would. Three policies are the reference points of this paper. \emph{FIFO} is the plain sliding window: the context is the last $M$ labelled rows. It is the
+simplest context policy and the building block of LTM \citep{lourenco2026streams}. \emph{Reset} empties the context when the drift detection method (DDM) of
 \citet{gama2004ddm} fires. \emph{Window ensemble} mixes FIFO contexts of several lengths. None of them has memory.
 
 % =====================================================================================================
@@ -310,10 +312,10 @@ value, that is, the stored expert if $a_k(n_c)\ge a_k(\min(jB,M))$ and the windo
 the top-two gap of that expert. On the $c$-th visit of concept $k$, the expected accuracy of
 the mixture minus that of relearning, averaged over the block, is
 \begin{equation}\label{eq:area}
-  \Delta_{k,c}(L)=\frac1J\sum_{j=1}^{J-1}\Bigl[a_k(n_c)-a_k\bigl(\min(jB,M)\bigr)\Bigr]_+ \;+\;\varepsilon_{k,c},
+  \Delta_{k,c}(L)=\frac1J\sum_{j=1}^{J-1}\Bigl[a_k(n_c)-a_k\bigl(\min(jB,M)\bigr)\Bigr]_+ \;+\;\zeta_{k,c},
 \end{equation}
-where $\varepsilon_{k,c}=(A^{\mathrm{mix}}_{1}-A^{\mathrm{rel}}_{1})/J$ is the difference on the first batch of the
-block, which both learners predict before any label of the block has arrived, so $|\varepsilon_{k,c}|\le1/J$. We call
+where $\zeta_{k,c}=(A^{\mathrm{mix}}_{1}-A^{\mathrm{rel}}_{1})/J$ is the difference on the first batch of the
+block, which both learners predict before any label of the block has arrived, so $|\zeta_{k,c}|\le1/J$. We call
 the sum the \emph{area term}.
 \end{theorem}
 
@@ -379,7 +381,7 @@ lets one confidently wrong batch after a switch dominate the slow level for the 
 \section{Method: A Mixture of In-Context Experts}
 \label{sec:method}
 
-\method{} (\cref{fig:method,alg:mice}) runs a frozen TFM; no expert is trained. Each component implements one result of
+\method{} (\cref{fig:method,alg:mice}) runs a frozen TFM; no expert is trained. \Cref{tab:notation} collects the notation. Each component implements one result of
 \cref{sec:theory}.
 
 \begin{figure}[t]
@@ -450,6 +452,35 @@ and one call per stored expert (at most 14), so at most 29 calls on a closing ba
 \end{algorithmic}
 \end{algorithm}
 
+\begin{table}[t]
+  \centering
+  \caption{Notation.}
+  \label{tab:notation}
+  \footnotesize
+  \begin{tabular}{@{}lp{0.70\columnwidth}@{}}
+    \toprule
+    Symbol & Meaning \\
+    \midrule
+    $(\vx,y)$ & a row: feature vector $\vx$ and label $y\in\cY$ \\
+    $B$, $M$ & rows per batch ($B=100$); context budget in rows ($M=1000$) \\
+    $\cC$, $\cC_k$ & a context (set of labelled rows); the context of stored expert $k$ \\
+    $f_\Theta(\cdot\mid\vx;\cC)$ & frozen TFM with parameters $\Theta$: maps a row $\vx$ and a context $\cC$ to a distribution over $\cY$ \\
+    $P$, $Q$; $P_X$; $p_\vx$ & concepts (distributions over $(\vx,y)$); marginal of $\vx$; conditional $P(\cdot\mid\vx)$ \\
+    $\epsilon_P(\cC)$, $R_P(n)$ & risk on $P$ of the TFM given $\cC$; learning curve, the expected risk for $n$ rows of $P$ \\
+    $\Div_T$, $\Div_E$, $\Div_R$ & recall regret and excess-risk discrepancy (\cref{def:excess}); R-divergence \citep{zhao2023rdiv} \\
+    $S$, $\delta$ & a closed segment of 500 rows; merge threshold ($\delta=0.02$) \\
+    $K$ & number of experts of a meta expert \\
+    $\ell_k$, $\eta$, $w_k$ & log-loss of expert $k$ on the last labelled batch; fast step ($\eta=10$); fast weight \\
+    $g$, $\kappa$ & margin of the leading expert; $\kappa=\ln\bigl(1+(K-1)e^{-\eta g}\bigr)$ \\
+    $L$, $J$ & block length in rows; batches per block, $J=L/B$ \\
+    $a_k(n)$, $n_c$ & accuracy learning curve of concept $k$; rows held by its stored expert on visit $c$ \\
+    $\Delta_{k,c}(L)$, $\zeta_{k,c}$ & accuracy of the mixture minus that of relearning on visit $c$; first-batch term \\
+    $\ell_{t,k}$, $L_{t,k}$ & half Brier score of slow-level expert $k$ on batch $t$; its discounted cumulative loss \\
+    $\eta_2$, $\gamma$, $v_{t,k}$ & slow step ($\eta_2=\tfrac12$); discount ($\gamma=0.9$); slow weight \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 % =====================================================================================================
 \section{Experiments}
 \label{sec:exp}
@@ -463,21 +494,24 @@ what the organisation of the pool, probability quality and resources contribute.
 $M=1000$ for every policy; backbone TabPFN v2 with four ensemble members \citep{hollmann2025tabpfn}, and TabICL
 \citep{qu2025tabicl} as a second backbone.
 
-\textbf{In-context baselines}: FIFO; the dual memory (LTM) of
-\citet{lourenco2026streams}; DDM-triggered reset \citep{gama2004ddm}; a window ensemble of the three windows of
-\method{} without the pool. \textbf{Other stream learners}: Adaptive Random Forest \citep{gomes2017arf}, Streaming
-Random Patches \citep{gomes2019srp}, the Hoeffding Adaptive Tree \citep{bifet2009hat}, Leveraging Bagging
-\citep{bifet2010levbag}, ADWIN Bagging, Learn++.NSE \citep{elwell2011nse}, and MOOE with trained experts
+\textbf{In-context baselines}: FIFO; LTM \citep{lourenco2026streams}; DDM-triggered reset \citep{gama2004ddm}; a window ensemble of the three windows of
+\method{} without the pool. \textbf{Other stream learners}: Adaptive Random Forest (ARF) \citep{gomes2017arf}, Streaming
+Random Patches (SRP) \citep{gomes2019srp}, the Hoeffding Adaptive Tree \citep{bifet2009hat}, Leveraging Bagging
+\citep{bifet2010levbag}, Adaptive Windowing (ADWIN) Bagging \citep{bifet2009new}, Learn++.NSE \citep{elwell2011nse}, and MOOE with trained experts
 \citep{zhao2025mooe}, tuned on the development streams over 72 configurations and an extension of its grid
 (\cref{app:details}).
 
 \textbf{Streams.} A controlled grid of recurring concepts: mixtures of 5, 30 or 100 Gaussian
 centroids in ten dimensions with four nominal classes, where each of three concepts assigns its own, independently
 drawn class to every centroid, so that $P_X$ is fixed and concepts conflict on the centroids where their classes
-differ; blocks of 500 or 2000 rows; three cycles (\cref{app:grid} gives the full specification). Thirty streams from six standard generators (SEA, Stagger, Agrawal, Sine,
-RBF, Hyperplane) with recurring concepts. Twenty-nine real streams from 13 sources, the long ones in segments
-of 100{,}000 rows: Electricity, seven INSECTS streams \citep{souza2020insects} (one in three segments), Forest
-CoverType, PokerHand and Airlines (five segments each), Rialto, NOAA Weather, Spam and Phishing.
+differ; blocks of 500 or 2000 rows; three cycles (\cref{app:grid} gives the full specification). Thirty streams from six standard generators with recurring concepts, as implemented in River \citep{montiel2021river}:
+SEA \citep{street2001sea}, STAGGER \citep{schlimmer1986stagger}, Agrawal \citep{agrawal1993database}, Sine
+\citep{gama2004ddm}, random radial basis function (RBF) \citep{bifet2009new} and Hyperplane \citep{hulten2001mining}. Twenty-nine real streams from 13 sources, the long ones in segments
+of 100{,}000 rows: Electricity and seven INSECTS streams \citep{souza2020insects} from River \citep{montiel2021river} (one INSECTS stream in
+three segments); Forest CoverType\footnote{\url{https://archive.ics.uci.edu/dataset/31/covertype}} in five segments; and,
+from a public collection of drift data sets,\footnote{\url{https://github.com/ogozuacik/concept-drift-datasets-scikit-multiflow}}
+PokerHand and Airlines in five segments each, Rialto \citep{losing2016knn}, NOAA Weather \citep{elwell2011nse}, Spam
+\citep{katakis2010tracking} and Phishing.
 
 \textbf{Development and confirmation.} The real streams were opened in five stages (\cref{tab:real}): the first
 three developed the slow level and the last two confirm the method as defined in \cref{sec:method}
@@ -498,7 +532,7 @@ they change only for $L=500$ (100 centroids: 9.2 instead of 10.4 points, closer 
 correlations are unchanged. The theorem idealises relearning as a reset exactly
 at the block boundary and the mixture as identifying the concept under the margin; the observed comparison is
 against DDM, whose detection delay, and the slow level of \method{}, lie outside the theorem, so agreement in
-magnitude is approximate and the first-batch term $\varepsilon_{k,c}$ is not predicted. On seeds 10 and 11 the curves were measured
+magnitude is approximate and the first-batch term $\zeta_{k,c}$ is not predicted. On seeds 10 and 11 the curves were measured
 on the evaluated concepts; on seeds 20 and 21 they predict the gains of new concepts from the same generator. The six standard generators are the other end of the scale: their learning curves are flat after
 about 200 rows, the predicted gain is at most 0.4 points, and the observed gain of \method{} over reset is 0.1 points
 on average. This is the low-area regime of \cref{prop:recall}: memory has little to add where relearning
@@ -814,7 +848,7 @@ estimate with 0.85 (0.42 on the hardest cell). This is an empirical comparison o
 since the proposition concerns population risks of exact concept predictors; on pairs of the same concept the
 estimated excess is negative, down to $-0.2$ for 100 centroids, the pooling gain.
 
-\textbf{Beyond accuracy.} \Cref{tab:metrics} adds the macro-F1 score, the one-vs-rest ROC AUC, the expected
+\textbf{Beyond accuracy.} \Cref{tab:metrics} adds the macro-F1 score, the one-vs-rest area under the receiver operating characteristic curve (AUC), the expected
 calibration error (ECE) and the half Brier score, computed from the stored predictions of every method. On the real
 streams the picture of the accuracy carries over for F1 and the Brier score: \method{} has the highest F1 and a lower
 Brier score than every baseline; against FIFO its F1 is higher on 24 of 29 streams ($+0.8$ points on average), its
@@ -975,20 +1009,20 @@ $\ln\bigl(1+(K-1)e^{-\eta g}\bigr)\le(K-1)e^{-\eta g}$. Summing over the $J-1$ l
 
 \begin{proof}[Proof of \cref{prop:recall}]
 The first batch of the block is predicted by both learners before any label of the block has arrived; its
-accuracy difference, divided by $J$, is $\varepsilon_{k,c}$ and is at most $1/J$ in absolute value because
+accuracy difference, divided by $J$, is $\zeta_{k,c}$ and is at most $1/J$ in absolute value because
 accuracies lie in $[0,1]$. Before batch $j+1$
 ($j=1,\dots,J-1$) the relearning context holds $\min(jB,M)$ rows of the block, so its expected accuracy is
 $a_k(\min(jB,M))$; the stored expert has expected accuracy $a_k(n_c)$. By \cref{lem:margin}(iii) the mixture
 predicts as the better of the two, so its expected accuracy is the larger of the two values, and the difference to
 relearning is the positive part in \eqref{eq:area}. Averaging over the $J$ batches gives the area term, and adding
-the first batch gives $\varepsilon_{k,c}$.
+the first batch gives $\zeta_{k,c}$.
 \end{proof}
 
 \begin{proof}[Proof of \cref{cor:flat}]
 On the first visit the pool holds no expert of the concept, so the mixture and the relearning learner use the same
 rows. Since $a_k$ is non-decreasing and $n_c\le M$, every term of the area term is at most $a_k(M)-a_k(B)$, which
 is zero for a flat curve, and the terms with $jB\ge M$ vanish. At most $M/B$ of the $J-1$ terms are non-zero (only those with $jB<n_c\le M$),
-which with $|\varepsilon_{k,c}|\le1/J$ gives the bound.
+which with $|\zeta_{k,c}|\le1/J$ gives the bound.
 \end{proof}
 
 \subsection{Proofs of \texorpdfstring{\cref{prop:outer,cor:outer}}{Theorem 2 and Corollary 2}}
@@ -999,7 +1033,7 @@ $I$, and $\lVert p-e_y\rVert^2\le2$ on the simplex. Hence
 $\nabla^2\ell\succeq\eta_2\,\nabla\ell\nabla\ell^{\top}$ for $\eta_2\le\tfrac12$, that is, $\ell$ is
 $\eta_2$-exp-concave. The mean over the rows of a batch is $\eta_2$-exp-concave as well: its Hessian is the mean
 Hessian, and $\tfrac1n\sum_ig_ig_i^\top\succeq\bar g\bar g^\top$ for the row gradients $g_i$ with mean $\bar g$.
-Consequently
+Consequently,
 \begin{equation}\label{eq:expconcave}
   e^{-\eta_2\ell_t(p_t)}\;\ge\;\sum_kv_{t,k}\,e^{-\eta_2\ell_{t,k}} .
 \end{equation}
