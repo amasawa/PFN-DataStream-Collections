@@ -1,53 +1,42 @@
 ---
 name: anti-defensive-writing
-description: Rewrite or edit a research paper so every sentence advances the argument; delete sentences that only pre-empt criticism, and frame the paper as method + elegant theory + experiments that support both (not leaderboard-chasing). Use when writing, revising or reviewing a paper with this user, especially with Codex/MiMo.
+description: 写作、改写或审阅论文时使用：让每一句话都推进论证，删除只为防止被质疑的句子；把论文写成"方法 + 漂亮的理论 + 支持两者的实验"，而不是刷点。与用户合写论文、尤其和 Codex/MiMo 协作改稿时使用。
 ---
 
-# Anti-defensive writing (user's rules, 2026-10-10)
+# 反防御式写作（用户规则，2026-10-10）
 
-## Framing
-- A paper presents **a method with an elegant theory, and experiments that support the method and the theory**.
-- It does **not** need to show that no cheaper or better method exists. "General and robust superiority over every
-  baseline" is score-chasing, not the goal.
-- Organise the argument around what the theory predicts (when the method helps, when it does not), and place each
-  experiment where it tests a prediction. Results outside the method's favourable regime are evidence for the
-  theory's conditions, not apologies.
+## 论文的定位
+- 一篇论文提出**一个方法，有漂亮的理论，实验支持方法和理论**。
+- **不需要**证明不存在更便宜或更好的方法。"对所有基线都有普遍且稳健的优势"是刷点，不是目标。
+- 按理论的预测来组织论证：方法在什么情况下有用、什么情况下没用。每个实验放在它所检验的那个预测下面。
+  方法不占优的结果，是理论适用条件的证据，不是需要道歉的地方。
 
-## The sentence test
-User's rule, verbatim: **"如果某句话的作用只是防止被质疑，而不是推进论证，请删除。"**
+## 逐句判断
+用户原话：**"如果某句话的作用只是防止被质疑，而不是推进论证，请删除。"**
 
-Delete every sentence whose **only** role is to pre-empt criticism rather than advance the argument.
+**保留**的句子：
+- 陈述一个结果（数字、比较、结论）；
+- 给出一个主张成立的条件（假设、适用范围、样本、硬件、某个界覆盖的是什么）；
+- 下定义或描述方法。
 
-Keep a sentence if it
-- states a result (a number, a comparison, an outcome),
-- states a condition under which a claim holds (assumptions, scope, sample, hardware, what a bound covers), or
-- gives a definition or describes the method.
+**删除或移走**的句子：
+- 预先回应质疑但没有带来新信息的（如"这并不说明……""因此我们只主张……""上面的陈述比较的是……""X 是否成立没有检验"）；
+- 重复前面已经说过的结论或附加说明；
+- 在正文里讲审稿或登记的经过（如"应审稿人要求""运行前已登记""我们先测了 X，然后才……"）。
 
-Delete or move it if it
-- anticipates an objection without adding information ("this does not show ...", "we therefore only claim ...",
-  "the statements above compare ...", "whether X holds was not tested"),
-- repeats a verdict or caveat already stated,
-- narrates the review or registration history in the main text ("in response to review", "registered before the
-  run", "we measured X and only then ...").
+登记、开发过程和结果出处统一放在**附录的一节**里，正文最多指向它。
 
-Registration, development history and provenance go into **one appendix section**; the main text may point to it.
+## 底线（不能越过）
+- **不利结果一律不删。** 把它放在理论所预测的位置（适用条件）或局限里；正文里不能留下与它矛盾的主张。
+- **作为成立条件的句子要保留**，即使读起来像在设防：定理的假设、某个界覆盖的是什么（例如 Brier 分数而不是准确率）、
+  bootstrap 和样本的适用范围、对照是预算不同的完整策略、上界与实测值的区别。
+- 区分三种说法："理论预测了 X"、"X 落在理论前提之外"、"与理论一致"（用于没有实测的量）。
+- 修改已登记的报告规则（例如哪些结果必须写进摘要），由用户决定，并在记录中注明。
+- 数字都来自脚本；改写之后，请 MiMo（auditor）核对每个数字都没有变。
 
-## Guardrails (do not cross)
-- Never delete an unfavourable result. Place it where the theory predicts it (conditions of validity) or in the
-  limitations, and never keep a main-text claim that it contradicts.
-- Keep load-bearing conditions even if they sound cautious: theorem assumptions, what a bound covers (e.g. Brier
-  versus accuracy), bootstrap/sample scope, that controls are complete policies with different budgets, bounds versus
-  measurements.
-- Distinguish "the theory predicts X" from "X falls outside the theory's premise" and from "consistent with the
-  theory" when the quantity was not measured.
-- Changing a registered reporting rule (for example what must appear in the abstract) is the user's decision and is
-  recorded as such.
-- Numbers come from scripts; after rewriting, have MiMo (auditor) check that every number is unchanged.
-
-## Workflow with the agents
-1. Ask the Codex expert (read-only) for: a theory-driven outline, an exhaustive list of defensive sentences with line
-   numbers and delete/move decisions, the load-bearing sentences that must stay, and a rewritten abstract and
-   contributions using only existing numbers.
-2. Verify each item yourself (Codex can be wrong), then rewrite in passes, compiling after each.
-3. MiMo audit: numbers unchanged, no unfavourable result lost, no contradicted claim left.
-4. Codex reviewer reads the rewritten paper.
+## 和各 agent 的协作流程
+1. 请 Codex·高级专家（只读）给出：理论驱动的论文结构；逐行列出防御句及处理方式（删除或移到附录）；必须保留的
+   成立条件句；只用论文已有数字重写的摘要和贡献。
+2. 每一条都自己核实（Codex 也可能错），然后分几遍改写，每遍都编译检查。
+3. MiMo 审计：数字没有变、没有丢掉不利结果、没有留下与结果矛盾的主张。
+4. 请 Codex·审稿人通读改写后的论文。
