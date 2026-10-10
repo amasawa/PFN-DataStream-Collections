@@ -29,6 +29,8 @@ constraints specific to this repository.
   utilisation alone.
 
 ## Papers
+- **Any text written into a paper must follow both skills `writing-skill` and `anti-defensive-writing`**
+  (`.claude/skills/`; user rule 2026-10-10). Load them before editing a manuscript.
 - LaTeX compiles locally with Tectonic: `/mnt/c/Users/zhwu9808/Desktop/GRPO/.runtime/envs/paper/bin/tectonic -X
   compile main.tex` (XeTeX falls back from Times; the venue build is pdfLaTeX on Overleaf).
 - Tables are generated from result CSVs by each paper's `make_tables.py`; check every number in the text against the
