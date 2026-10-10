@@ -432,3 +432,24 @@ Codex 与 MiMo 的原始输出存放在 `MICE/logs/tkde_review/`（`roundN_codex
 - 2026-10-10T07:16+11:00：FIFO 3000 完成 25/29，2 次重试，10 分钟平均利用率 90.2%。
 - 2026-10-10T07:28+11:00：fifoM_h2_spam 被阻塞（连续 5 次失败，检查点停在第 21 批）。原因是每个 worker 的显存配额 4096 MiB（MICE_ALLOC_MIB）不够：Spam 维度高，3000 行上下文需要超过 4 GB，报 TabPFN 显存不足，不是间歇性故障。处理：只对这个任务把配额提到 12 288 MiB，单独重跑（配额不影响计算结果，12 GB 也在 28 GB 规则之内）。排实验规则里补一条：高维流加大窗口时，先检查每个 worker 的配额。
 - 2026-10-10T07:34+11:00：FIFO 3000 29/29 完成。MICE − FIFO 3000（`fifo_m_real.py` → `results_paper/fifo3000_real.csv`）：均值 +0.31，95% 区间 [+0.09, +0.50]，单侧下界 +0.12；但 MICE 只在 8/29 条流上更好，区间完全在 0 以下（FIFO 3000 显著更好）的有 14 条，完全在 0 以上的有 6 条。MICE 的平均优势来自 INSECTS 中漂移剧烈的流（+3.3 到 +5.5）和 Rialto（+6.9）；在 Airlines（−1.1）、Poker（−1.6）、Phishing（−1.5）、Weather、Spam、Elec2 上 FIFO 3000 更准。FIFO 3000 的耗时约为 MICE 的 40%。按登记 C，这一不利结果要写进摘要和结论。
+
+## 重写（理论驱动 + 反防御式写作 + 用户写作规范）— 2026-10-10 22:21
+
+**依据**：用户 2026-10-10 规则——"如果某句话的作用只是防止被质疑，而不是推进论证，请删除"；之后写论文必须同时使用
+`writing-skill`（用户桌面 writingSkill.md）和 `anti-defensive-writing` 两个 skill。改写前的版本打了 tag `tkde-before-rewrite-20261010`。
+
+**完成的几遍**
+- Pass A（50c0662）：理论驱动的摘要与贡献；防御句删除，登记/开发过程统一移到附录"Registration, Development History and Provenance"一段；FIFO-3000 不再写进摘要（用户决定，2026-10-10）。
+- Pass B（0bcb066、447d782）：实验按理论的两种情形重排为 4 小节（学习曲线预测召回收益；单一概念的记忆与边界敏感性；真实流上的慢层保护；池的组织、概率质量与资源），label 不变。
+- 写作规范一遍（d879547）：新增 Notation 表（tab:notation）；生成器（SEA、STAGGER、Agrawal、Sine、RBF、Hyperplane）和数据集（Rialto、Weather、Spam）首次出现补引用，7 条新文献逐条以 Crossref 记录核对（DBLP 本机连不上）；CoverType 与漂移数据集合集用 \footnote{\url{}}；缩写首次出现写全称（FIFO、LTM、ARF、SRP、ADWIN、AUC）；公式标点；首批项 \varepsilon_{k,c} 与风险 \epsilon_P 同符号，改为 \zeta_{k,c}；加 xurl 消除长 URL 溢出。编译 0 个未定义引用、0 个 overfull。
+
+**数字核对（我自己）**：比较改写前后正文中所有数字的多重集。新增的数字都是正文已有数值的复述（摘要、贡献、附录）或 Notation 表里的常数；删掉的数字在新版中都至少还出现一次，即只删了重复。不利结果都在：FIFO-3000 在 21/29 条流上更准（正文与局限）、错开边界 −6.8、两个边界检验未达登记标准、合并相对 archive +0.30 未达 +0.5。
+
+**MiMo Pro high 审计**（原文 `tkde_review/rewrite_mimo.md`），8 条，逐条核实：
+- F1（replay 说明被删，P1）、F2（"没有常数在真实流上调过"被删，P1）：**驳回**——两句都在附录 provenance 段（第 1066 行，MiMo 读到的是被截断的长行）。
+- F3（结论把 bootstrap 下界写成"与窗口相差不超过 0.3 点"，P1）：**接受**，改为"在 29 条真实流上最多比窗口低 0.25 点"。
+- F4（"as the single-concept premise implies"把前提之外的情形说成定理推论；贡献里"mixed segments remove the gain"过强，检验 (a) 仍有小幅正收益）：**接受**，改为"as expected when the premise fails"和"shifted segment boundaries remove the gain"。
+- F5（"confirm"过强）：**接受**，改为"support"。
+- F6：**部分接受**——"MICE 池最小"需加条件：上限时单条流存储行数可超过 archive（已写回正文）；"通过阈值不等于等价"属于纯防御句，不恢复。
+- F7（K 有三种含义）：**接受**，Notation 表注明 def:recur 中 K 的含义；网格附录改写为"three concepts"。
+- F8（摘要缺范围）：**部分接受**——bootstrap 下界加"(backbone seed 0)"；1.39 的界对任意 γ 都成立（ln K/η₂），不加 γ。

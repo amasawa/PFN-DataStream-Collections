@@ -58,9 +58,9 @@ margin; the slow level bounds the discounted half-Brier regret against the plain
 time, for any stream. A model-oriented discrepancy organises the stored contexts. On a controlled grid, the gains
 predicted from learning curves rank the observed gains with Spearman correlations of 0.94 and 0.83, and \method{}
 exceeds reset detection by 8.5 points on the hardest cell; shifting the concept boundaries inside the stored segments
-removes this advantage, as the single-concept premise implies. On 29 real streams \method{} is more accurate than all
+removes this advantage, as expected when the single-concept premise fails. On 29 real streams \method{} is more accurate than all
 four in-context baselines on 23, and its one-sided 95\% block-bootstrap bound on the difference to the plain window is
-above $-0.3$ points on 28.
+above $-0.3$ points on 28 (backbone seed 0).
 \end{abstract}
 \begin{IEEEkeywords}
 Concept drift, recurring concepts, tabular foundation models, in-context learning, data streams, online learning, mixture of experts.
@@ -136,7 +136,7 @@ level (\cref{prop:outer}).
 \textbf{(3) A training-free streaming method.} \method{} combines window and stored-context experts through a fast and
 a slow level and organises a bounded pool of past contexts by directed recall regret.
 \textbf{(4) Evidence in the recall and the weak-gain regime.} On a controlled grid, predicted and observed gains have
-Spearman correlations of 0.94 and 0.83, and mixed segments remove the gain; on real streams, accuracy is non-inferior
+Spearman correlations of 0.94 and 0.83, and shifted segment boundaries remove the gain; on real streams, accuracy is non-inferior
 to the default window on 28 of 29 streams at a 0.3-point margin. Pool controls, ablations and resource comparisons
 quantify the roles of aggregation, pool organisation and larger windows.
 
@@ -469,7 +469,7 @@ and one call per stored expert (at most 14), so at most 29 calls on a closing ba
     $\epsilon_P(\cC)$, $R_P(n)$ & risk on $P$ of the TFM given $\cC$; learning curve, the expected risk for $n$ rows of $P$ \\
     $\Div_T$, $\Div_E$, $\Div_R$ & recall regret and excess-risk discrepancy (\cref{def:excess}); R-divergence \citep{zhao2023rdiv} \\
     $S$, $\delta$ & a closed segment of 500 rows; merge threshold ($\delta=0.02$) \\
-    $K$ & number of experts of a meta expert \\
+    $K$ & number of experts of a meta expert; in \cref{def:recur}, number of past intervals \\
     $\ell_k$, $\eta$, $w_k$ & log-loss of expert $k$ on the last labelled batch; fast step ($\eta=10$); fast weight \\
     $g$, $\kappa$ & margin of the leading expert; $\kappa=\ln\bigl(1+(K-1)e^{-\eta g}\bigr)$ \\
     $L$, $J$ & block length in rows; batches per block, $J=L/B$ \\
@@ -765,8 +765,8 @@ block-bootstrap bounds are above $-0.3$ points on 23 and 17 streams, and single 
 \method{} keeps the smallest pool: 8.4 active experts per batch against 14.2, 9.7 TFM calls against 14.0 (fewer on 25
 of the 29 streams, including about 1.3 discrepancy calls per batch), and 2\,700 to 5\,400 stored rows per batch on
 average (bounds from the 500- and 1000-row caps; per-expert counts were not recorded) against 5\,600 for the archive
-and 11\,100 for the snapshot pool. Keeping past contexts carries the recall gain; organising them by discrepancy keeps
-the pool small.
+and 11\,100 for the snapshot pool; at the upper cap \method{} can store more rows than the archive on single streams.
+Keeping past contexts carries the recall gain; organising them by discrepancy keeps the pool small in experts and calls.
 
 \begin{table}[t]
   \centering
@@ -911,10 +911,9 @@ For an in-context learner, a past concept is recalled without retraining, and th
 between the learning curve and the accuracy of the stored context. \method{} turns this into a stream learner: past
 contexts are experts next to fast windows, a fast meta expert identifies a recurring concept within one batch, and a
 slow meta expert bounds, at any time and for any stream, what following the mixture costs against the plain window.
-The experiments confirm both regimes of the theory. Where concepts are costly to learn and a stored context holds one
+The experiments support both regimes of the theory. Where concepts are costly to learn and a stored context holds one
 concept, recall gains up to 8.5 points over reset detection, in the order the learning curves predict; where segments
-mix concepts or relearning is cheap, there is little to recall, \method{} stays within 0.3 points of the plain window on
-28 of the 29 real streams, and a larger window can be the better use of the budget.
+mix concepts or relearning is cheap, there is little to recall, \method{} is never more than 0.25 points below the plain window on the 29 real streams, and a larger window can be the better use of the budget.
 
 \textbf{Limitations.} The fixed 500-row segmentation is the main weakness: both tests with boundaries inside segments
 failed their registered criteria, \method{} fell below reset on most shifted streams, and an archive of unmerged
@@ -1137,7 +1136,7 @@ centroids: all held. The step $\tfrac12$ is 0.23 points lower on average and sat
 \subsection{Controlled Grid and Learning Curves}
 \label{app:grid}
 
-\textbf{Generator.} A stream has $d=10$ features, four nominal classes and $K=3$ concepts. For $m\in\{5,30,100\}$
+\textbf{Generator.} A stream has $d=10$ features, four nominal classes and three concepts. For $m\in\{5,30,100\}$
 centroids, $C_j\sim\mathcal U([0,1]^{10})$ i.i.d.\ and mixture weights $w_j=u_j/\sum_i u_i$ with $u_j\sim\mathcal U(0,1)$.
 Each concept $k$ has its own class vector $\lambda_k(j)\sim\mathcal U\{0,1,2,3\}$, drawn i.i.d.\ over centroids and
 independently across concepts: it is not a permutation, and two concepts may agree on a centroid (on our seeds the
@@ -1157,7 +1156,7 @@ schedules; the shifted streams reuse seeds 20 and 21 and draw their prefix from 
   \resizebox{\columnwidth}{!}{%
   \begin{tabular}{ll}
     \toprule
-    Features, classes, concepts & $d=10$, 4, $K=3$ \\
+    Features, classes, concepts & $d=10$, 4, 3 \\
     Centroids $m$ & 5, 30, 100; $C_j\sim\mathcal U([0,1]^{10})$ \\
     Weights & $u_j\sim\mathcal U(0,1)$, normalised \\
     Class of centroid $j$ in concept $k$ & $\lambda_k(j)\sim\mathcal U\{0,\dots,3\}$, independent \\
