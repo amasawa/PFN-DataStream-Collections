@@ -454,10 +454,10 @@ and one call per stored expert (at most 14), so at most 29 calls on a closing ba
 \section{Experiments}
 \label{sec:exp}
 
-The experiments answer four questions. \textbf{RQ1}: does the learning curve predict the value of memory?
-\textbf{RQ2}: does \method{} recall, that is, exceed relearning and window ensembles when concepts recur?
-\textbf{RQ3}: is \method{} safe and accurate on real streams, where recurrence is weak or absent?
-\textbf{RQ4}: what does each component contribute, and do the theoretical conditions hold?
+The experiments test the theory in its two regimes. \Cref{sec:rq1} asks whether learning curves predict the
+gains of recall; \cref{sec:rq2} whether recall needs stored contexts that hold one concept; \cref{sec:rq3} whether
+the slow level keeps \method{} close to the plain window where there is little to recall; and \cref{sec:ablation}
+what the organisation of the pool, probability quality and resources contribute.
 
 \textbf{Protocol.} Prequential evaluation in batches of $B=100$ rows with labels one batch late; context budget
 $M=1000$ for every policy; backbone TabPFN v2 with four ensemble members \citep{hollmann2025tabpfn}, and TabICL
@@ -484,7 +484,7 @@ three developed the slow level and the last two confirm the method as defined in
 (\cref{app:prereg}).
 
 
-\subsection{RQ1: The Learning Curve Predicts the Value of Memory}
+\subsection{Learning Curves Predict Recall Gains}
 \label{sec:rq1}
 
 \Cref{prop:recall} predicts the gain of recall from the learning curves of the grid concepts, measured before the
@@ -548,9 +548,6 @@ is cheap.
   \end{tabular}}
 \end{table*}
 
-\subsection{RQ2: Recall under Recurring Concepts}
-\label{sec:rq2}
-
 On the grid \method{} exceeds reset on all eight streams with 30 or 100 centroids and the window ensemble on all
 eight (\cref{tab:grid}): the gain comes from memory, not from faster adaptation. Averaged over the twelve streams it
 reaches 86.5 against 84.3 for reset, 81.8 for the window ensemble and 62.4 for FIFO; on the hardest cell the gain
@@ -559,6 +556,9 @@ safeguard. Stream learners that train a model are far behind when a concept must
 10 and 11, ARF reaches 68.0, SRP 69.7 and the tuned MOOE 78.1, against 83.9 for reset and 86.2 for \method{}. On the
 thirty generator streams \method{} matches reset (95.0 against 94.8), and the forgetting of \cref{obs:forget} is
 repaired: 0.82--0.89 in the five batches after a recurrence against 0.17--0.51 for FIFO.
+
+\subsection{Concept-Pure Memory and Boundary Sensitivity}
+\label{sec:rq2}
 
 \textbf{Boundary alignment.} Every grid concept above lasts 500 or 2\,000 rows from row zero, so each closed
 segment of 500 rows holds one concept, which is the premise of \cref{prop:recall}. Two further tests of the frozen
@@ -640,7 +640,7 @@ and its gains are small.
   \end{tabular}}
 \end{table}
 
-\subsection{RQ3: Real Streams}
+\subsection{The Slow Safeguard on Real Streams}
 \label{sec:rq3}
 
 
@@ -675,45 +675,27 @@ sources, with every stream resampled independently, the worst lower bound apart 
 bounds concern backbone seed~0 on fixed streams; the second seed below varies the model, not the data, and segments
 of one source are not independent evidence.
 
-\textbf{A second seed.} We repeated ten segments with another seed of the backbone. On the fourth held-out set all four hold again (most accurate on five of six segments, never below
+\textbf{A second seed.} We repeated ten segments with another seed of the backbone. On the fourth held-out set the results hold again (most accurate on five of six segments, never below
 FIFO). On four segments of the third held-out set, non-inferiority, safety and the highest mean hold, and \method{}
 is the most accurate policy on two of the four segments, where the hypothesis asked for three. Over the ten
 segments the difference to FIFO has the same sign under both seeds and changes by at most 0.4 points; its minimum
 is $-0.08$ points.
 
-\textbf{Beyond accuracy.} \Cref{tab:metrics} adds the macro-F1 score, the one-vs-rest ROC AUC, the expected
-calibration error (ECE) and the half Brier score, computed from the stored predictions of every method. On the real
-streams the picture of the accuracy carries over for F1 and the Brier score: \method{} has the highest F1 and a lower
-Brier score than every baseline; against FIFO its F1 is higher on 24 of 29 streams ($+0.8$ points on average), its
-AUC on 25 and its Brier score lower on 26, and against reset on 25, 28 and 28. The exception is the AUC of the dual
-memory: LTM has the highest mean AUC (91.0 against 90.5), all of it from the five PokerHand segments (up to 7.3
-points), where its class-balanced long-term buffer keeps rows of the rare classes that a window loses; on the
-same segments its accuracy is 2.5 to 3.8 points below \method{}, and on the other 24 streams the AUC of \method{}
-is 0.2 points higher in the median. On the grid the step $\eta_2=\tfrac12$ has a price in the quality of the probabilities:
-\method{} is 0.2 points below the step of 10 in accuracy but 3.1 points in ECE and 1.2 in the Brier score, because a
-small step keeps weight on the default window, which is poorly calibrated under conflicting concepts (ECE 16.7);
-its ECE is also above that of reset (7.3), while its Brier score is lower (12.7 against 13.1).
-The step that \cref{prop:outer} covers is thus the conservative choice: it buys the guarantee with calibration in the
-recall regime.
+\textbf{Slow level.} It leaves the recall regime almost
+unchanged (grid: 86.5 against 86.9 for the fast level alone) and removes the losses on real streams (worst case
+$-0.25$ against $-2.3$; \cref{tab:real}). With the log-loss in place of the half Brier score, one grid stream falls
+from 86.4 to 74.9: after a switch the fast mixture is confidently wrong for one batch, and an unbounded loss lets
+that batch outweigh the next ten.
 
-\begin{table*}[!t]
-  \centering
-  \caption{Metrics beyond accuracy (\%, mean over streams): macro-F1, one-vs-rest ROC AUC, expected calibration error
-  (15 bins) and half Brier score, on the 29 real streams and the 24 grid streams. Computed from stored predictions;
-  the best value per column is in bold.}
-  \label{tab:metrics}
-  \small
-  \setlength{\tabcolsep}{5pt}
-  \begin{tabular}{lccccc|ccccc}
-    \toprule
-     & \multicolumn{5}{c|}{Real streams} & \multicolumn{5}{c}{Controlled grid} \\
-    Method & Acc.\ $\uparrow$ & F1 $\uparrow$ & AUC $\uparrow$ & ECE $\downarrow$ & Brier $\downarrow$
-           & Acc.\ $\uparrow$ & F1 $\uparrow$ & AUC $\uparrow$ & ECE $\downarrow$ & Brier $\downarrow$ \\
-    \midrule
-\rowinput{tab_metrics_rows.tex}
-    \bottomrule
-  \end{tabular}
-\end{table*}
+\textbf{Margin.} On the grid the
+leading expert holds weight 1.000 from the second batch of a recurring block, with a gap of 0.8--8.0 nats to the
+runner-up, so $(K-1)e^{-\eta g}<0.005$ in \cref{prop:block}; on the real streams the median gap is 0.008--0.012
+nats, the regime for which the slow level is built.
+
+\textbf{Regret.} Over 33 development streams the largest
+discounted regret of the slow level is 0.15 against the window and 0.35 against the fast mixture, within the bound
+of 1.39; on adversarial sequences the bound holds at $\eta_2=\tfrac12$ and fails for steps of 2 and 10
+(\cref{app:details}).
 
 \textbf{Other learners and a second backbone.} On all 29 streams, the best trained
 stream learner per stream (seven learners, MOOE in two configurations) is below \method{} on 28 and below FIFO on
@@ -725,7 +707,7 @@ above hold: on the fourth set \method{} is the most accurate policy on six of si
 84.7 for FIFO, 84.2 for the window ensemble and 81.3 for reset), and over the ten segments it is at most 0.02 points
 below FIFO.
 
-\subsection{RQ4: Components and Conditions}
+\subsection{Pool Organisation, Probability Quality and Resources}
 \label{sec:ablation}
 
 \textbf{Windows and pool.} Removing the pool, so that the two levels mix the three windows only, lowers accuracy on
@@ -826,12 +808,6 @@ or recur.
   \end{tabular}
 \end{table*}
 
-\textbf{Slow level.} It leaves the recall regime almost
-unchanged (grid: 86.5 against 86.9 for the fast level alone) and removes the losses on real streams (worst case
-$-0.25$ against $-2.3$; \cref{tab:real}). With the log-loss in place of the half Brier score, one grid stream falls
-from 86.4 to 74.9: after a switch the fast mixture is confidently wrong for one batch, and an unbounded loss lets
-that batch outweigh the next ten.
-
 \textbf{Discrepancy.} On 144 pairs of grid segments, the recall regret and the
 excess-risk discrepancy separate ``different concept'' from ``same concept'' with AUROC 1.00, and the R-divergence
 estimate with 0.85 (0.42 on the hardest cell). This is an empirical comparison of the estimators as implemented
@@ -839,15 +815,39 @@ estimate with 0.85 (0.42 on the hardest cell). This is an empirical comparison o
 since the proposition concerns population risks of exact concept predictors; on pairs of the same concept the
 estimated excess is negative, down to $-0.2$ for 100 centroids, the pooling gain.
 
-\textbf{Margin.} On the grid the
-leading expert holds weight 1.000 from the second batch of a recurring block, with a gap of 0.8--8.0 nats to the
-runner-up, so $(K-1)e^{-\eta g}<0.005$ in \cref{prop:block}; on the real streams the median gap is 0.008--0.012
-nats, the regime for which the slow level is built.
+\textbf{Beyond accuracy.} \Cref{tab:metrics} adds the macro-F1 score, the one-vs-rest ROC AUC, the expected
+calibration error (ECE) and the half Brier score, computed from the stored predictions of every method. On the real
+streams the picture of the accuracy carries over for F1 and the Brier score: \method{} has the highest F1 and a lower
+Brier score than every baseline; against FIFO its F1 is higher on 24 of 29 streams ($+0.8$ points on average), its
+AUC on 25 and its Brier score lower on 26, and against reset on 25, 28 and 28. The exception is the AUC of the dual
+memory: LTM has the highest mean AUC (91.0 against 90.5), all of it from the five PokerHand segments (up to 7.3
+points), where its class-balanced long-term buffer keeps rows of the rare classes that a window loses; on the
+same segments its accuracy is 2.5 to 3.8 points below \method{}, and on the other 24 streams the AUC of \method{}
+is 0.2 points higher in the median. On the grid the step $\eta_2=\tfrac12$ has a price in the quality of the probabilities:
+\method{} is 0.2 points below the step of 10 in accuracy but 3.1 points in ECE and 1.2 in the Brier score, because a
+small step keeps weight on the default window, which is poorly calibrated under conflicting concepts (ECE 16.7);
+its ECE is also above that of reset (7.3), while its Brier score is lower (12.7 against 13.1).
+The step that \cref{prop:outer} covers is thus the conservative choice: it buys the guarantee with calibration in the
+recall regime.
 
-\textbf{Regret.} Over 33 development streams the largest
-discounted regret of the slow level is 0.15 against the window and 0.35 against the fast mixture, within the bound
-of 1.39; on adversarial sequences the bound holds at $\eta_2=\tfrac12$ and fails for steps of 2 and 10
-(\cref{app:details}).
+\begin{table*}[!t]
+  \centering
+  \caption{Metrics beyond accuracy (\%, mean over streams): macro-F1, one-vs-rest ROC AUC, expected calibration error
+  (15 bins) and half Brier score, on the 29 real streams and the 24 grid streams. Computed from stored predictions;
+  the best value per column is in bold.}
+  \label{tab:metrics}
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{lccccc|ccccc}
+    \toprule
+     & \multicolumn{5}{c|}{Real streams} & \multicolumn{5}{c}{Controlled grid} \\
+    Method & Acc.\ $\uparrow$ & F1 $\uparrow$ & AUC $\uparrow$ & ECE $\downarrow$ & Brier $\downarrow$
+           & Acc.\ $\uparrow$ & F1 $\uparrow$ & AUC $\uparrow$ & ECE $\downarrow$ & Brier $\downarrow$ \\
+    \midrule
+\rowinput{tab_metrics_rows.tex}
+    \bottomrule
+  \end{tabular}
+\end{table*}
 
 % =====================================================================================================
 \section{Related Work}
