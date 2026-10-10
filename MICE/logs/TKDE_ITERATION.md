@@ -462,3 +462,6 @@ gpt-6-astra high，只读（原文 `tkde_review/rewrite_codex_review.md`）。**
 - 第三留出集的地位（P2）：**接受**。本文方法（η₂=½）在第三集上是看到三段基线后加入分析的，不是登记假设；正文改为"后两个阶段检验它：第四集按第 3 节的方法登记，第三集上该方法在看到三段基线后加入"。
 - "as expected when the premise fails"（P2）：**接受**，改为"such segments lie outside the single-concept premise of the theory"（skill 规定的说法区分）。
 编译：0 个未定义引用，0 个 overfull。
+
+### Codex rebuttal 复审未能运行 — 2026-10-10 22:33
+gpt-6-astra 报额度用完（"usage limit … try again at Oct 14th, 2026 11:27 PM"）。按协议不换模型，等恢复后再对 306251f 版做复审（问题 1–5 是否解决、更新分数、oracle 重置实验能否提分）。当前有效评分仍为改写后首读的 5/8（那 4 处文字修改之前）。
