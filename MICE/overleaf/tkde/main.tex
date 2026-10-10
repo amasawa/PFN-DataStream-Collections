@@ -58,7 +58,7 @@ margin; the slow level bounds the discounted half-Brier regret against the plain
 time, for any stream. A model-oriented discrepancy organises the stored contexts. On a controlled grid, the gains
 predicted from learning curves rank the observed gains with Spearman correlations of 0.94 and 0.83, and \method{}
 exceeds reset detection by 8.5 points on the hardest cell; shifting the concept boundaries inside the stored segments
-removes this advantage, as expected when the single-concept premise fails. On 29 real streams \method{} is more accurate than all
+removes this advantage; such segments lie outside the single-concept premise of the theory. On 29 real streams \method{} is more accurate than all
 four in-context baselines on 23, and its one-sided 95\% block-bootstrap bound on the difference to the plain window is
 above $-0.3$ points on 28 (backbone seed 0).
 \end{abstract}
@@ -294,8 +294,9 @@ satisfies
 \end{proposition}
 
 \begin{remark}
-The first term is one batch of identification, lost because labels arrive one batch late. The rest is exponentially
-small in the margin and does not grow with the number of rows, against $\sqrt{JB\ln K}$ for the cumulative rule.
+The first term is one batch of identification, lost because labels arrive one batch late. On the row scale of the
+cumulative bound $\sqrt{JB\ln K}$ the regret is at most $Bc+B(J-1)(K-1)e^{-\eta g}$: linear in the length of the
+block, but with a coefficient that is exponentially small in the margin.
 \end{remark}
 
 \subsection{When Recall Beats Relearning}
@@ -320,8 +321,8 @@ the sum the \emph{area term}.
 \end{theorem}
 
 \begin{corollary}[When memory pays]\label{cor:flat}
-On the first visit there is no stored expert of the concept, so $\Delta_{k,1}(L)=0$; on later visits the area
-term of \eqref{eq:area} is zero whenever the learning curve is flat, $a_k(B)=a_k(M)$, and in general
+On the first visit $n_1=0$ and the area term of \eqref{eq:area} is zero; on later visits it is zero whenever the
+learning curve is flat, $a_k(B)=a_k(M)$, and in general
 \[
   \Delta_{k,c}(L)\;\le\;\frac{M}{L}\,\bigl(a_k(M)-a_k(B)\bigr)+\frac1J .
 \]
@@ -514,7 +515,8 @@ PokerHand and Airlines in five segments each, Rialto \citep{losing2016knn}, NOAA
 \citep{katakis2010tracking} and Phishing.
 
 \textbf{Development and confirmation.} The real streams were opened in five stages (\cref{tab:real}): the first
-three developed the slow level and the last two confirm the method as defined in \cref{sec:method}
+three developed the slow level, and the last two test it: the fourth set was registered for the method as defined
+in \cref{sec:method}, which on the third set was added after the baselines of three segments were visible
 (\cref{app:prereg}).
 
 
@@ -1018,8 +1020,8 @@ the first batch gives $\zeta_{k,c}$.
 \end{proof}
 
 \begin{proof}[Proof of \cref{cor:flat}]
-On the first visit the pool holds no expert of the concept, so the mixture and the relearning learner use the same
-rows. Since $a_k$ is non-decreasing and $n_c\le M$, every term of the area term is at most $a_k(M)-a_k(B)$, which
+On the first visit $n_1=0$, and $a_k(0)\le a_k(\min(jB,M))$ because $a_k$ is non-decreasing, so every positive part
+vanishes. Since $a_k$ is non-decreasing and $n_c\le M$, every term of the area term is at most $a_k(M)-a_k(B)$, which
 is zero for a flat curve, and the terms with $jB\ge M$ vanish. At most $M/B$ of the $J-1$ terms are non-zero (only those with $jB<n_c\le M$),
 which with $|\zeta_{k,c}|\le1/J$ gives the bound.
 \end{proof}
