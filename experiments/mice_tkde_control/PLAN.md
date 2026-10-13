@@ -177,3 +177,46 @@ batch over the three prefixes: MICE 1.067 (two-level replay included); FIFO 1500
 is within a factor 1.25 of MICE, so by rule B M* = 3000 (closest) and the 29-stream comparison is reported as not
 cost-matched: FIFO 3000 is about 2.5 times cheaper than MICE. On the prefixes, FIFO 5000 (0.674) and FIFO 13 400
 (1.907) bracket MICE's cost. Files: MICE/results_paper/bench/.
+
+## Round 11 addition: direct test of the recall-versus-relearn magnitude (registered 2026-10-13T18:14+1100, before any run)
+
+**Motivation (Codex reviewer, 2026-10-10, rewrite read, score 5/8):** the grid tests rank the predicted gains but
+compare deployed MICE with DDM reset, so detection delay, identification errors and the slow level confound the
+magnitude that Theorem 1 characterises. Requested fix: compare the theorem's recall policy with a boundary-oracle
+reset, using visit-specific stored sizes, report the first-batch term separately, then quantify the departures of
+deployed MICE and DDM. Run under the user's standing authorisation of 2026-10-09 (existing generator, method
+unchanged). Codex (expert) is out of quota until 2026-10-14 23:27; the design follows the reviewer's own requested
+fix, is checked by MiMo before the run, and is put to the Codex reviewer at the rebuttal.
+
+**Streams.** grid_streams.stream(nc, L, seed), nc in {5, 30, 100}, L in {500, 2000}, three concepts, three cycles.
+Primary seeds **40, 41** (never used before). Secondary seeds 20, 21 (the confirmation seeds on which MICE - DDM is
+already reported), only to decompose the deployed gap. Backbone TabPFN v2, seed 0, four estimators; B = 100, M = 1000;
+labels one batch late.
+
+**Policies (oracle boundaries; all three are computed on every batch).** In block b (concept k, visit c, J = L/B
+batches), batch j = 1..J:
+- R (relearn, boundary-oracle reset): for j >= 2 the context is the last min((j-1)B, M) labelled rows of the current
+  block; for j = 1 (no label of the block yet) it is FIFO, the last M labelled rows of the stream.
+- S (stored expert, c >= 2 only): the last n_c = min(M, (c-1)L) rows of concept k from its earlier visits (oracle
+  concept identity).
+- X (the theorem's mixture): for c = 1, X = R. For c >= 2, experts {S, R} with weights proportional to
+  exp(-eta * l), eta = 10, l = mean log-loss (probabilities clipped at 1e-6, as in reweight.simulate2) of each expert on
+  the last labelled batch (for j = 1, the last batch of the previous block).
+
+**Quantities (points, mean over all 9 blocks of a stream, then over the two seeds of a cell).**
+- area_obs = mean over blocks of (1/J) sum_{j=2..J} (acc X_j - acc R_j);
+- zeta_obs = mean over blocks of (1/J)(acc X_1 - acc R_1);
+- ideal_obs = as area_obs with max(acc S_j, acc R_j) in place of acc X_j (what Lemma 1 identification would give);
+- predicted = column indep_visit_specific of MICE/results_grid_test/predicted_indep.csv (independent learning
+  curves, visit-specific n_c; fixed before this registration).
+
+**Registered hypotheses (primary seeds 40, 41).**
+- H1 (magnitude): |area_obs - predicted| <= 1.0 point on at least five of the six cells, and the mean absolute
+  difference over the six cells is at most 0.5 points.
+- H2 (rank): Spearman correlation between area_obs and predicted over the six cells >= 0.8.
+Both are reported whether they hold or fail; no criterion is changed after the run.
+
+**Descriptive (no criterion).** zeta_obs per cell; ideal_obs - area_obs (identification loss); on seeds 20, 21, the
+decomposition of deployed MICE - DDM (results already reported) into the oracle gain area_obs + zeta_obs and the
+remainder (detection delay, identification, slow level). Script: MICE/code/oracle_recall.py; output
+MICE/results_grid_test/oracle_recall.csv (per block and batch) and oracle_recall_summary.csv.
