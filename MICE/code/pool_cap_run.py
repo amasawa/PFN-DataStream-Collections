@@ -1,7 +1,9 @@
 """TKDE round 13, part C (registered in experiments/mice_tkde_control/PLAN.md, "Round 13"): the archive and snapshot
 pools at the benchmark-calibrated capacity k* (kstar.json, fixed from the A1 timings before this runs) on the aligned
 grid, the shifted grid and the prespecified source-balanced real subset. run.run unchanged apart from the pool
-capacity (backbone seed 0). Usage: python pool_cap_run.py <task index> ...; outputs in RUN/k<k*>/, skipped if present."""
+capacity (backbone seed 0). Usage: python pool_cap_run.py <task index> ...; outputs in RUN/k<k*>/, skipped if present.
+Amendment 2026-10-14 (PLAN.md): with MICE_R13_K in {2, 4} the candidate capacity is run before kstar.json exists,
+outputs in RUN/k<MICE_R13_K>/."""
 import json
 import os
 import sys
@@ -20,12 +22,14 @@ TASKS = [(s, m) for s in REAL + GRID + SHIFT for m in ("arch1000_500", "snap1000
 
 if __name__ == "__main__":
     assert os.environ.get("MICE_BACKBONE", "tabpfn") == "tabpfn", "registered backbone is TabPFN v2"
-    ks = json.load(open(f"{BENCH}/kstar.json"))
+    kenv = os.environ.get("MICE_R13_K")      # amendment 2026-10-14: candidates run before k* is fixed
+    assert kenv in (None, "2", "4"), kenv
+    ks = None if kenv else json.load(open(f"{BENCH}/kstar.json"))
     run.DATA = f"{CTRL}/data"
     _init = run.PoolControl.__init__
     for i in map(int, sys.argv[1:]):
         s, m = TASKS[i]
-        k = int(ks[m[:4]])
+        k = int(kenv) if kenv else int(ks[m[:4]])
 
         def _init_k(self, *a, _k=k, **kw):
             _init(self, *a, **kw)

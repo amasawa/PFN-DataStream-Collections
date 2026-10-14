@@ -292,3 +292,17 @@ block-bootstrap lower bounds per stream (blocks of 20) and a two-sided 95% inter
 say so, naming the group. All configurations are reported, including infeasible ones.
 **Code:** experiments/mice_tkde_control/bench_pools.py (A1, A2), MICE/code/pool_cap_run.py (C), analysis
 experiments/mice_tkde_control/analyse_pools.py. Run roots ~/pfn-runs/mice-r13-bench, ~/pfn-runs/mice-r13-acc.
+
+### Round 13 operational amendment (2026-10-14T22:42+11:00, before any part-C run and before kstar.json exists)
+Motivation: the user asked for higher GPU utilisation while A1 runs alone. Change of schedule only; criteria, k* rule,
+statistics and reporting rule E are unchanged.
+- Part C is run now for **both** candidate capacities kmax in {2, 4} (archive and snapshot; 2 x 50 tasks), with 3
+  parallel workers (4 if the 10-min mean utilisation stays < 90% and memory allows; GPU memory <= 28 GB), outputs in
+  ~/pfn-runs/mice-r13-acc/k2 and k4 (pool_cap_run.py: env MICE_R13_K overrides the kstar.json lookup).
+- A1/A2 timings stay isolated: bench_pools.py already waits for a quiet GPU before every attempt. The A1 child that is
+  running when part C starts is killed (failed attempt, partial outputs deleted, retried later on a quiet GPU); no
+  timing measured with part C running is used. Any ok record whose gpu_before/gpu_after shows another process is
+  excluded and rerun before k* is fixed.
+- k* is still fixed from A1 timings only. No part-C output (npz, accuracies, worker logs beyond completion and
+  errors) is read until kstar.json is written. Primary analysis C uses k*; the other capacity is reported as a
+  supplementary configuration (rule E "all configurations are reported").
