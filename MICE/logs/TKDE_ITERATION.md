@@ -476,3 +476,6 @@ gpt-6-astra 报额度用完（"usage limit … try again at Oct 14th, 2026 11:27
 - 另加：脚本接受种子参数，3 个进程各跑互不重叠的种子（40 | 41 | 20 21），每条流原子写入。修补的 diff 交 MiMo Flash low 复查（只改汇总和断言，不影响运行数据，因此与运行并行）。
 - 17:42 启动运行：~/pfn-runs/mice_oracle_r11，3 个 worker，OMP_NUM_THREADS=1；GPU 利用率 85%，显存 2.2 GB。
 - 用户 2026-10-14 指出 MiMo 审计太慢。已修改全局协作规则（~/.claude/CLAUDE.md 新增"MiMo 审计提速"）：审计不阻塞无关工作；复查只审 diff，用 Flash；Pro high 只用于首次审计；附件只附调用到的函数片段；大审计拆成 2–3 个并行小审计；Flash 限时 10 分钟，Pro 限时 20 分钟；记录耗时。
+- 2026-10-14T17:48+11:00：MiMo Flash low 复查修补 diff，耗时 83 秒（17:45:37–17:47:00；此前 Pro high 整包审计 >10 分钟）。原文：tkde_review/round11_mimo_fix.md。5 项修补均确认正确。两条疑似：
+  - 每条流 9 个块的断言可能误拒：已运行核实，L=500 时 4500 行、L=2000 时 18000 行，都是 9 块，不成立。
+  - 与 predicted_indep.csv 的合并可能悄悄丢格：该文件 6 格齐全，但仍采纳，加了合并后必须 6 格的断言。

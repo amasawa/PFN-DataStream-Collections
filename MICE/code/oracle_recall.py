@@ -77,6 +77,7 @@ def summary():
     for seeds, tag in (((40, 41), "primary_s40_41"), ((20, 21), "secondary_s20_21")):
         s = per_seed[per_seed.seed.isin(seeds)].groupby(["n_centroids", "block"])[["area", "zeta", "ideal"]].mean()
         s = s.reset_index().merge(pv[["n_centroids", "block", "indep_visit_specific", "observed_mice_s20_21"]])
+        assert len(s) == 6, f"{tag}: {len(s)} of 6 cells after merge with predicted_indep.csv"
         s.insert(0, "seeds", tag)
         res.append(s)
     r = pd.concat(res).rename(columns=dict(indep_visit_specific="predicted"))
