@@ -512,3 +512,14 @@ gpt-6-astra 报额度用完（"usage limit … try again at Oct 14th, 2026 11:27
   - archive 在复现窗口内的比较：采纳，已添加。
 - 修补的 diff 交 MiMo Flash low 复查（材料写进提示词），76 秒，结果 none。修补只改报告部分，不影响运行数据。
 - 18:49 启动：~/pfn-runs/mice_seg_origin_r12，3 个 worker，MICE_CKPT_EVERY=10；GPU 61%，显存 2.8 GB。
+- 2026-10-14T19:15+11:00：第 12 轮结果（19:08 完成 16/16，无报错；check_seg_origin.py → results_paper/seg_origin.{csv,txt}）。**三条登记的判据全部成立：**
+  - H1：P 下 MICE−DDM 8/8 为正，均值 +3.009（对齐流 +3.09）。
+  - H2：相位复原效应 C_imp 均值 +6.679（≥ +5.0），复现窗口内 +12.0。
+  - H3：历史效应 C_hist 均值 −0.079（|·| ≤ 1）。
+  - 描述性：MICE−archive 在 A/O/P 下为 +0.295 / −2.988 / +0.294（P 下 7/8 为正）；复现窗口内为 +0.967 / −6.387 / +0.967。原始差值：MICE P−A +0.27，DDM O−A +0.35。
+  - P 下复现窗口和 −archive 的数值与对齐流完全相同：存储的段相同，前 200 行只进入窗口专家。
+- 写入论文：
+  - sec:rq2 新增 (c)"移位边界、分段重新对齐"；总结段改为"依赖在于分段相对概念边界的相位，与定理的单一概念前提一致"。按 Codex·高级专家的意见，称为相位复原效应，不说成只由分段纯度造成。
+  - tab:offset 增加 realig. 三列，由 make_robust_tables.py 生成（misaligned 表不变）。
+  - 摘要、贡献、结论、Limitations 各加一句；附录 provenance 注明 (c) 是在 (a)(b) 失败后增加的，运行前已登记三条判据，三条都成立。
+- MiMo Flash low 封闭式数字核对（材料写进提示词），约 2 分钟（19:12:53–19:14:59），结果 none。原文：round12_mimo_paper.md。

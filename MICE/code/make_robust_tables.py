@@ -1,5 +1,6 @@
 """Table rows for the boundary-robustness tests of the TKDE revision (round 4): 4.a misaligned schedules
-(../results_paper/misaligned.csv) and 4.b fixed-length half-segment offset (../results_paper/offset.csv).
+(../results_paper/misaligned.csv) and 4.b fixed-length half-segment offset (../results_paper/offset.csv), with the
+round-12 realigned segments (../results_paper/seg_origin.csv).
 Writes ../overleaf/tkde/tab_misaligned_rows.tex and tab_offset_rows.tex. No number is typed by hand."""
 import pandas as pd
 
@@ -25,17 +26,22 @@ def misaligned():
 
 def offset():
     o = pd.read_csv("../results_paper/offset.csv")
+    g = pd.read_csv("../results_paper/seg_origin.csv")          # round 12: segments realigned (origin at row 200)
+    o = o.merge(g[["block", "nc", "seed", "A_d_ddm", "P_d_ddm", "P_d_ddm_rec5", "P_d_arch"]], on=["block", "nc", "seed"])
+    assert len(o) == 8 and (o.al_d_ddm - o.A_d_ddm).abs().max() < 1e-9
     rows = []
     for blk in (500, 2000):
         for nc in (30, 100):
             for r in o[(o.block == blk) & (o.nc == nc)].sort_values("seed").itertuples():
                 rows.append(f"{blk} & {nc} & {r.seed} & {r.al_d_ddm:+.2f} & {r.off_d_ddm:+.2f} & {r.delta:+.2f} & "
-                            f"{r.al_d_ddm_rec5:+.1f} & {r.off_d_ddm_rec5:+.1f} & {r.al_d_arch:+.2f} & {r.off_d_arch:+.2f} \\\\")
+                            f"{r.P_d_ddm:+.2f} & {r.al_d_ddm_rec5:+.1f} & {r.off_d_ddm_rec5:+.1f} & {r.P_d_ddm_rec5:+.1f} & "
+                            f"{r.al_d_arch:+.2f} & {r.off_d_arch:+.2f} & {r.P_d_arch:+.2f} \\\\")
         rows.append("\\addlinespace")
     rows[-1] = "\\midrule"
     rows.append(f"Mean & & & {o.al_d_ddm.mean():+.2f} & {o.off_d_ddm.mean():+.2f} & {o.delta.mean():+.2f} & "
-                f"{o.al_d_ddm_rec5.mean():+.1f} & {o.off_d_ddm_rec5.mean():+.1f} & {o.al_d_arch.mean():+.2f} & "
-                f"{o.off_d_arch.mean():+.2f} \\\\")
+                f"{o.P_d_ddm.mean():+.2f} & {o.al_d_ddm_rec5.mean():+.1f} & {o.off_d_ddm_rec5.mean():+.1f} & "
+                f"{o.P_d_ddm_rec5.mean():+.1f} & {o.al_d_arch.mean():+.2f} & {o.off_d_arch.mean():+.2f} & "
+                f"{o.P_d_arch.mean():+.2f} \\\\")
     open(f"{TEX}/tab_offset_rows.tex", "w").write("\n".join(rows) + "\n")
 
 
