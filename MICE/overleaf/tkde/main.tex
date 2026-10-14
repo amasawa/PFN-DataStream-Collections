@@ -867,7 +867,8 @@ Capping each control at the largest pool size among 2 and 4 whose time per batch
 chosen from these timings alone, gives two experts for both (0.93 and 0.98\,s; four experts take 1.27 and 1.38\,s).
 At this capacity \method{} is more accurate on the aligned grid, by 6.7 points over the archive and 7.5 over the
 snapshot pool (95\% intervals $[+5.4,+8.7]$ and $[+6.2,+9.5]$, all eight streams), and on a source-balanced subset of
-nine real streams, by 0.35 and 0.27 points ($[+0.26,+0.44]$ and $[+0.16,+0.36]$). Both capped pools also stay within the time of \method{} on
+nine real streams, by 0.35 and 0.27 points ($[+0.26,+0.44]$ and $[+0.16,+0.36]$; above them on seven and six of
+the nine). Both capped pools also stay within the time of \method{} on
 each of the four grid streams (0.78 and 0.80\,s on average). On the shifted grid \method{} is 1.45 points above the
 archive ($[+1.03,+2.06]$), which at size 12 is 2.88 points above \method{}, and level with the snapshot pool ($+0.00$, $[-0.64,+0.47]$, above it on four of
 the eight streams): the latest rows do not depend on where a segment starts, so the snapshot pool loses nothing when
