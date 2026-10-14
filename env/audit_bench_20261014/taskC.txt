@@ -1,0 +1,286 @@
+Code audit against a registration. Do NOT call any tool; all material is below. Check that seg_origin_run.py and check_seg_origin.py implement the registration exactly (policy, segment origin, matched batches, contrasts, hypotheses and thresholds). Output at most 8 findings, one per line: Severity P0/P1/P2 | Location | Evidence | Correction. If there is no issue output exactly: none
+=== REGISTRATION ===
+## Round 12 (direction B) — segment-phase diagnostic on the shifted streams (registered 2026-10-14T18:36+11:00, before any run)
+
+Provenance: the reviewer's round-11 closing review (MICE/logs/tkde_review/round11_rebuttal2.md) names the shift
+sensitivity of 4.b as the most severe remaining issue and notes that the 200-row prefix also changes the initial history,
+so 4.b does not separate segment impurity from history. The user chose on 2026-10-14 to first run a diagnosis with the
+method unchanged (direction B); under the standing authorisation of 2026-10-09. The 4.a and 4.b verdicts stand.
+
+- **Streams:** the 8 offset streams of 4.b (off_c{30,100}_b{500,2000}_s{20,21}), unchanged.
+- **New policies (P):** micev1000_500 and arch1000_500, method, rule and constants frozen, backbone seed 0, with one
+  change of the segment origin: segments are rows [200+500k, 700+500k), so every stored segment lies inside one concept
+  block. The 200 prefix rows enter the window experts but no segment. The origin uses the known phase of the
+  boundaries (oracle knowledge); P is a diagnostic, not a deployable method.
+- **Existing comparisons:** A = aligned streams (4.b aligned values), O = offset streams with origin 0 (4.b results).
+- **Matched batches, recurrence windows, replay:** as in 4.b (offset batch t+2 = aligned batch t; two-level rule
+  simulate2(outer='brier', scale=0.5, temper=True)).
+- **Contrasts per stream (MICE - DDM on matched batches, points):** C_imp = P - O (segment impurity, history fixed);
+  C_hist = P - A (200-row history, pure segments). DDM is the same run in P and O.
+- **Predictions (single-concept premise of Theorem 1):**
+  - H1: under P, MICE - DDM positive on >= 7 of 8 streams and mean >= +1.0 (the 4.b criterion).
+  - H2: mean C_imp >= +5.0 (at least three quarters of the 4.b loss of 6.76 points comes from impure segments).
+  - H3: |mean C_hist| <= 1.0.
+- **Descriptive:** MICE - archive under P (aligned +0.30, offset -2.99 in 4.b); all contrasts in recurrence windows;
+  per-stream values; breakdown by block length.
+- **Limits stated in advance:** two data seeds, one backbone seed; 8 configurations are not independent replications.
+- **Code:** MICE/code/seg_origin_run.py (calls run.run with the segment origin set after construction);
+  MICE/code/check_seg_origin.py (contrasts). Run root ~/pfn-runs/mice_seg_origin_r12.
+=== seg_origin_run.py ===
+"""TKDE round 12, direction B (registered in experiments/mice_tkde_control/PLAN.md, "Round 12"): MICE and the
+archive on the 4.b offset streams with the segment origin moved to row 200, so every stored segment lies inside one
+concept block. Everything else is run.run unchanged (method, rule, constants, backbone seed 0).
+Usage: python seg_origin_run.py <task index> ... (indices into TASKS); outputs in RUN/P, skipped if present."""
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import run
+
+ORIGIN = 300
+CTRL = os.path.expanduser("~/pfn-runs/mice-tkde-control-20261009")
+RUN = os.path.expanduser("~/pfn-runs/mice_seg_origin_r12")
+STREAMS = [f"off_c{nc}_b{blk}_s{s}" for blk in (500, 2000) for nc in (30, 100) for s in (20, 21)]
+TASKS = [(s, m) for s in STREAMS for m in ("micev1000_500", "arch1000_500")]
+
+_init = run.MiceV1.__init__
+
+
+def _init_origin(self, *a, **kw):
+    _init(self, *a, **kw)
+    self.closed = ORIGIN            # first segment closes at row ORIGIN + seg; rows < ORIGIN go to no segment
+
+
+if __name__ == "__main__":
+    assert os.environ.get("MICE_BACKBONE", "tabpfn") == "tabpfn", "registered backbone is TabPFN v2"
+    run.MiceV1.__init__ = _init_origin          # PoolControl (archive) inherits it through super().__init__
+    run.DATA = f"{CTRL}/data"
+    os.makedirs(f"{RUN}/P", exist_ok=True)
+    for i in map(int, sys.argv[1:]):
+        s, m = TASKS[i]
+        run.run(s, m, 100, f"{RUN}/P")
+=== check_seg_origin.py ===
+"""TKDE round 12, direction B: contrasts of the segment-phase diagnostic (registered in
+experiments/mice_tkde_control/PLAN.md, "Round 12"). A = aligned streams, O = offset streams with segment origin 0 (4.b),
+P = offset streams with segment origin 200 (seg_origin_run.py). MICE - DDM on matched batches, points.
+C_imp = P - O is the phase-restoration effect at fixed observed history (segment contents, closure times and expert
+availability change together); C_hist = P - A is the prefix effect on the relative advantage under restored phase.
+Writes ../results_paper/seg_origin.csv."""
+import os
+
+import numpy as np
+import pandas as pd
+
+from check_offset import ALIGNED, SHIFT, policies, recurring, replay
+
+CTRL = os.path.expanduser("~/pfn-runs/mice-tkde-control-20261009")
+RUN = os.path.expanduser("~/pfn-runs/mice_seg_origin_r12")
+
+if __name__ == "__main__":
+    rows = []
+    for blk in (500, 2000):
+        for nc in (30, 100):
+            for s in (20, 21):
+                al, of = f"grid_c{nc}_b{blk}_s{s}", f"off_c{nc}_b{blk}_s{s}"
+                a0, c0 = replay(f"{ALIGNED}/{al}__micev1000_500.pkl")
+                t = np.array(sorted(a0))
+                assert t[0] == 1 and t[-1] == len(c0["y"]) // c0["B"] - 1 and (np.diff(t) == 1).all(), al
+                rec = np.isin(t, recurring(c0["concept"], c0["B"]))
+                pol = dict(A=policies(ALIGNED, f"{CTRL}/arch", ALIGNED, al, t)[0],
+                           O=policies(f"{CTRL}/off", f"{CTRL}/off", f"{CTRL}/off", of, t + SHIFT)[0],
+                           P=policies(f"{RUN}/P", f"{RUN}/P", f"{CTRL}/off", of, t + 1)[0])
+                assert np.array_equal(pol["O"]["ddm"], pol["P"]["ddm"])
+                r = dict(block=blk, nc=nc, seed=s)
+                for k, P in pol.items():
+                    r[f"{k}_d_ddm"], r[f"{k}_d_ddm_rec5"] = (P["mice"] - P["ddm"]).mean(), (P["mice"] - P["ddm"])[rec].mean()
+                    r[f"{k}_d_arch"], r[f"{k}_d_arch_rec5"] = (P["mice"] - P["arch"]).mean(), (P["mice"] - P["arch"])[rec].mean()
+                    for b in ("mice", "ddm", "arch"):
+                        r[f"{k}_{b}"] = P[b].mean()              # raw accuracies, for the per-method differences
+                for k in ("", "_rec5"):
+                    r[f"C_imp{k}"] = r[f"P_d_ddm{k}"] - r[f"O_d_ddm{k}"]
+                    r[f"C_hist{k}"] = r[f"P_d_ddm{k}"] - r[f"O_d_ddm{k}"]
+                r["mice_P_minus_A"], r["ddm_O_minus_A"] = r["P_mice"] - r["A_mice"], r["O_ddm"] - r["A_ddm"]
+                r["mice_P_minus_O"] = r["P_mice"] - r["O_mice"]
+                rows.append(r)
+    m = pd.DataFrame(rows)
+    m.to_csv("../results_paper/seg_origin.csv", index=False)
+    pd.set_option("display.width", 250)
+    print(m.round(2).to_string(index=False))
+    print(m.groupby("block")[["A_d_ddm", "O_d_ddm", "P_d_ddm", "C_imp", "C_hist", "P_d_arch"]].mean().round(2))
+    pos, mean = int((m.P_d_ddm > 0).sum()), m.P_d_ddm.mean()
+    print(f"H1: P MICE - DDM positive {pos}/8 (>= 7), mean {mean:+.3f} (>= +1.0) -> "
+          f"{'HOLDS' if pos >= 6 and mean >= 1.0 else 'FAILS'}")
+    print(f"H2: mean C_imp {m.C_imp.mean():+.3f} (>= +5.0) -> {'HOLDS' if m.C_imp.mean() >= 5.0 else 'FAILS'}")
+    print(f"H3: mean C_hist {m.C_hist.mean():+.3f} (|.| <= 1.0) -> {'HOLDS' if m.C_hist.abs().mean() <= 1.0 else 'FAILS'}")
+    print(f"descriptive: MICE - archive A {m.A_d_arch.mean():+.3f}, O {m.O_d_arch.mean():+.3f}, P {m.P_d_arch.mean():+.3f} "
+          f"(P positive {int((m.P_d_arch > 0).sum())}/8); recurrence windows C_imp {m.C_imp_rec5.mean():+.3f}, "
+          f"C_hist {m.C_hist_rec5.mean():+.3f}; MICE - archive in recurrence windows A {m.A_d_arch_rec5.mean():+.3f}, "
+          f"O {m.O_d_arch_rec5.mean():+.3f}, P {m.P_d_arch_rec5.mean():+.3f}")
+    print(f"raw differences (mean): MICE P - A {m.mice_P_minus_A.mean():+.3f}, DDM O - A {m.ddm_O_minus_A.mean():+.3f}, "
+          f"MICE P - O {m.mice_P_minus_O.mean():+.3f}")
+=== check_offset.py (imported functions, lines 1-50) ===
+"""TKDE round 4, attempt 4.b (registered in experiments/mice_tkde_control/PLAN.md before the run): boundary
+alignment at fixed block length. Offset streams off_c<nc>_b<block>_s<seed> (make_offset.py) hold 200 extra rows of
+the first concept before the unchanged aligned stream, so offset batch t+2 = aligned batch t.
+
+Matched batches t = 1..T_aligned-1. MICE and the archive replayed with the paper's two-level rule; baselines from
+their per-batch accuracies. Recurrence windows: first five batches of blocks 4-9 (aligned indexing, +2 in offset).
+Primary contrast: Delta_i = (MICE - DDM)_offset - (MICE - DDM)_aligned on matched batches (descriptive).
+Descriptive criterion: MICE - DDM on the offset streams positive on >= 7 of 8 and mean >= +1.0.
+Usage: python check_offset.py <run root>   (writes ../results_paper/offset.csv)"""
+import os
+import pickle
+import sys
+
+import numpy as np
+import pandas as pd
+
+import reweight
+
+SHIFT, ALIGNED = 2, "../results_grid_test3"
+
+
+def replay(f):
+    c = pickle.load(open(f, "rb"))
+    a = reweight.simulate2(c, outer="brier", scale=0.5, temper=True)
+    return a, c
+
+
+def series(a, t):
+    return 100 * np.array([a[k] for k in t])
+
+
+def recurring(concept, B, K=3, first=5):
+    starts = np.flatnonzero(np.r_[True, concept[1:] != concept[:-1]])
+    return np.array(sorted({b for r in starts[K:] for b in range(r // B, r // B + first)}))
+
+
+def policies(d_mice, d_arch, d_base, stream, t):
+    out = {}
+    a, c = replay(f"{d_mice}/{stream}__micev1000_500.pkl")
+    out["mice"] = series(a, t)
+    a, _ = replay(f"{d_arch}/{stream}__arch1000_500.pkl")
+    out["arch"] = series(a, t)
+    for b in ("ddm1000", "fifo1000", "winens1000"):
+        x = 100 * np.load(f"{d_base}/{stream}__{b}.npz")["acc"][t]
+        assert np.isfinite(x).all(), (stream, b)
+        out[b[:-4]] = x
+    return out, c
+
+
+def main(root):
+=== run.py excerpts: Mice.__init__, MiceV1, PoolControl, run() ===
+    def __init__(self, tfm, M, seg=1000, eta=2.0, gamma=0.5, delta=0.02, kmax=12, cache_px=False):
+        self.cache_px = cache_px
+        self.f, self.M, self.seg, self.eta, self.gamma, self.delta, self.kmax = tfm, M, seg, eta, gamma, delta, kmax
+        self.experts = []          # list of dicts: X, y, loss, last_used
+        self.pending = None        # predictions of every expert on the batch whose labels arrive next
+        self.closed = 0
+        self.online = dict(loss=0.0)
+        self.uid = 0
+        self.cache = []            # per batch: {uid or -1 (online): probabilities}, and the label-free discrepancy
+...
+class MiceV1(Mice):
+    """Mice with several online experts: FIFO windows of `windows` rows (fast in-context re-learning) next to the pool of
+    past-segment experts (memory). Every expert's prediction on every batch is cached (keys: -w for the window of w rows,
+    uid > 0 for pool experts), so that weighting rules and expert subsets can be compared offline (reweight.py)."""
+
+    def __init__(self, tfm, M, windows=(100, 300), **kw):
+        super().__init__(tfm, M, cache_px=False, **kw)
+        self.windows = tuple(windows) + (M,)
+        self.wloss = {w: 0.0 for w in self.windows}
+
+    def step(self, X, y, t, B):
+        n = t * B
+        if self.pending is not None:
+            yb = y[n - B:n]
+            for key, P in self.pending.items():
+                l = -np.log(np.clip(P[np.arange(len(yb)), yb], 1e-6, 1)).mean()
+                if key < 0:
+                    self.wloss[-key] = self.gamma * self.wloss[-key] + l
+                else:
+                    e = next((e for e in self.experts if e["uid"] == key), None)
+                    if e is not None:
+                        e["loss"] = self.gamma * e["loss"] + l
+        self.online = dict(loss=float(np.median(list(self.wloss.values()))))
+        while n - self.closed >= self.seg:
+            self._merge_or_add(X[self.closed:self.closed + self.seg], y[self.closed:self.closed + self.seg], t)
+            self.closed += self.seg
+        Xq = X[n:n + B]
+        preds = {-w: self.f.predict(*fifo(X, y, t, B, w), Xq) for w in self.windows}
+        for e in self.experts:
+            preds[e["uid"]] = self.f.predict(e["X"], e["y"], Xq)
+        losses = np.array([self.wloss[-k] if k < 0 else next(e["loss"] for e in self.experts if e["uid"] == k)
+                           for k in preds])
+        w = np.exp(-self.eta * (losses - losses.min()))
+        w /= w.sum()
+        self.pending = preds
+        self.cache.append(dict(t=t, P=dict(preds), disc={}))
+        return sum(wi * P for wi, P in zip(w, preds.values())), None
+
+
+class PoolControl(MiceV1):
+    """Review control for TKDE (2026-10-09): MiceV1 with the concept-organising step removed, same windows, pool size,
+    aggregation and constants. mode="arch": every closed segment becomes its own expert (no discrepancy test, no
+    merging); mode="snap": every closed segment stores a snapshot of the latest M rows. Oldest expert evicted beyond
+    kmax. Isolates the value of merging by discrepancy from the value of keeping past contexts."""
+
+    def __init__(self, tfm, M, mode, **kw):
+        super().__init__(tfm, M, **kw)
+        self.mode, self.Xall, self.yall = mode, None, None
+
+    def step(self, X, y, t, B):
+        self.Xall, self.yall = X, y
+        return super().step(X, y, t, B)
+
+    def _merge_or_add(self, Xs, ys, now):
+        if self.mode == "snap":
+            end = self.closed + self.seg
+            Xs, ys = self.Xall[max(0, end - self.M):end], self.yall[max(0, end - self.M):end]
+        self.uid += 1
+        self.experts.append(dict(X=Xs[-self.M:], y=ys[-self.M:], loss=self.online["loss"], last=now, uid=self.uid))
+        if len(self.experts) > self.kmax:
+...
+def run(stream, method, B, out):
+    dst = f"{out}/{stream}__{method}.npz"
+    if os.path.exists(dst):
+        return
+    z = np.load(f"{DATA}/{stream}.npz")
+    X, y, concept = z["X"], z["y"].astype(int), z["concept"]
+    K, T = int(y.max()) + 1, len(y) // B
+    f = TFM(K)
+    acc, ll, wt = np.full(T, np.nan), np.full(T, np.nan), np.zeros(T)
+    m = re.fullmatch(r"([a-z]+)(\d+)(?:_(\d+))?", method)
+    kind, M = m.group(1), int(m.group(2))
+    pol = (LTM(M, int(m.group(3)) / 100) if kind == "ltm" else Mice(f, M) if kind == "mice"
+           else Mice(f, M, cache_px=True) if kind == "micecache" else DDMReset(M) if kind == "ddm"
+           else MiceV1(f, M, seg=int(m.group(3)) if m.group(3) else 1000) if kind == "micev"
+           else PoolControl(f, M, kind, seg=int(m.group(3)) if m.group(3) else 1000) if kind in ("arch", "snap") else None)
+    Lw = {}  # winens: discounted losses of the window experts
+    errs, Pw_last = None, None
+    # micev runs take hours and the machine restarts: its state is saved every CK batches and picked up on restart
+    ck, CK, t0_ = dst[:-4] + ".ckpt", int(os.environ.get("MICE_CKPT_EVERY", 100)), 1
+    if kind in ("micev", "arch", "snap") and os.path.exists(ck):
+        st = pickle.load(open(ck, "rb"))
+        pol.__dict__.update(st["pol"])
+        acc, ll, wt, f.calls, t0_ = st["acc"], st["ll"], st["wt"], st["calls"], st["t"] + 1
+        print(stream, method, f"resumed at batch {t0_}", flush=True)
+    for t in range(t0_, T):
+        t0 = time.time()
+        Xq, yq = X[t * B:(t + 1) * B], y[t * B:(t + 1) * B]
+        if kind == "fifo":
+            P = f.predict(*fifo(X, y, t, B, M), Xq)
+        elif kind == "ltm":
+            pol.add(X[(t - 1) * B:t * B], y[(t - 1) * B:t * B])
+            P = f.predict(*pol.context(), Xq)
+        elif kind == "oracle":
+            if concept[0] < 0:
+                return
+            P = f.predict(*oracle(X, y, concept, t, B, M), Xq)
+        elif kind in ("mice", "micecache", "micev", "arch", "snap"):
+            P, _ = pol.step(X, y, t, B)
+        elif kind == "ddm":
+            if errs is not None:
+                pol.update(errs, t, B)
+=== verified facts ===
+Concept boundaries of every offset stream lie at rows 200+kL. Offset batch t+2 holds the rows of aligned batch t (SHIFT=2). Aligned caches cover batches 1..T-1 contiguously. run.TFM uses seed=0 by default.

@@ -1,0 +1,3 @@
+P1 | seg_origin_run.py: ORIGIN = 300 | Registration specifies segment origin 200 and segments [200+500k, 700+500k); setting `closed = 300` shifts them by 100 rows. | Set `ORIGIN = 200`.
+P1 | check_seg_origin.py: C_hist assignment | Both `C_imp` and `C_hist` are computed as P−O; registration defines `C_hist = P−A`. | Compute `C_hist` as `P_d_ddm - A_d_ddm` (and likewise for recurrence windows).
+P1 | check_seg_origin.py: H1/H3 reporting | H1 accepts `pos >= 6`, though the criterion is at least 7 of 8; H3 checks `mean(abs(C_hist)) <= 1`, not `abs(mean(C_hist)) <= 1`. | Use `pos >= 7` for H1 and `abs(m.C_hist.mean()) <= 1.0` for H3.
