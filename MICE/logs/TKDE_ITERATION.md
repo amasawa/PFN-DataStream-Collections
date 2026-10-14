@@ -551,3 +551,19 @@ gpt-6-astra 报额度用完（"usage limit … try again at Oct 14th, 2026 11:27
     - 前缀长度没有检查：采纳，加断言。
     - 它推测"保存 npz 的时间被计入每批耗时"，不成立：run.py 只计每批的时间，npz 在循环结束后才保存。
 - 20:23 启动 A1：~/pfn-runs/mice-r13-bench（GPU 独占，51 次运行，预计约 5 小时）。
+- 22:34 A1 进度 18/51，全部成功；第 0 轮重复用了 2.05 小时。单进程计时期间 GPU 利用率只有约 30%。
+- 22:42 用户问"利用率好低，你就不能并行跑一些代码吗"，所以做了一次运行安排上的修订（PLAN.md "Round 13 operational
+  amendment"，commit 6261132，运行前已推送）。判据、k* 规则、统计方法和报告规则 E 都不变：
+  - part C 现在就跑，两个候选容量 k=2 和 k=4 都跑（2×50 个任务，3 个 worker，c_worker.sh 用 mkdir 认领任务）。
+    k* 仍只按 A1 计时确定，然后主分析用 k*，另一个容量作为补充配置报告。
+  - 在 kstar.json 写出之前，不读 part C 的任何准确率。
+  - A1 和 A2 的计时仍然独占 GPU：bench_pools.py 每次尝试前都会等 GPU 空闲，part C 跑的时候它自动暂停；
+    gpu_before/gpu_after 显示有别的进程的记录会剔除并重跑。
+  - Sonnet 预检（28 秒），5 条意见：
+    - 补了 docstring；
+    - worker 注释里写明崩溃后怎样清理认领；
+    - 检查点写入本来就是原子的，不用改；
+    - kmax 补丁和 A1 用的是同一个，PoolControl.__init__ 不读 kmax；
+    - 手动停掉 A1 当时在跑的那一次。
+- 22:45 停掉 A1 当时在跑的子进程（snap k12 h4_covertype_d，已运行 3 分钟），它记为 ok:false 的失败尝试，部分输出已删除，
+  之后会在 GPU 空闲时重跑。22:45–22:46 启动 3 个 part C worker。bench 处于等待状态。
