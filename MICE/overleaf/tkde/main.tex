@@ -539,13 +539,18 @@ the last $n_c$ rows of the concept's earlier visits, and the mixture of the two 
 $\exp(-\eta\,\ell)$ with $\eta=10$ and $\ell$ the log-loss on the last labelled batch. On the unused seeds 40 and 41
 the measured area term lies within 0.7 points of the visit-specific prediction in every cell (mean absolute
 difference 0.37 points; Spearman correlation 1.0), from 0.3 against 0.02 points for 5 centroids and $L=500$ to 8.7
-against 8.9 for 100 centroids and $L=500$. The mixture loses 0.03 points on average against the better of the two
-experts on each batch, so identification under the margin is nearly exact once one label batch of the block has
-arrived. The first-batch term is zero: the only labels before it belong to the preceding block, another concept, on
-which the stored expert receives zero weight. On seeds 20 and 21 the deployed \method{} gains 0.06 to 1.14 points
-less over DDM than the oracle area in five of the six cells, the cost of detecting boundaries and of the slow level;
-on the sixth (5 centroids, $L=500$) the oracle area is 0.03 points and the gain over DDM of 1.24 points does not come
-from recall. On seeds 10 and 11 the curves were measured
+against 8.9 for 100 centroids and $L=500$. Identification follows the margin of \cref{ass:margin}: on the 74 batches where the two experts
+differ by more than 10 points the mixture puts more than half of its weight on the more accurate one every time, on
+the 59 batches with a difference of 5 to 10 points on 90\% of them, and on the 221 batches within 2 points of each
+other on 49\%; weighted by the accuracy difference, the agreement is 0.87. The net cost against the better expert on
+every batch is 0.03 points, with batches on which the mixture is more accurate than both offsetting the others. On
+the first batch of a block the weights come from the last batch of the preceding block, which belongs to another
+concept; the stored expert received a weight of at most $3\times10^{-10}$ there, the mixture was as accurate as
+relearning on all 72 first batches of recurrences, and the measured first-batch term is zero. On seeds 20 and 21 the
+gain of the deployed \method{} over DDM is below the oracle area in five of the six cells, by 0.06 to 1.14 points; this
+departure combines DDM's detection against the oracle reset, \method{}'s memory and identification without oracle
+boundaries, and the slow level. On the sixth cell (5 centroids, $L=500$) the gain over DDM is 1.24 points against an
+oracle area of 0.03. On seeds 10 and 11 the curves were measured
 on the evaluated concepts; on seeds 20 and 21 they predict the gains of new concepts from the same generator. The six standard generators are the other end of the scale: their learning curves are flat after
 about 200 rows, the predicted gain is at most 0.4 points, and the observed gain of \method{} over reset is 0.1 points
 on average. This is the low-area regime of \cref{prop:recall}: memory has little to add where relearning

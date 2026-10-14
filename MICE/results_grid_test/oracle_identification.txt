@@ -1,0 +1,7 @@
+first batches of recurrences: 72, max w_S 2.8e-10, equal accuracy X = R on 1.000
+ gap_lo  gap_hi  batches  agree  share_of_gap
+      0       2      221  0.493         0.076
+      2       5      238  0.622         0.225
+      5      10       59  0.898         0.136
+     10     100       74  1.000         0.564
+gap-weighted agreement 0.872 over 592 batches
