@@ -306,3 +306,7 @@ statistics and reporting rule E are unchanged.
 - k* is still fixed from A1 timings only. No part-C output (npz, accuracies, worker logs beyond completion and
   errors) is read until kstar.json is written. Primary analysis C uses k*; the other capacity is reported as a
   supplementary configuration (rule E "all configurations are reported").
+- Addendum (2026-10-14T23:52+11:00, before kstar.json exists): on this machine 3 workers produced CUDA failure storms
+  twice (6 failures within 4-7 min), so part C runs with 2 workers. To avoid delaying A1 by about 5 h, the k=2
+  tasks run first and the k=4 tasks are held back (claims reserved); after A1 fixes k*, the k=4 tasks are run if k*
+  = 4 for either control, otherwise they are run afterwards as the supplementary configuration or reported as not run.
