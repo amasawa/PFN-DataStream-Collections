@@ -62,8 +62,8 @@ exceeds reset detection by 8.5 points on the hardest cell; shifting the concept 
 removes this advantage, and realigning the segments to the shifted boundaries restores it (3.01 against 3.09 points
 over reset), consistent with the single-concept premise of the theory. On 29 real streams \method{} is more accurate than all
 four in-context baselines on 23, and its one-sided 95\% block-bootstrap bound on the difference to the plain window is
-above $-0.3$ points on 28 (backbone seed 0). Against an unmerged archive and a snapshot pool capped, by timing
-alone, at the cost per batch of \method{}, \method{} is more accurate on the aligned grid (by 6.7 and 7.5 points) and on
+above $-0.3$ points on 28 (backbone seed 0). Against an unmerged archive and a snapshot pool whose size was chosen,
+by timing alone, to fit the time per batch of \method{} on three real prefixes, \method{} is more accurate on the aligned grid (by 6.7 and 7.5 points) and on
 average over nine real streams (by 0.35 and 0.27), and level with the snapshot pool on the shifted grid.
 \end{abstract}
 \begin{IEEEkeywords}
@@ -867,15 +867,17 @@ Capping each control at the largest pool size among 2 and 4 whose time per batch
 chosen from these timings alone, gives two experts for both (0.93 and 0.98\,s; four experts take 1.27 and 1.38\,s).
 At this capacity \method{} is more accurate on the aligned grid, by 6.7 points over the archive and 7.5 over the
 snapshot pool (95\% intervals $[+5.4,+8.7]$ and $[+6.2,+9.5]$, all eight streams), and on a source-balanced subset of
-nine real streams, by 0.35 and 0.27 points ($[+0.26,+0.44]$ and $[+0.16,+0.36]$; above them on seven and six of
+nine real streams (Airlines 4d, CoverType 4d, PokerHand 4d, INSECTS abr., Rialto, Electricity, Weather, Phishing and
+Spam, full streams), by 0.35 and 0.27 points ($[+0.26,+0.44]$ and $[+0.16,+0.36]$; above them on seven and six of
 the nine). Both capped pools also stay within the time of \method{} on
 each of the four grid streams (0.78 and 0.80\,s on average). On the shifted grid \method{} is 1.45 points above the
-archive ($[+1.03,+2.06]$), which at size 12 is 2.88 points above \method{}, and level with the snapshot pool ($+0.00$, $[-0.64,+0.47]$, above it on four of
+archive ($[+1.03,+2.06]$), which at size 12 is 2.88 points above \method{} over all batches
+(2.99 on the matched batches of \cref{tab:offset}), and level with the snapshot pool ($+0.00$, $[-0.64,+0.47]$, above it on four of
 the eight streams): the latest rows do not depend on where a segment starts, so the snapshot pool loses nothing when
 the boundaries move inside the segments, while the merged segments of \method{} do (\cref{sec:rq2}). Organising past
-contexts by discrepancy thus matches, with about two stored experts, a twelve-expert archive on the aligned grid and
+contexts by discrepancy thus matches, with 1.8 stored experts on average on the benchmark prefixes, a twelve-expert archive on the aligned grid and
 both twelve-expert pools on the real streams; where the segments mix concepts, unmerged pools are more robust: a
-snapshot pool of the same cost is as accurate, and an archive of size 12 is more accurate.
+snapshot pool sized to the same prefix budget is as accurate, and an archive of size 12 is more accurate.
 
 \begin{table*}[t]
   \centering
@@ -1007,8 +1009,8 @@ contexts are experts next to fast windows, a fast meta expert identifies a recur
 slow meta expert bounds, at any time and for any stream, what following the mixture costs against the plain window.
 The experiments support both regimes of the theory. Where concepts are costly to learn and a stored context holds one
 concept, recall gains up to 8.5 points over reset detection, in the order the learning curves predict; where segments
-mix concepts the gain disappears and returns once they are realigned; where relearning is cheap there is little to recall. Merging by discrepancy keeps the pool at about two experts:
-at the same cost per batch, unmerged pools are less accurate, except a snapshot of the latest rows on the shifted
+mix concepts the gain disappears and returns once they are realigned; where relearning is cheap there is little to recall. Merging by discrepancy keeps the pool small: with sizes
+chosen to fit its time per batch on three real prefixes, unmerged pools are less accurate, except a snapshot of the latest rows on the shifted
 grid, which matches \method{}. \method{} is never more than 0.25 points below the plain window on the 29 real streams, and a larger window can be the better use of the budget.
 
 \textbf{Limitations.} The fixed 500-row segmentation is the main weakness: both tests with boundaries inside segments
@@ -1016,7 +1018,7 @@ failed their registered criteria, \method{} fell below reset on most shifted str
 segments was more accurate. Realigning the segments with the known phase restored the gain, so the loss comes from the
 segment phase; segmenting at detected change points would change the method and is left to future work.
 At the same pool size, merging by discrepancy did not improve accuracy over an unmerged archive by the registered
-margin; its benefit is cost: capped at the time per batch of \method{}, both controls were less accurate except the
+margin; its benefit is cost: with sizes chosen to fit the time per batch of \method{} on three real prefixes, both controls were less accurate except the
 snapshot pool on the shifted grid, which matched \method{}. On real streams the gains are large only on sharply drifting streams (INSECTS, Rialto); a
 3000-row window, about 2.5 times cheaper on the benchmark prefixes, was more accurate on 21 of the 29 streams, and
 costs were measured on three 300-batch prefixes on one GPU only. The confirmatory real segments come from three
