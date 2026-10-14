@@ -220,3 +220,30 @@ Both are reported whether they hold or fail; no criterion is changed after the r
 decomposition of deployed MICE - DDM (results already reported) into the oracle gain area_obs + zeta_obs and the
 remainder (detection delay, identification, slow level). Script: MICE/code/oracle_recall.py; output
 MICE/results_grid_test/oracle_recall.csv (per block and batch) and oracle_recall_summary.csv.
+
+## Round 12 (direction B) — segment-phase diagnostic on the shifted streams (registered 2026-10-14T18:36+11:00, before any run)
+
+Provenance: the reviewer's round-11 closing review (MICE/logs/tkde_review/round11_rebuttal2.md) names the shift
+sensitivity of 4.b as the most severe remaining issue and notes that the 200-row prefix also changes the initial history,
+so 4.b does not separate segment impurity from history. The user chose on 2026-10-14 to first run a diagnosis with the
+method unchanged (direction B); under the standing authorisation of 2026-10-09. The 4.a and 4.b verdicts stand.
+
+- **Streams:** the 8 offset streams of 4.b (off_c{30,100}_b{500,2000}_s{20,21}), unchanged.
+- **New policies (P):** micev1000_500 and arch1000_500, method, rule and constants frozen, backbone seed 0, with one
+  change of the segment origin: segments are rows [200+500k, 700+500k), so every stored segment lies inside one concept
+  block. The 200 prefix rows enter the window experts but no segment. The origin uses the known phase of the
+  boundaries (oracle knowledge); P is a diagnostic, not a deployable method.
+- **Existing comparisons:** A = aligned streams (4.b aligned values), O = offset streams with origin 0 (4.b results).
+- **Matched batches, recurrence windows, replay:** as in 4.b (offset batch t+2 = aligned batch t; two-level rule
+  simulate2(outer='brier', scale=0.5, temper=True)).
+- **Contrasts per stream (MICE - DDM on matched batches, points):** C_imp = P - O (segment impurity, history fixed);
+  C_hist = P - A (200-row history, pure segments). DDM is the same run in P and O.
+- **Predictions (single-concept premise of Theorem 1):**
+  - H1: under P, MICE - DDM positive on >= 7 of 8 streams and mean >= +1.0 (the 4.b criterion).
+  - H2: mean C_imp >= +5.0 (at least three quarters of the 4.b loss of 6.76 points comes from impure segments).
+  - H3: |mean C_hist| <= 1.0.
+- **Descriptive:** MICE - archive under P (aligned +0.30, offset -2.99 in 4.b); all contrasts in recurrence windows;
+  per-stream values; breakdown by block length.
+- **Limits stated in advance:** two data seeds, one backbone seed; 8 configurations are not independent replications.
+- **Code:** MICE/code/seg_origin_run.py (calls run.run with the segment origin set after construction);
+  MICE/code/check_seg_origin.py (contrasts). Run root ~/pfn-runs/mice_seg_origin_r12.
