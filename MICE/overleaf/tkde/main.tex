@@ -64,7 +64,7 @@ over reset), consistent with the single-concept premise of the theory. On 29 rea
 four in-context baselines on 23, and its one-sided 95\% block-bootstrap bound on the difference to the plain window is
 above $-0.3$ points on 28 (backbone seed 0). Against an unmerged archive and a snapshot pool capped, by timing
 alone, at the cost per batch of \method{}, \method{} is more accurate on the aligned grid (by 6.7 and 7.5 points) and on
-nine real streams (by 0.35 and 0.27), and level with the snapshot pool on the shifted grid.
+average over nine real streams (by 0.35 and 0.27), and level with the snapshot pool on the shifted grid.
 \end{abstract}
 \begin{IEEEkeywords}
 Concept drift, recurring concepts, tabular foundation models, in-context learning, data streams, online learning, mixture of experts.
@@ -858,20 +858,23 @@ Keeping past contexts carries the recall gain; organising them by discrepancy ke
   \end{tabular}}
 \end{table*}
 
-\textbf{Pool capacity at equal cost.} At the same pool size of 12 the three pools are close in accuracy but not in
-cost. In an isolated benchmark on the three real prefixes of \cref{tab:cost} (three repetitions), \method{} takes
+\textbf{Pool capacity at equal cost.} At the same pool size of 12, \method{} is within 0.3 points of both pools on the
+real streams and of the archive on the aligned grid, but not at the same cost. In an isolated benchmark on the three real prefixes of \cref{tab:cost} (three repetitions), \method{} takes
 1.11\,s per batch with 1.8 stored experts and 5.5 TFM calls on average, the archive 2.49\,s (10.7 experts, 13.6
-calls) and the snapshot pool 2.84\,s (\cref{tab:poolcap}).%A2
+calls) and the snapshot pool 2.84\,s (\cref{tab:poolcap}); on four grid streams (100 centroids, two aligned and two shifted) the times are
+1.05, 1.58 and 1.63\,s.
 Capping each control at the largest pool size among 2 and 4 whose time per batch does not exceed that of \method{},
 chosen from these timings alone, gives two experts for both (0.93 and 0.98\,s; four experts take 1.27 and 1.38\,s).
 At this capacity \method{} is more accurate on the aligned grid, by 6.7 points over the archive and 7.5 over the
 snapshot pool (95\% intervals $[+5.4,+8.7]$ and $[+6.2,+9.5]$, all eight streams), and on a source-balanced subset of
-nine real streams, by 0.35 and 0.27 points ($[+0.26,+0.44]$ and $[+0.16,+0.36]$). On the shifted grid it is 1.45 points
-above the archive ($[+1.03,+2.06]$) and level with the snapshot pool ($+0.00$, $[-0.64,+0.47]$, above it on four of
+nine real streams, by 0.35 and 0.27 points ($[+0.26,+0.44]$ and $[+0.16,+0.36]$). Both capped pools also stay within the time of \method{} on
+each of the four grid streams (0.78 and 0.80\,s on average). On the shifted grid \method{} is 1.45 points above the
+archive ($[+1.03,+2.06]$), which at size 12 is 2.88 points above \method{}, and level with the snapshot pool ($+0.00$, $[-0.64,+0.47]$, above it on four of
 the eight streams): the latest rows do not depend on where a segment starts, so the snapshot pool loses nothing when
 the boundaries move inside the segments, while the merged segments of \method{} do (\cref{sec:rq2}). Organising past
-contexts by discrepancy thus reaches the accuracy of a twelve-expert pool with about two stored experts; where the
-segments mix concepts, a snapshot pool of the same cost is as accurate.
+contexts by discrepancy thus matches, with about two stored experts, a twelve-expert archive on the aligned grid and
+both twelve-expert pools on the real streams; where the segments mix concepts, unmerged pools are more robust: a
+snapshot pool of the same cost is as accurate, and an archive of size 12 is more accurate.
 
 \begin{table*}[t]
   \centering
