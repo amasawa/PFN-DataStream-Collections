@@ -64,7 +64,8 @@ over reset), consistent with the single-concept premise of the theory. On 29 rea
 four in-context baselines on 23, and its one-sided 95\% block-bootstrap bound on the difference to the plain window is
 above $-0.3$ points on 28 (backbone seed 0). Against an unmerged archive and a snapshot pool whose size was chosen,
 by timing alone, to fit the time per batch of \method{} on three real prefixes, \method{} is more accurate on the aligned grid (by 6.7 and 7.5 points) and on
-average over nine real streams (by 0.35 and 0.27), and level with the snapshot pool on the shifted grid.
+average over nine real streams (by 0.35 and 0.27), and level with the snapshot pool on the shifted grid, as are both
+pools with four experts, which take more time per batch than \method{}.
 \end{abstract}
 \begin{IEEEkeywords}
 Concept drift, recurring concepts, tabular foundation models, in-context learning, data streams, online learning, mixture of experts.
@@ -874,10 +875,14 @@ each of the four grid streams (0.78 and 0.80\,s on average). On the shifted grid
 archive ($[+1.03,+2.06]$), which at size 12 is 2.88 points above \method{} over all batches
 (2.99 on the matched batches of \cref{tab:offset}), and level with the snapshot pool ($+0.00$, $[-0.64,+0.47]$, above it on four of
 the eight streams): the latest rows do not depend on where a segment starts, so the snapshot pool loses nothing when
-the boundaries move inside the segments, while the merged segments of \method{} do (\cref{sec:rq2}). Organising past
+the boundaries move inside the segments, while the merged segments of \method{} do (\cref{sec:rq2}). With four
+experts, slower than \method{}, both pools are level with it on the shifted grid ($-0.01$ and $-0.09$) and remain
+below it on the aligned grid (by 2.11 and 6.31 points) and on the real subset (by 0.31 and 0.20; above them on six
+and four of the nine). Organising past
 contexts by discrepancy thus matches, with 1.8 stored experts on average on the benchmark prefixes, a twelve-expert archive on the aligned grid and
 both twelve-expert pools on the real streams; where the segments mix concepts, unmerged pools are more robust: a
-snapshot pool sized to the same prefix budget is as accurate, and an archive of size 12 is more accurate.
+snapshot pool sized to the same prefix budget is as accurate, as are both pools of size 4, and an archive of size 12
+is more accurate.
 
 \begin{table*}[t]
   \centering
@@ -886,7 +891,7 @@ snapshot pool sized to the same prefix budget is as accurate, and an archive of 
   isolated benchmark on the three real prefixes (mean over prefixes of the mean over three repetitions; one
   repetition for $k=12$); seconds per batch on four grid streams; accuracy difference \method{} minus control
   (points) on the aligned grid (8 streams), the shifted grid (8) and the real subset (9), with 95\% block-bootstrap
-  intervals of the group mean. $k=2$ is the capacity chosen from the timings; $k=12$ differences are on the same
+  intervals of the group mean. $k=2$ is the capacity chosen from the timings, $k=4$ a supplementary configuration; $k=12$ differences are on the same
   streams, without intervals.}
   \label{tab:poolcap}
   \small
@@ -1019,7 +1024,7 @@ segments was more accurate. Realigning the segments with the known phase restore
 segment phase; segmenting at detected change points would change the method and is left to future work.
 At the same pool size, merging by discrepancy did not improve accuracy over an unmerged archive by the registered
 margin; its benefit is cost: with sizes chosen to fit the time per batch of \method{} on three real prefixes, both controls were less accurate except the
-snapshot pool on the shifted grid, which matched \method{}. On real streams the gains are large only on sharply drifting streams (INSECTS, Rialto); a
+snapshot pool on the shifted grid, which matched \method{}, as did both controls with four experts, which are slower. On real streams the gains are large only on sharply drifting streams (INSECTS, Rialto); a
 3000-row window, about 2.5 times cheaper on the benchmark prefixes, was more accurate on 21 of the 29 streams, and
 costs were measured on three 300-batch prefixes on one GPU only. The confirmatory real segments come from three
 streams whose earlier segments were used in development, and most streams have one run. \Cref{prop:outer} bounds the
@@ -1167,7 +1172,7 @@ $\sum_{t\le T}\gamma^{T-t}\le1/(1-\gamma)$.
 of 2 and 4 within \method{}'s amortised time per batch on all three prefixes, from timings alone), the streams, the
 block bootstrap (blocks of 10 batches on the grid, 20 on real streams) and the rule that a group with a mean difference
 of at most $+0.1$ points is named in the abstract. The accuracy runs at size 2 were made before the
-capacity was fixed, to use the GPU while the benchmark waited; no accuracy was read before it was fixed. The real
+capacity was fixed, to use the GPU while the benchmark waited; no accuracy was read before it was fixed. The runs at size 4 were made afterwards as the supplementary configuration. The real
 subset was chosen before the runs to balance sources; its $k=12$ differences come from the 29-stream runs.
 
 All hypotheses below were written to the experiment log before the corresponding streams were run, and every test
