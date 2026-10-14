@@ -137,8 +137,9 @@ def mice_pkl(s):
     return REPO / "MICE" / d / f"{s}__micev1000_500.pkl"
 
 
-def c():
-    ks = json.load(open(BENCH / "kstar.json"))
+def c(k=None):
+    """k=None: registered analysis at k* (r13_c_*); k=4: the supplementary capacity (r13_c4_*, same statistics)."""
+    ks = json.load(open(BENCH / "kstar.json")) if k is None else dict(arch=k, snap=k)
     rng = np.random.default_rng(0)
     rows, boots = [], {}
     for grp, streams, blk in (("aligned", GRID, 10), ("shifted", SHIFT, 10), ("real", REAL, 20)):
@@ -153,7 +154,7 @@ def c():
                 boots[(s, name)] = bm
                 r.update({name: x.mean(), f"d_{name}": dd.mean(), f"lo_{name}": np.percentile(bm, 2.5),
                           f"hi_{name}": np.percentile(bm, 97.5), f"lb95_{name}": np.percentile(bm, 5)})
-                f12 = CTRL / name / f"{s}__{name}1000_500.pkl"
+                f12 = CTRL / ("off" if s.startswith("off_") else name) / f"{s}__{name}1000_500.pkl"
                 if f12.exists():
                     r[f"d_{name}12"] = (m - replay(f12)[1]).mean()
             rows.append(r)
@@ -174,8 +175,9 @@ def c():
         if r.report_rule:
             print(f"REPORTING RULE E: {r.control} on the {r.group} group is within +0.1 of MICE or better "
                   f"(mean Delta {r.mean_delta:+.3f}) -> abstract and conclusion must say so")
-    d.to_csv(OUT / "r13_c_streams.csv", index=False); o.to_csv(OUT / "r13_c_groups.csv", index=False)
+    tag = "r13_c" if k is None else f"r13_c{k}"
+    d.to_csv(OUT / f"{tag}_streams.csv", index=False); o.to_csv(OUT / f"{tag}_groups.csv", index=False)
 
 
 if __name__ == "__main__":
-    dict(a1=a1, a1acc=a1acc, a2=a2, c=c)[sys.argv[1]]()
+    dict(a1=a1, a1acc=a1acc, a2=a2, c=c, c4=lambda: c(4))[sys.argv[1]]()

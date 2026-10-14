@@ -605,3 +605,14 @@ gpt-6-astra 报额度用完（"usage limit … try again at Oct 14th, 2026 11:27
     这一组触发报告规则 E：摘要和结论必须写明，snapshot2 在移位网格上与 MICE 持平。
   - 真实 9 条：archive2 +0.35 [0.26, 0.44]，7/9；snapshot2 +0.27 [0.16, 0.36]，6/9。
 - 04:21 启动 A2（网格 4 条流的计时，独占 GPU）。
+- 04:20 Fable 专家（round13_expert_q1.md，45 秒，0.88 美元）。主张从"提高准确率"改为"省成本"：
+  - 同为 12 个专家时，三种池子的准确率相近，但 MICE 每批快 2.2–2.6 倍；
+  - 把对照组限制在 MICE 的每批耗时以内时，对照组更差，只有移位网格上的 snapshot 和 MICE 持平；
+  - 局限一节的"合并的收益只是池子更小"一句改成说明成本收益。
+  采纳。它提到"A2 若选出 k*=4 要重算"，这一点不成立：登记写明 A2 不重新选 k*。
+- 04:25 论文初稿：
+  - sec:ablation 新增 "Pool capacity at equal cost" 一段和 tab:poolcap（make_poolcap_table.py 生成，A2 网格计时一列待填）；
+  - 摘要按规则 E 写明在移位网格上与 snapshot 持平；
+  - 结论、局限、出处附录同步修改。
+  已编译，无错误。analyse_pools.py 增加 c4（k=4 补充配置），并在移位流上读取 k=12 archive 的结果
+  （CTRL/off），只增加描述性的一列。
