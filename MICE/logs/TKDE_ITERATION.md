@@ -479,3 +479,11 @@ gpt-6-astra 报额度用完（"usage limit … try again at Oct 14th, 2026 11:27
 - 2026-10-14T17:48+11:00：MiMo Flash low 复查修补 diff，耗时 83 秒（17:45:37–17:47:00；此前 Pro high 整包审计 >10 分钟）。原文：tkde_review/round11_mimo_fix.md。5 项修补均确认正确。两条疑似：
   - 每条流 9 个块的断言可能误拒：已运行核实，L=500 时 4500 行、L=2000 时 18000 行，都是 9 块，不成立。
   - 与 predicted_indep.csv 的合并可能悄悄丢格：该文件 6 格齐全，但仍采纳，加了合并后必须 6 格的断言。
+- 2026-10-14T17:56+11:00：第 11 轮结果（oracle_recall.py --summary；原始输出 results_grid_test/oracle_recall_summary.txt）。登记的判据：
+  - H1 成立：6/6 格 |area−predicted| ≤ 1.0，平均 0.372（要求 ≤ 0.5）。
+  - H2 成立：Spearman 1.000（要求 ≥ 0.8）。
+  - 描述性结果：
+    - 识别损失 ideal−area 平均 0.026 点。
+    - ζ 全为 0。原因：每块第一批只能用上一块（另一个概念）的最后一批定权重，存储专家权重为 0（实测 w_S 均值 0.0），第 2 批起均值为 0.63。
+    - 种子 20/21 的 MICE−DDM 在 5/6 格比 oracle 面积少 0.06–1.14 点，这是检测边界和慢层的代价；5 中心、L=500 一格 oracle 面积 0.03、MICE−DDM 为 1.24，这部分不来自召回。
+  - 已写入论文：sec:rq1 中把"定理理想化…量级只是近似"一段换成直接检验的结果，新增表 tab:oracle（由 make_oracle_table.py 生成）；摘要加一句"面积项在每格与预测相差不到 0.7 点"；登记和种子信息写进附录的 Development and provenance。按两个写作 skill 处理：数字均来自脚本，删去被直接检验取代的保留性说明，保留 DDM 检测延迟和慢层不在定理内的成立条件。

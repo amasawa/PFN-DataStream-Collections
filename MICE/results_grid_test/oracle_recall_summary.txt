@@ -1,0 +1,24 @@
+           seeds  n_centroids  block  area  zeta  ideal  predicted  observed_mice_s20_21  abs_err  abs_err_ideal
+  primary_s40_41            5    500 0.322   0.0  0.456      0.024                 1.239    0.298          0.431
+  primary_s40_41            5   2000 0.214   0.0  0.308      0.012                 0.006    0.202          0.296
+  primary_s40_41           30    500 2.078   0.0  2.056      1.698                 0.966    0.380          0.358
+  primary_s40_41           30   2000 0.956   0.0  1.019      0.517                 0.402    0.438          0.502
+  primary_s40_41          100    500 8.678   0.0  8.811      8.905                 8.455    0.227          0.094
+  primary_s40_41          100   2000 3.517   0.0  3.272      2.832                 2.531    0.685          0.440
+secondary_s20_21            5    500 0.033   0.0  0.100      0.024                 1.239    0.009          0.076
+secondary_s20_21            5   2000 0.061   0.0  0.097      0.012                 0.006    0.049          0.085
+secondary_s20_21           30    500 1.622   0.0  1.567      1.698                 0.966    0.076          0.131
+secondary_s20_21           30   2000 0.811   0.0  0.853      0.517                 0.402    0.294          0.336
+secondary_s20_21          100    500 9.111   0.0  9.167      8.905                 8.455    0.206          0.262
+secondary_s20_21          100   2000 3.672   0.0  3.533      2.832                 2.531    0.840          0.702
+H1: |area - predicted| <= 1.0 on 6/6 cells (need >= 5), mean abs diff 0.372 (need <= 0.5) -> HOLDS
+H2: Spearman 1.000 (need >= 0.8) -> HOLDS
+descriptive: |ideal - predicted| <= 1.0 on 6/6, mean 0.354, Spearman 1.000; identification loss ideal - area mean 0.026
+seeds 20, 21: deployed MICE - DDM (points, run.py scores batches >= 1) vs oracle area + zeta (all batches; batch 0 contributes 0); remainder = delay, identification, slow level
+ n_centroids  block  mice_minus_ddm  oracle  remainder
+           5    500           1.239   0.033      1.205
+           5   2000           0.006   0.061     -0.056
+          30    500           0.966   1.622     -0.656
+          30   2000           0.402   0.811     -0.409
+         100    500           8.455   9.111     -0.657
+         100   2000           2.531   3.672     -1.141
