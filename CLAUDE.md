@@ -8,8 +8,10 @@ constraints specific to this repository.
   fixes: `env/MACHINE_LOG.md`.
 - Write logs in Chinese with timestamps taken from `date` (never estimated). During long runs, log important events
   about every 10 minutes and skip entries when nothing changed.
-- Commit and push every significant attempt, code change or LaTeX change right after it, with explicit paths only
-  (other agents may have uncommitted work in the tree).
+- Commit locally with explicit paths only (other agents may have uncommitted work in the tree). **Push once per small
+  round** (user 2026-10-14): after a review round or sub-round (N.a, N.b …) is closed, or an experiment stage
+  finishes, push all its commits together; do not push after every step. Exception: registrations of experiments are
+  pushed before the run (they prove the criteria came first).
 
 ## Experiments
 - **Before scheduling or changing any run, read `env/EXPERIMENT_SCHEDULING.md`** (machine limits, concurrency evidence,
