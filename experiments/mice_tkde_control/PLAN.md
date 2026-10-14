@@ -247,3 +247,48 @@ method unchanged (direction B); under the standing authorisation of 2026-10-09. 
 - **Limits stated in advance:** two data seeds, one backbone seed; 8 configurations are not independent replications.
 - **Code:** MICE/code/seg_origin_run.py (calls run.run with the segment origin set after construction);
   MICE/code/check_seg_origin.py (contrasts). Run root ~/pfn-runs/mice_seg_origin_r12.
+
+## Round 13 — resource comparison against the archive and snapshot pools (registered 2026-10-14T19:45+11:00, before any run)
+
+Provenance: reviewer's next issue after round 12 (MICE/logs/tkde_review/round12_rebuttal.md); plan v1/v2
+(round13_plan.md, round13_plan_v2.md), expert corrections (round13_expert_a1.md), reviewer plan check "sufficient with
+changes" (round13_reviewer_plan_check.md: add isolated latency/memory on aligned and shifted streams, k* not
+reselected). User instruction 2026-10-14 "做第13轮"; standing authorisation of 2026-10-09. Method frozen; all earlier
+results and criteria unchanged.
+
+**Candidate capacities (fixed from round-9 timing facts only, before any new run):** on the three benchmark prefixes MICE
+averaged 1.0-1.6 stored experts and about 5.3 TFM calls per batch (bench_cost_runs.csv), while a pool control makes 3
+window calls plus one per occupied expert. Candidates kmax in {2, 4} (three repetitions each) for k* selection; the
+deployed kmax 12 is measured once per prefix (one repetition; descriptive cost of the deployed control, not a
+candidate). kmax 6 and 8 are not run (expected 9-11 calls, about twice MICE's).
+
+**A1. Isolated benchmark on real prefixes** (protocol of round 9 A, bench_resources.py, GPU alone, 28 GB cap,
+checkpointing off, fresh process per run, rotated order): h4_airlines_d, h4_covertype_d, insects_abrupt_balanced,
+batches 1-300. Policies: micev1000_500 (3 reps, same session), arch1000_500 and snap1000_500 at kmax 2 and 4 (3 reps)
+and at kmax 12 (1 rep). Reported: amortised mean s/batch (two-level replay averaged in; mean only), median, p95, max of
+the online step, closing vs non-closing, the same over batches 61-300 (diagnostic), between-repetition spread, peak
+allocated/reserved GPU memory, peak process RSS (process peak, not data volume), TFM calls, mean occupancy, logical
+stored context rows per batch (MICE recorded per batch in this run; controls exact), prefix accuracy. Aggregation: equal
+weight over the three prefixes of the mean over repetitions.
+**A2. Isolated benchmark on grid streams** (same protocol, full streams, reviewer's required change): aligned
+grid_c100_b500_s20, grid_c100_b2000_s20 and shifted off_c100_b500_s20, off_c100_b2000_s20; policies MICE, archive k*,
+snapshot k*, and both controls at kmax 12; 3 reps (kmax 12: 1 rep). Reported as A1, plus whether each control at k*
+meets MICE's amortised mean s/batch on each stream. These timings do not reselect k*.
+**B. k* from A1 timings only, before any accuracy of a new run is examined:** for archive and snapshot separately, among
+kmax in {2, 4} feasible on all three prefixes, the largest whose amortised mean s/batch <= MICE's; if none, k* = 2,
+labelled "over-budget fallback".
+**C. Accuracy at benchmark-calibrated capacity** (backbone seed 0, two-level replay, full streams, batches 1..T-1;
+parallel workers, not timed): MICE vs archive k* and snapshot k* on (i) 8 aligned grid streams (seeds 20/21; 30/100
+centroids; 500/2000-row blocks), (ii) the 8 shifted streams of test (b), (iii) the prespecified source-balanced real
+subset h4_airlines_d, h4_covertype_d, h4_poker_d, insects_abrupt_balanced, h2_rialto, elec2, h2_weather, h2_phishing,
+h2_spam (equal weight). The 29-stream kmax-12 results stay as reported; no nine-stream mean is compared with a
+29-stream mean.
+**D. Statistics:** Delta = MICE - control per stream and group mean; grid groups: moving-block bootstrap, blocks of 10
+batches, same indices for both policies, group mean of independently resampled streams; real subset: one-sided 95%
+block-bootstrap lower bounds per stream (blocks of 20) and a two-sided 95% interval of the group mean. Delta >= -0.1 is
+"within the descriptive tolerance or better", not equivalence.
+**E. Reporting rule (fixed now):** resource results are stated for the measured prefixes and streams only; accuracy is
+"at benchmark-calibrated capacity". If in any group a control at k* has mean Delta <= +0.1, the abstract and conclusion
+say so, naming the group. All configurations are reported, including infeasible ones.
+**Code:** experiments/mice_tkde_control/bench_pools.py (A1, A2), MICE/code/pool_cap_run.py (C), analysis
+experiments/mice_tkde_control/analyse_pools.py. Run roots ~/pfn-runs/mice-r13-bench, ~/pfn-runs/mice-r13-acc.
