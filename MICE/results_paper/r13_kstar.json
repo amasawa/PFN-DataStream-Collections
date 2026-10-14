@@ -1,0 +1,13 @@
+{
+ "arch": 2,
+ "arch_status": "within MICE's budget",
+ "snap": 2,
+ "snap_status": "within MICE's budget",
+ "mice_mean_s": 1.1112567181294972,
+ "arch12_mean_s": 2.487268038190927,
+ "arch2_mean_s": 0.9276474238506571,
+ "arch4_mean_s": 1.2674315177996782,
+ "snap12_mean_s": 2.837815279702966,
+ "snap2_mean_s": 0.9817487982289727,
+ "snap4_mean_s": 1.376216924417488
+}
