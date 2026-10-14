@@ -465,3 +465,14 @@ gpt-6-astra high，只读（原文 `tkde_review/rewrite_codex_review.md`）。**
 
 ### Codex rebuttal 复审未能运行 — 2026-10-10 22:33
 gpt-6-astra 报额度用完（"usage limit … try again at Oct 14th, 2026 11:27 PM"）。按协议不换模型，等恢复后再对 306251f 版做复审（问题 1–5 是否解决、更新分数、oracle 重置实验能否提分）。当前有效评分仍为改写后首读的 5/8（那 4 处文字修改之前）。
+
+### 第 11 轮 · MiMo 审计 oracle_recall.py 与运行（2026-10-14T17:46+11:00）
+- MiMo Pro high 对照登记审计脚本（原文：tkde_review/round11_mimo.md）：策略 R/S/X、无标签泄漏、area/zeta/ideal 的尺度和平均方式与 predicted 一致，均已确认无问题。5 条意见：
+  - F1（P1，采纳）：--summary 不检查 24 条流是否齐全；已加断言（4 个种子 × 6 格齐全、每条流 9 个块），否则拒绝汇总。
+  - F2（P1，采纳）：未防止 MICE_BACKBONE=tabicl；已加断言，登记的骨干是 TabPFN v2。启动环境中该变量为空。
+  - F3（P2，采纳为说明）：学习曲线用骨干种子 10/11，本次用 0；predicted 列已冻结，不重算，作为比较的局限写明。
+  - F4（P2，采纳为描述性输出）：H1/H2 不变；另外打印 |ideal−predicted| 与识别损失 ideal−area，H1 失败时可区分是量级模型错还是加权没识别出来。
+  - F5（缺信息）：我已核对 predict_gain_visit.py：observed_mice_s20_21 = 100 × 每格种子 20/21 的 (mice−ddm) 平均，单位为点；run.py 不计第 0 批，本脚本第 0 批贡献为 0，已在输出中注明。
+- 另加：脚本接受种子参数，3 个进程各跑互不重叠的种子（40 | 41 | 20 21），每条流原子写入。修补的 diff 交 MiMo Flash low 复查（只改汇总和断言，不影响运行数据，因此与运行并行）。
+- 17:42 启动运行：~/pfn-runs/mice_oracle_r11，3 个 worker，OMP_NUM_THREADS=1；GPU 利用率 85%，显存 2.2 GB。
+- 用户 2026-10-14 指出 MiMo 审计太慢。已修改全局协作规则（~/.claude/CLAUDE.md 新增"MiMo 审计提速"）：审计不阻塞无关工作；复查只审 diff，用 Flash；Pro high 只用于首次审计；附件只附调用到的函数片段；大审计拆成 2–3 个并行小审计；Flash 限时 10 分钟，Pro 限时 20 分钟；记录耗时。
