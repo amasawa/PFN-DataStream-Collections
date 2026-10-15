@@ -52,9 +52,9 @@ putting its labelled rows back into the context, without retraining. We characte
 prediction under recurring concept drift. When a stored context holds one concept and the experts are separated by a
 margin, the gain of recall over relearning is the area between the stored context's accuracy and the TFM's learning
 curve, up to a first-batch term. The characterisation predicts large gains for concepts that need many examples and
-little gain for concepts that are learned quickly. Identification needs only that the concept holds the majority of the stored rows, and stored contexts are segments
-that start at changes detected by a two-sample test on the window's errors, which bounds the rows of other concepts
-in each segment. We propose \method{}, a mixture of window and stored-context experts
+little gain for concepts that are learned quickly. Under a posterior-predictive model of the TFM, identification needs only that the concept holds the majority of the
+stored rows; stored contexts are segments that start at changes detected by a two-sample test on the window's
+errors, which bounds the rows of other concepts in each segment when the changes are detected. We propose \method{}, a mixture of window and stored-context experts
 under a meta expert with two time scales. The fast level identifies a recurring concept within one batch under a
 margin; the slow level bounds the discounted half-Brier regret against the plain window by $2\ln2\approx1.39$ at every
 time, for any stream. A model-oriented discrepancy organises the stored contexts. On a controlled grid, the gains
@@ -293,11 +293,10 @@ where $\rho=\Pr_\vx[g_P(\vx)\ne g_Q(\vx)]$; at $\pi=\tfrac12$ it depends on the 
 
 \begin{remark}
 In the population limit a stored context recalls the concept that holds the majority of its rows, so identifying
-the concept needs majority purity, not purity. \Cref{prop:recall} then applies to the majority concept with a
-finite-context correction: the minority rows are wrong labels for it on the disagreement region and correct ones
-elsewhere, so a context of $n$ rows with share $\pi>\tfrac12$ is worth between $\pi n$ and $n$ rows of the majority
-concept. Dropping the rows near a boundary raises $\pi$ but lowers $n$; whether the worth rises or falls depends on
-the disagreement and on the learning curve.
+the concept needs majority purity, not purity. With finite contexts the minority rows are wrong labels for the majority concept on
+the disagreement region and correct ones elsewhere, and the proposition does not say how many clean rows a mixed
+context is worth; \cref{prop:recall} is stated for pure contexts. Dropping the rows near a boundary raises $\pi$ but
+lowers the number of stored rows.
 \end{remark}
 
 \textbf{Change detection.} Let $z_t\in\{0,\dots,B\}$ be the number of errors that the window of the last 300 rows
@@ -770,8 +769,10 @@ stream, so the two are compared on matched batches. The shift leaves FIFO, reset
 unchanged (within one point) but removes the recall advantage (\cref{tab:offset}): the gain over reset changes by
 $-6.8$ points on average ($-1.0$ to $-14.4$; $-12.0$ in the first five batches of the recurring blocks), and fixed
 segmentation is below reset on 7 of the 8 shifted streams ($-3.7$ points on average, down to $-10.8$ with blocks of
-500 rows), short of the registered criterion. With 2\,000-row blocks and 100 centroids it keeps $+5.7$ and $+7.3$
-points over reset in the first five batches of the recurring blocks. The archive loses less and is above fixed
+500 rows), short of the registered criterion. With 500-row blocks it is also below the window ensemble ($-0.9$ to
+$-8.5$ points); with 2\,000-row blocks it stays above it ($+0.2$ to $+1.8$) and loses 1.0 to 3.0 points of its
+advantage over reset, and with 100 centroids it keeps $+5.7$ and $+7.3$ points over reset in the first five batches of
+the recurring blocks. The archive loses less and is above fixed
 segmentation on all eight shifted streams (by 3.0 points on average), whereas on the aligned streams it is 0.3
 points below.
 
@@ -788,16 +789,19 @@ segments realigned the advantage returns. This is the premise that segmentation 
 knowing the phase.
 
 \textbf{Detected segmentation on fresh streams.} The test streams are 72 new grid streams (registered before any run,
-\cref{app:prereg}): four data seeds (40 to 43) that were not used before, 30 or 100 centroids, and three length
+\cref{app:prereg}): four data seeds (40 to 43), 30 or 100 centroids, and three length
 regimes, nine blocks of 500 rows, of 2\,000 rows, or of lengths drawn uniformly from 500 to 2\,500 rows; each
 combination is run with three independently drawn offsets of 1 to 499 rows (1 to 1\,999 for 2\,000-row blocks) of the
-first concept prepended, so that boundaries fall at arbitrary rows, mostly inside batches. Uncertainty is estimated
-by a hierarchical bootstrap that resamples seeds within each centroid count and offsets within each seed.
+first concept prepended, so that boundaries fall at arbitrary rows, mostly inside batches. Seeds 40 and 41 had been used for the oracle test of \cref{tab:oracle}, which involves no
+detector and set no constant, so their concepts, and for fixed block lengths their rows after the offset, had been
+seen; the detector constants were set on development seeds 0 and 1 (\cref{app:prereg}). Uncertainty is estimated by a
+hierarchical bootstrap that resamples seeds within each centroid count and offsets within each seed.
 \Cref{tab:fresh} gives the results. \method{} is above reset on 70 of the 72 streams, by $+2.85$ points on average,
 and in every length regime: $+5.17$ points with 500-row blocks (24 of 24; 95\% interval $[+4.59,+5.72]$), $+1.48$
 with 2\,000-row blocks (22 of 24; $[+1.22,+1.72]$) and $+1.91$ with variable blocks (24 of 24; $[+1.74,+2.07]$). Fixed
 segmentation gains $+0.66$ ($[-2.34,+3.31]$), $+0.74$ and $+0.65$ on the same streams. In the first five batches of
-the recurring blocks the gain over reset is $+10.1$ points against $+5.3$. The ordering of the cells is that of the
+the recurring blocks the gain over reset is $+10.1$ points against $+5.3$. On seeds 42 and 43 alone (36 streams, a split made after the evaluation) \method{} is above reset on all 36,
+by $+2.84$ points, and $+5.35$, $+1.41$ and $+1.76$ in the three regimes. The ordering of the cells is that of the
 learning curves (\cref{sec:rq1}): with 100 centroids the gain is $+2.4$ to $+8.2$ points, with 30 centroids $+0.5$ to
 $+2.2$.
 
@@ -1193,7 +1197,8 @@ between the learning curve and the accuracy of the stored context. \method{} tur
 contexts are experts next to fast windows, a fast meta expert identifies a recurring concept within one batch, and a
 slow meta expert bounds, at any time and for any stream, what following the mixture costs against the plain window.
 Recall needs the recalled concept to hold the majority of the stored rows, and segments that start at detected
-changes provide this wherever the concept boundaries fall. The experiments support both regimes of the theory. Where
+changes provide this wherever the concept boundaries fall, as long as the changes are detected close to the
+boundaries. The experiments support both regimes of the theory. Where
 concepts are costly to learn, recall gains up to 8.5 points over reset detection, in the order the learning curves
 predict; fixed segments lose this gain when boundaries fall inside them, and detected segments recover it on fresh
 streams with random boundary phases; where relearning is cheap there is little to recall. Merging by discrepancy
@@ -1454,7 +1459,11 @@ the 29 real streams, at least $-0.1$ points against FIFO and $-0.2$ against fixe
 and stored experts per batch than the archive with the same segments, and a mean difference to it of at least $-0.3$
 points. Purity rule: the stored contexts meet the single-concept premise if at least 90\% of the closes hold at least
 95\% rows of one concept, its majority form if at least 95\% hold more than half, and otherwise the recall theorem
-is conditional on purity. All five criteria held; the purity rule gave the majority form (88\% and 100\%).
+is conditional on purity. All five criteria held; the purity rule gave the majority form (88\% and 100\%). The registration described the
+test seeds 40 to 43 as unused; seeds 40 and 41 had in fact been used, two days earlier, for the registered oracle
+test of \cref{tab:oracle}, with the same concept draws and, for fixed block lengths, the same rows after the offset.
+That test involved no detector and set no constant. We found the reuse after the evaluation, kept the registered
+verdicts as computed, and report the split by seeds as a post-hoc analysis (\cref{sec:rq2}).
 
 \section{Experimental Details and Full Results}
 \label{app:details}
@@ -1489,8 +1498,11 @@ present); there is no rejection or coverage constraint, and class priors follow 
 concept $k$ draws $j\sim\mathrm{Categorical}(w)$, $\vx=C_j+\mathcal N(0,0.15^2 I_{10})$ and $y=\lambda_k(j)$. Concepts
 appear in the order $1,2,3$ in blocks of $L\in\{500,2000\}$ rows, three cycles, so $P_X$ is the same for all
 concepts. One NumPy generator per data seed draws $C$, $w$ and $\lambda$ first and then the rows. Data seeds: 0 and 1
-for development, 10 and 11 for the registered test, 20 and 21 for confirmation, 30 and 31 for the misaligned
-schedules; the shifted streams reuse seeds 20 and 21 and draw their prefix from a separate generator.
+for development (also of the change detector), 10 and 11 for the registered test, 20 and 21 for confirmation, 30 and
+31 for the misaligned schedules, 40 and 41 for the oracle test, and 40 to 43 for the test of detected segmentation;
+the shifted streams reuse seeds 20 and 21 and draw their prefix from a separate generator, and the streams of
+\cref{tab:fresh} prepend rows of the first concept from a separate generator and also use blocks of lengths drawn
+uniformly from 500 to 2\,500 rows.
 
 \begin{table}[t]
   \centering
@@ -1506,7 +1518,8 @@ schedules; the shifted streams reuse seeds 20 and 21 and draw their prefix from 
     Class of centroid $j$ in concept $k$ & $\lambda_k(j)\sim\mathcal U\{0,\dots,3\}$, independent \\
     Noise & isotropic Gaussian, s.d.\ 0.15 \\
     Block length $L$, cycles & 500 or 2000 rows, 3 \\
-    Batch size, segment, $M$ & 100, 500, 1000 rows \\
+    Batch size, $M$ & 100, 1000 rows \\
+    Segments & 300--700 rows (detected); 500 rows (fixed) \\
     \bottomrule
   \end{tabular}}
 \end{table}

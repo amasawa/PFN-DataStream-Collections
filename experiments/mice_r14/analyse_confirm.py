@@ -55,7 +55,7 @@ def main():
           f"{(d.mice - d.reset).mean():+.3f}; CP-fixed {(d.cp - d.mice).mean():+.3f}; rec CP-reset "
           f"{(d.cp_rec - d.reset_rec).mean():+.2f} fixed-reset {(d.mice_rec - d.reset_rec).mean():+.2f}")
     print(f"purity: >=95% {d.pure95.sum() / d.closes.sum():.3f}, >50% {d.major.sum() / d.closes.sum():.3f}, "
-          f"mean {d.purity_mean.mean():.3f}; detection: changes {d.changes.sum()} found {d.found.sum()} false {d.false.sum()}")
+          f"mean over streams of the per-stream mean {d.purity_mean.mean():.3f} (as in analyse_test.py); detection: changes {d.changes.sum()} found {d.found.sum()} false {d.false.sum()}")
 
 
 if __name__ == "__main__":
