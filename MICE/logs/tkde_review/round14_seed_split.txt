@@ -1,0 +1,8 @@
+seeds 42-43: n=36 cp-reset +2.842 above 36 ; mice-reset +0.678; cp-mice +2.164
+   b500: n=12 mean +5.350 above 12/12 hier95 [+4.526,+6.150]
+   b2000: n=12 mean +1.411 above 12/12 hier95 [+1.110,+1.705]
+   bvar: n=12 mean +1.764 above 12/12 hier95 [+1.569,+1.945]
+seeds 40-41: n=36 cp-reset +2.866 above 34 ; mice-reset +0.692; cp-mice +2.175
+   b500: n=12 mean +4.997 above 12/12 hier95 [+4.255,+5.657]
+   b2000: n=12 mean +1.549 above 10/12 hier95 [+1.214,+1.891]
+   bvar: n=12 mean +2.053 above 12/12 hier95 [+1.906,+2.227]

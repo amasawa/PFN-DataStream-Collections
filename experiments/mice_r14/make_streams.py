@@ -73,9 +73,24 @@ def test():
                 out[f"t_bvar_c{nc}_s{s}_o{k}"] = (nc, var, s, int(r.integers(1, 500)))
     return out
 
+def confirm():
+    """Confirmation set (PLAN_CONFIRM.md, registered 2026-10-16 after the seed-40/41 reuse was found): fresh data seeds
+    50-53, otherwise built exactly as test() (offset generator 8000 + 10 * seed + centroids)."""
+    out = {}
+    for s in (50, 51, 52, 53):
+        for nc in (30, 100):
+            r = np.random.default_rng(8000 + 10 * s + nc)
+            var = [int(b) for b in r.integers(500, 2501, size=9)]
+            for k in range(3):
+                out[f"c_b500_c{nc}_s{s}_o{k}"] = (nc, [500] * 9, s, int(r.integers(1, 500)))
+                out[f"c_b2000_c{nc}_s{s}_o{k}"] = (nc, [2000] * 9, s, int(r.integers(1, 2000)))
+                out[f"c_bvar_c{nc}_s{s}_o{k}"] = (nc, var, s, int(r.integers(1, 500)))
+    return out
+
+
 if __name__ == "__main__":
     which, root = sys.argv[1], Path(sys.argv[2])
-    spec = dev() if which == "dev" else dev2() if which == "dev2" else test() if which == "test" else None
+    spec = {"dev": dev, "dev2": dev2, "test": test, "confirm": confirm}[which]()
     (root / "data").mkdir(parents=True, exist_ok=True)
     for name, (nc, blocks, s, off) in spec.items():
         f = root / "data" / f"{name}.npz"
