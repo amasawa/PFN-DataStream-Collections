@@ -649,7 +649,7 @@ correlations are unchanged. These observed gains are against DDM, whose detectio
 \cref{prop:recall}. The quantity of the theorem itself is measured in \cref{tab:oracle}: with the boundaries and
 concept identities of the generator, relearning resets its context at the block boundary, the stored expert holds
 the last $n_c$ rows of the concept's earlier visits, and the mixture of the two weights them by
-$\exp(-\eta\,\ell)$ with $\eta=10$ and $\ell$ the log-loss on the last labelled batch. On the unused seeds 40 and 41
+$\exp(-\eta\,\ell)$ with $\eta=10$ and $\ell$ the log-loss on the last labelled batch. On seeds 40 and 41, which no earlier test had used,
 the measured area term lies within 0.7 points of the visit-specific prediction in every cell (mean absolute
 difference 0.37 points; Spearman correlation 1.0), from 0.3 against 0.02 points for 5 centroids and $L=500$ to 8.7
 against 8.9 for 100 centroids and $L=500$. Identification follows the margin of \cref{ass:margin}: on the 74 batches where the two experts
