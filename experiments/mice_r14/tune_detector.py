@@ -24,15 +24,17 @@ class Sim(run.CPSegments):
         self.segs.append((self.closed, self.closed + len(ys)))
 
 
-def evaluate(f, prm, B=100, seg=500):
+def evaluate(f, prm, seg=500):
     c = pickle.load(open(f, "rb"))
+    assert f.endswith(f"_{seg}.pkl") and prm[0] in (100, 300, 1000), (f, prm)   # SIG must be a cached window
+    B = c["B"]
     y, concept, T = c["y"], c["concept"], len(c["y"]) // B
     P = {st["t"]: st["P"][-prm[0]] for st in c["cache"]}
     sim = Sim(seg, prm)
     for t in range(1, T):
         if t - 1 in P:
             sim.err[t - 1] = int((P[t - 1].argmax(1) != y[(t - 1) * B:t * B]).sum())
-        sim._segment(None if False else _Rows(), _Rows(), t, B)
+        sim._segment(_Rows(), _Rows(), t, B)
     changes = np.flatnonzero(concept[1:] != concept[:-1]) + 1
     det = [b * B for _, b in sim.cuts]
     found = sum(any(0 <= d - ch < sim.H * B + B for d in det) for ch in changes)
@@ -55,7 +57,7 @@ class _Rows:
 if __name__ == "__main__":
     root = sys.argv[1]
     settings = [tuple(float(v) if "." in v else int(v) for v in a.split(",")) for a in sys.argv[2:]] or \
-        [(300, 3, 5, 2, 0.01, 300)]
+        [tuple(getattr(run.CPSegments, k) for k in ("SIG", "H", "R", "RMIN", "DELTA_CP", "LMIN"))]
     files = sorted(glob.glob(f"{root}/P/*__micev1000_500.pkl"))
     for prm in settings:
         print("setting SIG,H,R,RMIN,DELTA_CP,LMIN =", prm)

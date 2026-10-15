@@ -250,7 +250,7 @@ class CPSegments:
     """Round 14 (method change approved by the user 2026-10-15): segments start at detected changes, so that a stored
     segment holds one concept whatever the phase of the concept boundaries (the single-concept premise of the recall
     theorem). Mixed into MiceV1 (MiceCP) or the archive (ArchCP); merge rule, experts and weights are unchanged.
-    Signal: errors of the SIG-row window on each labelled batch (independent of the pool). A change at batch b is
+    Signal: errors of the SIG-row window (SIG must be one of the window sizes) on each labelled batch (independent of the pool). A change at batch b is
     declared at time t when the error rate on batches b..t-1 (1 to H batches) exceeds that on the up to R batches before
     b, all after the batch following the previous change (at least RMIN of them), by more than the Hoeffding margin
     sqrt((1/n1 + 1/n2) / 2 * ln(1 / DELTA_CP)) on n1, n2 rows; the b with the largest excess is taken. The open segment
@@ -352,8 +352,8 @@ def run(stream, method, B, out):
            else Mice(f, M, cache_px=True) if kind == "micecache" else DDMReset(M) if kind == "ddm"
            else MiceV1(f, M, seg=int(m.group(3)) if m.group(3) else 1000) if kind == "micev"
            else PoolControl(f, M, kind, seg=int(m.group(3)) if m.group(3) else 1000) if kind in ("arch", "snap")
-           else MiceCP(f, M, seg=int(m.group(3))) if kind == "micecp"
-           else ArchCP(f, M, seg=int(m.group(3))) if kind == "archcp" else None)
+           else MiceCP(f, M, seg=int(m.group(3)) if m.group(3) else 1000) if kind == "micecp"
+           else ArchCP(f, M, seg=int(m.group(3)) if m.group(3) else 1000) if kind == "archcp" else None)
     Lw = {}  # winens: discounted losses of the window experts
     errs, Pw_last = None, None
     # micev runs take hours and the machine restarts: its state is saved every CK batches and picked up on restart
