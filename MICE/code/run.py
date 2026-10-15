@@ -279,16 +279,32 @@ class CPSegments:
         b = self._detect(t, B)
         if b is not None:
             if b * B - self.closed >= self.LMIN:
-                self._merge_or_add(X[self.closed:b * B], y[self.closed:b * B], t)
+                self._close(X, y, self.closed, b * B, t)
             self.closed, self.ref0 = b * B, b + 1
             self.cuts.append((t, b))
         while n - self.closed >= self.seg + self.H * B:
-            self._merge_or_add(X[self.closed:self.closed + self.seg], y[self.closed:self.closed + self.seg], t)
+            self._close(X, y, self.closed, self.closed + self.seg, t)
             self.closed += self.seg
+
+    def _close(self, X, y, a, b, t):
+        """_merge_or_add of rows a..b-1, recording which rows each stored context holds (for purity; no effect on
+        predictions). The receiving expert is the new one (uid counter advanced) or the one whose context array was
+        replaced by the merge (identity, not values)."""
+        uid0, held = self.uid, {e["uid"]: e["X"] for e in self.experts}
+        self._merge_or_add(X[a:b], y[a:b], t)
+        if not isinstance(X, np.ndarray):        # offline simulation (tune_detector.py)
+            return
+        if self.uid != uid0:
+            e = next(e for e in self.experts if e["uid"] == self.uid)
+        else:
+            (e,) = [e for e in self.experts if e["X"] is not held[e["uid"]]]
+        e["src"] = e.get("src", []) + [(a, b)]
+        assert sum(q - p for p, q in e["src"]) >= len(e["X"])
+        self.closes.append((t, a, b, e["uid"], tuple(e["src"])))
 
     def step(self, X, y, t, B):
         if not hasattr(self, "err"):
-            self.err, self.ref0, self.cuts = {}, 1, []
+            self.err, self.ref0, self.cuts, self.closes = {}, 1, [], []
         self.Xall, self.yall = X, y
         n = t * B
         if self.pending is not None:
@@ -400,7 +416,10 @@ def run(stream, method, B, out):
             os.replace(ck + ".tmp", ck)
     np.savez_compressed(dst, acc=acc, ll=ll, wt=wt, B=B, concept=concept, calls=f.calls,
                         n_experts=len(pol.experts) if kind in ("mice", "micecache", "micev", "arch", "snap", "micecp", "archcp") else 0,
-                        cuts=np.array(getattr(pol, "cuts", []), dtype=int).reshape(-1, 2))
+                        cuts=np.array(getattr(pol, "cuts", []), dtype=int).reshape(-1, 2),
+                        closes=np.array([(t_, a, b, u) for t_, a, b, u, _ in getattr(pol, "closes", [])], dtype=int).reshape(-1, 4))
+    if getattr(pol, "closes", None):
+        pickle.dump(pol.closes, open(dst[:-4] + ".closes.pkl", "wb"))
     if kind in ("micecache", "micev", "arch", "snap", "micecp", "archcp"):
         pickle.dump(dict(cache=pol.cache, y=y, B=B, concept=concept, K=K), open(dst[:-4] + ".pkl", "wb"))
         if os.path.exists(ck):

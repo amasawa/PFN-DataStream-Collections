@@ -3,7 +3,7 @@ phase relative to MICE's 500-row segments. Same generator as MICE/code/grid_stre
 experiments/mice_tkde_control/make_misaligned.py (RBF mixture, d=10, 4 classes, K=3 concepts sharing centroids,
 concepts recur in order), with `offset` rows of the first concept prepended (auxiliary generator 10_000 + seed, as
 make_offset.py) and arbitrary block lengths.
-Development set (seeds 0 and 1, the generator's development seeds): see DEV. Test sets are defined in PLAN.md.
+Development sets (seeds 0 and 1, the generator's development seeds): dev(), dev2(). Frozen test set: test().
 Usage: python make_streams.py dev <root>    -> <root>/data/<name>.npz with X, y, concept."""
 import hashlib
 import sys
@@ -55,9 +55,27 @@ def dev2():
     return out
 
 
+def test():
+    """Frozen test set of round 14 (PLAN.md): fresh data seeds 40-43 (independent concept draws), 30 or 100 centroids,
+    three length regimes: fixed 500-row blocks, fixed 2000-row blocks, nine variable blocks drawn uniformly from
+    500..2500 rows (drawn once per seed and centroid count). Each (seed, centroids, regime) is run with three
+    independently drawn offsets at row granularity: 1..499 rows for 500-row and variable blocks, 1..1999 for 2000-row
+    blocks. The offset rows (first concept, auxiliary generator) are prepended; the stream after them is identical
+    across the three offsets."""
+    out = {}
+    for s in (40, 41, 42, 43):
+        for nc in (30, 100):
+            r = np.random.default_rng(7000 + 10 * s + nc)
+            var = [int(b) for b in r.integers(500, 2501, size=9)]
+            for k in range(3):
+                out[f"t_b500_c{nc}_s{s}_o{k}"] = (nc, [500] * 9, s, int(r.integers(1, 500)))
+                out[f"t_b2000_c{nc}_s{s}_o{k}"] = (nc, [2000] * 9, s, int(r.integers(1, 2000)))
+                out[f"t_bvar_c{nc}_s{s}_o{k}"] = (nc, var, s, int(r.integers(1, 500)))
+    return out
+
 if __name__ == "__main__":
     which, root = sys.argv[1], Path(sys.argv[2])
-    spec = dev() if which == "dev" else dev2() if which == "dev2" else None
+    spec = dev() if which == "dev" else dev2() if which == "dev2" else test() if which == "test" else None
     (root / "data").mkdir(parents=True, exist_ok=True)
     for name, (nc, blocks, s, off) in spec.items():
         f = root / "data" / f"{name}.npz"

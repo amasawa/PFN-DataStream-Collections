@@ -18,7 +18,7 @@ import run  # noqa: E402
 class Sim(run.CPSegments):
     def __init__(self, seg, prm):
         (self.SIG, self.H, self.R, self.RMIN, self.DELTA_CP, self.LMIN) = prm
-        self.seg, self.closed, self.err, self.ref0, self.cuts, self.segs = seg, 0, {}, 1, [], []
+        self.seg, self.closed, self.err, self.ref0, self.cuts, self.segs, self.closes = seg, 0, {}, 1, [], [], []
 
     def _merge_or_add(self, Xs, ys, now):
         self.segs.append((self.closed, self.closed + len(ys)))
