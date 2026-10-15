@@ -676,3 +676,4 @@ gpt-6-astra 报额度用完（"usage limit … try again at Oct 14th, 2026 11:27
 - 正式测试 15:14 启动（4 worker）；15:25 检查：6 个任务完成、0 次失败，GPU 利用率 70–89%，显存 2.7–3.6 GB。15:25 加第 5 个 worker（用户要求多开进程），继续观察失败率。
 - 15:41 5 个 worker 15 分钟 0 次失败（24 个任务完成，利用率 71–93%）；加第 6 个 worker。
 - 16:02 6 个 worker 20 分钟 0 次失败、21 个任务完成，利用率约 88%；保持 6 个。
+- 2026-10-15 17:31 17:28 出现一次故障集中爆发：6 个 worker 在约 1 分钟内有 6 次 CUDA 失败（unspecified launch failure，均从检查点重试）。按调度规则降到 4 个 worker：停止 w5、w6，释放它们手上的两个任务（t_b500_c30_s41_o1 micecp、t_b500_c30_s41_o0 micev），由 test 根目录的补扫 worker 在第一个 worker 跑完 T1 后接手。此时 T1 已完成 198/360。
