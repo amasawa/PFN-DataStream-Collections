@@ -1,0 +1,56 @@
+     group         diff  streams   mean   lo95   hi95  above     min    max
+  T1_fresh     cp-reset       72  2.854  2.348  3.314     70  -0.240 10.841
+  T1_fresh   mice-reset       72  0.685  0.256  1.005     52  -8.000 10.795
+  T1_fresh      cp-mice       72  2.169  1.887  2.502     68  -2.114 16.739
+  T1_fresh    cp-archcp       72  0.114  0.028  0.169     50  -2.574  0.891
+  T1_fresh archcp-reset       72  2.740  2.261  3.210     72   0.239 10.136
+  T1_fresh      cp-fifo       72 18.818 18.793 20.493     72   8.857 37.717
+   shifted     cp-reset        8  3.074  1.590  4.356      8   0.293  9.196
+   shifted   mice-reset        8 -3.475 -4.645 -2.993      1 -10.283  0.160
+   shifted      cp-mice        8  6.549  5.093  8.542      8   0.972 13.804
+   shifted    cp-archcp        8  0.264  0.107  0.359      7   0.000  0.783
+   shifted      cp-arch        8  3.668  2.317  4.757      8   0.387  9.783
+   shifted archcp-reset        8  2.810  1.430  4.052      8   0.271  8.848
+   shifted      cp-fifo        8 23.532 21.969 27.419      8  10.481 41.826
+   shifted    cp-winens        8  5.191  3.481  6.931      8   1.149 12.500
+  aligned8     cp-reset        8  3.130  1.853  4.482      8   0.307  8.909
+  aligned8   mice-reset        8  3.088  1.830  4.424      8   0.291  8.773
+  aligned8      cp-mice        8  0.041 -0.028  0.107      6  -0.091  0.151
+  aligned8    cp-archcp        8  0.351  0.174  0.479      7   0.000  0.977
+  aligned8      cp-arch        8  0.336  0.143  0.467      6  -0.006  0.977
+  aligned8 archcp-reset        8  2.779  1.627  4.071      8   0.274  8.341
+  aligned8      cp-fifo        8 24.218 22.864 27.839      8  10.542 43.727
+  aligned8    cp-winens        8  5.367  3.822  7.104      8   1.162 12.864
+misaligned     cp-reset       12  2.206  1.330  3.303     12   0.022  5.597
+misaligned   mice-reset       12  0.466 -0.388  1.205      8  -0.739  1.871
+misaligned      cp-mice       12  1.739  1.479  2.389     12   0.634  4.371
+misaligned    cp-archcp       12  0.265  0.194  0.384      6  -0.113  1.060
+misaligned      cp-arch       12  0.847  0.664  1.190     11  -0.017  2.548
+misaligned archcp-reset       12  1.940  1.069  2.990     12   0.061  5.710
+misaligned      cp-fifo       12 22.289 21.888 25.663     12  10.894 37.323
+misaligned    cp-winens       12  4.728  3.870  6.110     12   0.939 10.919
+    real29      cp-fifo       29  0.581  0.499  0.682     24  -0.230  4.529
+    real29      cp-mice       29  0.012 -0.020  0.053     19  -0.371  0.407
+    real29    mice-fifo       29  0.568  0.486  0.661     24  -0.246  4.734
+    real29    cp-archcp       29  0.078  0.034  0.117     17  -0.274  0.685
+            cp_reset  mice_reset  cp_mice
+cell                                     
+b2000_c100      2.43        1.55     0.88
+b2000_c30       0.53       -0.07     0.60
+b500_c100       8.20        2.84     5.36
+b500_c30        2.15       -1.51     3.66
+bvar_c100       3.01        1.27     1.75
+bvar_c30        0.80        0.03     0.77
+C1 b500: mean(CP-reset) +5.173 (>= +1.0), above 24/24 (>= 18), hierarchical 95% [+4.586, +5.720] (lower > 0): met
+   original MICE - reset +0.664 [-2.336, +3.314]
+C1 b2000: mean(CP-reset) +1.480 (>= +1.0), above 22/24 (>= 18), hierarchical 95% [+1.220, +1.724] (lower > 0): met
+   original MICE - reset +0.739 [+0.398, +1.091]
+C1 bvar: mean(CP-reset) +1.909 (>= +1.0), above 24/24 (>= 18), hierarchical 95% [+1.737, +2.069] (lower > 0): met
+   original MICE - reset +0.651 [+0.262, +1.029]
+C1 (primary, all three regimes): MET
+C5 calls CP 6.26 vs ArchCP 10.64; experts 2.42 vs 7.64; mean(CP-ArchCP) +0.114 (>= -0.3): MET
+P purity: (context, close) evaluations >= 95% one concept 0.882 (>= 0.90 strict), > 50% 1.000 (>= 0.95 majority form) -> majority form; mean purity 0.976
+C2 shifted mean(CP-MICE) +6.549 (>= +2.0): MET
+C3 aligned8 mean(CP-MICE) +0.041 (>= -0.3): MET
+C4 real29 mean(CP-FIFO) +0.581 (>= -0.1), mean(CP-MICE) +0.012 (>= -0.2): MET
+T1 detection: changes 576 found 570 false 1
