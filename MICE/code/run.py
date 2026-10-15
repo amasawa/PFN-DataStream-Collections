@@ -254,10 +254,14 @@ class CPSegments:
     declared at time t when the error rate on batches b..t-1 (1 to H batches) exceeds that on the up to R batches before
     b, all after the batch following the previous change (at least RMIN of them), by more than the Hoeffding margin
     sqrt((1/n1 + 1/n2) / 2 * ln(1 / DELTA_CP)) on n1, n2 rows; the b with the largest excess is taken. The open segment
-    ends at row b*B: it is closed by _merge_or_add if it holds at least LMIN rows, otherwise its rows enter no segment
-    (they stay in the windows); the next segment starts at row b*B. Without a change a segment closes after seg rows,
+    ends at row (b-TRIM)*B: it is closed by _merge_or_add if it holds at least LMIN rows, otherwise its rows enter no
+    segment (they stay in the windows); the next segment starts at row (b+TRIM)*B. A boundary inside a batch makes that
+    batch mixed and the detector may name it or the next one, so the TRIM batches on each side of b, which may hold
+    the boundary, enter no stored context. Without a change a segment closes after seg rows,
     once H further batches are labelled. No extra TFM call besides the merge tests of the closed segments."""
     SIG, H, R, RMIN, DELTA_CP, LMIN = 300, 3, 5, 2, 0.001, 300   # set on the development streams (round 14)
+    TRIM = 0      # batches left out on each side of a detected change; TRIM=1 (pure segments) was less accurate on
+                  # 500-row development blocks (fewer stored rows), round 14
 
     def _detect(self, t, B):
         best, bx = None, 0.0
@@ -278,9 +282,9 @@ class CPSegments:
         n = t * B
         b = self._detect(t, B)
         if b is not None:
-            if b * B - self.closed >= self.LMIN:
-                self._close(X, y, self.closed, b * B, t)
-            self.closed, self.ref0 = b * B, b + 1
+            if (b - self.TRIM) * B - self.closed >= self.LMIN:
+                self._close(X, y, self.closed, (b - self.TRIM) * B, t)
+            self.closed, self.ref0 = (b + self.TRIM) * B, b + 1
             self.cuts.append((t, b))
         while n - self.closed >= self.seg + self.H * B:
             self._close(X, y, self.closed, self.closed + self.seg, t)

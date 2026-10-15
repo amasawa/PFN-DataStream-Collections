@@ -3,7 +3,7 @@ window predictions of the original MICE runs on the development streams (windows
 segments are exactly those an online MiceCP run would close). Reports, per stream and setting: detected cuts, true
 changes found within H batches, false cuts, purity of the closed segments (share of rows of the segment's majority
 concept), share of stored rows in mixed segments (< 0.95 purity), against the fixed 500-row segmentation.
-Usage: python tune_detector.py <root> [SIG,H,R,RMIN,DELTA_CP,LMIN ...]"""
+Usage: python tune_detector.py <root> [SIG,H,R,RMIN,DELTA_CP,LMIN,TRIM ...]"""
 import glob
 import os
 import pickle
@@ -17,8 +17,9 @@ import run  # noqa: E402
 
 class Sim(run.CPSegments):
     def __init__(self, seg, prm):
-        (self.SIG, self.H, self.R, self.RMIN, self.DELTA_CP, self.LMIN) = prm
+        (self.SIG, self.H, self.R, self.RMIN, self.DELTA_CP, self.LMIN, self.TRIM) = prm
         self.seg, self.closed, self.err, self.ref0, self.cuts, self.segs, self.closes = seg, 0, {}, 1, [], [], []
+        self.uid, self.experts = 0, []
 
     def _merge_or_add(self, Xs, ys, now):
         self.segs.append((self.closed, self.closed + len(ys)))
@@ -37,8 +38,8 @@ def evaluate(f, prm, seg=500):
         sim._segment(_Rows(), _Rows(), t, B)
     changes = np.flatnonzero(concept[1:] != concept[:-1]) + 1
     det = [b * B for _, b in sim.cuts]
-    found = sum(any(0 <= d - ch < sim.H * B + B for d in det) for ch in changes)
-    false = sum(not any(0 <= d - ch < sim.H * B + B for ch in changes) for d in det)
+    found = sum(any(-B < d - ch < sim.H * B + B for d in det) for ch in changes)    # cut at the batch holding ch
+    false = sum(not any(-B < d - ch < sim.H * B + B for ch in changes) for d in det)
     pur = np.array([np.bincount(concept[a:b]).max() / (b - a) for a, b in sim.segs])
     rows = np.array([b - a for a, b in sim.segs])
     fixed = [(a, a + seg) for a in range(0, T * B - seg + 1, seg)]
@@ -57,10 +58,10 @@ class _Rows:
 if __name__ == "__main__":
     root = sys.argv[1]
     settings = [tuple(float(v) if "." in v else int(v) for v in a.split(",")) for a in sys.argv[2:]] or \
-        [tuple(getattr(run.CPSegments, k) for k in ("SIG", "H", "R", "RMIN", "DELTA_CP", "LMIN"))]
+        [tuple(getattr(run.CPSegments, k) for k in ("SIG", "H", "R", "RMIN", "DELTA_CP", "LMIN", "TRIM"))]
     files = sorted(glob.glob(f"{root}/P/*__micev1000_500.pkl"))
     for prm in settings:
-        print("setting SIG,H,R,RMIN,DELTA_CP,LMIN =", prm)
+        print("setting SIG,H,R,RMIN,DELTA_CP,LMIN,TRIM =", prm)
         tot = dict(changes=0, found=0, false=0)
         for f in files:
             r = evaluate(f, prm)

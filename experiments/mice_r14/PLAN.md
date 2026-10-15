@@ -15,7 +15,7 @@ without losing accuracy where boundaries are aligned and without harming the rea
 ## Method (frozen at the registration commit)
 MiceCP = MICE (MiceV1: windows 100/300/1000, merge rule delta=0.02, kmax 12 with least-recently-used eviction,
 two-level rule `reweight.simulate2(outer="brier", scale=0.5, temper=True)`) whose segments start at detected changes:
-`MICE/code/run.py` class `CPSegments` with SIG=300, H=3, R=5, RMIN=2, DELTA_CP=0.001, LMIN=300 (method name
+`MICE/code/run.py` class `CPSegments` with SIG=300, H=3, R=5, RMIN=2, DELTA_CP=0.001, LMIN=300, TRIM=0 (method name
 `micecp1000_500`). ArchCP = the archive (every closed segment its own expert, no merging, oldest evicted beyond 12)
 with the same segmentation (`archcp1000_500`).
 Causal segment construction (as implemented): at step t the labels of batches < t are known. (1) The 300-row window's
@@ -36,7 +36,12 @@ The constants were set on development streams only (data seeds 0 and 1 of the ge
 experiments/mice_r14/make_streams.py dev/dev2; offline tuning with tune_detector.py; dev accuracies with
 analyse_dev.py, ~/pfn-runs/mice-r14-dev). Development result (20 streams, before registration): MiceCP - reset
 +2.66 points on average, above reset on 20/20; original MICE -0.01; MiceCP - MICE +2.67; MiceCP - ArchCP +0.31;
-152/152 changes detected, 0 false cuts, all fixed-phase dev segments pure.
+152/152 changes detected, 0 false cuts, all fixed-phase dev segments pure. Row-granularity development offsets (dev2):
+230/232 changes found (cut at the batch holding the change or up to 3 batches later), 0 false cuts; a boundary inside
+a batch leaves < 100 rows of the adjacent concept in a segment (500-row blocks: segment purity down to 0.83).
+Leaving out one batch on each side of a detected change (TRIM=1) made the segments pure but lowered accuracy on
+500-row blocks (MiceCP - reset, 30 centroids, offset 250: +1.76/+2.09 with TRIM=0, -0.50/-1.24 with TRIM=1; 100
+centroids +6.96/+9.22 vs +6.65/+8.24), so TRIM=0 is frozen (~/pfn-runs/mice-r14-devtrim).
 Reviewer check of the draft (Codex astra high, round14_reviewer_plan.md): three required changes adopted (several
 offsets per concept draw with a per-regime criterion and hierarchical uncertainty; an operational resource criterion;
 causal construction stated and purity measured, the theorem claim conditional on purity).
@@ -52,7 +57,8 @@ causal construction stated and purity measured, the theorem claim conditional on
   30 or 100 centroids) and the 12 misaligned schedules (mis_); the other methods from the earlier runs.
 - T3 (real): micecp on the 29 real streams (then archcp, reported without criterion); MICE and FIFO from the earlier
   runs (MICE/results_test, results_heldout, results_heldout2/3/4).
-Order: T1, T2, T3 micecp, T3 archcp. Two workers (experiments/mice_r14/worker.sh), checkpoints every 10 batches.
+Order: T1, T2, T3 micecp, T3 archcp (experiments/mice_r14/launch_test.sh; 4 workers at the user's request, reduced if
+CUDA failures storm), checkpoints every 10 batches.
 
 ## Registered criteria (experiments/mice_r14/analyse_test.py, committed with this plan)
 Accuracy of a stream = mean over batches 1..T-1; differences in points.
@@ -65,10 +71,13 @@ Accuracy of a stream = mean over batches 1..T-1; differences in points.
 - C4 (real): mean(MiceCP - FIFO) >= -0.1 and mean(MiceCP - MICE) >= -0.2 over the 29 streams.
 - C5 (resources, T1): MiceCP uses no more TFM calls and no more stored experts per batch than ArchCP (means over the
   72 streams), with mean(MiceCP - ArchCP) >= -0.3.
-- P (purity rule, T1): the paper says that MiceCP's stored contexts meet the single-concept premise only if >= 90% of
-  the (stored context, segment close) evaluations -- the context that received a segment, right after receiving it, over
-  all closes of the 72 streams -- hold >= 95% rows of one concept; otherwise the recall theorem
-  is presented as conditional on purity, with the measured purity.
+- P (purity rule, T1), on the (stored context, segment close) evaluations (the context that received a segment, right
+  after receiving it, over all closes of the 72 streams): the paper says that MiceCP's stored contexts meet the
+  single-concept premise if >= 90% of them hold >= 95% rows of one concept; else that they meet its majority form
+  (under the posterior-predictive assumption, a context whose majority concept holds more than half of its rows
+  predicts that concept's class where two deterministic concepts disagree) if >= 95% of them hold > 50%; otherwise the
+  recall theorem is presented as conditional on purity. The measured purity is reported in every case.
+
 Reported without criterion: per-cell means; misaligned schedules; the archive (k=12) on the existing streams; first
 five batches of recurring blocks; 95% moving-block bootstrap intervals of group means; detection (found / false
 cuts); experts, TFM calls and seconds per batch (wall time of the runs, not an isolated benchmark). All results are
