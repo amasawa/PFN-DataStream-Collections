@@ -246,6 +246,86 @@ class PoolControl(MiceV1):
             self.experts.pop(0)
 
 
+class CPSegments:
+    """Round 14 (method change approved by the user 2026-10-15): segments start at detected changes, so that a stored
+    segment holds one concept whatever the phase of the concept boundaries (the single-concept premise of the recall
+    theorem). Mixed into MiceV1 (MiceCP) or the archive (ArchCP); merge rule, experts and weights are unchanged.
+    Signal: errors of the SIG-row window on each labelled batch (independent of the pool). A change at batch b is
+    declared at time t when the error rate on batches b..t-1 (1 to H batches) exceeds that on the up to R batches before
+    b, all after the batch following the previous change (at least RMIN of them), by more than the Hoeffding margin
+    sqrt((1/n1 + 1/n2) / 2 * ln(1 / DELTA_CP)) on n1, n2 rows; the b with the largest excess is taken. The open segment
+    ends at row b*B: it is closed by _merge_or_add if it holds at least LMIN rows, otherwise its rows enter no segment
+    (they stay in the windows); the next segment starts at row b*B. Without a change a segment closes after seg rows,
+    once H further batches are labelled. No extra TFM call besides the merge tests of the closed segments."""
+    SIG, H, R, RMIN, DELTA_CP, LMIN = 300, 3, 5, 2, 0.001, 300   # set on the development streams (round 14)
+
+    def _detect(self, t, B):
+        best, bx = None, 0.0
+        for b in range(max(t - self.H, 1), t):
+            pre = [k for k in range(max(self.ref0, b - self.R), b) if k in self.err]
+            post = [k for k in range(b, t) if k in self.err]
+            if len(pre) < self.RMIN or not post or b * B < self.closed:
+                continue
+            n1, n2 = len(pre) * B, len(post) * B
+            ex = (sum(self.err[k] for k in post) / n2 - sum(self.err[k] for k in pre) / n1
+                  - np.sqrt((1 / n1 + 1 / n2) / 2 * np.log(1 / self.DELTA_CP)))
+            if ex > bx:
+                best, bx = b, ex
+        return best
+
+    def _segment(self, X, y, t, B):
+        """Close segments given the window errors of batches < t (self.err); called once per batch."""
+        n = t * B
+        b = self._detect(t, B)
+        if b is not None:
+            if b * B - self.closed >= self.LMIN:
+                self._merge_or_add(X[self.closed:b * B], y[self.closed:b * B], t)
+            self.closed, self.ref0 = b * B, b + 1
+            self.cuts.append((t, b))
+        while n - self.closed >= self.seg + self.H * B:
+            self._merge_or_add(X[self.closed:self.closed + self.seg], y[self.closed:self.closed + self.seg], t)
+            self.closed += self.seg
+
+    def step(self, X, y, t, B):
+        if not hasattr(self, "err"):
+            self.err, self.ref0, self.cuts = {}, 1, []
+        self.Xall, self.yall = X, y
+        n = t * B
+        if self.pending is not None:
+            yb = y[n - B:n]
+            for key, P in self.pending.items():
+                l = -np.log(np.clip(P[np.arange(len(yb)), yb], 1e-6, 1)).mean()
+                if key < 0:
+                    self.wloss[-key] = self.gamma * self.wloss[-key] + l
+                else:
+                    e = next((e for e in self.experts if e["uid"] == key), None)
+                    if e is not None:
+                        e["loss"] = self.gamma * e["loss"] + l
+            self.err[t - 1] = int((self.pending[-self.SIG].argmax(1) != yb).sum())
+        self.online = dict(loss=float(np.median(list(self.wloss.values()))))
+        self._segment(X, y, t, B)
+        Xq = X[n:n + B]
+        preds = {-w: self.f.predict(*fifo(X, y, t, B, w), Xq) for w in self.windows}
+        for e in self.experts:
+            preds[e["uid"]] = self.f.predict(e["X"], e["y"], Xq)
+        losses = np.array([self.wloss[-k] if k < 0 else next(e["loss"] for e in self.experts if e["uid"] == k)
+                           for k in preds])
+        w = np.exp(-self.eta * (losses - losses.min()))
+        w /= w.sum()
+        self.pending = preds
+        self.cache.append(dict(t=t, P=dict(preds), disc={}))
+        return sum(wi * P for wi, P in zip(w, preds.values())), None
+
+
+class MiceCP(CPSegments, MiceV1):
+    pass
+
+
+class ArchCP(CPSegments, PoolControl):
+    def __init__(self, tfm, M, **kw):
+        super().__init__(tfm, M, "arch", **kw)
+
+
 def two_sample_auc(Xa, Xb):
     """Label-free discrepancy: AUROC of a 2-fold kNN classifier separating context rows from the query batch."""
     from sklearn.metrics import roc_auc_score
@@ -271,12 +351,14 @@ def run(stream, method, B, out):
     pol = (LTM(M, int(m.group(3)) / 100) if kind == "ltm" else Mice(f, M) if kind == "mice"
            else Mice(f, M, cache_px=True) if kind == "micecache" else DDMReset(M) if kind == "ddm"
            else MiceV1(f, M, seg=int(m.group(3)) if m.group(3) else 1000) if kind == "micev"
-           else PoolControl(f, M, kind, seg=int(m.group(3)) if m.group(3) else 1000) if kind in ("arch", "snap") else None)
+           else PoolControl(f, M, kind, seg=int(m.group(3)) if m.group(3) else 1000) if kind in ("arch", "snap")
+           else MiceCP(f, M, seg=int(m.group(3))) if kind == "micecp"
+           else ArchCP(f, M, seg=int(m.group(3))) if kind == "archcp" else None)
     Lw = {}  # winens: discounted losses of the window experts
     errs, Pw_last = None, None
     # micev runs take hours and the machine restarts: its state is saved every CK batches and picked up on restart
     ck, CK, t0_ = dst[:-4] + ".ckpt", int(os.environ.get("MICE_CKPT_EVERY", 100)), 1
-    if kind in ("micev", "arch", "snap") and os.path.exists(ck):
+    if kind in ("micev", "arch", "snap", "micecp", "archcp") and os.path.exists(ck):
         st = pickle.load(open(ck, "rb"))
         pol.__dict__.update(st["pol"])
         acc, ll, wt, f.calls, t0_ = st["acc"], st["ll"], st["wt"], st["calls"], st["t"] + 1
@@ -293,7 +375,7 @@ def run(stream, method, B, out):
             if concept[0] < 0:
                 return
             P = f.predict(*oracle(X, y, concept, t, B, M), Xq)
-        elif kind in ("mice", "micecache", "micev", "arch", "snap"):
+        elif kind in ("mice", "micecache", "micev", "arch", "snap", "micecp", "archcp"):
             P, _ = pol.step(X, y, t, B)
         elif kind == "ddm":
             if errs is not None:
@@ -312,13 +394,14 @@ def run(stream, method, B, out):
         acc[t] = (P.argmax(1) == yq).mean()
         ll[t] = -np.log(np.clip(P[np.arange(len(yq)), yq], 1e-6, 1)).mean()
         wt[t] = time.time() - t0
-        if kind in ("micev", "arch", "snap") and t % CK == 0:
+        if kind in ("micev", "arch", "snap", "micecp", "archcp") and t % CK == 0:
             pickle.dump(dict(pol={k: v for k, v in pol.__dict__.items() if k not in ("f", "Xall", "yall")}, acc=acc, ll=ll, wt=wt,
                              calls=f.calls, t=t), open(ck + ".tmp", "wb"))
             os.replace(ck + ".tmp", ck)
     np.savez_compressed(dst, acc=acc, ll=ll, wt=wt, B=B, concept=concept, calls=f.calls,
-                        n_experts=len(pol.experts) if kind in ("mice", "micecache", "micev", "arch", "snap") else 0)
-    if kind in ("micecache", "micev", "arch", "snap"):
+                        n_experts=len(pol.experts) if kind in ("mice", "micecache", "micev", "arch", "snap", "micecp", "archcp") else 0,
+                        cuts=np.array(getattr(pol, "cuts", []), dtype=int).reshape(-1, 2))
+    if kind in ("micecache", "micev", "arch", "snap", "micecp", "archcp"):
         pickle.dump(dict(cache=pol.cache, y=y, B=B, concept=concept, K=K), open(dst[:-4] + ".pkl", "wb"))
         if os.path.exists(ck):
             os.remove(ck)
