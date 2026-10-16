@@ -1,0 +1,15 @@
+**Score: 5/8 — borderline accept**, assuming the excluded round-14 measurements support the current text.
+
+**How far from acceptance:** Close. The independent confirmation and explicit separation of pure-context theory from mixed-context results substantially strengthen the paper. One focused theoretical correction could move my assessment to weak accept; I do not see a need to redesign the method.
+
+**Single most severe remaining issue: the detection proof does not account for its adaptively selected reference window.**
+
+- **Severity:** P1.
+- **Finding status:** Confirmed proof gap; the claimed probability constants remain unestablished for the full procedure.
+- **Location:** §III-B, Proposition 3 and its numerical interpretation; Appendix A-B, proof of Proposition 3 ([definition](/tmp/claude-1000/-mnt-c-Users-zhwu9808-Desktop-dataStream/ddb2746a-c254-444c-acb3-004905f96da7/scratchpad/paper_r15pre/main.tex:303), [proof](/tmp/claude-1000/-mnt-c-Users-zhwu9808-Desktop-dataStream/ddb2746a-c254-444c-acb3-004905f96da7/scratchpad/paper_r15pre/main.tex:1297)).
+- **Evidence:** The procedure states: “The compared batches before \(b\) start after the batch that follows the previous declared change.” The proof nevertheless applies Azuma–Hoeffding with normalization \(1/n_1\), then concludes that “a union bound over the at most \(H_{\mathrm{cp}}\) candidates gives the claim.” The resulting interpretation asserts a false-alarm probability “at most \(0.003\).”
+- **Why it matters:** Fixing candidate \(b\) does not fix the reference window: its start and \(n_1\) depend on earlier detection outcomes computed from the errors. Consequently, the selected, normalized error sum is not automatically the fixed-window martingale sum used in the proof. Predictability of each batch’s predictor does not establish predictability of these retrospectively selected coefficients. The proof needs to account for reference-window selection as well as candidate-boundary selection. This affects an advertised theoretical guarantee, independently of the revised purity discussion.
+- **Concrete fix:** Prove concentration uniformly over every eligible reference-window start, or provide a valid stopping-time argument for the exact reset rule. A conservative repair preserving the detector is to union-bound over reference lengths too: with two to five reference batches, there are at most four possibilities per candidate. This yields a straightforward false-alarm bound of \(4H_{\mathrm{cp}}\delta_{\mathrm{cp}}=0.012\); the detection statement likewise needs selection accounted for, with eligibility and gap conditions explicit. Retain sharper constants only where proved, and update the numerical interpretation consistently.
+- **Requires changing the method or new data?** **Neither**, if the paper accepts a weaker, correctly proved guarantee. Preserving the original constants requires additional proof; changing thresholds would change the frozen method and is unnecessary for this repair.
+
+**Confidence:** High in the proof-gap diagnosis; moderate-to-high in the overall acceptance assessment.

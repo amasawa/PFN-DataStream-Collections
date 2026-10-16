@@ -310,22 +310,26 @@ batches before $b$ ($n_1$ rows), and declare a change at the candidate with the 
 if that excess is positive, where
 \[
   \tau(n_1,n_2)=\sqrt{\tfrac12\bigl(\tfrac1{n_1}+\tfrac1{n_2}\bigr)\ln\tfrac1{\delta_{\mathrm{cp}}}} .
-\] The compared batches before $b$ start after the batch that follows the previous
+\] The compared batches before $b$ start at or after the batch that follows the previous
 declared change, and at least two are required; $n_1$ and $n_2$ count $B$ rows per compared batch.
 
 \begin{assumption}[Window error]\label{ass:err}
-Given its context, the window errs on the rows of a batch independently, each with the conditional error rate of
-that batch. (a) Between two changes this rate does not increase from batch to batch. (b) After a change at batch $b$,
-the mean rate on the batches $b,\dots,t-1$ exceeds that on the compared batches before $b$ by at least $\beta$.
+Given all earlier rows and errors, the window errs on the rows of a batch independently, each with the conditional
+error rate of that batch, and almost surely: (a) between two changes this rate does not increase from batch to batch;
+(b) after a change at batch $b$, the mean rate on the batches $b,\dots,t-1$ exceeds that on every run of two to
+$R_{\mathrm{cp}}$ consecutive batches that ends at batch $b-1$ and starts at or after the batch following the
+previous declared change by at least $\beta$.
 \end{assumption}
 
 \begin{proposition}[Detection]\label{prop:cp}
 Under \cref{ass:err}:
 \begin{enumerate}
-  \item[(i)] \emph{False alarms.} If no change occurs in the batches compared at time $t$, the probability that
-  \eqref{eq:cp} declares one at $t$ is at most $H_{\mathrm{cp}}\delta_{\mathrm{cp}}$.
-  \item[(ii)] \emph{Detection.} If a change occurs at batch $b$ and $\beta\ge2\tau(n_1,n_2)$ at time $t$, then at
-  $t$ the excess at $b$ is positive, and a change is declared, with probability at least $1-\delta_{\mathrm{cp}}$.
+  \item[(i)] \emph{False alarms.} If no change occurs in the batches $t-H_{\mathrm{cp}}-R_{\mathrm{cp}},\dots,t-1$,
+  the probability that \eqref{eq:cp} declares one at $t$ is at most $(R_{\mathrm{cp}}-1)H_{\mathrm{cp}}\delta_{\mathrm{cp}}$.
+  \item[(ii)] \emph{Detection.} If a change occurs at batch $b$ and $\beta\ge2\tau(2B,n_2)$ at time $t$, the
+  probability that $b$ is a candidate at $t$ with at least two compared batches before it and that its excess at
+  $t$ is not positive is at most $(R_{\mathrm{cp}}-1)\delta_{\mathrm{cp}}$. If $b$ is such a candidate almost surely,
+  a change is declared at $t$ with probability at least $1-(R_{\mathrm{cp}}-1)\delta_{\mathrm{cp}}$.
 \end{enumerate}
 \end{proposition}
 
@@ -336,12 +340,15 @@ segment $S$ holds at most $2\nu$ rows of other concepts, and it is majority-pure
 
 \begin{remark}
 With $B=100$, $H_{\mathrm{cp}}=3$, $R_{\mathrm{cp}}=5$ and $\delta_{\mathrm{cp}}=10^{-3}$, the false-alarm probability
-per batch is at most $0.003$. By \cref{prop:purity}, the window, whose 300 rows hold the previous concept in the
+per batch is at most $0.012$. By \cref{prop:purity}, the window, whose 300 rows hold the previous concept in the
 majority for two batches after a change, keeps predicting that concept on those batches; for two deterministic
-concepts that disagree on mass $\rho$, the gap $\beta$ is about $\rho$ on batches $b$ and $b+1$. With $n_1=500$ and
-$n_2=200$, $2\tau=0.31$, so changes between concepts that disagree on more than about a third of the inputs are
-detected within two batches with probability at least $0.999$; changes between closer concepts may be missed, and a
-segment then holds both. When the declared batch is the one that holds the boundary or the next, $\nu<B$, and a
+concepts that disagree on mass $\rho$, the gap $\beta$ is about $\rho$ on batches $b$ and $b+1$ when the window
+erred little on the previous concept. With $n_2=200$ and the shortest reference, $n_1=200$, $2\tau=0.372$. For $\beta\ge0.372$, the
+probability that $b$ is a candidate two batches later with at least two compared batches before it and that its
+excess is not positive is at most $0.004$; if $b$ is such a candidate almost surely, a change is declared then with
+probability at least $0.996$. Under the conditions above, $\beta\ge0.372$ holds for concepts that disagree on more
+than about 37\% of the inputs. Changes
+between closer concepts may be missed, and a segment then holds both. When the declared batch is the one that holds the boundary or the next, $\nu<B$, and a
 segment of at least 400 rows is majority-pure. These results bound the mixing of a detected segment but do not make
 it pure, and \cref{prop:recall} is stated for pure contexts. Detection, the location of each declared change and
 the purity of the stored contexts are separate conditions; \cref{sec:rq2} measures each.
@@ -1294,17 +1301,24 @@ $\pi\,\mathbf 1[y=g_P(\vx)]+(1-\pi)\,\mathbf 1[y=g_Q(\vx)]$. Where $g_P(\vx)=g_Q
 they differ the mode is $g_P(\vx)$ if $\pi>\tfrac12$ and $g_Q(\vx)$ if $\pi<\tfrac12$. The 0-1 risk on $P$ is therefore
 $0$ or $\rho$, and $\epsilon_P(h_P)=0$, which gives the regret.
 
-\emph{\Cref{prop:cp}.} Fix a candidate $b$ and write the statistic of \eqref{eq:cp} without the margin as
-$Z=\frac1{n_2}\sum_{\mathrm{post}}\mathbf 1[\text{error}]-\frac1{n_1}\sum_{\mathrm{pre}}\mathbf 1[\text{error}]$ over
-the compared rows, and $\bar Z$ for the same sum of conditional error rates. The context of each batch is fixed
-before its rows are seen, so the error indicators minus their conditional rates, taken in row order, form a
-martingale difference sequence whose terms lie in intervals of length $1/n_2$ (post) and $1/n_1$ (pre). By the
-Azuma--Hoeffding inequality, $\Pr[Z-\bar Z\ge\lambda]\le\exp\bigl(-2\lambda^2/(1/n_1+1/n_2)\bigr)$, and the same bound
-holds for $\Pr[Z-\bar Z\le-\lambda]$; at $\lambda=\tau(n_1,n_2)$ both equal $\delta_{\mathrm{cp}}$. (i) Without a change
-in the compared batches, \cref{ass:err}(a) gives $\bar Z\le0$, so the excess at $b$ is positive with probability at
-most $\delta_{\mathrm{cp}}$; a union bound over the at most $H_{\mathrm{cp}}$ candidates gives the claim. (ii) Here
-$\bar Z\ge\beta\ge2\tau$, so the excess $Z-\tau$ is non-positive only if $Z-\bar Z\le-\tau$, which has probability at
-most $\delta_{\mathrm{cp}}$.
+\emph{\Cref{prop:cp}.} Fix a candidate $b$ and a number $m\in\{2,\dots,R_{\mathrm{cp}}\}$ of compared batches before
+it, and write the statistic of \eqref{eq:cp} without the margin as
+$Z_m=\frac1{n_2}\sum_{\mathrm{post}}\mathbf 1[\text{error}]-\frac1{n_1}\sum_{\mathrm{pre}}\mathbf 1[\text{error}]$ over
+the rows of the batches $b-m,\dots,b-1$ (pre, $n_1=mB$) and $b,\dots,t-1$ (post), and $\bar Z_m$ for the same sum of
+conditional error rates. For fixed $b$ and $m$ these rows and the weights $1/n_1$ and $1/n_2$ do not depend on the
+data. By \cref{ass:err} the error indicators minus their conditional rates, taken in row order, form a martingale
+difference sequence whose terms lie in intervals of length $1/n_2$ (post) and $1/n_1$ (pre). By the
+Azuma--Hoeffding inequality, $\Pr[Z_m-\bar Z_m\ge\lambda]\le\exp\bigl(-2\lambda^2/(1/n_1+1/n_2)\bigr)$, and the same
+bound holds for $\Pr[Z_m-\bar Z_m\le-\lambda]$; at $\lambda=\tau(n_1,n_2)$ both equal $\delta_{\mathrm{cp}}$. The
+reference that \eqref{eq:cp} uses starts after the previous declared change, which depends on earlier errors,
+possibly on those of the compared rows; it is one of these $R_{\mathrm{cp}}-1$ fixed references, and a union bound
+over $m$ covers this selection. (i) Without a change in the batches $t-H_{\mathrm{cp}}-R_{\mathrm{cp}},\dots,t-1$,
+\cref{ass:err}(a) gives $\bar Z_m\le0$ for every $b$ and $m$, so each excess is positive with probability at most
+$\delta_{\mathrm{cp}}$; a union bound over the at most $H_{\mathrm{cp}}$ candidates and $R_{\mathrm{cp}}-1$ references
+gives the claim. (ii) On the event that $b$ is a candidate with $m\ge2$ compared batches, these batches form one of
+the runs of \cref{ass:err}(b), so $\bar Z_m\ge\beta\ge2\tau(2B,n_2)\ge2\tau(mB,n_2)$, as $\tau$ decreases in $n_1$; the
+excess $Z_m-\tau(mB,n_2)$ is then non-positive only if $Z_m-\bar Z_m\le-\tau(mB,n_2)$, and a union bound over the
+$R_{\mathrm{cp}}-1$ values of $m$ bounds the probability of this event by $(R_{\mathrm{cp}}-1)\delta_{\mathrm{cp}}$.
 
 \emph{\Cref{cor:cp}.} Each end of a closed segment is a declared change, a periodic close inside one concept, or
 the start of the stream. Without missed boundaries, the rows of other concepts lie between an end and the true
