@@ -11,6 +11,7 @@ Usage: python worker.py <root> <worker id> [--tasks f]
 """
 import json
 import os
+import shutil
 from pathlib import Path
 import sys
 import time
@@ -90,6 +91,9 @@ def run_task(root, kind, stream, seed, draw, data, models):
     z = np.load(data)
     X, y = z['X'].astype(np.float32), z['y'].astype(int)
     concept = z['concept'] if 'concept' in z.files else None
+    if kind == 'orc':   # every batch holds one concept (blocks of 20 batches), so a batch's first row gives its concept
+        cb = concept[:len(concept) // B * B].reshape(-1, B)
+        assert (cb == cb[:, :1]).all()
     T, K = min(300, len(y) // B), int(y.max()) + 1
     if (K, seed) not in models:
         models[(K, seed)] = make_tfm(K, seed)
@@ -113,10 +117,33 @@ def run_task(root, kind, stream, seed, draw, data, models):
         assert np.isfinite(p).all() and np.allclose(p.sum(1), 1, atol=1e-4)
         P[t], chosen[t, :len(selected)] = p, selected
     out.parent.mkdir(parents=True, exist_ok=True)
-    tmp = str(out) + '.tmp.npz'
+    tmp = f'{out}.{os.getpid()}.tmp.npz'
     np.savez_compressed(tmp, P=P, chosen=chosen, sec=sec, y=y[:T * B].reshape(T, B))
     os.replace(tmp, out)
     return True
+
+
+def mine(claim, wid):
+    """A claim this worker id owns (a task its previous process did not finish)."""
+    try:
+        return open(claim + '/owner').read() == wid
+    except FileNotFoundError:
+        return False
+
+
+def take(claim, wid):
+    """Atomic claim: a directory holding the owner is renamed onto the claim path; the rename fails if another worker
+    already holds it (the existing claim directory is never empty), so a claim always names its owner."""
+    tmp = f'{claim}.tmp{wid}'
+    os.makedirs(tmp, exist_ok=True)
+    with open(tmp + '/owner', 'w') as fh:
+        fh.write(wid)
+    try:
+        os.rename(tmp, claim)
+        return True
+    except OSError:
+        shutil.rmtree(tmp)
+        return False
 
 
 def main():
@@ -130,18 +157,18 @@ def main():
     tasks = [ln.split() for ln in open(opts.get('--tasks', f'{root}/tasks.txt')) if ln.strip()]
     models = {}
     os.makedirs(f'{root}/claims', exist_ok=True)
+    held = f'{root}/held/w{wid}'   # informational: the task this process runs (read by worker.sh after a death)
+    os.makedirs(f'{root}/held', exist_ok=True)
     for kind, stream, seed, draw, data in tasks:
         claim = f'{root}/claims/{kind}_{stream}_s{seed}_d{draw}'
-        held = f'{root}/claims/held_w{wid}'
-        resumed = os.path.exists(held) and open(held).read() == claim
-        if not resumed:
-            try:
-                os.mkdir(claim)
-            except FileExistsError:
-                continue
-            with open(held + '.tmp', 'w') as fh:
-                fh.write(claim)
-            os.replace(held + '.tmp', held)
+        out = Path(root) / 'out' / kind / f's{seed}' / f'd{draw}' / f'{stream}.npz'
+        if out.exists() or os.path.exists(claim + '/FAILED'):
+            continue
+        if not (mine(claim, wid) or take(claim, wid)):
+            continue
+        with open(held + '.tmp', 'w') as fh:
+            fh.write(claim)
+        os.replace(held + '.tmp', held)
         t0 = time.time()
         run_task(root, kind, stream, int(seed), int(draw), data, models)
         with open(f'{root}/progress.txt', 'a') as fh:
