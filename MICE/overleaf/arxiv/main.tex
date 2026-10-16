@@ -1,0 +1,1678 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\setlength{\emergencystretch}{1em}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xurl}
+\usepackage{hyperref}
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+
+\usepackage{microtype}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage[capitalize,noabbrev]{cleveref}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{tikz}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{observation}{Observation}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\input{math.tex}
+\crefname{assumption}{Assumption}{Assumptions}
+\crefname{observation}{Observation}{Observations}
+\crefname{appendix}{Appendix}{Appendices}
+\newcommand{\method}{\textsc{MICE}}   %
+\makeatletter\newcommand{\rowinput}[1]{\@@input #1 }\makeatother   %
+
+\begin{document}
+
+\title{Recall or Relearn? A Mixture of In-Context Experts for Recurring Concept Drift}
+\author{%
+  Zhangkai Wu \and Xu Zhang \and Zhihong Cui \and Kaize Shi\\[4pt]
+  \normalsize AFFILIATIONS\\
+  \normalsize\texttt{EMAIL}
+}
+\maketitle
+\begin{abstract}
+Tabular foundation models (TFMs) learn a data stream through their context, so a past concept can be recalled by
+putting its labelled rows back into the context, without retraining. We characterise when this memory improves
+prediction under recurring concept drift. When a stored context holds one concept and the experts are separated by a
+margin, the gain of recall over relearning is the area between the stored context's accuracy and the TFM's learning
+curve, up to a first-batch term. The characterisation predicts large gains for concepts that need many examples and
+little gain for concepts that are learned quickly. Under a posterior-predictive model of the TFM, for deterministic concepts with a shared input distribution and in the
+population limit, a stored context recalls the concept that holds the majority of its rows; stored contexts are segments that start at changes detected by a two-sample test on the window's
+errors, with false-alarm and detection guarantees; if every change is detected and declared within $\nu$ rows of its
+boundary, a segment holds at most $2\nu$ rows of other concepts. We propose \method{}, a mixture of window and stored-context experts
+under a meta expert with two time scales. The fast level identifies a recurring concept within one batch under a
+margin; the slow level bounds the discounted half-Brier regret against the plain window by $2\ln2\approx1.39$ at every
+time, for any stream. A model-oriented discrepancy organises the stored contexts. On a controlled grid, the gains
+predicted from learning curves rank the observed gains with Spearman correlations of 0.94 and 0.83, and the
+measured area term matches its prediction within 0.7 points in every cell. With fixed 500-row segments the gain
+depended on where the concept boundaries fell inside the segments; on 72 fresh grid streams with random boundary
+phases, \method{} exceeds reset detection by 2.85 points on average (0.68 with fixed segments), on 70 of the 72
+streams and in each of three block-length regimes (hierarchical 95\% lower bounds $+1.22$ to $+4.59$), and by 2.69 points on all of 72 further streams from unused seeds; its stored contexts were majority-pure at every segment close, and 88\% held at least 95\% rows of one concept, short
+of the registered 90\%, so these gains are measured with contexts that are mixed, not with the pure contexts the
+recall theorem assumes. On 29 real streams \method{} is more accurate than all
+four in-context baselines on 23, and its one-sided 95\% block-bootstrap bound on the difference to the plain window is
+above $-0.3$ points on 28 (backbone seed 0, fixed segments; detected segments differ by 0.01 points on average). With
+fixed segments, against an unmerged archive and a snapshot pool whose size was chosen,
+by timing alone, to fit the time per batch of \method{} on three real prefixes, \method{} is more accurate on the aligned grid (by 6.7 and 7.5 points) and on
+average over nine real streams (by 0.35 and 0.27), and level with the snapshot pool on the shifted grid, as are both
+pools with four experts, which take more time per batch than \method{}. With detected segments, \method{} takes 1.07\,s
+per batch on the three prefixes, against 2.58\,s for an archive of twelve experts with the same segments; it is 5.7
+to 6.6 points more accurate than a snapshot pool of two experts on fresh, shifted and misaligned grid streams, and
+1.3 to 3.4 points more accurate than one of twelve, which takes 1.3 to 2.6 times as long, except on 2\,000-row
+blocks, where the two are level.
+\end{abstract}
+\noindent\textbf{Keywords:} Concept drift, recurring concepts, tabular foundation models, in-context learning, data streams, online learning, mixture of experts.
+
+
+
+
+
+\section{Introduction}
+\label{sec:intro}
+
+A data stream revisits its past: seasons, weekdays, market regimes and sensor modes return. A learner that kept what
+it knew about a concept can use it again when the concept recurs \citep{gama2014survey,lu2019learning}. For a
+trained model this means keeping a pool of models and deciding which one to reuse
+\citep{goncalves2013rcd,gama2014recurrent,zhao2025mooe}. Tabular foundation models (TFMs) such as TabPFN
+\citep{hollmann2025tabpfn} and TabICL \citep{qu2025tabicl} change the cost of this idea. A TFM approximates posterior
+prediction in one forward pass given a context of labelled rows \citep{muller2022pfn,nagler2023statistical}; its
+knowledge of a concept \emph{is} a set of rows, and recalling the concept means conditioning on them. Memory needs no
+training.
+
+TFMs have already replaced incremental trees as stream learners: with a sliding memory they outperform adaptive tree
+ensembles on non-stationary benchmarks \citep{lourenco2026streams}, and a prior with drifting causal models improves
+them under temporal shift \citep{helli2024drift}. Neither line reuses past contexts without additional training. A sliding context forgets a
+concept once it leaves the window, and a drift-extrapolating prior models a trend rather than a return. Three
+observations show what an in-context stream learner is missing, and what a remedy has to respect.
+
+\begin{observation}[Sliding contexts forget]\label{obs:forget}
+In the five batches after a concept recurs, a TFM with a first-in-first-out (FIFO) context or with the short- and long-term memory (LTM) of
+\citet{lourenco2026streams} reaches 0.17, 0.39 and 0.51 accuracy on Sine \citep{gama2004ddm}, STAGGER \citep{schlimmer1986stagger} and Agrawal
+\citep{agrawal1993database} streams, whereas the
+same TFM conditioned on the past rows of the recurring concept reaches at least 0.99; in steady state all contexts
+are equally accurate.
+\end{observation}
+
+\begin{observation}[Relearning in context is cheap, for simple concepts]\label{obs:relearn}
+A TFM relearns the concepts of the standard drift generators within about 200 rows, so resetting the context when a
+drift detector fires \citep{gama2004ddm} already closes most of the gap of \cref{obs:forget} (0.81--0.88 in the same
+five batches). Memory pays only for concepts that take many rows to learn: on mixtures with 100 centroids the TFM
+needs more than 1000 rows to approach its asymptote.
+\end{observation}
+
+\begin{observation}[Resetting is unsafe]\label{obs:reset}
+On 29 real streams the same reset detector is on average 1.8 points \emph{below} the plain FIFO context and up to 9.6
+points below it: most rises of the error rate on real streams do not mean that the context has become useless.
+\end{observation}
+
+These observations raise the question of this paper: \emph{when should an in-context learner recall a past concept
+rather than relearn it, and how can it do so without paying when there is nothing to recall?}
+
+\textbf{Approach.} We treat every past context as an offline expert and the current window as an online expert, and
+combine them with a meta expert, following the mixture of online and offline experts (MOOE) of
+\citet{zhao2025mooe}. An in-context expert costs no training, which changes both the method and its analysis.
+(i)~Which segments belong to the same concept is decided by a model-oriented discrepancy in the sense of
+R-divergence \citep{zhao2023rdiv}; we show that the original form is blind to concepts that contradict each other on
+the same inputs, which is the defining case of recurring drift, and that an excess-risk form repairs it.
+(ii)~In the population limit, a stored context of deterministic concepts with a shared input distribution
+identifies the concept that holds the majority of its rows, so segments start at changes
+detected by a two-sample test on the window's errors; if every change is detected and declared within $\nu$ rows of
+its boundary, a segment holds at most $2\nu$ rows of other concepts, wherever the boundaries fall.
+(iii)~The meta expert has two time scales. A fast level restarts every batch and identifies a recurring concept in
+one batch under a margin; a slow level decides whether following the fast level is worth it at all, with a
+worst-case guarantee against the plain window. (iv)~The gain of recall over relearning then has a closed form in
+the TFM's learning curve, so the value of memory can be estimated before deployment from labelled data
+representative of the concepts.
+
+\textbf{Contributions.}
+\textbf{(1) The value of recall.} The gain of recalling a concept rather than relearning it is the area between the
+stored context's accuracy and the backbone's learning curve, under single-concept contexts and identification
+conditions (\cref{prop:recall}); it explains when memory pays and when the opportunity vanishes.
+\textbf{(2) Theory for identifying and combining contexts.} Majority purity as the population condition under which a mixed
+context of deterministic concepts with a shared input distribution recalls a concept, false-alarm and detection guarantees for the change test, and a bound on the mixing of segments whose changes are
+detected and declared within $\nu$ rows of the boundary (\cref{prop:purity,prop:cp,cor:cp}); identification within one batch under a margin (\cref{prop:block}); a blind spot of R-divergence under conflicting concepts and its excess-risk repair under
+posterior-predictive assumptions (\cref{prop:blind}); and an any-time discounted half-Brier regret bound for the slow
+level (\cref{prop:outer}).
+\textbf{(3) A training-free streaming method.} \method{} combines window and stored-context experts through a fast and
+a slow level and organises a bounded pool of past contexts, segmented at detected changes, by directed recall regret.
+\textbf{(4) Evidence in the recall and the weak-gain regime.} On a controlled grid, predicted and observed gains have
+Spearman correlations of 0.94 and 0.83; fixed segments lose the gain when boundaries fall inside them, and detected
+segments recover it on 72 fresh streams with random boundary phases ($+2.85$ points over reset, with contexts that are
+majority-pure but not pure) and on 72 confirmation streams ($+2.69$); on real streams, accuracy is non-inferior
+to the default window on 28 of 29 streams at a 0.3-point margin. Pool controls, ablations and resource comparisons
+quantify the roles of aggregation, pool organisation and larger windows.
+
+\section{Recurring Concept Drift for In-Context Learners}
+\label{sec:def}
+
+\textbf{Setting.} A stream delivers batches of $B$ rows; the labels of a batch arrive one batch late. A frozen TFM
+$f_\Theta(\cdot\mid\vx;\cC)$ predicts every batch from a context $\cC$ of at most $M$ labelled rows, and a
+\emph{context policy} decides which rows form the context. The stream is a sequence of intervals $I_1,I_2,\dots$ with
+distributions $P_1,P_2,\dots$ over $(\vx,y)$; concept drift occurs between intervals in the sense of
+\citet{lu2019learning}.
+
+\begin{definition}[Recurring in-context concept drift]\label{def:recur}
+Let $\cC_k$ be a context of rows of interval $I_k$ and $f_\Theta(\cdot\,;\cC_k)$ the $k$-th \emph{in-context expert}.
+The drift into interval $I_{K+1}$ is \emph{recurring} if $\min_{k\le K}\Div_T(P_{K+1}\,|\,P_k)\le\delta$, where
+$\Div_T(Q\,|\,P)$ is the risk on $Q$ of the expert of $P$ minus that of the expert of $Q$ (\cref{def:excess}), and
+\emph{new} otherwise.
+\end{definition}
+
+The definition is model-oriented: a drift is recurring when some stored context serves the new interval as well as
+its own rows would. Three policies are the reference points of this paper. \emph{FIFO} is the plain sliding window: the context is the last $M$ labelled rows. It is the
+simplest context policy and the building block of LTM \citep{lourenco2026streams}. \emph{Reset} empties the context when the drift detection method (DDM) of
+\citet{gama2004ddm} fires. \emph{Window ensemble} mixes FIFO contexts of several lengths. None of them has memory.
+
+\section{Theory: From a Model-Oriented Discrepancy to Recall versus Relearn}
+\label{sec:theory}
+
+The analysis has five steps, one per component of the method: which contexts share a concept
+(\cref{sec:th-disc}), which rows of the stream form a concept (\cref{sec:th-seg}), how fast a recurring concept is
+identified (\cref{sec:th-fast}), what recalling it is worth (\cref{sec:th-recall}), and what following the mixture
+can cost when nothing recurs (\cref{sec:th-slow}). All proofs
+are in \cref{app:proofs}.
+
+\textbf{Notation.} For a concept $P$ over $(\vx,y)$ and a loss $\ell$, the \emph{risk} of a context $\cC$ is
+\[
+  \epsilon_P(\cC)=\E_{(\vx,y)\sim P}\,\ell\bigl(f_\Theta(\cdot\mid\vx;\cC),y\bigr),
+\]
+and the \emph{learning curve} of $P$ is $R_P(n)=\E_{\cC\sim P^n}\,\epsilon_P(\cC)$. We write $p_\vx=P(\cdot\mid\vx)$
+for the conditional, $P_X$ for the marginal, $H$ for the entropy and $\mathrm{JS}$ for the Jensen--Shannon
+divergence.
+
+\subsection{Which Contexts Share a Concept}
+\label{sec:th-disc}
+
+R-divergence \citep{zhao2023rdiv} declares two distributions identical \emph{for a model} when the hypothesis learned
+on their mixture has the same risk on both. For an in-context learner that hypothesis is the TFM conditioned on the
+union of the two contexts:
+\begin{equation}\label{eq:rdiv}
+  \Div_R(P\|Q)=\bigl|\epsilon_P(\cC_P\cup\cC_Q)-\epsilon_Q(\cC_P\cup\cC_Q)\bigr| .
+\end{equation}
+Its population behaviour follows from the principle behind prior-fitted networks, which approximate the posterior
+predictive distribution \citep{muller2022pfn,nagler2023statistical}.
+
+\begin{assumption}[Posterior-predictive limit]\label{ass:ppd}
+With a context from $P$ alone, the TFM predicts the conditional $p_\vx$; with contexts of equal size from $P$ and
+$Q$, it predicts the conditional of the mixture $U=\tfrac12(P+Q)$,
+\[
+  u_\vx=\alpha(\vx)\,p_\vx+\bigl(1-\alpha(\vx)\bigr)\,q_\vx,\qquad \alpha=\frac{P_X}{P_X+Q_X}.
+\]
+We denote the two predictors by $h_P$ and $h_U$.
+\end{assumption}
+
+\begin{definition}[Recall regret and excess-risk discrepancy]\label{def:excess}
+For two concepts $P$ and $Q$, the \emph{recall regret} of $P$ on $Q$ is the risk that the context of $P$ incurs on
+$Q$ beyond that of the context of $Q$ itself, and the \emph{excess-risk discrepancy} is the mean risk that pooling
+the two contexts adds to each concept:
+\begin{align}
+  \Div_T(Q\,|\,P) &= \epsilon_Q(h_P)-\epsilon_Q(h_Q), \label{eq:transfer}\\
+  \Div_E(P,Q) &= \tfrac12\bigl[\epsilon_P(h_U)-\epsilon_P(h_P)\bigr] \notag\\
+              &\quad+\tfrac12\bigl[\epsilon_Q(h_U)-\epsilon_Q(h_Q)\bigr].
+  \label{eq:excess}
+\end{align}
+\end{definition}
+
+\begin{proposition}[Blind spot of R-divergence and its repair]\label{prop:blind}
+Let \cref{ass:ppd} hold and let $\ell$ be the log-loss.
+\begin{enumerate}
+  \item[(i)] \emph{Decomposition.} The excess-risk discrepancy is the part of the divergence between the joints
+  that covariate shift does not explain:
+  \[
+    \Div_E(P,Q)=\mathrm{JS}(P,Q)-\mathrm{JS}(P_X,Q_X)\;\ge\;0 .
+  \]
+  If $P_X=Q_X$, then $\Div_E(P,Q)=\E_{\vx}\,\mathrm{JS}(p_\vx,q_\vx)$, which is zero if and only if $p_\vx=q_\vx$
+  almost surely.
+  \item[(ii)] \emph{Blind spot.} Let $P_X=Q_X$ and let both concepts be deterministic, $y=g_P(\vx)$ and
+  $y=g_Q(\vx)$, with disagreement mass $\rho=\Pr_{\vx}[g_P(\vx)\neq g_Q(\vx)]$. Then, for every $\rho\in[0,1]$,
+  \[
+    \Div_R(P\|Q)=0\qquad\text{whereas}\qquad \Div_E(P,Q)=\rho\ln2 .
+  \]
+  \item[(iii)] \emph{0-1 loss.} In the setting of (ii) with the 0-1 loss, $\Div_T(Q\,|\,P)=\rho$ for any rule that
+  breaks ties of $h_U$. If ties are broken uniformly at random between the two maximisers, independently of the source
+  of the query, and each risk is averaged over this randomisation before the difference is taken, then
+  $\Div_R(P\|Q)=\bigl|\E_\xi\epsilon_P(h_U^\xi)-\E_\xi\epsilon_Q(h_U^\xi)\bigr|=0$. Under a deterministic tie rule
+  $c(\vx)$, $\Div_R(P\|Q)=\bigl|\E_\vx\mathbf 1[g_P(\vx)\ne g_Q(\vx)]\bigl(\mathbf 1[c(\vx)\ne g_P(\vx)]-
+  \mathbf 1[c(\vx)\ne g_Q(\vx)]\bigr)\bigr|\le\rho$, which depends on both the disagreement region and the tie choices,
+  is not determined by $\rho$ alone, and can vanish although $\rho>0$.
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}\label{rem:merge}
+R-divergence asks whether the mixture hypothesis treats the two sets \emph{equally}. Under the log-loss, two
+concepts that contradict each other on the same inputs are treated equally badly, so the answer is yes although
+neither context helps the other (\cref{prop:blind}(ii)); this is the defining case of
+recurring drift. Under the 0-1 loss the answer depends on how the mixture breaks its ties: it is again zero under
+uniform, source-independent random tie-breaking with risks averaged before taking their difference, and otherwise it is not determined by the disagreement mass $\rho$ (\cref{prop:blind}(iii)). Under
+the 0-1 loss the directed form $\Div_T$ equals $\rho$ whatever the tie rule; under the log-loss it is infinite on the
+disagreement region of two deterministic concepts. The excess-risk form asks whether pooling \emph{costs}
+anything. With finite contexts it has a second term: if $P=Q$, pooling doubles the context and changes the risk by
+$R_P(2n)-R_P(n)\le0$. The empirical excess is interference minus pooling gain, so a rule that pools two contexts
+when the empirical excess is at most $\delta$ does so when the pooling gain is at least the interference minus
+$\delta$ ($\delta=0$ gives the exact equivalence). \method{} instead merges on the directed form \eqref{eq:transfer},
+which bounds the regret that recalling the stored expert would incur on the segment (\cref{def:recur}).
+\end{remark}
+
+
+\subsection{Which Rows Form a Concept}
+\label{sec:th-seg}
+
+\Cref{prop:recall} below compares relearning with the stored expert \emph{of concept $k$}. A stored context is built
+from segments of the stream, and a segment that straddles a concept boundary holds rows of two concepts. The next
+results say how much mixing identification tolerates, how reliably a change detector declares changes, and how
+much mixing remains when its declarations lie close to the boundaries.
+
+\begin{proposition}[Majority purity]\label{prop:purity}
+Let \cref{ass:ppd} extend to unequal shares: a context whose rows come from $P$ in proportion $\pi$ and from $Q$ in
+proportion $1-\pi$ predicts the conditional of $\pi P+(1-\pi)Q$. Let $P_X=Q_X$, let both concepts be deterministic,
+$y=g_P(\vx)$ and $y=g_Q(\vx)$, and let $\ell$ be the 0-1 loss. Then the recall regret of this context on $P$ is
+\[
+  \Div_T\bigl(P\,|\,\pi P+(1-\pi)Q\bigr)=
+  \begin{cases}
+    0, & \pi>\tfrac12,\\
+    \rho, & \pi<\tfrac12,
+  \end{cases}
+\]
+where $\rho=\Pr_\vx[g_P(\vx)\ne g_Q(\vx)]$; at $\pi=\tfrac12$ it depends on the tie rule, as in
+\cref{prop:blind}(iii).
+\end{proposition}
+
+\begin{remark}
+In the population limit a stored context of deterministic concepts with a shared input distribution recalls the
+concept that holds the majority of its rows, so identifying the concept needs majority purity, not purity. For labels that are not deterministic a
+majority is not enough: if the most probable label of $P$ at $\vx$ exceeds every other label by $m(\vx)$, the mixture
+keeps it whenever $\pi>1/(1+m(\vx))$, since the part from $Q$ changes each difference by at most $1-\pi$;
+deterministic concepts have $m=1$. With finite contexts the minority rows are wrong labels for the majority concept on
+the disagreement region and correct ones elsewhere, and the proposition does not say how many clean rows a mixed
+context is worth; \cref{prop:recall} is stated for pure contexts. Dropping the rows near a boundary raises $\pi$ but
+lowers the number of stored rows.
+\end{remark}
+
+\textbf{Change detection.} Let $z_t\in\{0,\dots,B\}$ be the number of errors that the window of the last 300 rows
+makes on batch $t$, scored when its labels arrive. At time $t$, for every candidate change $b\in\{t-H_{\mathrm{cp}},
+\dots,t-1\}$, compare the error rate on the batches $b,\dots,t-1$ ($n_2$ rows) with that on up to $R_{\mathrm{cp}}$
+batches before $b$ ($n_1$ rows), and declare a change at the candidate with the largest excess
+\begin{equation}\label{eq:cp}
+  \frac{1}{n_2}\sum_{s=b}^{t-1}z_s-\frac{1}{n_1}\sum_{s=b-R_{\mathrm{cp}}}^{b-1}z_s-\tau(n_1,n_2),
+\end{equation}
+if that excess is positive, where
+\[
+  \tau(n_1,n_2)=\sqrt{\tfrac12\bigl(\tfrac1{n_1}+\tfrac1{n_2}\bigr)\ln\tfrac1{\delta_{\mathrm{cp}}}} .
+\] The compared batches before $b$ start at or after the batch that follows the previous
+declared change, and at least two are required; $n_1$ and $n_2$ count $B$ rows per compared batch.
+
+\begin{assumption}[Window error]\label{ass:err}
+Given all earlier rows and errors, the window errs on the rows of a batch independently, each with the conditional
+error rate of that batch, and almost surely: (a) between two changes this rate does not increase from batch to batch;
+(b) after a change at batch $b$, the mean rate on the batches $b,\dots,t-1$ exceeds that on every run of two to
+$R_{\mathrm{cp}}$ consecutive batches that ends at batch $b-1$ and starts at or after the batch following the
+previous declared change by at least $\beta$.
+\end{assumption}
+
+\begin{proposition}[Detection]\label{prop:cp}
+Under \cref{ass:err}:
+\begin{enumerate}
+  \item[(i)] \emph{False alarms.} If no change occurs in the batches $t-H_{\mathrm{cp}}-R_{\mathrm{cp}},\dots,t-1$,
+  the probability that \eqref{eq:cp} declares one at $t$ is at most $(R_{\mathrm{cp}}-1)H_{\mathrm{cp}}\delta_{\mathrm{cp}}$.
+  \item[(ii)] \emph{Detection.} If a change occurs at batch $b$ and $\beta\ge2\tau(2B,n_2)$ at time $t$, the
+  probability that $b$ is a candidate at $t$ with at least two compared batches before it and that its excess at
+  $t$ is not positive is at most $(R_{\mathrm{cp}}-1)\delta_{\mathrm{cp}}$. If $b$ is such a candidate almost surely,
+  a change is declared at $t$ with probability at least $1-(R_{\mathrm{cp}}-1)\delta_{\mathrm{cp}}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{corollary}[Segment purity]\label{cor:cp}
+If every declared change lies within $\nu$ rows of a concept boundary and no boundary is missed, then a closed
+segment $S$ holds at most $2\nu$ rows of other concepts, and it is majority-pure when $4\nu<|S|$.
+\end{corollary}
+
+\begin{remark}
+With $B=100$, $H_{\mathrm{cp}}=3$, $R_{\mathrm{cp}}=5$ and $\delta_{\mathrm{cp}}=10^{-3}$, the false-alarm probability
+per batch is at most $0.012$. By \cref{prop:purity}, the window, whose 300 rows hold the previous concept in the
+majority for two batches after a change, keeps predicting that concept on those batches; for two deterministic
+concepts that disagree on mass $\rho$, the gap $\beta$ is about $\rho$ on batches $b$ and $b+1$ when the window
+erred little on the previous concept. With $n_2=200$ and the shortest reference, $n_1=200$, $2\tau=0.372$. For $\beta\ge0.372$, the
+probability that $b$ is a candidate two batches later with at least two compared batches before it and that its
+excess is not positive is at most $0.004$; if $b$ is such a candidate almost surely, a change is declared then with
+probability at least $0.996$. Under the conditions above, $\beta\ge0.372$ holds for concepts that disagree on more
+than about 37\% of the inputs. Changes
+between closer concepts may be missed, and a segment then holds both. When the declared batch is the one that holds the boundary or the next, $\nu<B$, and a
+segment of at least 400 rows is majority-pure. Under this location condition, which \cref{prop:cp} does not guarantee, these results bound the mixing of a
+detected segment but do not make it pure, and \cref{prop:recall} is stated for pure contexts. Detection, the location of each declared change and
+the purity of the stored contexts are separate conditions; \cref{sec:rq2} measures each.
+\end{remark}
+
+\subsection{The Fast Level: Identification under a Margin}
+\label{sec:th-fast}
+
+Following \citet{zhao2025mooe}, the regret of a mixture of experts against the best predictor splits into the regret
+of the meta expert against the best expert and the regret of that expert,
+\begin{equation}\label{eq:decomp}
+  \Regret=\Regret_{\mathrm{ME}}+\Regret_{\mathrm{KE}} .
+\end{equation}
+MOOE bounds $\Regret_{\mathrm{ME}}\le\sqrt{T\ln K}$ for cumulative losses over an interval of $T$ rounds. After a
+recurrence the cumulative loss still carries the previous concept, so the fast level of \method{} restarts every
+batch: it weights the $K$ experts by
+\begin{equation}\label{eq:fast}
+  w_k\propto\exp(-\eta\,\ell_k),
+\end{equation}
+where $\ell_k$ is the log-loss of expert $k$ on the last labelled batch only. Its guarantee comes from a margin.
+
+\begin{assumption}[Margin]\label{ass:margin}
+One expert $k^\star$ leads the last labelled batch by a margin $g>0$: $\ell_{k^\star}\le\ell_k-g$ for all
+$k\ne k^\star$.
+\end{assumption}
+
+\begin{lemma}[Margin]\label{lem:margin}
+Under \cref{ass:margin}, let $\kappa=\ln\bigl(1+(K-1)e^{-\eta g}\bigr)$. The mixture with the weights
+\eqref{eq:fast} satisfies:
+\begin{enumerate}
+  \item[(i)] the leader holds almost all weight, $w_{k^\star}\ge e^{-\kappa}$;
+  \item[(ii)] on every row, the log-loss of the mixture is at most that of expert $k^\star$ plus $\kappa$;
+  \item[(iii)] the mixture predicts the class of expert $k^\star$ on every row where the top two probabilities of
+  that expert differ by more than $e^{\kappa}-1$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proposition}[One batch of identification]\label{prop:block}
+Consider a block of $J$ batches of one concept, with log-losses clipped at $c$, and let \cref{ass:margin} hold for
+every labelled batch of the block. Then the regret of the fast level per row, summed over the batches of the block,
+satisfies
+\[
+  \Regret_{\mathrm{ME}}\;\le\;c+(J-1)(K-1)\,e^{-\eta g} .
+\]
+\end{proposition}
+
+\begin{remark}
+The first term is one batch of identification, lost because labels arrive one batch late. On the row scale of the
+cumulative bound $\sqrt{JB\ln K}$ the regret is at most $Bc+B(J-1)(K-1)e^{-\eta g}$: linear in the length of the
+block, but with a coefficient that is exponentially small in the margin.
+\end{remark}
+
+\subsection{When Recall Beats Relearning}
+\label{sec:th-recall}
+
+Let concepts recur in blocks of $L$ rows, that is, $J=L/B$ batches, and let $a_k(n)$ be the accuracy learning curve
+of concept $k$, non-decreasing in $n$. On the $c$-th visit of concept $k$ ($c\ge2$) its stored expert holds
+$n_c=\min(M,(c-1)L)$ rows. The \emph{relearning} learner resets its context at the block boundary; in the terms of
+\citet{zhao2025mooe} it is the online expert, and the stored context is an offline expert that needed no training.
+
+\begin{theorem}[Recall versus relearn]\label{prop:recall}
+Let \cref{ass:margin} hold on every labelled batch of the block for the expert with the larger learning-curve
+value, that is, the stored expert if $a_k(n_c)\ge a_k(\min(jB,M))$ and the window otherwise, with $e^\kappa-1$ below
+the top-two gap of that expert. On the $c$-th visit of concept $k$, the expected accuracy of
+the mixture minus that of relearning, averaged over the block, is
+\begin{equation}\label{eq:area}
+  \Delta_{k,c}(L)=\frac1J\sum_{j=1}^{J-1}\Bigl[a_k(n_c)-a_k\bigl(\min(jB,M)\bigr)\Bigr]_+ \;+\;\zeta_{k,c},
+\end{equation}
+where $\zeta_{k,c}=(A^{\mathrm{mix}}_{1}-A^{\mathrm{rel}}_{1})/J$ is the difference on the first batch of the
+block, which both learners predict before any label of the block has arrived, so $|\zeta_{k,c}|\le1/J$. We call
+the sum the \emph{area term}.
+\end{theorem}
+
+\begin{corollary}[When memory pays]\label{cor:flat}
+On the first visit $n_1=0$ and the area term of \eqref{eq:area} is zero; on later visits it is zero whenever the
+learning curve is flat, $a_k(B)=a_k(M)$, and in general
+\[
+  \Delta_{k,c}(L)\;\le\;\frac{M}{L}\,\bigl(a_k(M)-a_k(B)\bigr)+\frac1J .
+\]
+\end{corollary}
+
+\begin{remark}
+\Cref{eq:area} is the area by which the learning curve lies below the accuracy of the stored expert. In the
+decomposition \eqref{eq:decomp} it is the regret of the online expert minus that of the recalled expert: memory helps
+when this area exceeds the cost of the meta expert, and \cref{prop:block} makes that cost one batch, which the
+relearning learner loses as well. The value of memory is therefore a property of the backbone and the concept that
+can be measured before deployment, and \cref{cor:flat} explains \cref{obs:relearn}: for concepts that a TFM learns
+from one batch, the area is zero.
+\end{remark}
+
+\subsection{The Slow Level: A Safeguard at Any Time}
+\label{sec:th-slow}
+
+\Cref{ass:margin} fails on streams whose experts are close to each other. The batch-wise restart then follows
+noise: the expert that was best on the last batch need not be best on the next, which is the situation of
+\cref{obs:reset}. \method{} therefore places a second meta expert above the first. It has two experts, the
+\emph{default} (the FIFO window of $M$ rows, $k=0$) and the \emph{fast mixture} \eqref{eq:fast} ($k=1$), with
+predictions $p_{t,0}$ and $p_{t,1}$ on batch $t$. Let $\ell_{t,k}\in[0,1]$ be the mean half Brier score
+$\tfrac12\lVert p-e_y\rVert_2^2$ of expert $k$ on batch $t$. The slow level keeps discounted losses and predicts with
+\begin{align}
+  L_{t,k}&=\gamma L_{t-1,k}+\ell_{t,k},\qquad L_{0,k}=0, \label{eq:outer-loss}\\
+  v_{t,k}&\propto\exp\bigl(-\eta_2\,\gamma\,L_{t-1,k}\bigr), \label{eq:outer-weight}\\
+  p_t&=v_{t,0}\,p_{t,0}+v_{t,1}\,p_{t,1}, \label{eq:outer}
+\end{align}
+with a discount $\gamma\in(0,1]$. For $\gamma=1$ this is the cumulative meta expert of MOOE with an exp-concave loss;
+$\gamma<1$ forgets losses older than about $1/(1-\gamma)$ batches.
+
+\begin{theorem}[Any-time safeguard]\label{prop:outer}
+Let $K$ experts be combined by \eqref{eq:outer-loss}--\eqref{eq:outer} with a step $\eta_2\le\tfrac12$. For every
+sequence of labels and expert predictions, every time $T$ and every expert $k$,
+\begin{equation}\label{eq:outer-bound}
+  \sum_{t=1}^{T}\gamma^{\,T-t}\bigl(\ell_t(p_t)-\ell_{t,k}\bigr)\;\le\;\frac{\ln K}{\eta_2} .
+\end{equation}
+\end{theorem}
+
+\begin{corollary}[Cost of following the fast level]\label{cor:outer}
+With $K=2$, $\eta_2=\tfrac12$ and $\gamma=0.9$, the discounted regret of \method{} against the plain window, and
+against the fast mixture, is at most $2\ln2\approx1.39$ at every time, against a discounted horizon of
+$1/(1-\gamma)=10$ batches.
+\end{corollary}
+
+\begin{remark}
+\Cref{prop:outer} makes no assumption on the stream. The discount makes it an any-time statement: the comparison covers an
+effective horizon of ten batches, not the length of the stream, and older losses fade geometrically. How fast the
+slow level follows the better of the two experts after a change depends on their earlier losses and on the loss gap
+after the change. The two levels divide the work. The fast level identifies a recurring concept within one batch when there
+is something to identify (\cref{prop:block}); the slow level decides whether identification is worth following. The
+guarantee is proved for the half-Brier loss with $\eta_2\le\tfrac12$, where it is exp-concave; being bounded, it also
+limits how far one batch moves the weights. The log-loss is exp-concave but unbounded, and in our runs one confidently
+wrong batch after a switch dominated the slow level for the whole horizon (\cref{sec:ablation}).
+\end{remark}
+
+\section{Method: A Mixture of In-Context Experts}
+\label{sec:method}
+
+\method{} (\cref{fig:method,alg:mice}) runs a frozen TFM; no expert is trained. \Cref{tab:notation} collects the notation. Each component implements one result of
+\cref{sec:theory}.
+
+\begin{figure}[t]
+  \centering
+  \resizebox{0.8\textwidth}{!}{\input{fig_method.tex}}
+  \caption{\method{} for one batch. Windows and stored contexts are in-context experts of the same frozen TFM. The
+  fast level mixes all experts from their losses on the last labelled batch; the slow level mixes the result with the
+  default window. Each component is governed by one result of \cref{sec:theory}.}
+  \label{fig:method}
+\end{figure}
+
+\textbf{Experts.} \emph{Windows} are FIFO contexts of the last 100, 300 and $M$ labelled rows; they relearn fast and
+cover concepts that are new or cheap to learn. \emph{Stored concepts} are contexts kept in a pool, built from
+segments of the stream that start at detected changes (\cref{sec:th-seg}). After every labelled batch the errors of
+the 300-row window are tested by \eqref{eq:cp} with $H_{\mathrm{cp}}=3$, $R_{\mathrm{cp}}=5$ and
+$\delta_{\mathrm{cp}}=10^{-3}$. When a change is declared at batch $b$, the open segment ends at row $bB$ and is
+closed if it holds at least 300 rows (shorter ones stay in the windows only), and the next segment starts there.
+Without a change a segment closes after 500 rows, once three further batches are labelled, so that a change in its
+last rows can still end it first; a segment therefore holds 300 to 700 rows. The test uses only the window's errors, so the segments do not depend on the pool.
+We call \emph{fixed segmentation} the variant that closes a segment every 500 labelled rows from the first row of the
+stream; it is the original form of \method{}, and the experiments name it where they use it. A closed segment $S$ joins the stored expert $\cC_k$ that minimises the estimated recall regret
+$\widehat{\Div}_T(S\,|\,\cC_k)=\hat\epsilon_S(\cC_k)-\hat\epsilon_S(S)$ if this is at most $\delta=0.02$, where
+$\hat\epsilon$ is the 0-1 risk (one minus accuracy, as in \cref{prop:blind}(iii)) and $\hat\epsilon_S(S)$ is
+cross-fitted in two folds because an in-context learner memorises its context; otherwise it
+founds a new stored expert (\cref{prop:blind}). A stored expert keeps its last $M$ rows, and the pool holds at most
+12 experts (least recently used out).
+
+\textbf{Fast level.} The windows and the stored experts are mixed with the weights \eqref{eq:fast}, $\eta=10$
+(\cref{lem:margin,prop:block}).
+
+\textbf{Slow level.} The fast mixture and the $M$-row window are mixed by \eqref{eq:outer-loss}--\eqref{eq:outer}
+with $\gamma=0.9$ and $\eta_2=\tfrac12$ (\cref{prop:outer,cor:outer}).
+
+\textbf{Timing.} Every loss scores a prediction that was issued before its labels arrived
+(\cref{alg:mice}): each expert's prediction for a batch is cached when the batch is predicted, and when the labels
+come one batch later the cached predictions are scored; contexts are updated only afterwards, so no expert is scored
+on rows it already holds. The fast level uses the log-loss of the last labelled batch only. A stored expert created
+at a segment close has issued no prediction for that batch and starts with the median of the other experts' losses;
+a merged expert keeps its identity and its losses. Batch 0 only fills the windows and counts towards the first
+segment; at $t=1$ nothing has been issued yet, so the fast weights are uniform and $L_{0,k}=0$ makes the slow weights
+uniform, and scoring of cached predictions begins at $t=2$, where $L_{1,k}=\gamma L_{0,k}+\ell_{1,k}$. The slow level is scored on the default and fast predictions actually issued, with the mean half
+Brier score in $[0,1]$; these are the two adaptive prediction sequences of \cref{prop:outer}, whose bound needs
+$\eta_2\le\tfrac12$ for the half Brier score. It therefore covers the method as run, but not the variants we report
+with the log-loss or with the registered step $\eta_2=10$.
+
+
+The cost is one TFM call per expert and batch, at most 15, plus, when a segment closes, two cross-fitted calls
+and one call per stored expert (at most 14), so at most 29 calls on a closing batch; at most one segment closes per
+batch, and the change test reuses the window's predictions and makes no call.
+
+\begin{algorithm}[tb]
+\caption{\method{} for one batch $t\ge1$}\label{alg:mice}
+\begin{algorithmic}[1]
+\STATE \textbf{Initialisation} (before $t=1$): batch 0 is observed with its labels and predicted by no one; the windows
+       hold its rows, the pool is empty, and its rows count towards the first segment
+       (rows are counted from the first row of the stream)
+\STATE \textbf{Input:} unlabelled batch $X_t$; labels $y_{t-1}$ of batch $t-1$; windows $\mathcal W$; pool $\mathcal P$;
+       cached predictions $\hat p_{t-1,k}$ of every expert $k$, $\hat p^{\mathrm{fast}}_{t-1}$ and
+       $\hat p^{\mathrm{def}}_{t-1}$, all issued for batch $t-1$ before $y_{t-1}$ arrived
+\STATE \textbf{if} $t=1$: no prediction has been issued; set $\ell_k\leftarrow0$ for every expert (uniform fast
+       weights) and $L_{0,\mathrm{def}}=L_{0,\mathrm{fast}}\leftarrow0$ (uniform slow weights), and go to the context
+       update
+\STATE \emph{Score issued predictions} ($t\ge2$): $\ell_k\leftarrow$ mean log-loss of $\hat p_{t-1,k}$ on $y_{t-1}$;
+       $\ell^{\mathrm{def}},\ell^{\mathrm{fast}}\leftarrow$ mean half Brier score of $\hat p^{\mathrm{def}}_{t-1}$,
+       $\hat p^{\mathrm{fast}}_{t-1}$; $L_{t-1,k}\leftarrow\gamma L_{t-2,k}+\ell^{k}$ for $k\in\{\mathrm{def},\mathrm{fast}\}$
+\STATE \emph{Update contexts:} add batch $t-1$ to the windows; record the errors of the 300-row window on it; if
+       \eqref{eq:cp} declares a change, or the open segment has 500 rows and three more batches are labelled: close a
+       segment $S$ (if it has at least 300 rows) and merge
+       it into $\argmin_{k\in\mathcal P}\widehat{\Div}_T(S\,|\,\cC_k)$ if the minimum is at most $\delta$ (the expert
+       keeps its identity), else add $S$ to $\mathcal P$ as a new expert $k'$ with $\ell_{k'}\leftarrow$ median of
+       the $\ell_k$
+\STATE \emph{Predict:} $\hat p_{t,k}\leftarrow f_\Theta(\cdot\mid X_t;\cC_k)$ for $k\in\mathcal W\cup\mathcal P$;
+       $\hat p^{\mathrm{fast}}_t\leftarrow\sum_k w_k\hat p_{t,k}$ with $w_k\propto e^{-\eta\ell_k}$;
+       $\hat p^{\mathrm{def}}_t\leftarrow\hat p_{t,M}$ (the $M$-row window)
+\STATE \textbf{Output and cache:} $\hat p_t=v_0\,\hat p^{\mathrm{def}}_t+v_1\,\hat p^{\mathrm{fast}}_t$ with
+       $v_k\propto e^{-\eta_2\gamma L_{t-1,k}}$; cache the expert predictions $\hat p_{t,k}$ (with
+       $\hat p^{\mathrm{def}}_t=\hat p_{t,M}$; $\hat p^{\mathrm{fast}}_t$ is a function of them and of earlier labels)
+\end{algorithmic}
+\end{algorithm}
+
+\begin{table}[t]
+  \centering
+  \caption{Notation.}
+  \label{tab:notation}
+  \footnotesize
+  \begin{tabular}{@{}lp{0.70\columnwidth}@{}}
+    \toprule
+    Symbol & Meaning \\
+    \midrule
+    $(\vx,y)$ & a row: feature vector $\vx$ and label $y\in\cY$ \\
+    $B$, $M$ & rows per batch ($B=100$); context budget in rows ($M=1000$) \\
+    $\cC$, $\cC_k$ & a context (set of labelled rows); the context of stored expert $k$ \\
+    $f_\Theta(\cdot\mid\vx;\cC)$ & frozen TFM with parameters $\Theta$: maps a row $\vx$ and a context $\cC$ to a distribution over $\cY$ \\
+    $P$, $Q$; $P_X$; $p_\vx$ & concepts (distributions over $(\vx,y)$); marginal of $\vx$; conditional $P(\cdot\mid\vx)$ \\
+    $\epsilon_P(\cC)$, $R_P(n)$ & risk on $P$ of the TFM given $\cC$; learning curve, the expected risk for $n$ rows of $P$ \\
+    $\Div_T$, $\Div_E$, $\Div_R$ & recall regret and excess-risk discrepancy (\cref{def:excess}); R-divergence \citep{zhao2023rdiv} \\
+    $S$, $\delta$ & a closed segment (300 to 700 rows); merge threshold ($\delta=0.02$) \\
+    $z_t$, $\tau$ & errors of the 300-row window on batch $t$; margin of the change test \eqref{eq:cp} \\
+    $H_{\mathrm{cp}}$, $R_{\mathrm{cp}}$, $\delta_{\mathrm{cp}}$ & batches after and before a candidate change ($3$, $5$); level of the test ($10^{-3}$) \\
+    $\pi$, $\beta$, $\nu$ & majority share of a context; error gap after a change; rows between a declared change and the boundary \\
+    $K$ & number of experts of a meta expert; in \cref{def:recur}, number of past intervals \\
+    $\ell_k$, $\eta$, $w_k$ & log-loss of expert $k$ on the last labelled batch; fast step ($\eta=10$); fast weight \\
+    $g$, $\kappa$ & margin of the leading expert; $\kappa=\ln\bigl(1+(K-1)e^{-\eta g}\bigr)$ \\
+    $L$, $J$ & block length in rows; batches per block, $J=L/B$ \\
+    $a_k(n)$, $n_c$ & accuracy learning curve of concept $k$; rows held by its stored expert on visit $c$ \\
+    $\Delta_{k,c}(L)$, $\zeta_{k,c}$ & accuracy of the mixture minus that of relearning on visit $c$; first-batch term \\
+    $\ell_{t,k}$, $L_{t,k}$ & half Brier score of slow-level expert $k$ on batch $t$; its discounted cumulative loss \\
+    $\eta_2$, $\gamma$, $v_{t,k}$ & slow step ($\eta_2=\tfrac12$); discount ($\gamma=0.9$); slow weight \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Experiments}
+\label{sec:exp}
+
+The experiments test the theory in its two regimes. \Cref{sec:rq1} asks whether learning curves predict the
+gains of recall; \cref{sec:rq2} how pure segments at detected changes are and whether they keep the gain of recall
+wherever the boundaries fall; \cref{sec:rq3} whether
+the slow level keeps \method{} close to the plain window where there is little to recall; and \cref{sec:ablation}
+what the organisation of the pool, probability quality and resources contribute.
+
+\textbf{Protocol.} Prequential evaluation in batches of $B=100$ rows with labels one batch late; context budget
+$M=1000$ for every policy; backbone TabPFN v2 with four ensemble members \citep{hollmann2025tabpfn}, and TabICL
+\citep{qu2025tabicl} as a second backbone.
+
+\textbf{Segmentation.} \method{} with detected segments and with fixed segmentation were both run on the twelve grid
+streams of seeds 20 and 21, on the streams of \cref{sec:rq2} and on the 29 real streams; on the aligned grid streams
+with 30 or 100 centroids and on the real streams they differ by $+0.04$ and $+0.01$ points on average
+(\cref{tab:segsum}). The other results (generator streams, oracle test, second backbone seed, TabICL, ablations, pool
+controls and timing) were obtained with fixed segmentation, except the resource and snapshot comparison of
+\cref{tab:cpres}, which uses detected segments.
+
+\textbf{In-context baselines}: FIFO; LTM \citep{lourenco2026streams}; DDM-triggered reset \citep{gama2004ddm}; a window ensemble of the three windows of
+\method{} without the pool. \textbf{Other stream learners}: Adaptive Random Forest (ARF) \citep{gomes2017arf}, Streaming
+Random Patches (SRP) \citep{gomes2019srp}, the Hoeffding Adaptive Tree \citep{bifet2009hat}, Leveraging Bagging
+\citep{bifet2010levbag}, Adaptive Windowing (ADWIN) Bagging \citep{bifet2009new}, Learn++.NSE \citep{elwell2011nse}, and MOOE with trained experts
+\citep{zhao2025mooe}, tuned on the development streams over 72 configurations and an extension of its grid
+(\cref{app:details}).
+
+\textbf{Streams.} A controlled grid of recurring concepts: mixtures of 5, 30 or 100 Gaussian
+centroids in ten dimensions with four nominal classes, where each of three concepts assigns its own, independently
+drawn class to every centroid, so that $P_X$ is fixed and concepts conflict on the centroids where their classes
+differ; blocks of 500 or 2000 rows; three cycles (\cref{app:grid} gives the full specification). Thirty streams from six standard generators with recurring concepts, as implemented in River \citep{montiel2021river}:
+SEA \citep{street2001sea}, STAGGER \citep{schlimmer1986stagger}, Agrawal \citep{agrawal1993database}, Sine
+\citep{gama2004ddm}, random radial basis function (RBF) \citep{bifet2009new} and Hyperplane \citep{hulten2001mining}. Twenty-nine real streams from 13 sources, the long ones in segments
+of 100{,}000 rows: Electricity and seven INSECTS streams \citep{souza2020insects} from River \citep{montiel2021river} (one INSECTS stream in
+three segments); Forest CoverType\footnote{\url{https://archive.ics.uci.edu/dataset/31/covertype}} in five segments; and,
+from a public collection of drift data sets,\footnote{\url{https://github.com/ogozuacik/concept-drift-datasets-scikit-multiflow}}
+PokerHand and Airlines in five segments each, Rialto \citep{losing2016knn}, NOAA Weather \citep{elwell2011nse}, Spam
+\citep{katakis2010tracking} and Phishing.
+
+\textbf{Development and confirmation.} The real streams were opened in five stages (\cref{tab:real}): the first
+three developed the slow level, and the last two test it: the fourth set was registered for the method of
+\cref{sec:method} with fixed segmentation, which on the third set was added after the baselines of three segments were visible
+(\cref{app:prereg}).
+
+
+\subsection{Learning Curves Predict Recall Gains}
+\label{sec:rq1}
+
+\Cref{prop:recall} predicts the gain of recall from the learning curves of the grid concepts, measured before the
+grid streams were run (\cref{app:grid}). On seeds 10 and 11 the fast level alone exceeds reset on all eight streams with 30 or 100
+centroids, more for shorter blocks and for harder concepts, as predicted, and the rank correlation between predicted
+and observed gain over the six cells is 0.94; the magnitudes agree as well (0.55 versus 0.53 points, 3.0 versus 2.6,
+10.4 versus 8.6). On the fresh seeds 20 and 21 with the full two-level method the correlation is 0.83
+(\cref{tab:grid,fig:recall}). On these aligned streams the segments of both segmentations hold one concept, and
+detected segments change the accuracy by less than 0.2 points on each of the twelve streams (\cref{sec:rq2}). The predictions in \cref{tab:grid,fig:recall}
+assume $M$ stored rows on every recurrence; with the visit-specific size $n_c=\min(M,(c-1)L)$ of \cref{prop:recall}
+they change only for $L=500$ (100 centroids: 9.2 instead of 10.4 points, closer to the observed 8.6) and the rank
+correlations are unchanged. These observed gains are against DDM, whose detection delay, and the slow level of \method{}, lie outside
+\cref{prop:recall}. The quantity of the theorem itself is measured in \cref{tab:oracle}: with the boundaries and
+concept identities of the generator, relearning resets its context at the block boundary, the stored expert holds
+the last $n_c$ rows of the concept's earlier visits, and the mixture of the two weights them by
+$\exp(-\eta\,\ell)$ with $\eta=10$ and $\ell$ the log-loss on the last labelled batch. On seeds 40 and 41, which no earlier test had used,
+the measured area term lies within 0.7 points of the visit-specific prediction in every cell (mean absolute
+difference 0.37 points; Spearman correlation 1.0), from 0.3 against 0.02 points for 5 centroids and $L=500$ to 8.7
+against 8.9 for 100 centroids and $L=500$. Identification follows the margin of \cref{ass:margin}: on the 74 batches where the two experts
+differ by more than 10 points the mixture puts more than half of its weight on the more accurate one every time, on
+the 59 batches with a difference of 5 to 10 points on 90\% of them, and on the 221 batches within 2 points of each
+other on 49\%; weighted by the accuracy difference, the agreement is 0.87. The net cost against the better expert on
+every batch is 0.03 points, with batches on which the mixture is more accurate than both offsetting the others. On
+the first batch of a block the weights come from the last batch of the preceding block, which belongs to another
+concept; the stored expert received a weight of at most $3\times10^{-10}$ there, the mixture was as accurate as
+relearning on all 72 first batches of recurrences, and the measured first-batch term is zero. On seeds 20 and 21 the
+gain of the deployed \method{} over DDM is below the oracle area in five of the six cells, by 0.06 to 1.14 points; this
+departure combines DDM's detection against the oracle reset, \method{}'s memory and identification without oracle
+boundaries, and the slow level. On the sixth cell (5 centroids, $L=500$) the gain over DDM is 1.24 points against an
+oracle area of 0.03. On seeds 10 and 11 the curves were measured
+on the evaluated concepts; on seeds 20 and 21 they predict the gains of new concepts from the same generator. The six standard generators are the other end of the scale: their learning curves are flat after
+about 200 rows, the predicted gain is at most 0.4 points, and the observed gain of \method{} over reset is 0.1 points
+on average. This is the low-area regime of \cref{prop:recall}: memory has little to add where relearning
+is cheap.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.65\textwidth]{fig_recall.pdf}
+  \caption{(a) Learning curves of the grid concepts with TabPFN v2, measured before the grid streams were run.
+  (b) Gain of memory over reset per grid cell: predicted from these curves (registered values, see \cref{sec:rq1}) against observed, for
+  the fast level on seeds 10 and 11 and for \method{} on seeds 20 and 21; the dashed line is equality.}
+  \label{fig:recall}
+\end{figure}
+
+\begin{table}[t]
+  \centering
+  \caption{Controlled grid, fresh seeds 20 and 21 (accuracy in \%, mean of two streams per cell). Win.: window ensemble; Fast: the
+  fast level without the slow level. Pred.: gain over reset predicted from learning curves measured beforehand
+  (registered values, which assume $M$ stored rows on every recurrence; see \cref{sec:rq1}); Gain: observed \method{} minus reset, in points.}
+  \label{tab:grid}
+  \footnotesize
+  \setlength{\tabcolsep}{2.2pt}
+  \begin{tabular}{rrccccccc}
+    \toprule
+    Cent. & Block & FIFO & Win. & Reset & Fast & \method{} & Pred. & Gain \\
+    \midrule
+\rowinput{tab_grid_rows.tex}
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \caption{Direct test of \cref{prop:recall} with oracle boundaries (points). Pred.: area term from the learning
+  curves with $n_c=\min(M,(c-1)L)$; Area: measured mixture minus relearning over batches $2,\dots,J$ of each block,
+  divided by $J$ and averaged over all blocks; Best: the better of stored expert and relearning on each batch in place of
+  the mixture; MICE$-$DDM: deployed gain on the same seeds. Two streams per cell.}
+  \label{tab:oracle}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{rrccccc}
+    \toprule
+     & & & \multicolumn{2}{c}{Seeds 40, 41} & \multicolumn{2}{c}{Seeds 20, 21} \\
+    \cmidrule(lr){4-5}\cmidrule(lr){6-7}
+    Cent. & Block & Pred. & Area & Best & Area & MICE$-$DDM \\
+    \midrule
+\rowinput{tab_oracle_rows.tex}
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table*}[!t]
+  \centering
+  \caption{Real streams: mean accuracy (\%) per evaluation stage, and the worst difference to FIFO over the streams
+  of the stage (points). Per-stream results are in \cref{tab:realfull}.}
+  \label{tab:real}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{%
+  \begin{tabular}{lccccccc|cccc}
+    \toprule
+     & & \multicolumn{6}{c|}{Mean accuracy} & \multicolumn{4}{c}{Worst difference to FIFO} \\
+    Stage & Streams & FIFO & LTM & Reset & Win.\ ens. & Fast only & \method{} & Reset & Win.\ ens. & Fast only & \method{} \\
+    \midrule
+\rowinput{tab_real_summary_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table*}
+
+On the grid \method{} exceeds reset on all eight streams with 30 or 100 centroids and the window ensemble on all
+eight (\cref{tab:grid}): the gain comes from memory, not from faster adaptation. Averaged over the twelve streams it
+reaches 86.5 against 84.3 for reset, 81.8 for the window ensemble and 62.4 for FIFO; on the hardest cell the gain
+over reset is 8.5 points. The slow level costs 0.4 points here against the fast level alone, the price of the
+safeguard. Stream learners that train a model are far behind when a concept must be learned within a block: on seeds
+10 and 11, ARF reaches 68.0, SRP 69.7 and the tuned MOOE 78.1, against 83.9 for reset and 86.2 for \method{}. On the
+thirty generator streams \method{} matches reset (95.0 against 94.8), and the forgetting of \cref{obs:forget} is
+repaired: 0.82--0.89 in the five batches after a recurrence against 0.17--0.51 for FIFO.
+
+\subsection{Segment Purity and Boundary Phase}
+\label{sec:rq2}
+
+\Cref{prop:recall} assumes stored contexts whose rows come from one concept, and \cref{prop:purity} shows that
+in the population limit a majority identifies one of two deterministic concepts with a shared input distribution. Fixed segmentation gives pure contexts only where concept boundaries coincide with segment ends, as
+on the grid of \cref{sec:rq1}, where every concept lasts 500 or 2\,000 rows from row zero. Three tests of fixed
+segmentation, with the same baselines and constants, remove this coincidence; they motivate segmentation at detected
+changes, which we then test on fresh streams.
+
+\textbf{Fixed segmentation.} \emph{(a) Misaligned schedules.} Twelve streams of the same generator (data seeds 30
+and 31, 30 or 100 centroids, three concepts in nine blocks) have blocks of 700 rows, of 1\,300 rows, or drawn
+uniformly from $\{500,600,\dots,2\,500\}$ rows, so that concept boundaries fall inside the 500-row segments (7 of the
+8 boundaries for blocks of 700 and 1\,300 rows). Fixed segmentation is above reset on 8 of the 12, by $+0.47$ points
+on average (\cref{tab:misaligned}), short of the registered criterion (\cref{app:prereg}). With 100 centroids it stays
+above reset on all six streams ($+0.8$ to $+1.9$ points; $+7.1$ to $+10.9$ in the first five batches of each
+recurring block); with 30 centroids it is between $-0.7$ and $+0.3$ ($-2.3$ to $+2.5$ in those batches). A pool that
+keeps every closed segment as its own expert, without the discrepancy test and without merging (an
+\emph{archive}), is more accurate on all twelve streams, by 0.2 to 1.8 points.
+
+\emph{(b) Fixed block length, shifted boundaries.} The eight aligned grid streams of \cref{tab:grid} with 30 or 100
+centroids, with 200 rows of the first concept prepended (drawn from the same centroids with a separate random
+generator): every recurring block keeps its length, and every boundary lies 200 rows into a 500-row segment while
+staying on a batch boundary. Batch $t+2$ of a shifted stream holds exactly the rows of batch $t$ of its aligned
+stream, so the two are compared on matched batches. The shift leaves FIFO, reset and the window ensemble almost
+unchanged (within one point) but removes the recall advantage (\cref{tab:offset}): the gain over reset changes by
+$-6.8$ points on average ($-1.0$ to $-14.4$; $-12.0$ in the first five batches of the recurring blocks), and fixed
+segmentation is below reset on 7 of the 8 shifted streams ($-3.7$ points on average, down to $-10.8$ with blocks of
+500 rows), short of the registered criterion. With 500-row blocks it is also below the window ensemble ($-0.9$ to
+$-8.5$ points); with 2\,000-row blocks it stays above it ($+0.2$ to $+1.8$) and loses 1.0 to 3.0 points of its
+advantage over reset, and with 100 centroids it keeps $+5.7$ and $+7.3$ points over reset in the first five batches of
+the recurring blocks. The archive loses less and is above fixed
+segmentation on all eight shifted streams (by 3.0 points on average), whereas on the aligned streams it is 0.3
+points below.
+
+\emph{(c) Shifted boundaries, segments realigned.} Rerunning on the shifted streams with the first segment starting
+at row 200, using the known phase of the boundaries, makes every stored segment hold one concept again while the
+prepended rows still enter the windows. This restores the recall advantage (\cref{tab:offset}): above reset on all
+eight streams, by 3.01 points on average against 3.09 on the aligned streams, and 0.29 points above the archive
+against 0.30. Restoring the phase changes the gain over reset by $+6.7$ points on average ($+12.0$ in the first five
+batches of the recurring blocks), while the prepended history changes it by $-0.08$ points.
+
+The three tests locate the loss in the phase of the segments relative to the concept boundaries: with 500-row
+blocks every fixed segment mixes two concepts, with 2\,000-row blocks one in four, and with the same rows and the
+segments realigned the advantage returns. Segmentation at detected changes seeks this alignment without knowing the
+phase.
+
+\textbf{Detected segmentation on fresh streams.} The test streams are 72 new grid streams (registered before any run,
+\cref{app:prereg}): four data seeds (40 to 43), 30 or 100 centroids, and three length
+regimes, nine blocks of 500 rows, of 2\,000 rows, or of lengths drawn uniformly from 500 to 2\,500 rows; each
+combination is run with three independently drawn offsets of 1 to 499 rows (1 to 1\,999 for 2\,000-row blocks) of the
+first concept prepended, so that boundaries fall at arbitrary rows, mostly inside batches. Seeds 40 and 41 had been used for the oracle test of \cref{tab:oracle}, which involves no
+detector and set no constant, so their concepts, and for fixed block lengths their rows after the offset, had been
+seen; the detector constants were set on development seeds 0 and 1 (\cref{app:prereg}). Uncertainty is estimated by a
+hierarchical bootstrap that resamples seeds within each centroid count and offsets within each seed.
+\Cref{tab:fresh} gives the results. \method{} is above reset on 70 of the 72 streams, by $+2.85$ points on average,
+and in every length regime: $+5.17$ points with 500-row blocks (24 of 24; 95\% interval $[+4.59,+5.72]$), $+1.48$
+with 2\,000-row blocks (22 of 24; $[+1.22,+1.72]$) and $+1.91$ with variable blocks (24 of 24; $[+1.74,+2.07]$). Fixed
+segmentation gains $+0.66$ ($[-2.34,+3.31]$), $+0.74$ and $+0.65$ on the same streams. In the first five batches of
+the recurring blocks the gain over reset is $+10.1$ points against $+5.3$. On seeds 42 and 43 alone (36 streams, a split made after the evaluation) \method{} is above reset on all 36,
+by $+2.84$ points, and $+5.35$, $+1.41$ and $+1.76$ in the three regimes. On 72 confirmation streams from seeds 50 to
+53, with the same construction and criterion, \method{} is above reset on all 72, by $+2.69$ points: $+5.07$
+($[+4.31,+5.83]$), $+1.35$ ($[+1.20,+1.51]$) and $+1.64$ ($[+1.48,+1.80]$) in the three regimes, against $-1.31$,
+$+0.39$ and $+0.43$ for fixed segmentation. The ordering of the cells is that of the
+learning curves (\cref{sec:rq1}): with 100 centroids the gain is $+2.4$ to $+8.2$ points, with 30 centroids $+0.5$ to
+$+2.2$.
+
+On the streams of tests (a) to (c), detected segmentation recovers what fixed segmentation lost and leaves the
+rest unchanged (\cref{tab:segsum}): $+6.55$ points over fixed segmentation on the shifted grid (8 of 8), where it is
+$+3.07$ points above reset against $+3.13$ on the aligned streams, and $+1.74$ on the misaligned schedules (12 of 12);
+on the aligned grid the two differ by $+0.04$ points and on the 29 real streams by $+0.01$ ($[-0.02,+0.05]$; $-0.37$
+to $+0.41$ on single streams).
+
+\textbf{Detection, location and purity.} We measure the three conditions of \cref{sec:th-seg} separately. The
+detector declared 570 of the 576 changes of the 72 streams, and 575 of the 576 on the confirmation streams, at the
+batch that holds the boundary or at one of the three batches after it, and made one cut elsewhere (none on the confirmation streams), consistent
+with \cref{prop:cp}. Each of the 570 and 575 declarations matched to a boundary lay in the batch that holds it (59\%
+and 64\%) or in the next one, so within $\nu<B$ rows of the boundary (median 24 and 28 rows, at most 78), the
+location condition of \cref{cor:cp}. The premises of \cref{cor:cp} thus held on 67 of the 72 test streams and on 71
+of the 72 confirmation streams; the others have a missed boundary, and one of them also the cut away from any
+boundary. At
+every segment close we measured the share of the majority concept among the rows of the stored context that received
+the segment. All closes were majority-pure. The grid concepts are not deterministic, as their Gaussian components overlap, so
+this share describes the mixing and does not verify the identification of \cref{prop:purity}; 88\%
+held at least 95\% rows of one concept (87\% on the confirmation streams), short of the registered 90\%
+(\cref{app:prereg}), and the mean share was 97.6\%. The impure closes concentrate on 500-row blocks (69\% at the 95\%
+level, against 92\% and 88\% for the other regimes), where a boundary inside a batch leaves up to 99 rows of the
+neighbouring concept in a segment of at least 300. The stored contexts are thus majority-pure but not pure:
+\cref{prop:recall} is not verified for them, and the gains above measure how much of this mixing recall tolerates.
+On the real streams the detector declares between 0 and 180 changes per stream (median 9), where
+\cref{ass:err} need not hold; there the slow level keeps \method{} within 0.23 points of FIFO on every stream
+(above it on 24 of 29, $+0.58$ points on average).
+
+\textbf{Archive and resources.} An archive with the same detected segments is 0.11 points below \method{} on the
+fresh streams (\method{} above it on 50 of 72) and 0.08 below on the real streams, and holds 7.64 stored experts with 10.64 TFM
+calls per batch on the fresh streams, against 2.42 experts and 6.26 calls for \method{} (6.56 calls with fixed
+segmentation). On the real streams \method{} makes 10.0 calls per batch on average (4.6 to 17.3). With detected
+segments the advantage of the archive in tests (a) and (b) disappears, and merging by discrepancy keeps the pool at a
+third of its size.
+
+\textbf{Resources and the snapshot pool with detected segments.} In the isolated benchmark of \cref{tab:poolcap},
+run with detected segments (\cref{tab:cpres}), \method{} takes 1.07\,s per batch on the three real prefixes, with
+2.0 stored experts, 5.6 TFM calls and 1\,900 stored rows, and the archive with the same segments 2.58\,s, with 10.7
+experts, 13.4 calls and 5\,200 rows; on four grid streams (100 centroids; blocks of 500, 2\,000 and 500 to
+2\,500 rows, and shifted 500-row blocks) the times are 1.03 and 1.58\,s, and the archive is slower on each stream
+(1.09 to 1.93 times). \method{} has the higher peak of reserved GPU memory (1.15 against 0.76\,GB on the prefixes).
+The snapshot pool needs no detector: every 500 rows it stores the latest 1\,000 rows. Of the pool sizes 2 and 4, none
+stays within the time per batch of \method{} on all three prefixes; two experts take 0.95\,s on average, but 1.08
+against 0.96\,s on CoverType, and this smaller size is used. With two experts the snapshot pool is below \method{}
+on all 72 confirmation streams, by 5.69 points on average (95\% interval $[+4.98,+6.49]$; 9.44, 3.29 and 4.33 in the
+regimes of 500-row, 2\,000-row and variable blocks), by 6.55 points on the shifted grid and by 6.61 on the misaligned
+schedules; with four experts by 5.06, 6.46 and 5.04 points. With twelve experts it has the pool capacity of
+\method{} and takes more time per batch: 2.78\,s on the prefixes (2.6 times) and 1.69\,s on the grid streams (1.28 to
+2.04 times). \method{} is then 2.14 points more accurate on the confirmation streams ($[+1.40,+2.96]$, above it on 50
+of 72), 3.42 on the shifted grid and 1.32 on the misaligned schedules, and level with it on 2\,000-row blocks
+($-0.13$, $[-0.35,+0.12]$, above it on 9 of 24), where at least half of the snapshots lie inside one block and hold a
+single concept, against none with 500-row blocks. Against \method{} with detected segments, a snapshot of the latest
+rows thus matches recall only on long blocks, and there at about twice the time per batch.
+
+\begin{table*}[t]
+  \centering
+  \caption{Resources and accuracy with detected segments. Mean stored experts, TFM calls and stored rows (thousands)
+  per batch, mean and 95th percentile of seconds per batch, and peak reserved GPU memory (GB) from the isolated
+  benchmark on the three real prefixes (mean over prefixes of the mean over three repetitions; one repetition for
+  the snapshot pool with $k=12$); mean seconds per batch on four grid streams (three repetitions); accuracy difference
+  \method{} minus snapshot pool (points) on the 72 confirmation streams (hierarchical bootstrap), the 8 shifted grid
+  streams and the 12 misaligned schedules (moving-block bootstrap), with 95\% intervals of the group mean. The archive
+  uses the segments of \method{}; its accuracy is in \cref{tab:segsum}. The snapshot pool stores the latest 1\,000
+  rows every 500 rows; $k=2$ is the smaller of the sizes 2 and 4, neither of which stays within the time of
+  \method{} on all three prefixes; $k=12$ is the pool capacity of \method{}.}
+  \label{tab:cpres}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{\begin{tabular}{lrrrrrrrccc}
+    \toprule
+    & \multicolumn{7}{c}{resources} & \multicolumn{3}{c}{\method{} minus snapshot pool, points} \\
+    \cmidrule(lr){2-8}\cmidrule(lr){9-11}
+    Pool & experts & calls & rows, k & s, real & p95 & s, grid & GB & confirmation & shifted & misaligned \\
+    \midrule
+    \rowinput{tab_cpres_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table*}
+
+\begin{table}[t]
+  \centering
+  \caption{Misaligned schedules with fixed segmentation (test (a), registered): accuracy (\%) and differences in
+  points. Rec.: first five batches of each recurring block. Archive: every closed segment its own expert, no merging.}
+  \label{tab:misaligned}
+  \small
+  \setlength{\tabcolsep}{2pt}
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{%
+  \begin{tabular}{lrrrrrrrrrr}
+    \toprule
+    Blocks & cent. & seed & \method{} & Reset & FIFO & Win.\ ens. & Archive & $-$Reset & $-$Reset (rec.) & $-$Archive \\
+    \midrule
+    \rowinput{tab_misaligned_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \caption{Fixed segmentation, block length fixed, boundaries shifted by 200 rows (tests (b) and (c), registered):
+  \method{} minus reset
+  and minus the archive, in points, on matched batches of each aligned stream and its shifted copy. $\Delta$: shifted
+  minus aligned. Realig.: shifted stream with the segments starting at row 200. Rec.: first five batches of each
+  recurring block.}
+  \label{tab:offset}
+  \small
+  \setlength{\tabcolsep}{2pt}
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{%
+  \begin{tabular}{rrrrrrrrrrrrr}
+    \toprule
+    & & & \multicolumn{4}{c}{$-$Reset} & \multicolumn{3}{c}{$-$Reset (rec.)} & \multicolumn{3}{c}{$-$Archive} \\
+    \cmidrule(lr){4-7}\cmidrule(lr){8-10}\cmidrule(lr){11-13}
+    Block & cent. & seed & aligned & shifted & $\Delta$ & realig. & aligned & shifted & realig. & aligned & shifted & realig. \\
+    \midrule
+    \rowinput{tab_offset_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\begin{table*}[t]
+  \centering
+  \caption{Detected segmentation on 72 fresh grid streams (seeds 40 to 43, three random boundary offsets each; 12
+  streams per cell, 24 per regime): differences in points. Det.: \method{} with detected segments; Fixed: \method{}
+  with fixed 500-row segments; Archive: unmerged pool with the same detected segments; Rec.: first five batches of
+  each recurring block. Pure: share of segment closes whose receiving context holds at least 95\% rows of one
+  concept; Purity: mean majority share; Found: detected changes over true changes; False: cuts away from any
+  boundary.}
+  \label{tab:fresh}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{%
+  \begin{tabular}{lrrrrrrrrrrr}
+    \toprule
+    & & \multicolumn{4}{c}{over the whole stream} & \multicolumn{2}{c}{Rec.} & & & & \\
+    \cmidrule(lr){3-6}\cmidrule(lr){7-8}
+    Blocks & cent. & Det.$-$Reset & Fixed$-$Reset & Det.$-$Fixed & Det.$-$Archive & Det.$-$Reset & Fixed$-$Reset & Pure, \% & Purity, \% & Found & False \\
+    \midrule
+    \rowinput{tab_fresh_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table*}
+
+\begin{table}[t]
+  \centering
+  \caption{Detected against fixed segmentation on every stream group with both (points): \method{} with detected
+  segments (Det.) and with fixed segments (Fixed) minus the reference policy, their difference with a 95\%
+  moving-block bootstrap interval of the group mean and the number of streams where it is positive, and Det.\ minus
+  the archive with the same detected segments.}
+  \label{tab:segsum}
+  \small
+  \setlength{\tabcolsep}{2pt}
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{%
+  \begin{tabular}{lrlrrrcrr}
+    \toprule
+    Streams & $n$ & Ref. & Det. & Fixed & Det.$-$Fixed & 95\% CI & $>0$ & Det.$-$Arch. \\
+    \midrule
+    \rowinput{tab_segsum_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\subsection{The Slow Safeguard on Real Streams}
+\label{sec:rq3}
+
+
+Real streams rarely announce a recurrence, and the experts are close to each other. Here the requirement is
+safety first. \Cref{tab:real} shows that every policy that reacts to the last errors pays for it somewhere: reset
+loses up to 9.6 points to FIFO (PokerHand) and 1.8 on average, the window ensemble up to 1.4, and the fast level
+alone up to 2.3. \method{} loses at most 0.25 points on any of the 29 streams, is above FIFO on 24 of them (+0.57 on
+average), and is more accurate than all four in-context baselines on 23; with detected segments it loses at most
+0.23 points and is above FIFO on 24 ($+0.58$; \cref{sec:rq2}). The rest of this section uses fixed segmentation. Its largest gains are where the stream
+revisits its past, Rialto (+4.7 points over FIFO, with a daily cycle) and the INSECTS streams (+0.2 to +1.9).
+
+\textbf{Confirmatory sets.} On the fourth held-out set \method{} is not below
+FIFO or reset on any of the six segments (worst difference to FIFO $-0.01$ points), it is more accurate than all four
+in-context baselines on five segments and has the highest mean (85.3 against 85.1 for FIFO, 84.2 for the window
+ensemble and 80.9 for reset), and it exceeds its own variant without the pool on all six. The fast level alone is
+2.0 and 1.9 points below FIFO on the two PokerHand segments, which the slow level turns into $+0.4$ and $+0.5$;
+reset is 9.6 and 8.6 points below. On the third held-out set, \method{} is within 0.08 points of FIFO on every
+segment, has the highest mean (85.2 against 84.9 for FIFO) and is the most accurate policy on five of eight
+segments; the paired difference to FIFO over batches is $+0.30$ points (block-bootstrap 95\% interval
+$[+0.20,+0.40]$), and the registered step of 10 gives the same worst case and five of eight segments.
+
+\textbf{Uncertainty.} To account for
+sampling variability and for dependence between consecutive batches, we computed for every real stream the
+one-sided 95\% lower bound of the mean per-batch accuracy difference to FIFO with a moving-block bootstrap over
+batches (blocks of 20 batches, 10\,000 resamples, percentile bound; the bootstrap treats the per-batch differences as
+locally stationary, so the 95\% level is approximate under drift). The lower bound is above $-0.3$ points on 28 of
+the 29 streams, and blocks of 10 and 50 give the same count. On the six segments of the fourth held-out set the
+worst lower bound is $-0.029$ points (Covertype-e; $-0.030$ with blocks of 50). The
+exception is Spam, which has only 61 batches: its mean difference is $-0.25$ points with a lower bound of $-0.85$, so
+non-inferiority there is undecided rather than refuted. For the unweighted mean over the streams of each of the nine
+sources, with every stream resampled independently, the worst lower bound apart from Spam is $-0.139$ points
+(Weather), and Spam's is $-0.85$. These
+bounds concern backbone seed~0 on fixed streams; the second seed below varies the model, not the data, and segments
+of one source are not independent evidence.
+
+\textbf{A second seed.} We repeated ten segments with another seed of the backbone. On the fourth held-out set the results hold again (most accurate on five of six segments, never below
+FIFO). On four segments of the third held-out set, non-inferiority, safety and the highest mean hold, and \method{}
+is the most accurate policy on two of the four segments, where the hypothesis asked for three. Over the ten
+segments the difference to FIFO has the same sign under both seeds and changes by at most 0.4 points; its minimum
+is $-0.08$ points.
+
+\textbf{Slow level.} It leaves the recall regime almost
+unchanged (grid: 86.5 against 86.9 for the fast level alone) and removes the losses on real streams (worst case
+$-0.25$ against $-2.3$; \cref{tab:real}). With the log-loss in place of the half Brier score, one grid stream falls
+from 86.4 to 74.9: after a switch the fast mixture is confidently wrong for one batch, and an unbounded loss lets
+that batch outweigh the next ten.
+
+\textbf{Margin.} On the grid the
+leading expert holds weight 1.000 from the second batch of a recurring block, with a gap of 0.8--8.0 nats to the
+runner-up, so $(K-1)e^{-\eta g}<0.005$ in \cref{prop:block}; on the real streams the median gap is 0.008--0.012
+nats, the regime for which the slow level is built.
+
+\textbf{Regret.} Over 33 development streams the largest
+discounted regret of the slow level is 0.15 against the window and 0.35 against the fast mixture, within the bound
+of 1.39; on adversarial sequences the bound holds at $\eta_2=\tfrac12$ and fails for steps of 2 and 10
+(\cref{app:details}).
+
+\textbf{Other learners and a second backbone.} On all 29 streams, the best trained
+stream learner per stream (seven learners, MOOE in two configurations) is below \method{} on 28 and below FIFO on
+23; the exception is one Airlines segment, where Streaming Random Patches is 0.3 points above \method{}. On
+CoverType and PokerHand the trained learners are 4 to 19 points behind. With TabICL as the backbone and no constant changed, \method{} is the most accurate policy on all four streams of the
+first held-out set (84.0 on average against 83.4 for FIFO and 83.5 for the window ensemble), and on four segments
+of the third held-out set and all six of the fourth the results match those with TabPFN: on the fourth set \method{} is the most accurate policy on six of six segments (85.2 on average against
+84.7 for FIFO, 84.2 for the window ensemble and 81.3 for reset), and over the ten segments it is at most 0.02 points
+below FIFO.
+
+\subsection{Pool Organisation, Probability Quality and Resources}
+\label{sec:ablation}
+
+\textbf{Windows and pool.} Removing the pool, so that the two levels mix the three windows only, lowers accuracy on
+every one of the 24 grid streams (by 5.6 points on average) and on 28 of the 29 real streams (by 0.35 points on
+average, 2.1 on Rialto and 1.5 on a PokerHand segment): memory, not the choice of a window, carries the gain, on real
+streams as well. Removing the two short windows instead lowers the generator streams from 95.0 to 93.6 and the grid
+from 86.4 to 81.8 and leaves the real streams within 0.2 points on average; the pool forms exactly as many stored
+experts as a generator stream has concepts.
+
+\textbf{Pool controls.} Removing the pool lowers accuracy, so past contexts carry the gain; two pools that never merge
+measure how much the organisation of the pool adds. Under the same windows, pool size of 12, two-level rule and
+constants, an \emph{archive} keeps every closed 500-row segment as its own expert, and a \emph{snapshot} pool stores the
+latest $\min(1000,\text{rows so far})$ rows at every segment close. They are complete policies with their own budgets:
+all three make at most 15 TFM calls per batch; \method{} and the snapshot pool hold at most 1000 rows per stored expert
+(13\,400 context rows in all), the archive 500 (7\,400); only \method{} adds discrepancy calls when a segment closes.
+On the aligned grid (\cref{tab:poolgrid}) \method{} is above the archive on seven of the eight streams with 30 or 100
+centroids, by $+0.30$ points (95\% interval $[+0.12,+0.41]$, below the registered $+0.5$), and $+3.3$ points above the
+snapshot pool, mostly on 500-row blocks, where a 1000-row snapshot spans two concepts and the single-concept premise
+fails again. On the 29 real streams (\cref{tab:poolreal}) the three pools are close: \method{} is $+0.07$ points above
+the archive (above it on 18 streams) and $-0.08$ points below the snapshot pool (above it on 11); the one-sided 95\%
+block-bootstrap bounds are above $-0.3$ points on 23 and 17 streams, and single streams differ by up to 0.52 points.
+\method{} keeps the smallest pool: 8.4 active experts per batch against 14.2, 9.7 TFM calls against 14.0 (fewer on 25
+of the 29 streams, including about 1.3 discrepancy calls per batch), and 2\,700 to 5\,400 stored rows per batch on
+average (bounds from the 500- and 1000-row caps; per-expert counts were not recorded) against 5\,600 for the archive
+and 11\,100 for the snapshot pool; at the upper cap \method{} can store more rows than the archive on single streams.
+Keeping past contexts carries the recall gain; organising them by discrepancy keeps the pool small in experts and calls.
+
+\begin{table}[t]
+  \centering
+  \caption{Pool controls on the aligned grid (seeds 20, 21): accuracy (\%), \method{} minus archive and minus snapshot
+  pool (points) with 95\% moving-block bootstrap intervals, TFM calls per batch (measured by the call counter of each run; \method{} including its
+  discrepancy calls / archive / snapshot), and stored rows per batch in thousands (\method{}: bound from the 500/1000-row caps;
+  archive and snapshot: reconstructed exactly).}
+  \label{tab:poolgrid}
+  \small
+  \setlength{\tabcolsep}{2pt}
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{%
+  \begin{tabular}{rrrrrrrrrrrrrrrr}
+    \toprule
+    cent. & block & seed & \method{} & Archive & Snapshot & $-$Arch. & 95\% CI & $-$Snap. & 95\% CI & calls & (arch.) & (snap.) & rows, k & (arch.) & (snap.) \\
+    \midrule
+    \rowinput{tab_pool_grid_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\begin{table*}[t]
+  \centering
+  \caption{Pool controls on the 29 real streams: \method{} accuracy (\%), difference to the archive and to the
+  snapshot pool (points) with one-sided 95\% block-bootstrap lower bounds (LB), active experts per batch (\method{} / archive; the snapshot pool has the archive's), TFM calls per batch
+  (measured by the call counter of each run; \method{} including its discrepancy calls / archive / snapshot), and stored rows per batch in thousands (\method{}: bound from the 500/1000-row caps;
+  archive and snapshot: reconstructed exactly).}
+  \label{tab:poolreal}
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{%
+  \begin{tabular}{lrrrrrrrrrrrrrr}
+    \toprule
+    Stream & batches & \method{} & $-$Arch. & LB & $-$Snap. & LB & experts & (arch.) & calls & (arch.) & (snap.) & rows, k & (arch.) & (snap.) \\
+    \midrule
+    \rowinput{tab_pool_real_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table*}
+
+\textbf{Pool capacity at equal cost.} At the same pool size of 12, \method{} is within 0.3 points of both pools on the
+real streams and of the archive on the aligned grid, but not at the same cost. In an isolated benchmark on the three real prefixes of \cref{tab:cost} (three repetitions), \method{} takes
+1.11\,s per batch with 1.8 stored experts and 5.5 TFM calls on average, the archive 2.49\,s (10.7 experts, 13.6
+calls) and the snapshot pool 2.84\,s (\cref{tab:poolcap}); on four grid streams (100 centroids, two aligned and two shifted) the times are
+1.05, 1.58 and 1.63\,s.
+Capping each control at the largest pool size among 2 and 4 whose time per batch does not exceed that of \method{},
+chosen from these timings alone, gives two experts for both (0.93 and 0.98\,s; four experts take 1.27 and 1.38\,s).
+At this capacity \method{} is more accurate on the aligned grid, by 6.7 points over the archive and 7.5 over the
+snapshot pool (95\% intervals $[+5.4,+8.7]$ and $[+6.2,+9.5]$, all eight streams), and on a source-balanced subset of
+nine real streams (Airlines 4d, CoverType 4d, PokerHand 4d, INSECTS abr., Rialto, Electricity, Weather, Phishing and
+Spam, full streams), by 0.35 and 0.27 points ($[+0.26,+0.44]$ and $[+0.16,+0.36]$; above them on seven and six of
+the nine). Both capped pools also stay within the time of \method{} on
+each of the four grid streams (0.78 and 0.80\,s on average). On the shifted grid with fixed segmentation, \method{} is 1.45 points above the
+archive ($[+1.03,+2.06]$), which at size 12 is 2.88 points above \method{} over all batches
+(2.99 on the matched batches of \cref{tab:offset}), and level with the snapshot pool ($+0.00$, $[-0.64,+0.47]$, above it on four of
+the eight streams): the latest rows do not depend on where a segment starts, so the snapshot pool loses nothing when
+the boundaries move inside the segments, while merged fixed segments do (\cref{sec:rq2}). With four
+experts, slower than \method{}, both pools are level with it on the shifted grid ($-0.01$ and $-0.09$) and remain
+below it on the aligned grid (by 2.11 and 6.31 points) and on the real subset (by 0.31 and 0.20; above them on six
+and four of the nine). Organising past
+contexts by discrepancy thus matches, with 1.8 stored experts on average on the benchmark prefixes, a twelve-expert archive on the aligned grid and
+both twelve-expert pools on the real streams; where fixed segments mix concepts, unmerged pools are more robust: a
+snapshot pool sized to the same prefix budget is as accurate, as are both pools of size 4, and an archive of size 12
+is more accurate. Detected segments remove this case: on the shifted grid \method{} is then 0.26 points above an
+archive of size 12 with the same segments (\cref{tab:segsum}) and 3.42 points above a snapshot pool of size 12
+(\cref{tab:cpres}).
+
+\begin{table*}[t]
+  \centering
+  \caption{\method{} against the archive and snapshot pools at pool sizes $k$ of 2, 4 and 12. Mean stored experts,
+  TFM calls and stored rows (thousands) per batch, seconds per batch and peak reserved GPU memory (GB) from the
+  isolated benchmark on the three real prefixes (mean over prefixes of the mean over three repetitions; one
+  repetition for $k=12$); seconds per batch on four grid streams; accuracy difference \method{} minus control
+  (points) on the aligned grid (8 streams), the shifted grid (8) and the real subset (9), with 95\% block-bootstrap
+  intervals of the group mean. $k=2$ is the capacity chosen from the timings, $k=4$ a supplementary configuration; $k=12$ differences are on the same
+  streams, without intervals.}
+  \label{tab:poolcap}
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{\begin{tabular}{lrrrrrrccc}
+    \toprule
+    & \multicolumn{6}{c}{resources} & \multicolumn{3}{c}{\method{} minus control, points} \\
+    \cmidrule(lr){2-7}\cmidrule(lr){8-10}
+    Pool & experts & calls & rows, k & s, real & s, grid & GB & aligned & shifted & real \\
+    \midrule
+    \rowinput{tab_poolcap_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table*}
+
+\textbf{Cost and a larger window.} The pool raises the cost per batch, and the baselines above use contexts of at most
+1000 rows. In an isolated benchmark (one process on an NVIDIA RTX 5000 Ada with 32\,GB under WSL2, TabPFN v2 with four
+estimators, GPU memory capped at 28\,GB; the first 300 batches of an Airlines, a CoverType and an INSECTS segment;
+three repetitions), \method{} takes 1.07\,s per batch (0.91 on batches without a segment close, 1.69 with one),
+against 0.22\,s for FIFO with 1000 rows, 0.42\,s with 3000 rows and 1.91\,s with 13\,400 rows, the capacity \method{}
+may retain (\cref{tab:cost}). A 3000-row window, about 2.5 times cheaper on these prefixes, separates two regimes on
+the 29 real streams (\cref{tab:fifo3000} in \cref{app:details}). \method{} is ahead by $+0.31$ points on average (95\%
+interval $[+0.09,+0.49]$) because of the strongly drifting streams: four INSECTS streams by $+3.3$ to $+5.5$ points and
+Rialto by $+6.9$. On Airlines ($-1.1$ points on average over its segments), PokerHand ($-1.5$), Phishing ($-1.4$) and
+Weather ($-0.5$) the larger window is more accurate, and overall it is ahead on 21 of the 29 streams, with a paired
+interval below zero on 14. The benchmark prefixes show the same split: larger windows win on Airlines and CoverType and
+lose up to 14.6 points on INSECTS. The pattern is consistent with the two regimes of \cref{prop:recall}: where
+relearning a concept is cheap, a larger window uses the budget better, and recall pays where concepts change sharply
+or recur.
+
+\begin{table*}[t]
+  \centering
+  \caption{Isolated resource benchmark (registered; one process on an RTX 5000 Ada, GPU memory capped at 28\,GB;
+  first 300 batches of three real segments; mean over the three prefixes of the mean over three repetitions).
+  Seconds per batch (\method{} including its two-level rule and segment processing), rows per second, peak allocated
+  and reserved GPU memory and peak process memory (GB), and accuracy (\%) on the same prefixes.}
+  \label{tab:cost}
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{\begin{tabular}{lrrrrrrrrrrr}
+    \toprule
+    & \multicolumn{4}{c}{seconds per batch} & & \multicolumn{3}{c}{memory, GB} & \multicolumn{3}{c}{accuracy} \\
+    \cmidrule(lr){2-5}\cmidrule(lr){7-9}\cmidrule(lr){10-12}
+    Policy & mean & median & p95 & max & rows/s & alloc. & reserved & process & Airlines & CoverType & INSECTS \\
+    \midrule
+    \rowinput{tab_cost_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table*}
+
+\textbf{Discrepancy.} On 144 pairs of grid segments, the recall regret and the
+excess-risk discrepancy separate ``different concept'' from ``same concept'' with AUROC 1.00, and the R-divergence
+estimate with 0.85 (0.42 on the hardest cell). This is an empirical comparison of the estimators as implemented
+(accuracy-based, finite contexts), consistent with the direction of \cref{prop:blind} but not a consequence of it,
+since the proposition concerns population risks of exact concept predictors; on pairs of the same concept the
+estimated excess is negative, down to $-0.2$ for 100 centroids, the pooling gain.
+
+\textbf{Beyond accuracy.} \Cref{tab:metrics} adds the macro-F1 score, the one-vs-rest area under the receiver operating characteristic curve (AUC), the expected
+calibration error (ECE) and the half Brier score, computed from the stored predictions of every method. On the real
+streams the picture of the accuracy carries over for F1 and the Brier score: \method{} has the highest F1 and a lower
+Brier score than every baseline; against FIFO its F1 is higher on 24 of 29 streams ($+0.8$ points on average), its
+AUC on 25 and its Brier score lower on 26, and against reset on 25, 28 and 28. The exception is the AUC of the dual
+memory: LTM has the highest mean AUC (91.0 against 90.5), all of it from the five PokerHand segments (up to 7.3
+points), where its class-balanced long-term buffer keeps rows of the rare classes that a window loses; on the
+same segments its accuracy is 2.5 to 3.8 points below \method{}, and on the other 24 streams the AUC of \method{}
+is 0.2 points higher in the median. On the grid the step $\eta_2=\tfrac12$ has a price in the quality of the probabilities:
+\method{} is 0.2 points below the step of 10 in accuracy but 3.1 points in ECE and 1.2 in the Brier score, because a
+small step keeps weight on the default window, which is poorly calibrated under conflicting concepts (ECE 16.7);
+its ECE is also above that of reset (7.3), while its Brier score is lower (12.7 against 13.1).
+The step that \cref{prop:outer} covers is thus the conservative choice: it buys the guarantee with calibration in the
+recall regime.
+
+\begin{table*}[!t]
+  \centering
+  \caption{Metrics beyond accuracy (\%, mean over streams): macro-F1, one-vs-rest ROC AUC, expected calibration error
+  (15 bins) and half Brier score, on the 29 real streams and the 24 grid streams. Computed from stored predictions;
+  the best value per column is in bold.}
+  \label{tab:metrics}
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{\begin{tabular}{lccccc|ccccc}
+    \toprule
+     & \multicolumn{5}{c|}{Real streams} & \multicolumn{5}{c}{Controlled grid} \\
+    Method & Acc.\ $\uparrow$ & F1 $\uparrow$ & AUC $\uparrow$ & ECE $\downarrow$ & Brier $\downarrow$
+           & Acc.\ $\uparrow$ & F1 $\uparrow$ & AUC $\uparrow$ & ECE $\downarrow$ & Brier $\downarrow$ \\
+    \midrule
+\rowinput{tab_metrics_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table*}
+
+\section{Related Work}
+\label{sec:related}
+
+\textbf{Concept drift and recurring concepts.} Drift detection and adaptation are surveyed by
+\citet{gama2014survey} and \citet{lu2019learning}. Recurring concepts are handled by storing past models and
+reusing them, selected by statistical tests \citep{goncalves2013rcd}, by meta-learners of each model's domain
+\citep{gama2014recurrent} or by weighted ensembles of batch learners \citep{elwell2011nse}. MOOE
+\citep{zhao2025mooe} combines offline experts of past intervals with an online expert under a meta expert with
+regret guarantees; \method{} keeps its decomposition and replaces trained experts by stored contexts, the
+cumulative meta expert by two time scales, and the generic regret by a quantity measured from the learning curve.
+\textbf{Model-oriented discrepancy.} R-divergence \citep{zhao2023rdiv} and I-Div \citep{zhao2024idiv} measure
+distribution discrepancy through a learned hypothesis; we identify the blind spot of the former under conflicting
+concepts and use an excess-risk form to decide which contexts to pool. \textbf{TFMs on streams.}
+\citet{lourenco2026streams} show that a TFM with a short- and long-term FIFO memory outperforms incremental
+ensembles; Drift-Resilient TabPFN \citep{helli2024drift} retrains the prior to extrapolate temporal trends. Neither
+models recurrence. Concept drift has likewise been redefined for other new model families, such as multi-modal
+large language models \citep{yang2025adapting,yang2026turning}. \textbf{Online aggregation.} Exponential weights
+with exp-concave losses and their logarithmic regret are classical \citep{cesabianchi2006prediction,hazan2007log};
+\cref{prop:outer} is their discounted, any-time form for two in-context experts.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+For an in-context learner, a past concept is recalled without retraining, and the value of recalling it is the area
+between the learning curve and the accuracy of the stored context. \method{} turns this into a stream learner: past
+contexts are experts next to fast windows, a fast meta expert identifies a recurring concept within one batch, and a
+slow meta expert bounds, at any time and for any stream, what following the mixture costs against the plain window.
+In the population limit a stored context of deterministic concepts with a shared input distribution recalls the
+concept that holds the majority of its rows. Segments that start at detected changes kept a majority at every close
+we measured, wherever the concept boundaries fell, on grid concepts that are not deterministic, so this share
+describes their mixing; they are not pure, which the recall theorem assumes. The experiments support both regimes of the theory. Where
+concepts are costly to learn, recall gains up to 8.5 points over reset detection, in the order the learning curves
+predict; fixed segments lose this gain when boundaries fall inside them, and detected segments recover it on fresh
+streams with random boundary phases; where relearning is cheap there is little to recall. Merging by discrepancy
+keeps the pool small: with detected segments it holds a third of the experts of an unmerged archive, is 0.11
+points more accurate and takes 0.41 times its time per batch on three real prefixes, and it is more accurate than
+a snapshot pool of the latest rows with the same capacity, except on 2\,000-row blocks, where they are level; with fixed segments and sizes chosen to fit its time per batch on three real prefixes, unmerged
+pools are less accurate, except a snapshot of the latest rows on the shifted grid, which matches \method{}. \method{} is never more than 0.25 points below the plain window on the 29 real streams, and a larger window can be the better use of the budget.
+
+\textbf{Limitations.} With fixed 500-row segments, both tests with boundaries inside segments failed their
+registered criteria, \method{} fell below reset on most shifted streams, and an archive of unmerged segments was more
+accurate. Detected segments repair this on the grid, but their stored contexts are not pure: at least 95\% rows of one concept
+in 90\% of the closes was not reached (88\%, 87\% on the confirmation streams, 69\% with 500-row blocks), because a
+boundary inside a batch leaves up to 99 rows of the neighbouring concept in a segment, so \cref{prop:recall} is not
+verified for these contexts and \cref{prop:purity} covers only the population limit. The detection guarantee assumes window
+errors that do not rise between changes; on real streams the detector declares up to 180 changes on one stream, and
+there the slow level, not the detector, keeps \method{} safe. The generator streams, the confirmatory real sets, the
+second backbone seed, TabICL, the pool controls and the timings were obtained with fixed segmentation, except the resource and snapshot comparison of \cref{tab:cpres}.
+At the same pool size, merging by discrepancy did not improve accuracy over an unmerged archive by the registered
+margin with fixed segments; its benefit is cost: with sizes chosen to fit the time per batch of \method{} on three real prefixes, both controls were less accurate except the
+snapshot pool on the shifted grid, which matched \method{}, as did both controls with four experts, which are slower. On real streams the gains are large only on sharply drifting streams (INSECTS, Rialto); a
+3000-row window, about 2.5 times cheaper on the benchmark prefixes, was more accurate on 21 of the 29 streams, and
+costs were measured on three 300-batch prefixes on one GPU only. The confirmatory real segments come from three
+streams whose earlier segments were used in development, and most streams have one run. \Cref{prop:outer} bounds the
+half Brier score rather than the accuracy, and its step costs calibration when concepts recur (\cref{tab:metrics});
+\cref{prop:blind,prop:purity} hold under \cref{ass:ppd}, \cref{prop:cp} under \cref{ass:err}, and \cref{prop:recall}
+under \cref{ass:margin}.
+
+\bibliography{refs}
+\bibliographystyle{IEEEtranN}
+
+\newpage
+\appendix
+\crefalias{section}{appendix}
+
+\section{Proofs}
+\label{app:proofs}
+
+\subsection{Proof of \texorpdfstring{\cref{prop:blind}}{Proposition 1}}
+
+\begin{proof}
+For the log-loss and any conditional $h$,
+\[
+  \epsilon_P(h)=\E_{P_X}\bigl[H(p_\vx)+\KL(p_\vx\|h_\vx)\bigr],
+\]
+so that $\epsilon_P(h_P)=\E_{P_X}H(p_\vx)$ and $\epsilon_P(h_U)-\epsilon_P(h_P)=\E_{P_X}\KL(p_\vx\|u_\vx)$, and likewise
+for $Q$.
+
+\emph{(i)} By the chain rule, $\KL(P\|U)=\KL(P_X\|U_X)+\E_{P_X}\KL(p_\vx\|u_\vx)$, and the same holds for $Q$.
+Averaging the two identities gives
+\[
+  \mathrm{JS}(P,Q)=\mathrm{JS}(P_X,Q_X)+\Div_E(P,Q),
+\]
+and $\Div_E\ge0$ as a mean of KL terms. If $P_X=Q_X$, then $\alpha\equiv\tfrac12$, $u_\vx=\tfrac12(p_\vx+q_\vx)$ and
+$\Div_E=\E_\vx\mathrm{JS}(p_\vx,q_\vx)$, which vanishes if and only if $p_\vx=q_\vx$ almost surely.
+
+\emph{(ii)} By the display above,
+\begin{multline*}
+  \Div_R(P\|Q)=\Bigl|\E_{P_X}\bigl[H(p_\vx)+\KL(p_\vx\|u_\vx)\bigr]\\
+  -\E_{Q_X}\bigl[H(q_\vx)+\KL(q_\vx\|u_\vx)\bigr]\Bigr| .
+\end{multline*}
+Deterministic concepts have $H(p_\vx)=H(q_\vx)=0$, and $u_\vx$ puts mass $\tfrac12$ on each of $g_P(\vx)$ and
+$g_Q(\vx)$ where they differ and mass $1$ where they agree. Hence
+$\KL(p_\vx\|u_\vx)=\KL(q_\vx\|u_\vx)=\ln2\cdot\mathbf 1[g_P(\vx)\neq g_Q(\vx)]$; with $P_X=Q_X$ the two expectations
+cancel, and $\Div_E=\rho\ln2$.
+
+\emph{(iii)} The predictor $h_P$ errs on $Q$ exactly where the concepts disagree and $h_Q$ nowhere, so
+$\Div_T(Q\,|\,P)=\rho$ whatever the tie rule of $h_U$. Where the concepts agree, $u_\vx$ has a unique maximiser and
+$h_U$ errs on neither concept. Where they disagree, $u_\vx$ puts $\tfrac12$ on $g_P(\vx)$ and $\tfrac12$ on $g_Q(\vx)$.
+With uniformly random ties $\xi$, $h_U^\xi$ predicts each of the two with probability $\tfrac12$, so
+$\E_\xi\epsilon_P(h_U^\xi)=\E_\xi\epsilon_Q(h_U^\xi)=\rho/2$ and $\Div_R=0$ (this concerns the averaged risks, not
+the expected absolute difference for one sampled predictor). With a deterministic rule $c$, $h_U$ errs on $P$ where
+$c(\vx)\ne g_P(\vx)$ and on $Q$ where $c(\vx)\ne g_Q(\vx)$, restricted to the disagreement region, which gives the
+stated expression; it is at most $\rho$ because the two indicators differ only there, it is zero for example when
+$c$ agrees with each concept on half of the disagreement mass, and it equals $\rho$ for example when that region is a
+single atom.
+\end{proof}
+
+\subsection{Proofs of \texorpdfstring{\cref{prop:purity,prop:cp,cor:cp}}{Propositions 2 and 3 and Corollary 1}}
+
+\emph{\Cref{prop:purity}.} With $P_X=Q_X$ the conditional of $\pi P+(1-\pi)Q$ is
+$\pi\,\mathbf 1[y=g_P(\vx)]+(1-\pi)\,\mathbf 1[y=g_Q(\vx)]$. Where $g_P(\vx)=g_Q(\vx)$ its mode is $g_P(\vx)$; where
+they differ the mode is $g_P(\vx)$ if $\pi>\tfrac12$ and $g_Q(\vx)$ if $\pi<\tfrac12$. The 0-1 risk on $P$ is therefore
+$0$ or $\rho$, and $\epsilon_P(h_P)=0$, which gives the regret.
+
+\emph{\Cref{prop:cp}.} Fix a candidate $b$ and a number $m\in\{2,\dots,R_{\mathrm{cp}}\}$ of compared batches before
+it, and write the statistic of \eqref{eq:cp} without the margin as
+$Z_m=\frac1{n_2}\sum_{\mathrm{post}}\mathbf 1[\text{error}]-\frac1{n_1}\sum_{\mathrm{pre}}\mathbf 1[\text{error}]$ over
+the rows of the batches $b-m,\dots,b-1$ (pre, $n_1=mB$) and $b,\dots,t-1$ (post), and $\bar Z_m$ for the same sum of
+conditional error rates. For fixed $b$ and $m$ these rows and the weights $1/n_1$ and $1/n_2$ do not depend on the
+data. By \cref{ass:err} the error indicators minus their conditional rates, taken in row order, form a martingale
+difference sequence whose terms lie in intervals of length $1/n_2$ (post) and $1/n_1$ (pre). By the
+Azuma--Hoeffding inequality, $\Pr[Z_m-\bar Z_m\ge\lambda]\le\exp\bigl(-2\lambda^2/(1/n_1+1/n_2)\bigr)$, and the same
+bound holds for $\Pr[Z_m-\bar Z_m\le-\lambda]$; at $\lambda=\tau(n_1,n_2)$ both equal $\delta_{\mathrm{cp}}$. The
+reference that \eqref{eq:cp} uses starts after the previous declared change, which depends on earlier errors,
+possibly on those of the compared rows; it is one of these $R_{\mathrm{cp}}-1$ fixed references, and a union bound
+over $m$ covers this selection. (i) Without a change in the batches $t-H_{\mathrm{cp}}-R_{\mathrm{cp}},\dots,t-1$,
+\cref{ass:err}(a) gives $\bar Z_m\le0$ for every $b$ and $m$, so each excess is positive with probability at most
+$\delta_{\mathrm{cp}}$; a union bound over the at most $H_{\mathrm{cp}}$ candidates and $R_{\mathrm{cp}}-1$ references
+gives the claim. (ii) On the event that $b$ is a candidate with $m\ge2$ compared batches, these batches form one of
+the runs of \cref{ass:err}(b), so $\bar Z_m\ge\beta\ge2\tau(2B,n_2)\ge2\tau(mB,n_2)$, as $\tau$ decreases in $n_1$; the
+excess $Z_m-\tau(mB,n_2)$ is then non-positive only if $Z_m-\bar Z_m\le-\tau(mB,n_2)$, and a union bound over the
+$R_{\mathrm{cp}}-1$ values of $m$ bounds the probability of this event by $(R_{\mathrm{cp}}-1)\delta_{\mathrm{cp}}$.
+
+\emph{\Cref{cor:cp}.} Each end of a closed segment is a declared change, a periodic close inside one concept, or
+the start of the stream. Without missed boundaries, the rows of other concepts lie between an end and the true
+boundary nearest to it, at most $\nu$ rows at each end, so at most $2\nu$ in all; the majority concept holds more
+than half of the rows when $2\nu<|S|/2$.
+
+\subsection{Proofs of \texorpdfstring{\cref{lem:margin,prop:block}}{Lemma 1 and Proposition 4}}
+
+\begin{proof}[Proof of \cref{lem:margin}]
+\emph{(i)} By \cref{ass:margin},
+\begin{align*}
+  w_{k^\star}&=\Bigl(1+\sum_{k\ne k^\star}e^{-\eta(\ell_k-\ell_{k^\star})}\Bigr)^{-1}\\
+  &\ge\bigl(1+(K-1)e^{-\eta g}\bigr)^{-1}=e^{-\kappa}.
+\end{align*}
+\emph{(ii)} For a row with label $y$ and expert predictions $p_k$,
+\[
+  -\ln\sum_kw_kp_k(y)\;\le\;-\ln\bigl(w_{k^\star}p_{k^\star}(y)\bigr)\;\le\;-\ln p_{k^\star}(y)+\kappa .
+\]
+\emph{(iii)} For two classes $y_1,y_2$,
+\begin{align*}
+  \sum_kw_k\bigl(p_k(y_1)-p_k(y_2)\bigr)\;&\ge\;w_{k^\star}\bigl(p_{k^\star}(y_1)-p_{k^\star}(y_2)\bigr)\\
+  &\quad-(1-w_{k^\star}),
+\end{align*}
+which is positive when the gap of expert $k^\star$ exceeds $(1-w_{k^\star})/w_{k^\star}\le e^{\kappa}-1$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{prop:block}]
+The first batch of the block is predicted with weights from a batch of the previous concept; its per-row regret is
+at most $c$. Every later batch is predicted with weights from a labelled batch of the block, on which $k^\star$
+leads by $g$, so \cref{lem:margin}(ii) bounds its per-row regret by
+$\ln\bigl(1+(K-1)e^{-\eta g}\bigr)\le(K-1)e^{-\eta g}$. Summing over the $J-1$ later batches gives the claim.
+\end{proof}
+
+\subsection{Proofs of \texorpdfstring{\cref{prop:recall,cor:flat}}{Theorem 1 and Corollary 2}}
+
+\begin{proof}[Proof of \cref{prop:recall}]
+The first batch of the block is predicted by both learners before any label of the block has arrived; its
+accuracy difference, divided by $J$, is $\zeta_{k,c}$ and is at most $1/J$ in absolute value because
+accuracies lie in $[0,1]$. Before batch $j+1$
+($j=1,\dots,J-1$) the relearning context holds $\min(jB,M)$ rows of the block, so its expected accuracy is
+$a_k(\min(jB,M))$; the stored expert has expected accuracy $a_k(n_c)$. By \cref{lem:margin}(iii) the mixture
+predicts as the better of the two, so its expected accuracy is the larger of the two values, and the difference to
+relearning is the positive part in \eqref{eq:area}. Averaging over the $J$ batches gives the area term, and adding
+the first batch gives $\zeta_{k,c}$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{cor:flat}]
+On the first visit $n_1=0$, and $a_k(0)\le a_k(\min(jB,M))$ because $a_k$ is non-decreasing, so every positive part
+vanishes. Since $a_k$ is non-decreasing and $n_c\le M$, every term of the area term is at most $a_k(M)-a_k(B)$, which
+is zero for a flat curve, and the terms with $jB\ge M$ vanish. At most $M/B$ of the $J-1$ terms are non-zero (only those with $jB<n_c\le M$),
+which with $|\zeta_{k,c}|\le1/J$ gives the bound.
+\end{proof}
+
+\subsection{Proofs of \texorpdfstring{\cref{prop:outer,cor:outer}}{Theorem 2 and Corollary 3}}
+
+\begin{proof}[Proof of \cref{prop:outer}]
+\emph{Exp-concavity.} The half Brier score $\ell(p)=\tfrac12\lVert p-e_y\rVert^2$ has gradient $p-e_y$ and Hessian
+$I$, and $\lVert p-e_y\rVert^2\le2$ on the simplex. Hence
+$\nabla^2\ell\succeq\eta_2\,\nabla\ell\nabla\ell^{\top}$ for $\eta_2\le\tfrac12$, that is, $\ell$ is
+$\eta_2$-exp-concave. The mean over the rows of a batch is $\eta_2$-exp-concave as well: its Hessian is the mean
+Hessian, and $\tfrac1n\sum_ig_ig_i^\top\succeq\bar g\bar g^\top$ for the row gradients $g_i$ with mean $\bar g$.
+Consequently,
+\begin{equation}\label{eq:expconcave}
+  e^{-\eta_2\ell_t(p_t)}\;\ge\;\sum_kv_{t,k}\,e^{-\eta_2\ell_{t,k}} .
+\end{equation}
+\emph{Potential.} Let $W_t=\sum_ke^{-\eta_2L_{t,k}}$, so that $W_0=K$. By \eqref{eq:outer-loss} and
+\eqref{eq:outer-weight},
+\[
+  W_t=\Bigl(\sum_ke^{-\eta_2\gamma L_{t-1,k}}\Bigr)\sum_kv_{t,k}\,e^{-\eta_2\ell_{t,k}} .
+\]
+By the power-mean inequality, $\sum_kx_k^{\gamma}\le K^{1-\gamma}\bigl(\sum_kx_k\bigr)^{\gamma}$ for $x_k\ge0$ and
+$\gamma\in(0,1]$; with $x_k=e^{-\eta_2L_{t-1,k}}$ and \eqref{eq:expconcave},
+\[
+  \ln W_t\;\le\;(1-\gamma)\ln K+\gamma\ln W_{t-1}-\eta_2\,\ell_t(p_t).
+\]
+\emph{Unrolling.} Since $(1-\gamma)\sum_{t\le T}\gamma^{T-t}+\gamma^{T}=1$,
+\[
+  \ln W_T\;\le\;\ln K-\eta_2\sum_{t=1}^{T}\gamma^{T-t}\ell_t(p_t).
+\]
+On the other hand $\ln W_T\ge-\eta_2L_{T,k}=-\eta_2\sum_{t=1}^{T}\gamma^{T-t}\ell_{t,k}$ for every $k$. Combining the
+two inequalities gives \eqref{eq:outer-bound}.
+\end{proof}
+
+\begin{proof}[Proof of \cref{cor:outer}]
+Insert $K=2$ and $\eta_2=\tfrac12$ into \eqref{eq:outer-bound}; the discounted number of batches is
+$\sum_{t\le T}\gamma^{T-t}\le1/(1-\gamma)$.
+\end{proof}
+
+\section{Registration, Development History and Provenance}
+\label{app:prereg}
+
+\textbf{Development and provenance.} Resource benchmark: registered before it was run; the comparison window was fixed beforehand from timings alone as the size among 1500, 2000 and 3000 rows whose cost is within a factor 1.25 of MICE's; none was, so the closest, 3000 rows, was used and the comparison is not cost-matched. The benchmark initially ran without a GPU memory cap; one oversubscribed run was discarded and rerun under a 28 GB cap, recorded before resuming. MICE's expert predictions in the benchmark are bit-identical to those behind every reported number. Costs were measured on the three prefixes only; the 29-stream comparison is an accuracy comparison. Pool controls: the archive and snapshot controls were added later. The archive runs, the grid criterion (MICE above the archive by at least 0.5 points on average over the eight streams with 30 or 100 centroids and on at least six of them; failed) and the real-stream criterion for the archive (mean difference at least $-0.1$ points; held) were registered before the runs. The grid snapshot pool was registered as a secondary control without a criterion. The snapshot pool on the real streams and its descriptive threshold (at least $-0.1$ points; held) were registered after the 29 streams and the MICE results had been examined, so that comparison is a control added later and not an independent confirmation. The grid intervals (moving-block bootstrap of the aligned per-batch differences with the same resampled indices for both policies of a stream, blocks of 10; the eight-stream aggregate is the mean of independently resampled streams) and the real-stream bounds against the archive are retrospective. MICE's discrepancy calls were reconstructed as calls per batch minus active experts per batch (0.05 to 2.6 per batch; a lower estimate because experts with a single-class context make no TFM call); stored rows of the archive and snapshot pool were reconstructed exactly from their storage rules; MICE's storage is a bound and at the upper cap can exceed the archive on single streams. The two boundary tests (misaligned schedules and shifted boundaries) were added later and registered before they were run. The realigned-segment test (c) was added later, after the two failed, and registered with its three criteria before it was run: \method{} above reset on at least 7 of the 8 streams with a mean gain of at least one point, a mean phase-restoration effect of at least 5.0 points, and a mean history effect within one point; all three held. The registered criterion of the misaligned schedules was MICE above reset on at least 10 of the 12 streams with a mean gain of at least one point; that of the shifted boundaries was MICE above reset on at least 7 of the 8 with a mean gain of at least one point. Both failed. The cache holds every expert's prediction for every batch; the fast mixture of batch $t$ is formed from these with weights that depend on the labels of earlier batches only, so replaying the rule over the cache issues the same predictions an online run would. All reported numbers for \method{} come from such replays: the method above with $\eta_2=\tfrac12$ (\texttt{simulate2(outer='brier', scale=0.5, temper=True)} in the code, frozen on 2026-10-05), and the stated variants with the log-loss or with $\eta_2=10$ as replays of the same rule with those parameters. The runs that produced the cache emitted a different, single-level mixture, which we do not report. All constants were set on synthetic development streams; none was tuned on a real stream. Hypotheses, data and decision rules were written down before each test, and every test stream was run once. The real streams were opened in five stages (\cref{tab:real}). The first three were also used, after their one-time evaluation, to develop the slow level. The third held-out set (eight later segments of four streams) and the grid seeds 20 and 21 were evaluated after the two-level rule was frozen with a step of 10; the step $\tfrac12$ required by \cref{prop:outer} was added to that analysis before any result was computed. The fourth held-out set, six further segments that no method had loaded, was then run once with \method{} with fixed segmentation, otherwise as defined in \cref{sec:method}, as the registered method (\cref{app:prereg}). The registered predictions used a simplification of the area term: a stored context of $M$ rows on every recurrence, whereas \cref{prop:recall} has $n_c=\min(M,(c-1)L)$, i.e.\ 500 rows on the second visit when $L=500$. Recomputed with $n_c$ from the same learning curves, the predictions change only for $L=500$ (100 centroids: 9.2 instead of 10.4 points; 30 centroids: 1.7 instead of 1.9), the rank correlations are unchanged (0.94 and 0.83) and the magnitudes agree more closely (9.2 versus 8.6). We report the registered values in \cref{tab:grid,fig:recall} because they were fixed before the runs. The two seed pairs answer different questions. The curves were measured on the concepts of seeds 10 and 11, so there the prediction is for concepts already sampled, using additional labelled data from them; we also found that this data repeats part of the random draws of the evaluated seed-10/11 streams (\cref{app:grid}), and curves remeasured on independent rows give the same rank correlations (0.94 and 0.83) and predictions within 0.6 points. Seeds 20 and 21 share no data with the curves: there the curves of other concept draws from the same generator predict the gains, which is the evidence for transfer to new concepts of the same family, with two data seeds. Every stage was run once when it was opened; the third and fourth held-out sets were opened after the   two-level rule was frozen. The oracle test of \cref{tab:oracle} was registered with its seeds and criteria before it was run: the measured area term within 1.0 point of the visit-specific prediction on at least five of the six cells with a mean absolute difference of at most 0.5 points, and a Spearman correlation of at least 0.8; both held. Its TFM uses backbone seed 0, the learning curves seeds 10 and 11. The capacity comparison of
+\cref{tab:poolcap} was added later and registered before it was run: the capacity rule (the largest
+of 2 and 4 within \method{}'s amortised time per batch on all three prefixes, from timings alone), the streams, the
+block bootstrap (blocks of 10 batches on the grid, 20 on real streams) and the rule that a group with a mean difference
+of at most $+0.1$ points is named in the abstract. The accuracy runs at size 2 were made before the
+capacity was fixed, to use the GPU while the benchmark waited; no accuracy was read before it was fixed. The runs at size 4 were made afterwards as the supplementary configuration. The real
+subset was chosen before the runs to balance sources; its $k=12$ differences come from the 29-stream runs.
+
+All hypotheses below were written to the experiment log before the corresponding streams were run, and every test
+stream was run once; interrupted runs were resumed from their checkpoints without rerunning a finished cell.
+
+\textbf{Grid, seeds 10 and 11} (fast level alone). Hypotheses: gain over reset positive on all eight streams with 30
+or 100 centroids, larger for shorter blocks and for more centroids; Spearman correlation between predicted and
+observed gain at least 0.8; the window ensemble below the method on these eight streams. All held (correlation
+0.94). An incidental expectation of no gain with 5 centroids was missed on one stream, where the reset baseline
+detected late.
+
+\textbf{Generator streams, seeds 10--14, and five real development streams.} Non-inferiority to reset on the
+generator streams ($+0.50$ points, 25 of 30 positive) and on each real stream held, as did the replication of
+\cref{obs:forget}. An exploratory expectation that the INSECTS stream with re-occurring drift would gain most was not
+met (it ranked second).
+
+\textbf{First held-out set} (four streams; fast level alone). Non-inferiority to reset on every stream and highest
+mean accuracy held; the method was the most accurate on three of four streams. A replication with TabICL held as
+well.
+
+\textbf{Second held-out set} (six streams; fast level alone). Non-inferiority to reset held. The hypothesis that the
+fast level alone would be the most accurate method on at least four of six streams was \emph{not} met (one of six),
+and on PokerHand it was 2.3 points below FIFO. This result motivated the slow level; all real streams seen so far
+count as development data from here on.
+
+\textbf{Third held-out set} (eight segments; two-level rule frozen). Two candidates for the slow level were
+registered before any result existed: the log-loss with step 1, and the half Brier score with step 10, added after
+the log-loss failed on a cached synthetic test stream. For both, non-inferiority to FIFO and reset (tolerance 0.5
+points) and to the fast level alone held on every segment, and the mean was the highest. ``Most accurate on at least
+five of eight segments'' held for the half Brier score (five) and not for the log-loss (four). The step
+$\eta_2=\tfrac12$ with tempered weights, the method of this paper, was added to the analysis after the baselines of
+three segments were visible and before any result of a two-level rule was computed; it was not part of the
+registered hypotheses. It gives five of eight segments and the highest mean.
+
+\textbf{Fourth held-out set} (six segments: the next 200{,}000 rows each of Airlines, PokerHand and CoverType; method of
+\cref{sec:method} with fixed segmentation frozen). Registered hypotheses: on every segment not more than 0.5 points below the better of FIFO
+and reset; above all four in-context baselines on at least four of six segments, with the highest mean; on every
+segment not more than 0.3 points below FIFO; above the variant without the pool on at least four of six segments.
+All held (five of six segments; worst difference to FIFO $-0.01$ points; six of six against the variant without the
+pool).
+
+\textbf{Second backbone and second seed.} With the method of \cref{sec:method} with fixed segmentation frozen and the same four hypotheses
+(``at least three of four'' for sets of four segments): TabICL on four segments of the third held-out set and on the
+six segments of the fourth, all held; a second seed of TabPFN on the same four segments, three held and ``most accurate on at least three of four
+segments'' did not (two); a second seed on the six segments of the fourth held-out set, all held.
+
+\textbf{Grid, seeds 20 and 21} (half Brier score, step 10). Mean difference to the fast level alone at least $-0.5$
+points ($-0.14$), above reset on all eight streams with 30 or 100 centroids, and within one point of reset with 5
+centroids: all held. The step $\tfrac12$ is 0.23 points lower on average and satisfies the same three statements.
+
+\textbf{Detected segmentation.} Segmentation at detected changes replaced fixed segmentation after the boundary
+tests above; the merge rule, the experts and both levels are unchanged. Its constants ($H_{\mathrm{cp}}=3$,
+$R_{\mathrm{cp}}=5$, $\delta_{\mathrm{cp}}=10^{-3}$, minimum segment of 300 rows, the 300-row window as signal) were set on
+development streams of the generator's development seeds 0 and 1: twenty streams with boundaries on batch edges
+(blocks of 500 and 2\,000 rows, aligned and shifted, and variable blocks) and twelve with boundaries inside batches
+(offsets of 250, 1\,170 and 37 rows). Because the window's errors do not depend on the pool, the segmentation was
+simulated offline from cached window predictions, and the online runs reproduced the simulated cuts exactly. A
+variant that leaves out the batch on each side of a declared change, which makes the segments pure, was less
+accurate on 500-row development blocks with 30 centroids (gain over reset $-0.50$ and $-1.24$ points against $+1.76$
+and $+2.09$ without it) because it stores fewer rows; it was not used. The test streams, the criteria and the
+evaluator were committed before any test stream was run, and every test stream was run once (runs interrupted by
+GPU faults were resumed from their checkpoints). Criteria: (C1, primary) in each of the three length regimes, mean
+gain over reset at least $+1.0$ points, above reset on at least 18 of 24 streams, and a hierarchical-bootstrap 95\%
+lower bound above zero; (C2) on the shifted grid, mean gain over fixed segmentation at least $+2.0$ points; (C3) on
+the eight aligned grid streams with 30 or 100 centroids, at least $-0.3$ points against fixed segmentation; (C4) on
+the 29 real streams, at least $-0.1$ points against FIFO and $-0.2$ against fixed segmentation; (C5) no more TFM calls
+and stored experts per batch than the archive with the same segments, and a mean difference to it of at least $-0.3$
+points. Purity rule: the stored contexts meet the single-concept premise if at least 90\% of the closes hold at least
+95\% rows of one concept, its majority form if at least 95\% hold more than half, and otherwise the recall theorem
+is conditional on purity. All five criteria held; the purity rule gave its majority form (88\% and 100\%), that is, the strict form failed
+and the recall theorem remains conditional on pure contexts; the confirmation streams gave 87\% and 100\%. The registration described the
+test seeds 40 to 43 as unused; seeds 40 and 41 had in fact been used, two days earlier, for the registered oracle
+test of \cref{tab:oracle}, with the same concept draws and, for fixed block lengths, the same rows after the offset.
+That test involved no detector and set no constant. We found the reuse after the evaluation, kept the registered
+verdicts as computed, and report the split by seeds as a post-hoc analysis (\cref{sec:rq2}). We then registered a
+confirmation on seeds 50 to 53, unused by any test, with the methods, construction and criterion C1 unchanged, before
+any run; C1 held in all three regimes (\cref{sec:rq2}). The resource and snapshot comparison of \cref{tab:cpres}
+was added later and registered before it was run, with its policies, streams, statistics and
+reporting rule: the snapshot size $k$ was fixed from the prefix timings alone, before any accuracy of the snapshot
+runs was read, as the larger of 2 and 4 within the time of \method{} on all three prefixes, and 2 if neither was
+(the case that occurred); if the snapshot pool of that size had been within $+0.1$ points of \method{} on average in
+any group, the abstract and conclusion would name the group (none was). The snapshot runs used backbone seed 0 and
+the existing runs of \method{} on the same streams; the benchmark ran each configuration in a fresh process alone on
+the GPU, and no run failed.
+
+\section{Experimental Details and Full Results}
+\label{app:details}
+
+\begin{table}[t]
+  \centering
+  \caption{\method{} versus FIFO with 3000 rows (fixed beforehand from timings; about 2.5 times cheaper than
+  \method{} on the three benchmark prefixes, cost not measured on these streams) on the 29 real streams: accuracy (\%), difference (points) and paired two-sided 95\% moving-block
+  bootstrap interval (blocks of 20 batches; aggregate over independently resampled streams).}
+  \label{tab:fifo3000}
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{%
+  \begin{tabular}{lrrrrr}
+    \toprule
+    Stream & batches & \method{} & FIFO 3000 & $\Delta$ & 95\% CI \\
+    \midrule
+    \rowinput{tab_fifo3000_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\subsection{Controlled Grid and Learning Curves}
+\label{app:grid}
+
+\textbf{Generator.} A stream has $d=10$ features, four nominal classes and three concepts. For $m\in\{5,30,100\}$
+centroids, $C_j\sim\mathcal U([0,1]^{10})$ i.i.d.\ and mixture weights $w_j=u_j/\sum_i u_i$ with $u_j\sim\mathcal U(0,1)$.
+Each concept $k$ has its own class vector $\lambda_k(j)\sim\mathcal U\{0,1,2,3\}$, drawn i.i.d.\ over centroids and
+independently across concepts: it is not a permutation, and two concepts may agree on a centroid (on our seeds the
+weight of such centroids is 18\% to 48\% averaged over the three pairs of concepts, 3\% to 76\% for single pairs), and with five centroids a concept can lack some classes (two to four
+present); there is no rejection or coverage constraint, and class priors follow from $w$ and $\lambda_k$. A row of
+concept $k$ draws $j\sim\mathrm{Categorical}(w)$, $\vx=C_j+\mathcal N(0,0.15^2 I_{10})$ and $y=\lambda_k(j)$. Concepts
+appear in the order $1,2,3$ in blocks of $L\in\{500,2000\}$ rows, three cycles, so $P_X$ is the same for all
+concepts. One NumPy generator per data seed draws $C$, $w$ and $\lambda$ first and then the rows. Data seeds: 0 and 1
+for development (also of the change detector), 10 and 11 for the registered test, 20 and 21 for confirmation, 30 and
+31 for the misaligned schedules, 40 and 41 for the oracle test, 40 to 43 for the test of detected segmentation, and 50 to 53 for its confirmation;
+the shifted streams reuse seeds 20 and 21 and draw their prefix from a separate generator, and the streams of
+\cref{tab:fresh} prepend rows of the first concept from a separate generator and also use blocks of lengths drawn
+uniformly from 500 to 2\,500 rows.
+
+\begin{table}[t]
+  \centering
+  \caption{Controlled grid: parameters.}
+  \label{tab:gridparams}
+  \small
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{%
+  \begin{tabular}{ll}
+    \toprule
+    Features, classes, concepts & $d=10$, 4, 3 \\
+    Centroids $m$ & 5, 30, 100; $C_j\sim\mathcal U([0,1]^{10})$ \\
+    Weights & $u_j\sim\mathcal U(0,1)$, normalised \\
+    Class of centroid $j$ in concept $k$ & $\lambda_k(j)\sim\mathcal U\{0,\dots,3\}$, independent \\
+    Noise & isotropic Gaussian, s.d.\ 0.15 \\
+    Block length $L$, cycles & 500 or 2000 rows, 3 \\
+    Batch size, $M$ & 100, 1000 rows \\
+    Segments & 300--700 rows (detected); 500 rows (fixed) \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\textbf{Learning curves.} Measured before the grid test, for data seeds 10 and 11: for each $m$ and concept, one
+block of 4000 rows of that concept from the generator above. Rows 1--3000 form the context pool and rows 3001--4000
+the 1000 test rows, disjoint. For $n\in\{50,100,200,500,1000,2000\}$, three contexts are drawn without replacement from
+the pool (generator seeds 0, 1, 2), so contexts of different sizes and repetitions overlap and the same 1000 test rows
+are used throughout; the frozen TabPFN v2 (four estimators, random state equal to the data seed) predicts the test
+rows. The curve $a(n)$ is the mean accuracy over 2 seeds, 3 concepts and 3 repetitions (18 measurements per $n$, not
+18 independent concept draws), interpolated linearly in $\log n$.
+
+\textbf{From curves to predictions.} The averaged curve is inserted into the area term of \cref{eq:area}; visits 2
+and 3 of a concept recur and enter with weight $\tfrac13$ each (the first visit has no stored expert and contributes
+zero). The registered predictions used $M$ stored rows on every recurrence; \cref{sec:rq1} also reports the form with
+$n_c=\min(M,(c-1)L)$. The observed gain of a cell is the mean over its two streams, and the Spearman correlations are
+over the six cells.
+
+\textbf{Shared randomness.} The curve data of seeds 10 and 11 were generated by re-initialising the generator of the
+same seed with one 4000-row block per concept. They therefore share the concept definitions with the evaluated
+seed-10/11 streams, the first block's centroid draws coincide, and some rows are bit-identical feature vectors (0 to
+1887 per stream), in runs where the two draw sequences of the same seed realign at a constant offset.
+The seed-20/21 streams share nothing with the curves. In a sensitivity analysis registered after this was found, we
+remeasured the curves on rows drawn, given the same concept definitions, from one independent NumPy generator per
+seed, centroid count and concept (seeded with $(20\,000+\text{seed},m,k)$; no row in common with any evaluated
+stream). These counts and checks are produced by \texttt{code/grid\_overlap\_check.py}. The curves change by at most 0.015 at any $n$, the predictions by at most 0.6
+points (100 centroids, $L=500$: 9.9 instead of 10.4 registered, 8.9 instead of 9.2 with $n_c$), and the rank
+correlations are unchanged (0.94 on seeds 10 and 11, 0.83 on seeds 20 and 21). Stream evaluation uses backbone random
+state 0.
+
+
+\textbf{Streams.} The grid and generator streams are produced by \texttt{code/grid\_streams.py} and
+\texttt{code/streams.py}; generator streams have blocks of 2000 rows and three cycles over three or four concepts.
+Real streams with more than 100{,}000 rows are cut into segments of 100{,}000 (CoverType and one INSECTS stream:
+150{,}000 for the first segment). The second held-out set consists of all streams of a public collection of drift
+data sets that have at least 5000 rows, at most ten classes and had not been used before.
+\textbf{Baselines.} LTM follows Algorithm~1 of \citet{lourenco2026streams} with a short-term share of 0.75. MOOE
+follows the original algorithm with linear experts on random Fourier features, generalised to several classes; it
+was tuned on the five development streams over feature type, interval length, step size and regularisation (72
+configurations), and its grid was extended twice because the optimum lay on the boundary; the best configuration of
+every round is evaluated. The incremental learners use the default settings of \texttt{river} \citep{montiel2021river}
+with ten base models and the same batch protocol.
+\textbf{Regret under adversarial sequences.} With synthetic expert predictions and labels chosen to hurt the mixture
+or the current leader ($K\in\{2,5\}$, $\gamma\in\{0.5,0.9,0.99,1\}$, 400 rounds), the discounted regret at
+$\eta_2=\tfrac12$ stays below $\ln K/\eta_2$ in every configuration (at most 0.67 for $K=2$), exceeds it at
+$\eta_2=2$ for $\gamma\ge0.9$, and reaches 4.4 at $\eta_2=10$, $\gamma=0.9$.
+
+\begin{table*}[!t]
+  \centering
+  \caption{Real streams: accuracy (\%) per stream. Fast only: the fast level without the slow level; $\eta_2=10$: the
+  pre-registered step; Trained: the best trained stream learner per stream;
+  $\Delta$: \method{} minus FIFO in points.}
+  \label{tab:realfull}
+  \small
+  \resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{\begin{tabular}{lccccccccc}
+    \toprule
+    Stream & FIFO & LTM & Reset & Win.\ ens. & Fast only & $\eta_2=10$ & \method{} & Trained & $\Delta$ \\
+    \midrule
+\rowinput{tab_real_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table*}
+
+\end{document}
