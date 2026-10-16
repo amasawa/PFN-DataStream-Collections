@@ -52,8 +52,8 @@ putting its labelled rows back into the context, without retraining. We characte
 prediction under recurring concept drift. When a stored context holds one concept and the experts are separated by a
 margin, the gain of recall over relearning is the area between the stored context's accuracy and the TFM's learning
 curve, up to a first-batch term. The characterisation predicts large gains for concepts that need many examples and
-little gain for concepts that are learned quickly. Under a posterior-predictive model of the TFM, identification needs only that the concept holds the majority of the
-stored rows; stored contexts are segments that start at changes detected by a two-sample test on the window's
+little gain for concepts that are learned quickly. Under a posterior-predictive model of the TFM and in the population limit, a stored context recalls the concept
+that holds the majority of its rows; stored contexts are segments that start at changes detected by a two-sample test on the window's
 errors, which bounds the rows of other concepts in each segment when the changes are detected. We propose \method{}, a mixture of window and stored-context experts
 under a meta expert with two time scales. The fast level identifies a recurring concept within one batch under a
 margin; the slow level bounds the discounted half-Brier regret against the plain window by $2\ln2\approx1.39$ at every
@@ -63,7 +63,8 @@ measured area term matches its prediction within 0.7 points in every cell. With 
 depended on where the concept boundaries fell inside the segments; on 72 fresh grid streams with random boundary
 phases, \method{} exceeds reset detection by 2.85 points on average (0.68 with fixed segments), on 70 of the 72
 streams and in each of three block-length regimes (hierarchical 95\% lower bounds $+1.22$ to $+4.59$), and by 2.69 points on all of 72 further streams from unused seeds; its stored contexts were majority-pure at every segment close, and 88\% held at least 95\% rows of one concept, short
-of the registered 90\%. On 29 real streams \method{} is more accurate than all
+of the registered 90\%, so these gains are measured with contexts that are mixed, not with the pure contexts the
+recall theorem assumes. On 29 real streams \method{} is more accurate than all
 four in-context baselines on 23, and its one-sided 95\% block-bootstrap bound on the difference to the plain window is
 above $-0.3$ points on 28 (backbone seed 0, fixed segments; detected segments differ by 0.01 points on average). With
 fixed segments, against an unmerged archive and a snapshot pool whose size was chosen,
@@ -141,8 +142,8 @@ representative of the concepts.
 \textbf{(1) The value of recall.} The gain of recalling a concept rather than relearning it is the area between the
 stored context's accuracy and the backbone's learning curve, under single-concept contexts and identification
 conditions (\cref{prop:recall}); it explains when memory pays and when the opportunity vanishes.
-\textbf{(2) Theory for identifying and combining contexts.} Majority purity as the condition for recalling a
-concept, and false-alarm and detection guarantees that bound the mixing of detected segments
+\textbf{(2) Theory for identifying and combining contexts.} Majority purity as the population condition under which a mixed
+context recalls a concept, and false-alarm and detection guarantees that bound the mixing of detected segments
 (\cref{prop:purity,prop:cp,cor:cp}); identification within one batch under a margin (\cref{prop:block}); a blind spot of R-divergence under conflicting concepts and its excess-risk repair under
 posterior-predictive assumptions (\cref{prop:blind}); and an any-time discounted half-Brier regret bound for the slow
 level (\cref{prop:outer}).
@@ -150,8 +151,8 @@ level (\cref{prop:outer}).
 a slow level and organises a bounded pool of past contexts, segmented at detected changes, by directed recall regret.
 \textbf{(4) Evidence in the recall and the weak-gain regime.} On a controlled grid, predicted and observed gains have
 Spearman correlations of 0.94 and 0.83; fixed segments lose the gain when boundaries fall inside them, and detected
-segments recover it on 72 fresh streams with random boundary phases ($+2.85$ points over reset, majority-pure
-contexts) and on 72 confirmation streams ($+2.69$); on real streams, accuracy is non-inferior
+segments recover it on 72 fresh streams with random boundary phases ($+2.85$ points over reset, with contexts that are
+majority-pure but not pure) and on 72 confirmation streams ($+2.69$); on real streams, accuracy is non-inferior
 to the default window on 28 of 29 streams at a 0.3-point margin. Pool controls, ablations and resource comparisons
 quantify the roles of aggregation, pool organisation and larger windows.
 
@@ -341,8 +342,9 @@ concepts that disagree on mass $\rho$, the gap $\beta$ is about $\rho$ on batche
 $n_2=200$, $2\tau=0.31$, so changes between concepts that disagree on more than about a third of the inputs are
 detected within two batches with probability at least $0.999$; changes between closer concepts may be missed, and a
 segment then holds both. When the declared batch is the one that holds the boundary or the next, $\nu<B$, and a
-segment of at least 400 rows is majority-pure. Segmentation at detected changes thus supplies the premise of
-\cref{prop:recall} up to the stated mixing, wherever the boundaries fall; \cref{sec:rq2} measures how often it holds.
+segment of at least 400 rows is majority-pure. These results bound the mixing of a detected segment but do not make
+it pure, and \cref{prop:recall} is stated for pure contexts. Detection, the location of each declared change and
+the purity of the stored contexts are separate conditions; \cref{sec:rq2} measures each.
 \end{remark}
 
 \subsection{The Fast Level: Identification under a Margin}
@@ -593,8 +595,8 @@ batch, and the change test reuses the window's predictions and makes no call.
 \label{sec:exp}
 
 The experiments test the theory in its two regimes. \Cref{sec:rq1} asks whether learning curves predict the
-gains of recall; \cref{sec:rq2} whether segments at detected changes supply the single-concept premise wherever
-the boundaries fall; \cref{sec:rq3} whether
+gains of recall; \cref{sec:rq2} how pure segments at detected changes are and whether they keep the gain of recall
+wherever the boundaries fall; \cref{sec:rq3} whether
 the slow level keeps \method{} close to the plain window where there is little to recall; and \cref{sec:ablation}
 what the organisation of the pool, probability quality and resources contribute.
 
@@ -745,8 +747,8 @@ repaired: 0.82--0.89 in the five batches after a recurrence against 0.17--0.51 f
 \subsection{Segment Purity and Boundary Phase}
 \label{sec:rq2}
 
-\Cref{prop:recall} needs stored contexts whose rows come from one concept, in the majority form of
-\cref{prop:purity}. Fixed segmentation supplies this only where concept boundaries coincide with segment ends, as
+\Cref{prop:recall} assumes stored contexts whose rows come from one concept, and \cref{prop:purity} shows that
+in the population limit a majority identifies the concept. Fixed segmentation gives pure contexts only where concept boundaries coincide with segment ends, as
 on the grid of \cref{sec:rq1}, where every concept lasts 500 or 2\,000 rows from row zero. Three tests of fixed
 segmentation, with the same baselines and constants, remove this coincidence; they motivate segmentation at detected
 changes, which we then test on fresh streams.
@@ -785,8 +787,8 @@ batches of the recurring blocks), while the prepended history changes it by $-0.
 
 The three tests locate the loss in the phase of the segments relative to the concept boundaries: with 500-row
 blocks every fixed segment mixes two concepts, with 2\,000-row blocks one in four, and with the same rows and the
-segments realigned the advantage returns. This is the premise that segmentation at detected changes supplies without
-knowing the phase.
+segments realigned the advantage returns. Segmentation at detected changes seeks this alignment without knowing the
+phase.
 
 \textbf{Detected segmentation on fresh streams.} The test streams are 72 new grid streams (registered before any run,
 \cref{app:prereg}): four data seeds (40 to 43), 30 or 100 centroids, and three length
@@ -814,15 +816,19 @@ $+3.07$ points above reset against $+3.13$ on the aligned streams, and $+1.74$ o
 on the aligned grid the two differ by $+0.04$ points and on the 29 real streams by $+0.01$ ($[-0.02,+0.05]$; $-0.37$
 to $+0.41$ on single streams).
 
-\textbf{Purity and detection.} At every segment close we measured the share of the majority concept among the rows
-of the stored context that received the segment. All closes on the 72 streams were majority-pure, the form that
-\cref{prop:purity} requires; 88\% held at least 95\% rows of one concept, short of the registered 90\% for the strict
-form (\cref{app:prereg}), and the mean share was 97.6\%. The impure closes concentrate on 500-row blocks (69\% at the
-95\% level, against 92\% and 88\% for the other regimes), where a boundary inside a batch leaves up to 99 rows of the
-neighbouring concept in a segment of at least 300. The detector declared 570 of the 576 changes at the batch that holds the boundary or
-at one of the three batches after it, and made one cut elsewhere, consistent with \cref{prop:cp}. On the
-confirmation streams all closes were majority-pure, 87\% held at least 95\% rows of one concept, and the detector
-found 575 of the 576 changes with no other cut. On the real streams it declares between 0 and 180 changes per stream (median 9), where
+\textbf{Detection, location and purity.} We measure the three conditions of \cref{sec:th-seg} separately. The
+detector declared 570 of the 576 changes of the 72 streams, and 575 of the 576 on the confirmation streams, at the
+batch that holds the boundary or at one of the three batches after it, and made one cut elsewhere (none on the confirmation streams), consistent
+with \cref{prop:cp}. Every declared change lay in the batch that holds the boundary (59\% and 64\%) or in the next one, so
+within $\nu<B$ rows of the boundary (median 24 and 28 rows, at most 78), the location condition of \cref{cor:cp}. At
+every segment close we measured the share of the majority concept among the rows of the stored context that received
+the segment. All closes were majority-pure, the condition under which \cref{prop:purity} identifies the concept; 88\%
+held at least 95\% rows of one concept (87\% on the confirmation streams), short of the registered 90\%
+(\cref{app:prereg}), and the mean share was 97.6\%. The impure closes concentrate on 500-row blocks (69\% at the 95\%
+level, against 92\% and 88\% for the other regimes), where a boundary inside a batch leaves up to 99 rows of the
+neighbouring concept in a segment of at least 300. The stored contexts are thus majority-pure but not pure:
+\cref{prop:recall} is not verified for them, and the gains above measure how much of this mixing recall tolerates.
+On the real streams the detector declares between 0 and 180 changes per stream (median 9), where
 \cref{ass:err} need not hold; there the slow level keeps \method{} within 0.23 points of FIFO on every stream
 (above it on 24 of 29, $+0.58$ points on average).
 
@@ -1201,9 +1207,9 @@ For an in-context learner, a past concept is recalled without retraining, and th
 between the learning curve and the accuracy of the stored context. \method{} turns this into a stream learner: past
 contexts are experts next to fast windows, a fast meta expert identifies a recurring concept within one batch, and a
 slow meta expert bounds, at any time and for any stream, what following the mixture costs against the plain window.
-Recall needs the recalled concept to hold the majority of the stored rows, and segments that start at detected
-changes provide this wherever the concept boundaries fall, as long as the changes are detected close to the
-boundaries. The experiments support both regimes of the theory. Where
+In the population limit a stored context recalls the concept that holds the majority of its rows, and segments
+that start at detected changes kept this majority at every close we measured, wherever the concept boundaries fell;
+they are not pure, which the recall theorem assumes. The experiments support both regimes of the theory. Where
 concepts are costly to learn, recall gains up to 8.5 points over reset detection, in the order the learning curves
 predict; fixed segments lose this gain when boundaries fall inside them, and detected segments recover it on fresh
 streams with random boundary phases; where relearning is cheap there is little to recall. Merging by discrepancy
@@ -1213,9 +1219,10 @@ pools are less accurate, except a snapshot of the latest rows on the shifted gri
 
 \textbf{Limitations.} With fixed 500-row segments, both tests with boundaries inside segments failed their
 registered criteria, \method{} fell below reset on most shifted streams, and an archive of unmerged segments was more
-accurate. Detected segments repair this on the grid, but the strict form of the single-concept premise, at least
-95\% rows of one concept in 90\% of the closes, was not reached (88\%, 69\% with 500-row blocks), because a boundary
-inside a batch leaves up to 99 rows of the neighbouring concept in a segment. The detection guarantee assumes window
+accurate. Detected segments repair this on the grid, but their stored contexts are not pure: at least 95\% rows of one concept
+in 90\% of the closes was not reached (88\%, 87\% on the confirmation streams, 69\% with 500-row blocks), because a
+boundary inside a batch leaves up to 99 rows of the neighbouring concept in a segment, so \cref{prop:recall} is not
+verified for these contexts and \cref{prop:purity} covers only the population limit. The detection guarantee assumes window
 errors that do not rise between changes; on real streams the detector declares up to 180 changes on one stream, and
 there the slow level, not the detector, keeps \method{} safe. The generator streams, the confirmatory real sets, the
 second backbone seed, TabICL, the pool controls and all timings were obtained with fixed segmentation.
@@ -1464,7 +1471,8 @@ the 29 real streams, at least $-0.1$ points against FIFO and $-0.2$ against fixe
 and stored experts per batch than the archive with the same segments, and a mean difference to it of at least $-0.3$
 points. Purity rule: the stored contexts meet the single-concept premise if at least 90\% of the closes hold at least
 95\% rows of one concept, its majority form if at least 95\% hold more than half, and otherwise the recall theorem
-is conditional on purity. All five criteria held; the purity rule gave the majority form (88\% and 100\%). The registration described the
+is conditional on purity. All five criteria held; the purity rule gave its majority form (88\% and 100\%), that is, the strict form failed
+and the recall theorem remains conditional on pure contexts; the confirmation streams gave 87\% and 100\%. The registration described the
 test seeds 40 to 43 as unused; seeds 40 and 41 had in fact been used, two days earlier, for the registered oracle
 test of \cref{tab:oracle}, with the same concept draws and, for fixed block lengths, the same rows after the offset.
 That test involved no detector and set no constant. We found the reuse after the evaluation, kept the registered
