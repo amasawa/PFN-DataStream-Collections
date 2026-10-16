@@ -1,0 +1,16 @@
+attempt 1 14:41:20
+attempt 2 14:41:40
+attempt 3 14:42:11
+c_b2000_c100_s50_o1 snap1000_500 resumed at batch 11
+verify c_b2000_c100_s50_o1 snap1000_500.k2 245s
+verify c_b500_c100_s51_o1 snap1000_500.k4 69s
+verify c_b500_c100_s50_o0 micecp1000_500 70s
+verify c_b500_c100_s50_o2 snap1000_500.k2 51s
+done 14:49:27
+P_k2 c_b2000_c100_s50_o1__snap1000_500 IDENTICAL
+P_k4 c_b500_c100_s51_o1__snap1000_500 IDENTICAL
+P c_b500_c100_s50_o0__micecp1000_500 IDENTICAL
+P_k2 c_b500_c100_s50_o2__snap1000_500 IDENTICAL
+ALL IDENTICAL
+
+[exited with code 0]
