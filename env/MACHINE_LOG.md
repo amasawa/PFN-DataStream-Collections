@@ -30,6 +30,11 @@ file modification times.
   several streams (no admin; verify bit-identical outputs first), driver update/rollback or HAGS toggle (user, admin and
   reboot). Command to recheck: `powershell.exe -NoProfile -Command "Get-WinEvent -FilterHashtable
   @{LogName='System';ProviderName='nvlddmkm';StartTime=(Get-Date).AddHours(-1)} | Group-Object Id"`.
+- **2026-10-16 19:40, fix confirmed in practice**: MICE part C moved from one process per task to 3 long-lived processes
+  (experiments/mice_r14/pool_worker.py; outputs bit-identical to per-task processes on 4 tasks). 14:50-19:40: 213 tasks,
+  0 failures (before: 9 failures in 7 min at 3 workers); Xid 153 per hour 14h 21, 15-18h 0, 19h 1; Xid 13 unchanged
+  (~2200/h, non-fatal). The fatal fault is triggered mainly by process/context creation, not by concurrency itself.
+  Rule: for many short GPU tasks use long-lived workers; verify bit-identity first for frozen runs.
 - **Open hypothesis (2026-10-08, not yet tested)**: failures cluster after process start. Time from LAUNCH to failure:
   6/25 within 60 s on 2026-10-08 and 8/27 on 2026-10-07 (median 170 s and 220 s), against about 10% expected for tasks
   of about 10 minutes if the hazard were constant. A staggered or serialised start (one process initialising at a time)
