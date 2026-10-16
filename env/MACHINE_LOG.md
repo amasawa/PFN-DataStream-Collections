@@ -17,6 +17,19 @@ file modification times.
 ## Faults and fixes
 
 ### 1. CUDA "unspecified launch failure" / "illegal memory access" (recurring since 2026-10-05)
+- **2026-10-16 14:30, Windows-side evidence (System log read from WSL with `powershell.exe Get-WinEvent`, no admin)**:
+  every worker death is preceded 1-2 s earlier by one `nvlddmkm` event 153 (Xid 153, text "Error occurred on GPUID:
+  5500"; the exact meaning of 153 is not named by the event template). Xid 153 counts: 11h 23 (5 workers), 12h 19,
+  14:18-14:30 27 (3->7 workers); overnight with 2-3 workers almost none. In addition `nvlddmkm` event 13 (Xid 13,
+  "Graphics FECS Exception: Logging error 0x2"; FECS = context-switch unit) appears 2000-5900 times per hour whenever
+  our TabPFN workers run and 0 times in the hour when only ComfyUI ran. No "Display" 4101 (TDR) event in the retained
+  log (from 2026-10-15 19:07), so the TDR hypothesis below is not supported; TdrDelay=8, TdrLevel=3 already set,
+  HwSchMode unset. Fable 5.1 (env/consultations/20261016_fable_cuda1.md, ..._cuda2.md): driver-level context-switch
+  fault under multi-process time-slicing, superlinear in the number of processes; per-context, never a device reset.
+  Action: back to 3 workers (7 workers: 135 deaths/h). Candidate fixes: a persistent worker pool or one process with
+  several streams (no admin; verify bit-identical outputs first), driver update/rollback or HAGS toggle (user, admin and
+  reboot). Command to recheck: `powershell.exe -NoProfile -Command "Get-WinEvent -FilterHashtable
+  @{LogName='System';ProviderName='nvlddmkm';StartTime=(Get-Date).AddHours(-1)} | Group-Object Id"`.
 - **Open hypothesis (2026-10-08, not yet tested)**: failures cluster after process start. Time from LAUNCH to failure:
   6/25 within 60 s on 2026-10-08 and 8/27 on 2026-10-07 (median 170 s and 220 s), against about 10% expected for tasks
   of about 10 minutes if the hazard were constant. A staggered or serialised start (one process initialising at a time)

@@ -761,3 +761,5 @@ gpt-6-astra 报额度用完（"usage limit … try again at Oct 14th, 2026 11:27
 2026-10-16 14:19 用户告知 t2v 已跑完，恢复 14.b。GPU 空闲（t2v 的 ComfyUI 服务仍在但不占算力，约 0.9 GB）。C 部分从 9/276 续跑，3 个 worker（调度记录：3 个稳定，5 个出现失败潮）加看门狗；C 完成后单独跑 A1 计时（GPU 独占）。
 
 2026-10-16 14:25 用户要求多开进程。C 部分加到 7 个 worker：GPU 利用率约 90%，显存约 5.4 GB。14:18–14:24 共 9 次 CUDA 失败（unspecified launch failure / illegal memory access），每次都从检查点续跑且进度在前进，没有任务放弃。旧看门狗按"10 分钟 4 次失败"退出；换成 v2，只在有任务放弃或全部完成时退出，并每 10 分钟记录完成数和失败数，用来按每小时完成任务数决定 worker 数。
+
+2026-10-16 14:32 CUDA 偶发错误诊断（用户要求问 Fable）。Windows 系统日志：每次 worker 死亡前 1–2 秒都有一条 nvlddmkm Xid 153；我们的 TabPFN 进程运行时 Xid 13（FECS 上下文切换单元异常）每小时数千条，只有 ComfyUI 时为 0；没有 TDR（4101）事件。Fable（env/consultations/20261016_fable_cuda1.md、_cuda2.md，共约 1.57 美元）：驱动在多进程时间片切换上下文时出错，随进程数超线性增加；建议退回 3 个 worker，按每小时完成任务数再试 4 个；根本办法是常驻进程池（需先验证输出逐位相同）或升级/回退驱动（需用户管理员权限和重启）。7 个 worker 时约每 27 秒死一个；已按 PID 停掉 worker 4、5、6、8，释放 4 个运行中任务的认领，检查点保留。
