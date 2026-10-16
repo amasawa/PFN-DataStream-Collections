@@ -83,18 +83,20 @@ def a1():
     print(agg.round(3).to_string())
     print("infeasible / failed:", bad)
     mice = per[per.policy == "mice"].set_index("stream").mean_s
-    feas = []
+    feas, measured = [], []
     for k in (2, 4):
         x = per[per.policy == f"snap{k}"].set_index("stream").mean_s
         if len(x) == 3 and not any(b["policy"].startswith("snap") and b["kmax"] == k for b in bad):
             feas.append((k, bool((x <= mice[x.index]).all())))
     under = [k for k, ok in feas if ok]
-    ks = dict(snap=max(under) if under else 2, snap_status="within MICE's budget on all three prefixes" if under
-              else "over-budget fallback", mice_mean_s=agg.loc["mice", "mean_s"])
+    status = ("within MICE's budget on all three prefixes" if under else "over-budget fallback" if feas
+              else "no complete measurement; k*=2 by the rule-B fallback")
+    ks = dict(snap=max(under) if under else 2, snap_status=status, mice_mean_s=agg.loc["mice", "mean_s"])
     ks.update({f"{p}_mean_s": agg.loc[p, "mean_s"] for p in agg.index if p != "mice"})
     print("snapshot k* (timings only):", ks)
     assert not (BENCH / "kstar.json").exists(), "k* already fixed"
     json.dump(ks, open(BENCH / "kstar.json", "w"), indent=1)
+    pd.DataFrame(bad).to_csv(OUT / "r14b_a1_infeasible.csv", index=False)
     d.to_csv(OUT / "r14b_a1_runs.csv", index=False)
     agg.to_csv(OUT / "r14b_a1_policy.csv")
     per.to_csv(OUT / "r14b_a1_stream.csv", index=False)
@@ -126,8 +128,10 @@ def a2():
     acc = accuracy_of("a2")
     print(acc.round(2).to_string())
     m = per[per.policy == "mice"].set_index("stream").mean_s
-    x = per[per.policy == f"snap{ks['snap']}"].set_index("stream").mean_s
-    print(f"snap{ks['snap']} meets MICE's amortised mean s/batch on:", {s: bool(x[s] <= m[s]) for s in m.index})
+    for c_ in (f"snap{ks['snap']}", "snap12", "archcp12"):
+        x = per[per.policy == c_].set_index("stream").mean_s
+        print(f"{c_}: s/batch ratio to MICE per stream", {s: round(float(x[s] / m[s]), 3) for s in x.index})
+    pd.DataFrame(bad).to_csv(OUT / "r14b_a2_infeasible.csv", index=False)
     d.to_csv(OUT / "r14b_a2_runs.csv", index=False)
     per.to_csv(OUT / "r14b_a2_stream.csv", index=False)
     acc.to_csv(OUT / "r14b_a2_accuracy.csv")
@@ -173,6 +177,8 @@ def c():
                                 above=int((dx > 0).sum()), min=dx.min(), max=dx.max(),
                                 interval="moving-block bootstrap, blocks of 10"))
     g = pd.DataFrame(out)
+    g["role"] = g.control.map({f"snap{kstar}": "primary (k*, prefix-budget-selected)", "snap12": "capacity-matched"}
+                              ).fillna("sensitivity")
     g.to_csv(OUT / "r14b_c_groups.csv", index=False)
     pd.set_option("display.width", 250)
     print(g.round(3).to_string(index=False))

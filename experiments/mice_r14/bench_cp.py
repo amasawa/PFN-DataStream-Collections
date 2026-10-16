@@ -9,7 +9,7 @@ Usage: python bench_cp.py <bench root> <repo> a1|a2
   a1: three real prefixes (batches 1-300); micecp, archcp kmax 12, snap kmax 2 and 4 with three repetitions, snap kmax
       12 with one.
   a2: full grid streams (three confirmation streams, one shifted); micecp, archcp kmax 12, snap k* (from
-      <root>/kstar.json, written by analyse_bench_cp.py a1), three repetitions.
+      <root>/kstar.json, written by analyse_14b.py a1) and snap kmax 12, three repetitions.
 Each run writes <root>/<stage>/rep<r>/<tag>/<stream>__<method>.npz/.pkl (tag "mice" or "k<kmax>") and
 <...>.occ.json (pool occupancy and logical stored context rows per batch); records go to <root>/<stage>.jsonl."""
 import json
@@ -94,7 +94,8 @@ def plan(root, stage):
                 ("snap1000_500", 12, 1)]
     else:
         ks = json.load(open(root / "kstar.json"))
-        pols = [("micecp1000_500", 0, 3), ("archcp1000_500", 12, 3), ("snap1000_500", ks["snap"], 3)]
+        pols = [("micecp1000_500", 0, 3), ("archcp1000_500", 12, 3), ("snap1000_500", ks["snap"], 3),
+                ("snap1000_500", 12, 3)]
     out = []
     for rep in range(3):
         todo = [p for p in pols if rep < p[2]]

@@ -1,0 +1,29 @@
+# Round 14.b part C provenance (2026-10-16 12:41:40)
+## MICE (micecp1000_500) runs paired in part C: name size mtime
+~/pfn-runs/mice-r14-exist/P/off_c100_b2000_s20__micecp1000_500.pkl 3537039 2026-10-15 19:58:28.372284275 +1100
+~/pfn-runs/mice-r14-exist/P/off_c100_b2000_s21__micecp1000_500.pkl 3537039 2026-10-15 19:59:59.810084947 +1100
+~/pfn-runs/mice-r14-exist/P/off_c100_b500_s20__micecp1000_500.pkl 853704 2026-10-15 20:00:59.136559408 +1100
+~/pfn-runs/mice-r14-exist/P/off_c100_b500_s21__micecp1000_500.pkl 853704 2026-10-15 20:02:06.290360853 +1100
+~/pfn-runs/mice-r14-exist/P/off_c30_b2000_s20__micecp1000_500.pkl 3537039 2026-10-15 20:06:39.932466768 +1100
+~/pfn-runs/mice-r14-exist/P/off_c30_b2000_s21__micecp1000_500.pkl 3537039 2026-10-15 20:08:08.768597692 +1100
+~/pfn-runs/mice-r14-exist/P/off_c30_b500_s20__micecp1000_500.pkl 853704 2026-10-15 20:08:06.601957556 +1100
+~/pfn-runs/mice-r14-exist/P/off_c30_b500_s21__micecp1000_500.pkl 853704 2026-10-15 20:09:15.920805466 +1100
+~/pfn-runs/mice-r14-exist/P/mis_b1300_c100_s30__micecp1000_500.pkl 2249626 2026-10-15 19:34:29.178600972 +1100
+~/pfn-runs/mice-r14-exist/P/mis_b1300_c100_s31__micecp1000_500.pkl 2249626 2026-10-15 19:36:24.977985494 +1100
+~/pfn-runs/mice-r14-exist/P/mis_b1300_c30_s30__micecp1000_500.pkl 2249626 2026-10-15 19:39:23.743777771 +1100
+~/pfn-runs/mice-r14-exist/P/mis_b1300_c30_s31__micecp1000_500.pkl 2249626 2026-10-15 19:40:12.043055304 +1100
+~/pfn-runs/mice-r14-exist/P/mis_b700_c100_s30__micecp1000_500.pkl 1171102 2026-10-15 19:41:05.254872637 +1100
+~/pfn-runs/mice-r14-exist/P/mis_b700_c100_s31__micecp1000_500.pkl 1171102 2026-10-15 19:42:33.354009037 +1100
+~/pfn-runs/mice-r14-exist/P/mis_b700_c30_s30__micecp1000_500.pkl 1171102 2026-10-15 19:43:22.776653409 +1100
+~/pfn-runs/mice-r14-exist/P/mis_b700_c30_s31__micecp1000_500.pkl 1171102 2026-10-15 19:44:50.554970293 +1100
+~/pfn-runs/mice-r14-exist/P/mis_bvar_c100_s30__micecp1000_500.pkl 2647975 2026-10-15 19:47:44.571799900 +1100
+~/pfn-runs/mice-r14-exist/P/mis_bvar_c100_s31__micecp1000_500.pkl 3512753 2026-10-15 19:49:26.624799929 +1100
+~/pfn-runs/mice-r14-exist/P/mis_bvar_c30_s30__micecp1000_500.pkl 2647975 2026-10-15 19:51:13.085217396 +1100
+~/pfn-runs/mice-r14-exist/P/mis_bvar_c30_s31__micecp1000_500.pkl 3512753 2026-10-15 19:55:02.931410930 +1100
+confirmation micecp pkl count: 72
+confirm mtime range: 2026-10-16 09:45:39.779578765 +1100
+confirm mtime range: 2026-10-16 12:04:18.008736809 +1100
+## staged data in ~/pfn-runs/mice-r14b-acc/data vs sources (sha256 equal?)
+files 92, mismatches 0
+## r14 test-root data for shifted/misaligned vs control data
+checked
