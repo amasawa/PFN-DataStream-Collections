@@ -20,6 +20,7 @@ import numpy as np
 import pandas as pd
 
 from analyse_test import CTRL, OUT, R14, RUNS, boot_ci, hier_lb, pool
+OUT = Path(OUT)
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "MICE/code"))
 import reweight  # noqa: E402
@@ -94,8 +95,11 @@ def a1():
     ks = dict(snap=max(under) if under else 2, snap_status=status, mice_mean_s=agg.loc["mice", "mean_s"])
     ks.update({f"{p}_mean_s": agg.loc[p, "mean_s"] for p in agg.index if p != "mice"})
     print("snapshot k* (timings only):", ks)
-    assert not (BENCH / "kstar.json").exists(), "k* already fixed"
-    json.dump(ks, open(BENCH / "kstar.json", "w"), indent=1)
+    if (BENCH / "kstar.json").exists():           # fixed by an earlier call: it must agree
+        old = json.load(open(BENCH / "kstar.json"))
+        assert (old["snap"], old["snap_status"]) == (ks["snap"], ks["snap_status"]), "k* already fixed differently"
+    else:
+        json.dump(ks, open(BENCH / "kstar.json", "w"), indent=1)
     pd.DataFrame(bad).to_csv(OUT / "r14b_a1_infeasible.csv", index=False)
     d.to_csv(OUT / "r14b_a1_runs.csv", index=False)
     agg.to_csv(OUT / "r14b_a1_policy.csv")
@@ -182,10 +186,10 @@ def c():
     g.to_csv(OUT / "r14b_c_groups.csv", index=False)
     pd.set_option("display.width", 250)
     print(g.round(3).to_string(index=False))
-    flag_reg = g[(g.control == f"snap{kstar}") & (g.mean <= 0.1)]
+    flag_reg = g[(g.control == f"snap{kstar}") & (g["mean"] <= 0.1)]
     print(f"rule E (snapshot k*={kstar}, mean Delta <= +0.1): groups {list(flag_reg.group)}"
           f"{' -> state in abstract and conclusion' if len(flag_reg) else ' (none)'}")
-    hb = g[(g.control == "snap12") & (g.mean < 0)]
+    hb = g[(g.control == "snap12") & (g["mean"] < 0)]
     print("snapshot kmax 12 more accurate than MICE (report 'at higher budget' with the s/batch ratio):", list(hb.group))
 
 
