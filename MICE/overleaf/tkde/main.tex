@@ -52,9 +52,10 @@ putting its labelled rows back into the context, without retraining. We characte
 prediction under recurring concept drift. When a stored context holds one concept and the experts are separated by a
 margin, the gain of recall over relearning is the area between the stored context's accuracy and the TFM's learning
 curve, up to a first-batch term. The characterisation predicts large gains for concepts that need many examples and
-little gain for concepts that are learned quickly. Under a posterior-predictive model of the TFM and in the population limit, a stored context recalls the concept
-that holds the majority of its rows; stored contexts are segments that start at changes detected by a two-sample test on the window's
-errors, which bounds the rows of other concepts in each segment when the changes are detected. We propose \method{}, a mixture of window and stored-context experts
+little gain for concepts that are learned quickly. Under a posterior-predictive model of the TFM, for deterministic concepts with a shared input distribution and in the
+population limit, a stored context recalls the concept that holds the majority of its rows; stored contexts are segments that start at changes detected by a two-sample test on the window's
+errors, with false-alarm and detection guarantees; if every change is detected and declared within $\nu$ rows of its
+boundary, a segment holds at most $2\nu$ rows of other concepts. We propose \method{}, a mixture of window and stored-context experts
 under a meta expert with two time scales. The fast level identifies a recurring concept within one batch under a
 margin; the slow level bounds the discounted half-Brier regret against the plain window by $2\ln2\approx1.39$ at every
 time, for any stream. A model-oriented discrepancy organises the stored contexts. On a controlled grid, the gains
@@ -129,9 +130,10 @@ combine them with a meta expert, following the mixture of online and offline exp
 (i)~Which segments belong to the same concept is decided by a model-oriented discrepancy in the sense of
 R-divergence \citep{zhao2023rdiv}; we show that the original form is blind to concepts that contradict each other on
 the same inputs, which is the defining case of recurring drift, and that an excess-risk form repairs it.
-(ii)~A stored context identifies the concept that holds the majority of its rows, so segments start at changes
-detected by a two-sample test on the window's errors, which bounds the rows of other concepts in a segment wherever
-the boundaries fall.
+(ii)~In the population limit, a stored context of deterministic concepts with a shared input distribution
+identifies the concept that holds the majority of its rows, so segments start at changes
+detected by a two-sample test on the window's errors; if every change is detected and declared within $\nu$ rows of
+its boundary, a segment holds at most $2\nu$ rows of other concepts, wherever the boundaries fall.
 (iii)~The meta expert has two time scales. A fast level restarts every batch and identifies a recurring concept in
 one batch under a margin; a slow level decides whether following the fast level is worth it at all, with a
 worst-case guarantee against the plain window. (iv)~The gain of recall over relearning then has a closed form in
@@ -143,8 +145,8 @@ representative of the concepts.
 stored context's accuracy and the backbone's learning curve, under single-concept contexts and identification
 conditions (\cref{prop:recall}); it explains when memory pays and when the opportunity vanishes.
 \textbf{(2) Theory for identifying and combining contexts.} Majority purity as the population condition under which a mixed
-context recalls a concept, and false-alarm and detection guarantees that bound the mixing of detected segments
-(\cref{prop:purity,prop:cp,cor:cp}); identification within one batch under a margin (\cref{prop:block}); a blind spot of R-divergence under conflicting concepts and its excess-risk repair under
+context of deterministic concepts with a shared input distribution recalls a concept, false-alarm and detection guarantees for the change test, and a bound on the mixing of segments whose changes are
+detected and declared within $\nu$ rows of the boundary (\cref{prop:purity,prop:cp,cor:cp}); identification within one batch under a margin (\cref{prop:block}); a blind spot of R-divergence under conflicting concepts and its excess-risk repair under
 posterior-predictive assumptions (\cref{prop:blind}); and an any-time discounted half-Brier regret bound for the slow
 level (\cref{prop:outer}).
 \textbf{(3) A training-free streaming method.} \method{} combines window and stored-context experts through a fast and
@@ -275,7 +277,8 @@ which bounds the regret that recalling the stored expert would incur on the segm
 
 \Cref{prop:recall} below compares relearning with the stored expert \emph{of concept $k$}. A stored context is built
 from segments of the stream, and a segment that straddles a concept boundary holds rows of two concepts. The next
-results say how much mixing identification tolerates and how a change detector bounds the mixing.
+results say how much mixing identification tolerates, how reliably a change detector declares changes, and how
+much mixing remains when its declarations lie close to the boundaries.
 
 \begin{proposition}[Majority purity]\label{prop:purity}
 Let \cref{ass:ppd} extend to unequal shares: a context whose rows come from $P$ in proportion $\pi$ and from $Q$ in
@@ -293,8 +296,11 @@ where $\rho=\Pr_\vx[g_P(\vx)\ne g_Q(\vx)]$; at $\pi=\tfrac12$ it depends on the 
 \end{proposition}
 
 \begin{remark}
-In the population limit a stored context recalls the concept that holds the majority of its rows, so identifying
-the concept needs majority purity, not purity. With finite contexts the minority rows are wrong labels for the majority concept on
+In the population limit a stored context of deterministic concepts with a shared input distribution recalls the
+concept that holds the majority of its rows, so identifying the concept needs majority purity, not purity. For labels that are not deterministic a
+majority is not enough: if the most probable label of $P$ at $\vx$ exceeds every other label by $m(\vx)$, the mixture
+keeps it whenever $\pi>1/(1+m(\vx))$, since the part from $Q$ changes each difference by at most $1-\pi$;
+deterministic concepts have $m=1$. With finite contexts the minority rows are wrong labels for the majority concept on
 the disagreement region and correct ones elsewhere, and the proposition does not say how many clean rows a mixed
 context is worth; \cref{prop:recall} is stated for pure contexts. Dropping the rows near a boundary raises $\pi$ but
 lowers the number of stored rows.
@@ -349,8 +355,8 @@ excess is not positive is at most $0.004$; if $b$ is such a candidate almost sur
 probability at least $0.996$. Under the conditions above, $\beta\ge0.372$ holds for concepts that disagree on more
 than about 37\% of the inputs. Changes
 between closer concepts may be missed, and a segment then holds both. When the declared batch is the one that holds the boundary or the next, $\nu<B$, and a
-segment of at least 400 rows is majority-pure. These results bound the mixing of a detected segment but do not make
-it pure, and \cref{prop:recall} is stated for pure contexts. Detection, the location of each declared change and
+segment of at least 400 rows is majority-pure. Under this location condition, which \cref{prop:cp} does not guarantee, these results bound the mixing of a
+detected segment but do not make it pure, and \cref{prop:recall} is stated for pure contexts. Detection, the location of each declared change and
 the purity of the stored contexts are separate conditions; \cref{sec:rq2} measures each.
 \end{remark}
 
@@ -471,13 +477,14 @@ $1/(1-\gamma)=10$ batches.
 \end{corollary}
 
 \begin{remark}
-\Cref{prop:outer} makes no assumption on the stream. The discount makes it an any-time statement: after a change of
-regime the slow level needs about ten batches, not the length of the stream, to follow the better of the two
-experts. The two levels divide the work. The fast level identifies a recurring concept within one batch when there
+\Cref{prop:outer} makes no assumption on the stream. The discount makes it an any-time statement: the comparison covers an
+effective horizon of ten batches, not the length of the stream, and older losses fade geometrically. How fast the
+slow level follows the better of the two experts after a change depends on their earlier losses and on the loss gap
+after the change. The two levels divide the work. The fast level identifies a recurring concept within one batch when there
 is something to identify (\cref{prop:block}); the slow level decides whether identification is worth following. The
-bounded, exp-concave loss is essential: it confines the step to $\eta_2\le\tfrac12$, and the unbounded log-loss
-lets one confidently wrong batch after a switch dominate the slow level for the whole horizon
-(\cref{sec:ablation}).
+guarantee is proved for the half-Brier loss with $\eta_2\le\tfrac12$, where it is exp-concave; being bounded, it also
+limits how far one batch moves the weights. The log-loss is exp-concave but unbounded, and in our runs one confidently
+wrong batch after a switch dominated the slow level for the whole horizon (\cref{sec:ablation}).
 \end{remark}
 
 % =====================================================================================================
@@ -755,7 +762,7 @@ repaired: 0.82--0.89 in the five batches after a recurrence against 0.17--0.51 f
 \label{sec:rq2}
 
 \Cref{prop:recall} assumes stored contexts whose rows come from one concept, and \cref{prop:purity} shows that
-in the population limit a majority identifies the concept. Fixed segmentation gives pure contexts only where concept boundaries coincide with segment ends, as
+in the population limit a majority identifies one of two deterministic concepts with a shared input distribution. Fixed segmentation gives pure contexts only where concept boundaries coincide with segment ends, as
 on the grid of \cref{sec:rq1}, where every concept lasts 500 or 2\,000 rows from row zero. Three tests of fixed
 segmentation, with the same baselines and constants, remove this coincidence; they motivate segmentation at detected
 changes, which we then test on fresh streams.
@@ -826,10 +833,14 @@ to $+0.41$ on single streams).
 \textbf{Detection, location and purity.} We measure the three conditions of \cref{sec:th-seg} separately. The
 detector declared 570 of the 576 changes of the 72 streams, and 575 of the 576 on the confirmation streams, at the
 batch that holds the boundary or at one of the three batches after it, and made one cut elsewhere (none on the confirmation streams), consistent
-with \cref{prop:cp}. Every declared change lay in the batch that holds the boundary (59\% and 64\%) or in the next one, so
-within $\nu<B$ rows of the boundary (median 24 and 28 rows, at most 78), the location condition of \cref{cor:cp}. At
+with \cref{prop:cp}. Each of the 570 and 575 declarations matched to a boundary lay in the batch that holds it (59\%
+and 64\%) or in the next one, so within $\nu<B$ rows of the boundary (median 24 and 28 rows, at most 78), the
+location condition of \cref{cor:cp}. The premises of \cref{cor:cp} thus held on 67 of the 72 test streams and on 71
+of the 72 confirmation streams; the others have a missed boundary, and one of them also the cut away from any
+boundary. At
 every segment close we measured the share of the majority concept among the rows of the stored context that received
-the segment. All closes were majority-pure, the condition under which \cref{prop:purity} identifies the concept; 88\%
+the segment. All closes were majority-pure. The grid concepts are not deterministic, as their Gaussian components overlap, so
+this share describes the mixing and does not verify the identification of \cref{prop:purity}; 88\%
 held at least 95\% rows of one concept (87\% on the confirmation streams), short of the registered 90\%
 (\cref{app:prereg}), and the mean share was 97.6\%. The impure closes concentrate on 500-row blocks (69\% at the 95\%
 level, against 92\% and 88\% for the other regimes), where a boundary inside a batch leaves up to 99 rows of the
@@ -1214,9 +1225,10 @@ For an in-context learner, a past concept is recalled without retraining, and th
 between the learning curve and the accuracy of the stored context. \method{} turns this into a stream learner: past
 contexts are experts next to fast windows, a fast meta expert identifies a recurring concept within one batch, and a
 slow meta expert bounds, at any time and for any stream, what following the mixture costs against the plain window.
-In the population limit a stored context recalls the concept that holds the majority of its rows, and segments
-that start at detected changes kept this majority at every close we measured, wherever the concept boundaries fell;
-they are not pure, which the recall theorem assumes. The experiments support both regimes of the theory. Where
+In the population limit a stored context of deterministic concepts with a shared input distribution recalls the
+concept that holds the majority of its rows. Segments that start at detected changes kept a majority at every close
+we measured, wherever the concept boundaries fell, on grid concepts that are not deterministic, so this share
+describes their mixing; they are not pure, which the recall theorem assumes. The experiments support both regimes of the theory. Where
 concepts are costly to learn, recall gains up to 8.5 points over reset detection, in the order the learning curves
 predict; fixed segments lose this gain when boundaries fall inside them, and detected segments recover it on fresh
 streams with random boundary phases; where relearning is cheap there is little to recall. Merging by discrepancy

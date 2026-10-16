@@ -1,0 +1,5 @@
+- **Rebuttal verdict: answered.** The revised remark separates the proved half-Brier guarantee at \(\eta_2\le1/2\), boundedness limiting one batch’s influence, and the empirical log-loss failure (“in our runs”).
+- **Remaining required change:** none.
+- **Updated score:** **7/8**, assuming the open resource item supports the text.
+- **Acceptable at TKDE under that assumption:** **yes**.
+- **Other issue required before acceptance within this review’s scope:** none.
