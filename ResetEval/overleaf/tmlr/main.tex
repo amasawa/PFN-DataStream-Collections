@@ -156,7 +156,7 @@ at most a constant in cumulative log-loss, while the weights move to the reset c
   exactly into per-reset contributions.
 \item \textbf{A large controlled evaluation.} Eight detectors $\times$ three actions $\times$ three TFMs on 81 streams,
   with backbone seeds, context budgets and two trained learners, and tests clustered by source
-  (\cref{sec:results}). Code, streams and all cached predictions will be released with the paper.
+  (\cref{sec:results}). The supplementary material holds the code, the stream construction scripts and the per-run results, from which every table except the list of sources, the figure and the check of \cref{thm:hedge}(ii) are regenerated; the cached predictions will be released with the paper.
 \item \textbf{A finding and a plausible explanation.} Error-driven resets are a tail risk for TFMs, not a uniform
   loss (\cref{obs:tail,obs:average}); the evidence is consistent with a FIFO window absorbing much of what a reset
   could gain (\cref{obs:fifo}, \cref{prop:memory}).

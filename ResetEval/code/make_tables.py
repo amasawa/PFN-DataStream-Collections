@@ -315,6 +315,8 @@ Model & Policy & Acc. & F1 & AUC & ECE & Log-loss & Brier \\
 
 
 def data_table():
+    if not os.path.exists(f"{DATA[REALS[0]]}/{REALS[0]}.npz"):   # supplementary archive: stream files not included
+        print("stream files not found: data table not regenerated"); return
     rows = []
     for s in REALS:
         z = np.load(f"{DATA[s]}/{s}.npz"); rows.append(dict(src=source(s), stream=s, n=len(z["y"]), p=z["X"].shape[1],
