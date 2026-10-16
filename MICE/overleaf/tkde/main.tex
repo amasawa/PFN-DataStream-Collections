@@ -62,7 +62,7 @@ predicted from learning curves rank the observed gains with Spearman correlation
 measured area term matches its prediction within 0.7 points in every cell. With fixed 500-row segments the gain
 depended on where the concept boundaries fell inside the segments; on 72 fresh grid streams with random boundary
 phases, \method{} exceeds reset detection by 2.85 points on average (0.68 with fixed segments), on 70 of the 72
-streams and in each of three block-length regimes (hierarchical 95\% lower bounds $+1.22$ to $+4.59$), its stored contexts were majority-pure at every segment close, and 88\% held at least 95\% rows of one concept, short
+streams and in each of three block-length regimes (hierarchical 95\% lower bounds $+1.22$ to $+4.59$), and by 2.69 points on all of 72 further streams from unused seeds; its stored contexts were majority-pure at every segment close, and 88\% held at least 95\% rows of one concept, short
 of the registered 90\%. On 29 real streams \method{} is more accurate than all
 four in-context baselines on 23, and its one-sided 95\% block-bootstrap bound on the difference to the plain window is
 above $-0.3$ points on 28 (backbone seed 0, fixed segments; detected segments differ by 0.01 points on average). With
@@ -151,7 +151,7 @@ a slow level and organises a bounded pool of past contexts, segmented at detecte
 \textbf{(4) Evidence in the recall and the weak-gain regime.} On a controlled grid, predicted and observed gains have
 Spearman correlations of 0.94 and 0.83; fixed segments lose the gain when boundaries fall inside them, and detected
 segments recover it on 72 fresh streams with random boundary phases ($+2.85$ points over reset, majority-pure
-contexts); on real streams, accuracy is non-inferior
+contexts) and on 72 confirmation streams ($+2.69$); on real streams, accuracy is non-inferior
 to the default window on 28 of 29 streams at a 0.3-point margin. Pool controls, ablations and resource comparisons
 quantify the roles of aggregation, pool organisation and larger windows.
 
@@ -801,7 +801,10 @@ and in every length regime: $+5.17$ points with 500-row blocks (24 of 24; 95\% i
 with 2\,000-row blocks (22 of 24; $[+1.22,+1.72]$) and $+1.91$ with variable blocks (24 of 24; $[+1.74,+2.07]$). Fixed
 segmentation gains $+0.66$ ($[-2.34,+3.31]$), $+0.74$ and $+0.65$ on the same streams. In the first five batches of
 the recurring blocks the gain over reset is $+10.1$ points against $+5.3$. On seeds 42 and 43 alone (36 streams, a split made after the evaluation) \method{} is above reset on all 36,
-by $+2.84$ points, and $+5.35$, $+1.41$ and $+1.76$ in the three regimes. The ordering of the cells is that of the
+by $+2.84$ points, and $+5.35$, $+1.41$ and $+1.76$ in the three regimes. On 72 confirmation streams from seeds 50 to
+53, with the same construction and criterion, \method{} is above reset on all 72, by $+2.69$ points: $+5.07$
+($[+4.31,+5.83]$), $+1.35$ ($[+1.20,+1.51]$) and $+1.64$ ($[+1.48,+1.80]$) in the three regimes, against $-1.31$,
+$+0.39$ and $+0.43$ for fixed segmentation. The ordering of the cells is that of the
 learning curves (\cref{sec:rq1}): with 100 centroids the gain is $+2.4$ to $+8.2$ points, with 30 centroids $+0.5$ to
 $+2.2$.
 
@@ -817,7 +820,9 @@ of the stored context that received the segment. All closes on the 72 streams we
 form (\cref{app:prereg}), and the mean share was 97.6\%. The impure closes concentrate on 500-row blocks (69\% at the
 95\% level, against 92\% and 88\% for the other regimes), where a boundary inside a batch leaves up to 99 rows of the
 neighbouring concept in a segment of at least 300. The detector declared 570 of the 576 changes at the batch that holds the boundary or
-at one of the three batches after it, and made one cut elsewhere, consistent with \cref{prop:cp}. On the real streams it declares between 0 and 180 changes per stream (median 9), where
+at one of the three batches after it, and made one cut elsewhere, consistent with \cref{prop:cp}. On the
+confirmation streams all closes were majority-pure, 87\% held at least 95\% rows of one concept, and the detector
+found 575 of the 576 changes with no other cut. On the real streams it declares between 0 and 180 changes per stream (median 9), where
 \cref{ass:err} need not hold; there the slow level keeps \method{} within 0.23 points of FIFO on every stream
 (above it on 24 of 29, $+0.58$ points on average).
 
@@ -1463,7 +1468,9 @@ is conditional on purity. All five criteria held; the purity rule gave the major
 test seeds 40 to 43 as unused; seeds 40 and 41 had in fact been used, two days earlier, for the registered oracle
 test of \cref{tab:oracle}, with the same concept draws and, for fixed block lengths, the same rows after the offset.
 That test involved no detector and set no constant. We found the reuse after the evaluation, kept the registered
-verdicts as computed, and report the split by seeds as a post-hoc analysis (\cref{sec:rq2}).
+verdicts as computed, and report the split by seeds as a post-hoc analysis (\cref{sec:rq2}). We then registered a
+confirmation on seeds 50 to 53, unused by any test, with the methods, construction and criterion C1 unchanged, before
+any run; C1 held in all three regimes (\cref{sec:rq2}).
 
 \section{Experimental Details and Full Results}
 \label{app:details}
@@ -1499,7 +1506,7 @@ concept $k$ draws $j\sim\mathrm{Categorical}(w)$, $\vx=C_j+\mathcal N(0,0.15^2 I
 appear in the order $1,2,3$ in blocks of $L\in\{500,2000\}$ rows, three cycles, so $P_X$ is the same for all
 concepts. One NumPy generator per data seed draws $C$, $w$ and $\lambda$ first and then the rows. Data seeds: 0 and 1
 for development (also of the change detector), 10 and 11 for the registered test, 20 and 21 for confirmation, 30 and
-31 for the misaligned schedules, 40 and 41 for the oracle test, and 40 to 43 for the test of detected segmentation;
+31 for the misaligned schedules, 40 and 41 for the oracle test, 40 to 43 for the test of detected segmentation, and 50 to 53 for its confirmation;
 the shifted streams reuse seeds 20 and 21 and draw their prefix from a separate generator, and the streams of
 \cref{tab:fresh} prepend rows of the first concept from a separate generator and also use blocks of lengths drawn
 uniformly from 500 to 2\,500 rows.
