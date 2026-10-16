@@ -1,0 +1,6 @@
+C1 b500: mean(CP-reset) +5.068 (>= +1.0), above 24/24 (>= 18), hierarchical 95% [+4.310, +5.827] (lower > 0): met; fixed - reset -1.312
+C1 b2000: mean(CP-reset) +1.355 (>= +1.0), above 24/24 (>= 18), hierarchical 95% [+1.196, +1.509] (lower > 0): met; fixed - reset +0.392
+C1 bvar: mean(CP-reset) +1.639 (>= +1.0), above 24/24 (>= 18), hierarchical 95% [+1.477, +1.797] (lower > 0): met; fixed - reset +0.425
+C1 (confirmation, all three regimes): MET
+all 72: CP-reset +2.687 above 72; fixed-reset -0.165; CP-fixed +2.852; rec CP-reset +9.49 fixed-reset +3.49
+purity: >=95% 0.867, >50% 1.000, mean over streams of the per-stream mean 0.975 (as in analyse_test.py); detection: changes 576 found 575 false 0
