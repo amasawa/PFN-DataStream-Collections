@@ -127,3 +127,6 @@ file modification times.
 ## 2026-10-09T14:22+11:00 MiMo auditor 的 History 工具泄露/污染
 - 第 6 轮审计返回了与请求无关的抽认卡 JSON。mimo session list 显示 MiMo 导入了 Claude Code 会话，History 工具可以读到其他项目的会话。
 - 处理：在 ~/.config/mimocode/mimocode.jsonc 的 auditor 中禁用 history（tools 为 false，permission 为 deny），已验证工具列表里不再有 History。
+
+## 2026-10-17 09:42 DUO 对照运行：常驻 worker 3→4 个时出现 CUDA 故障
+- 3 个常驻 TabPFN worker + 1 个空闲 ComfyUI（t2v）进程：3 分钟无故障；加第 4 个 worker 后 1 分钟内两次 "unspecified launch failure"（w3、w4 各一次）。退回 3 个。与 2026-10-16 的结论一致：常驻进程减少了故障，但并发数仍以 3 为宜。

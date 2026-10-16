@@ -10,3 +10,7 @@
 - **Claude 判断**：成立。方案：做一个匿名补充材料包（代码、数据流构造脚本、逐运行结果），能重新生成所有表格、图和定理 (ii) 的检验；缓存预测（约 1.5 GB）随论文发布。
 - **实施**：ResetEval/code/build_supplement.py（排除缓存、日志、运维脚本；替换用户名和绝对路径；README 说明目录和命令）；make_tables.py 在没有原始流文件时跳过数据表（仓库中的输出不变）。解包后重新生成：7 张表逐字相同，numbers.txt 只少数据表一行，thm_check.csv 相同（648/648）。包：ResetEval/submission/supplement.tgz（98.2 MB，未入库）。论文贡献一节改为说明补充材料内容。
 - **复审**（round1_rebuttal.md）：partly answered（实质问题已解决），**7 分（accept）**；剩余 P2：streams_new.py 的两个路径被去路径规则误替换成 <home>。已修正（只替换本机用户名路径），README 写明原始文件布局；重建后无占位符、无用户名。
+
+## 第 2 轮（2026-10-17 09:42）
+- 审稿人（round2_codex.md）：第 1 轮问题已完全回答；**7 分（accept），接收无需进一步修改**；没有剩余必改问题。
+- **迭代结束**：审稿人判定可接收。投稿包：ResetEval/overleaf/tmlr（main.tex/pdf）+ ResetEval/submission/supplement.tgz（98.2 MB）。投稿去向由用户决定（建议 TMLR）。
