@@ -802,3 +802,10 @@ gpt-6-astra 报额度用完（"usage limit … try again at Oct 14th, 2026 11:27
   - 快照 k=12（容量匹配）：+2.14 [1.40, 2.96]（50/72 为正），b500 +6.11，**b2000 −0.13 [−0.35, +0.12]**，bvar +0.45；shifted +3.43；misaligned +1.32。b2000 上快照 k=12 平均略好，按规则写"在更高预算下"并给出每批秒数比（A1 前缀上 2.78/1.07 ≈ 2.6 倍；A2 待测）。
 - A1 精度（只作描述）：各策略在三个前缀上相差 ≤0.4 个百分点。
 - 01:47 A2 开始（独占 GPU，4 条网格流 × 4 个策略 × 3 次）。
+
+## 第 14.b 轮：A2、写入论文、复审（2026-10-17 04:05）
+- **A2**（01:47–04:00，独占 GPU）：48 次全部成功。四条网格流平均每批秒数：MICE 1.03，archive k=12 1.58（各流 1.09–1.93 倍），快照 k=2 0.83，k=12 1.69（1.28–2.04 倍）；峰值保留显存 MICE 约 0.48 GB，其余 0.33 GB（前缀上 1.15 对 0.76 GB）。
+- **论文**（writing-skill + anti-defensive-writing）：新段落"Resources and the snapshot pool with detected segments"和表 tab:cpres（make_cpres_table.py 生成，与固定分段的表分开）；协议句和局限句写明 tab:cpres 使用检测分段；固定分段的 poolcap 段末补"比 k=12 快照高 3.42"；摘要和结论各加一句（时间 1.07 对 2.58 s；比快照 k=2 高 5.7–6.6，比 k=12 高 1.3–3.4、后者耗时 1.3–2.6 倍，2000 行块上持平）；附录登记节写明 k* 规则、规则 E（未触发）和 0 次失败。MICE 显存更高、k=2 在 CoverType 上超时、k=12 在 2000 行块持平都写进正文。
+- **核对**：Sonnet 封闭核对（round14b_sonnet.json，23 秒）：数字无不匹配；它提出"三分之一"与前缀上的专家数（0.19）不符，核实该句指 fresh 流（2.42 对 7.64），不改。MiMo 本轮未用（前两次审计均超时），由 Sonnet 代替。
+- **审稿人复审**（round14b_rebuttal.md，gpt-6-astra high）：**answered，7 分（accept），可在 TKDE 接收**；唯一 P2：局限里"all timings were obtained with fixed segmentation"与新表矛盾，已改。其他必改问题：none。
+- 迭代结束：第 14 轮开放项关闭，20 轮上限已到，审稿人判定可接收。
