@@ -129,7 +129,8 @@ $X$ given a context $\cC$ of at most $M$ labelled rows. A stream learner chooses
 batches $1,\dots,t-1$, or combines the predictions of several contexts.
 
 \textbf{\mice{}.} \mice{} \citep{mice2026} keeps a set $\mathcal E$ of in-context experts: FIFO windows of 100, 300 and
-$M$ rows, and up to 12 stored contexts of past segments. Its \emph{fast level} mixes all experts with weights
+$M$ rows, and up to 12 stored contexts of past segments. We use \mice{} with fixed segmentation, which closes a
+segment every 500 labelled rows; \citet{mice2026} also cut segments at detected changes. The \emph{fast level} of \mice{} mixes all experts with weights
 \begin{equation}\label{eq:fast}
   w_{t,k}\propto\exp\bigl(-\eta\,\ell^{\log}_{t-1,k}\bigr),\qquad k\in\mathcal E,
 \end{equation}
@@ -422,7 +423,8 @@ The gain of \method{} over \mice{} is small: $+0.15$ points on the development s
 most about half a point on the synthetic streams, where \mice{} itself gains 6.3 to 14.5 points over the window. The
 synthetic streams are pure real drift with a fixed input distribution, cleaner than real streams. The mechanism test
 uses one backbone seed (with three independent data seeds), and the development backbone seeds share data.
-Changing the number of concepts changes both recurrence frequency and return interval, so this experiment does
+All experiments use \mice{} with fixed segmentation; the selection expert was not run with segments cut at
+detected changes. Changing the number of concepts changes both recurrence frequency and return interval, so this experiment does
 not isolate their individual effects. Real-stream confirmation concerns 300-batch prefixes from four sources.
 The safeguard is against the window, not against \mice{}; the small observed losses against \mice{} satisfy
 an empirical tolerance criterion, not a guarantee of non-decreasing accuracy.
