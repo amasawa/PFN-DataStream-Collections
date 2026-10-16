@@ -738,3 +738,5 @@ gpt-6-astra 报额度用完（"usage limit … try again at Oct 14th, 2026 11:27
   - F6：只是证据包缺附件，不改；这些数字已由 Sonnet 对照 CSV 核过。
 - Sonnet 复查确认评估脚本（analyse_confirm.py）按登记计算 C1；只把纯度均值的标签改清楚（口径与 analyse_test.py 相同）。
 - 确认实验 09:40 启动，4 个 worker；监控规则：20 分钟内无失败则加第 5 个，出现故障集中爆发就降并发。
+
+- 2026-10-16 11:46 确认运行进度 191/216。11:40–11:42 连续 5 次 CUDA 偶发错误（"CUDA kernel errors…"），旧看门狗判为风暴后退出。按 EXPERIMENT_SCHEDULING.md 的规程，按确切 PID 结束 w4、w5（w4 当时在跑的任务从检查点续跑，不受影响），释放 w4 未完成任务的占位（c_bvar_c30_s51_o1 micev）；w5 的任务已有结果。保留 3 个 worker，并启动新看门狗：3 个 worker 都结束后由清扫 worker 7 补跑被释放的任务。运行仍未结束，分数一个都没看。
