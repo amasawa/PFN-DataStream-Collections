@@ -984,3 +984,32 @@
 
 ## 2026-10-06 02:24：登记 K2 暂停（未产生结果）
 - 登记 K2（第三个种子，四条链）02:18 启动后，与修复探查等共 5 个 GPU 进程并行，CUDA 重试频繁（7 分钟内 4 次以上），没有任何方法跑完。用户随后要求优先做两个新方向的可行性检查（"做吧，两个都跑"），而 5:00 系统更新前 GPU 时间有限，所以 02:2x 停掉了 K2 的四条链。停止时目录里除日志和可能的 micev 断点外没有结果文件；K2 的登记不变，之后续跑仍是每段一次有效运行。
+
+## 2026-10-17 21:36：主表（表 1）数据导出；网格列补跑（登记 c29f343，已推送）
+- 用户要求：主表补训练式学习器逐行、检测分段 MICE 一行、生成器流准确率一列；先导出到桌面，等 GPU 空了再补跑。
+- **导出**：新脚本 `MICE/code/export_main_table.py` → `MICE/results_paper/main_table/`，复制到桌面 `MICE_main_table/`（附中文 README）。
+  检测分段 MICE（mice_cp）从 round 14 的专家缓存（`~/pfn-runs/mice-r14-exist/P`）用冻结规则回放，再算 F1/AUC/ECE/Brier。
+  - 第一次核对用了运行 .npz 里的 acc，最多差 8.2 点：.npz 存的是运行时在线规则的准确率，不是论文所用的回放。改为对照论文的
+    r14 表（`r14_real_streams.csv`、`r14_aligned_streams.csv` 的 cp 列），41 条流最大差 2.8e-14。
+  - 平均（百分数）：真实流 29 条 mice_cp 准确率 83.83、F1 74.35、AUC 90.74、ECE 1.34、半 Brier 11.19（固定分段 mice 83.82、74.28、
+    90.49、1.29、11.20）；网格 grid20 12 条 mice_cp 86.55。生成器流 30 条：mice 94.96、ddm 94.82、oracle 97.05。
+- **缺口与补跑**（`experiments/mice_main_table_20261017/PLAN.md`）：
+  1. 训练式学习器 grid20（12 条 × 8 个，CPU）：21:36 开始。第一次误用 pfn venv（没有 river，river 部分报错；nse、mooe 跑了 2 个），
+     按 PID 停掉，输出移到 `~/pfn-runs/mice-main-trained-grid20-wrongvenv/`（不用）；改用原来的 `~/pfn-venvs/stream`，
+     先在 grid_c5_b500_s10 上重跑 8 个学习器，和已有 grid10 结果对照，确认环境一致。
+  2. 检测分段 MICE grid10（12 条，GPU）+ grid_c5_b500_s20 复现检查：tmux `mice-cp-grid10` 里的 `wait_gpu.sh` 等待
+     GPU 显存 < 12 GB、利用率 < 30%、可用内存 > 8 GB 连续 5 分钟后启动 2 个 worker。21:35 时 GPU 被其他项目占用（显存 25–27 GB），内存可用 2–6 GB。
+- 训练式学习器没存概率：F1/AUC/ECE/Brier 无法补，除非改代码重跑（未做）。
+
+## 2026-10-17 22:12：主表网格列补跑完成；重新导出
+- 训练式学习器 grid20：21:36–22:11，96/96 个结果，无报错。复现检查：grid_c5_b500_s10 上 8 个学习器与已有结果逐批相同（最大差 0）。
+- 检测分段 MICE grid10：21:42 GPU 空出后启动 2 个 worker，21:57 结束，13/13（grid_c30_b2000_s10 两次 CUDA launch failure，从断点续跑）。
+  复现检查：grid_c5_b500_s20 重跑，回放概率最大差 0，变化点相同。
+- 导出修正：网格上的 LTM 只在 metrics.csv（run_probs.py）里有准确率，上一版漏掉了；现在准确率以 all.csv 为准、缺的用 metrics.csv 补。
+  ddm/ltm 两处来源最多差 4.5e-4（run_probs.py 是另一次运行），其他方法完全一致（断言）。
+- 结果（网格 24 条平均准确率）：mice_cp 86.40、mice 86.36、ddm 84.10、winens 81.58、ltm 62.19、fifo 61.91；
+  训练式最好的 MOOE-4000 77.98、SRP 69.47、ARF 67.71。桌面 `MICE_main_table/` 已更新。
+- MiMo Pro medium 后台审计 export_main_table.py（22:12 开始）。
+- 用户定：检测分段确认实验第 1 条改为整体检验；数据 CIC-IDS2017 与 Bitcoin Heist。Bitcoin Heist 已从 UCI 下载
+  （`~/pfn-runs/raw-newdata-20261017/`，sha256 cdf3bb34…，2,916,697 行，29 个标签，勒索地址占 1.42%，各年 0.001%–4.1%）。
+  CIC-IDS2017 官方下载要填个人信息表单，需用户本人下载。

@@ -61,11 +61,14 @@ def main():
     chk.to_csv(f"{OUT}/check_cp_replay.csv", index=False)
     print(f"mice_cp replay vs r14 tables: max |diff| = {chk['diff'].max():.2e} over {len(chk)} streams")
     m = pd.concat([m, pd.DataFrame(cpr)], ignore_index=True)
-    # accuracy: all.csv for every method it has; metrics.csv only adds methods absent there (fast, mice_cp)
-    extra = m[~m.method.isin(acc.method.unique())][["group", "stream", "method", "acc"]]
-    long = acc.merge(m.drop(columns="acc"), on=["group", "stream", "method"], how="outer")
-    long = pd.concat([long[long.acc.notna()], extra.merge(m.drop(columns="acc"), on=["group", "stream", "method"])],
-                     ignore_index=True)
+    # accuracy: all.csv where it has a value, otherwise the replayed accuracy of metrics.csv (fast, mice_cp, and ltm on
+    # the grid, which exists only from run_probs.py)
+    long = acc.merge(m, on=["group", "stream", "method"], how="outer", suffixes=("", "_m"))
+    both = long.acc.notna() & long.acc_m.notna()
+    rerun = long.method.isin(["ddm", "ltm"])   # their metrics come from a separate run (run_probs.py): <= 0.05 points
+    dd = (long.acc - long.acc_m).abs()
+    assert dd[both & ~rerun].max() < 1e-9 and dd[both & rerun].max() < 1e-3, "all.csv and metrics.csv disagree"
+    long["acc"] = long.acc.fillna(long.acc_m); long = long.drop(columns="acc_m")
     long.insert(0, "set", long.group.map(SET))
     long = long.sort_values(["set", "group", "stream", "method"])
     long.to_csv(f"{OUT}/streams_long.csv", index=False)
