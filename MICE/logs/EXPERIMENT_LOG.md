@@ -1053,3 +1053,6 @@
 ## 2026-10-17 22:54：确认实验已提交登记（df475cc），等待资源启动
 - 22:54 GPU 被另一个项目占用（ComfyUI 与 t2v 的 TTS 任务；显存 19–28 GB，可用内存 1–3 GB，负载 13），按排程规则（可用内存 < 4 GB 不启动）不能开跑。
 - tmux `mice-confirm-cp` 运行 wait_and_launch.sh：显存 < 12 GB、利用率 < 30%、可用内存 > 8 GB 连续 5 分钟后启动 2 个 GPU worker（66 个任务）和 CPU 上的 ARF/SRP（22 个任务）。
+
+## 2026-10-17 23:23：确认实验开跑
+- 23:17 起 GPU 空出（显存 790 MiB、可用内存 28 GB），连续 5 分钟后 23:23 启动 2 个 GPU worker（cc_cic_wed 的 micecp、micev 先跑）和 CPU 的 ARF/SRP。
