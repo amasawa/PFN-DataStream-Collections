@@ -426,15 +426,15 @@ selection of low-discrepancy batches that motivates the rule (\cref{sec:duo}).
 
 \textbf{Inside \mice{}, synthetic streams.} With ranking, \mice{} is more accurate than with a random extra expert on
 all 18 streams, by $+0.32$, $+0.28$ and $+1.08$ points at $K=3$, 5 and 15; the interval excludes zero at $K=3$ and
-5 and reaches it at $K=15$. The log-loss difference is within $\pm0.006$ at $K=3$ and 5 with intervals that contain
-zero, and $+0.013$ at $K=15$. By the pre-specified reading, which requires both metrics, a deployed advantage at
+5 and reaches it at $K=15$. The log-loss difference (random minus ranked) is within $\pm0.006$ at $K=3$ and 5 with
+intervals that contain zero, and $+0.013$ at $K=15$ in favour of ranking. By the pre-specified reading, which requires both metrics, a deployed advantage at
 $K=3$ is not established. The fast level gives a random context little weight (0.02 to 0.05, against 0.19 to 0.31 for
 the ranked one), yet without recurrence it still costs \mice{} 1.07 points, and so does the oracle, which then has
 few same-concept candidates and is filled at random; the ranked context costs nothing there ($+0.01$).
 
 \textbf{Held-out real prefixes.} No advantage of ranking is established. Averaged over sources, a random extra expert
-lifts \mice{} by $+0.13$ points and the ranked one by $+0.07$; the difference is $-0.05$ $[-0.09,-0.01]$ points in
-accuracy and $-0.008$ $[-0.012,-0.006]$ in log-loss, positive on one source (INSECTS) and most negative on Poker
+lifts \mice{} by $+0.13$ points and the ranked one by $+0.07$; with ranking, accuracy is $0.05$ $[0.01,0.09]$ points
+lower and log-loss $0.008$ $[0.006,0.012]$ higher than with the random expert, positive on one source (INSECTS) and most negative on Poker
 ($-0.24$). Alone, the ranked context is less accurate than a random one on Airlines, Covertype and Poker ($-11.8$
 points on Covertype) and more accurate on INSECTS ($+5.4$). The small real-stream gain of \method{} over \mice{}
 (\cref{sec:exp-heldout}) is therefore the gain of an extra context expert; on these prefixes it is not shown to come
@@ -444,8 +444,8 @@ from ranking.
   \centering
   \caption{Ranked, random and oracle contexts. Hit: share (\%) of selected non-anchor batches from the query batch's
   concept. Alone: accuracy of the ranked minus the random context (points). vs \mice{}: accuracy of \mice{} with the
-  extra expert minus \mice{}. Deployed: \mice{} with the ranked minus \mice{} with the random expert, accuracy (points)
-  and log-loss, mean and 95\% interval (synthetic: paired $t$ over six streams; held-out: conditional block
+  extra expert minus \mice{}. Deployed: \mice{} with the ranked against \mice{} with the random expert, accuracy
+  (points, ranked minus random) and log-loss (random minus ranked), mean and 95\% interval (synthetic: paired $t$ over six streams; held-out: conditional block
   bootstrap, source averages for the other columns). Positive values favour ranking.}
   \label{tab:rand}
   \small

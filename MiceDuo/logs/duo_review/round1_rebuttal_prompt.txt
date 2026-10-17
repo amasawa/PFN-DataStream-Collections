@@ -1,0 +1,8 @@
+You are the reviewer of this paper (main.tex, main.pdf and the table files in this directory) for a top machine-learning venue, as in your round-1 review. Review only the paper content. Your round-1 issue (P1): "the incremental value of relevance selection is not established"; you asked for MICE augmented with an anchor-preserving, uniformly sampled context expert under identical mixing settings, paired accuracy/log-loss differences on the controlled-recurrence and held-out streams with uncertainty, isolated runtime measurements, and noted that an unfavourable result would require reconsidering the contribution.
+
+The revision adds Section "Is the Gain from Ranking? Random and Oracle Contexts" (Table tab:rand), an isolated timing benchmark (held-out Cost paragraph), and narrows the abstract, contributions, conclusion and limitations according to a reading rule fixed before the runs.
+
+Answer, briefly:
+1. Does the new control and the revised claims answer your round-1 issue? (yes / partly / no, with reasons)
+2. Updated score on the same 1-8 scale (1 strong reject ... 5 borderline accept, 6 weak accept, 7 accept, 8 strong accept) and how far from acceptance.
+3. The single most severe remaining issue: Severity (P0/P1/P2), Finding status, Location, Evidence, Why it matters, Concrete fix, whether a method change or new data is needed.
