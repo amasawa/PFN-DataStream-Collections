@@ -1074,3 +1074,8 @@
 - Bitcoin Heist 只有 6 个特征，任务轻（MICE 两个任务各约 10 分钟），2 个 worker 时 GPU 利用率降到 36%、显存 1.9 GB。
 - 按 PLAN.md 执行一节"2 workers, 3 if stable"和 env/EXPERIMENT_SCHEDULING.md（TabPFN 2–3 个并发最佳）：02:26 启动 worker 3
   （同一 worker.sh，mkdir 认领，环境变量由 worker.sh 设定）。启动后利用率 70%、显存 2.4 GB。属运行操作，不改变任何任务的计算。
+
+### 2026-10-18 03:27 确认实验进度：9 个主段全部完成
+- GPU 已完成 54/66：9 个主段 × 6 个方法全部完成，全部第一次尝试成功，无 CUDA 故障、无放弃。
+- 现在跑补充段 cc_poker_f（micecp、micev、winens，3 个 worker），之后 cc_poker_g。GPU 利用率 69%，显存 2.7 GB。
+- 按 PLAN.md，评估在全部 66 个任务完成后才运行（analyse.py 拒绝部分输出），此前不看任何分数。
