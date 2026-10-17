@@ -1,0 +1,8 @@
+h,rule,value,met
+H1,mean over segments of mice_cp - mice: one-sided 95% lower bound > -0.2 points,"mean -0.005, lb -0.013",True
+H2,every segment: one-sided 95% lower bound of mice_cp - fifo > -0.3 points,cc_btc_2013 +0.000; cc_btc_2014 -0.001; cc_btc_2015 +0.001; cc_btc_2016 -0.246; cc_btc_2017 -0.182; cc_cic_tue -0.009; cc_cic_wed +0.102; cc_cic_thu -0.006; cc_cic_fri +0.050,True
+H3,"every segment: mice_cp - max(fifo, ddm) >= -0.5 points",cc_btc_2013 +0.003; cc_btc_2014 +0.025; cc_btc_2015 +0.005; cc_btc_2016 -0.172; cc_btc_2017 -0.137; cc_cic_tue -0.002; cc_cic_wed +0.271; cc_cic_thu +0.017; cc_cic_fri +0.028,True
+H4,"per source mean above all four context baselines, and above all four on >= 6 of 9",per source margins bitcoinheist -0.055; cicids2017 -0.013; above on 4 of 9: cc_btc_2013 +0.001; cc_btc_2014 +0.025; cc_btc_2015 -0.001; cc_btc_2016 -0.532; cc_btc_2017 -0.137; cc_cic_tue -0.002; cc_cic_wed +0.135; cc_cic_thu +0.017; cc_cic_fri -0.234,False
+H5,mice_cp above mice_cp_nopool on >= 6 of 9 segments,8 of 9: cc_btc_2013 +0.001; cc_btc_2014 +0.011; cc_btc_2015 +0.000; cc_btc_2016 +0.007; cc_btc_2017 +0.019; cc_cic_tue +0.003; cc_cic_wed +0.202; cc_cic_thu +0.003; cc_cic_fri +0.156,True
+H1_b50,descriptive: H1 lower bound with blocks of 50 batches,lb -0.013,
+H2_b50,descriptive: H2 lower bounds with blocks of 50 batches,cc_btc_2013 +0.000; cc_btc_2014 -0.002; cc_btc_2015 +0.001; cc_btc_2016 -0.265; cc_btc_2017 -0.190; cc_cic_tue -0.008; cc_cic_wed +0.056; cc_cic_thu -0.006; cc_cic_fri +0.058,
