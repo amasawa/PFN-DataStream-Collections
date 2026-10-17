@@ -32,6 +32,17 @@ def strip_comments(text):
     return '\n'.join(out) + '\n'
 
 
+def expand_strings(bib):
+    """Writes @string venues out as braced literals: Tectonic's BibTeX drops the spaces inside @string values
+    ("ACM Comput. Surv." became "ACMComput.Surv." in the .bbl), and arXiv uses the shipped .bbl as is."""
+    macros = dict(re.findall(r'@string\{(\w+)\s*=\s*"([^"]*)"\}', bib))
+    bib = re.sub(r'@string\{\w+\s*=\s*"[^"]*"\}\n', '', bib)
+    for k, v in macros.items():
+        bib = re.sub(r'(=\s*)' + k + r'(\s*,)', lambda m: m.group(1) + '{' + v + '}' + m.group(2), bib)
+    assert not re.search(r'(journal|booktitle)\s*=\s*[A-Za-z]', bib), 'unexpanded venue macro'
+    return bib
+
+
 def convert(tex):
     tex = strip_comments(tex)
     tex = tex.replace(r'\documentclass[10pt,journal,compsoc]{IEEEtran}',
@@ -74,7 +85,9 @@ def main():
     for p in SRC.iterdir():
         if p.name.startswith('tab_') and p.suffix == '.tex' or p.name in ('math.tex', 'fig_method.tex'):
             (DST / p.name).write_text(strip_comments(p.read_text()))
-        elif p.name in ('refs.bib', 'fig_recall.pdf', 'algorithm.sty', 'algorithmic.sty'):
+        elif p.name == 'refs.bib':
+            (DST / p.name).write_text(expand_strings(p.read_text()))
+        elif p.name in ('fig_recall.pdf', 'algorithm.sty', 'algorithmic.sty'):
             shutil.copy(p, DST / p.name)
     print('written', DST)
 
