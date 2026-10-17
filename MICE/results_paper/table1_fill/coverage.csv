@@ -1,0 +1,191 @@
+set,method,metric,have,of,reason
+real,arf,f1,0,29,run pending or not available
+real,arf,auc,0,29,run pending or not available
+real,arf,ece,0,29,run pending or not available
+real,arf,brier,0,29,run pending or not available
+real,arf,nll,0,29,run pending or not available
+real,srp,f1,0,29,run pending or not available
+real,srp,auc,0,29,run pending or not available
+real,srp,ece,0,29,run pending or not available
+real,srp,brier,0,29,run pending or not available
+real,srp,nll,0,29,run pending or not available
+real,hat,f1,0,29,run pending or not available
+real,hat,auc,0,29,run pending or not available
+real,hat,ece,0,29,run pending or not available
+real,hat,brier,0,29,run pending or not available
+real,hat,nll,0,29,run pending or not available
+real,levbag,f1,0,29,run pending or not available
+real,levbag,auc,0,29,run pending or not available
+real,levbag,ece,0,29,run pending or not available
+real,levbag,brier,0,29,run pending or not available
+real,levbag,nll,0,29,run pending or not available
+real,adwinbag,f1,0,29,run pending or not available
+real,adwinbag,auc,0,29,run pending or not available
+real,adwinbag,ece,0,29,run pending or not available
+real,adwinbag,brier,0,29,run pending or not available
+real,adwinbag,nll,0,29,run pending or not available
+real,nse,f1,0,29,run pending or not available
+real,nse,auc,0,29,run pending or not available
+real,nse,ece,0,29,run pending or not available
+real,nse,brier,0,29,run pending or not available
+real,nse,nll,0,29,run pending or not available
+real,mooe_rff2000_100_2_0.01,f1,0,29,run pending or not available
+real,mooe_rff2000_100_2_0.01,auc,0,29,run pending or not available
+real,mooe_rff2000_100_2_0.01,ece,0,29,MOOE has no probability (squared loss on linear outputs)
+real,mooe_rff2000_100_2_0.01,brier,0,29,MOOE has no probability (squared loss on linear outputs)
+real,mooe_rff2000_100_2_0.01,nll,0,29,MOOE has no probability (squared loss on linear outputs)
+real,mooe_rff4000_100_2_0.01,f1,0,29,run pending or not available
+real,mooe_rff4000_100_2_0.01,auc,0,29,run pending or not available
+real,mooe_rff4000_100_2_0.01,ece,0,29,MOOE has no probability (squared loss on linear outputs)
+real,mooe_rff4000_100_2_0.01,brier,0,29,MOOE has no probability (squared loss on linear outputs)
+real,mooe_rff4000_100_2_0.01,nll,0,29,MOOE has no probability (squared loss on linear outputs)
+grid,arf,f1,0,24,run pending or not available
+grid,arf,auc,0,24,run pending or not available
+grid,arf,ece,0,24,run pending or not available
+grid,arf,brier,0,24,run pending or not available
+grid,arf,nll,0,24,run pending or not available
+grid,srp,f1,0,24,run pending or not available
+grid,srp,auc,0,24,run pending or not available
+grid,srp,ece,0,24,run pending or not available
+grid,srp,brier,0,24,run pending or not available
+grid,srp,nll,0,24,run pending or not available
+grid,hat,f1,0,24,run pending or not available
+grid,hat,auc,0,24,run pending or not available
+grid,hat,ece,0,24,run pending or not available
+grid,hat,brier,0,24,run pending or not available
+grid,hat,nll,0,24,run pending or not available
+grid,levbag,f1,0,24,run pending or not available
+grid,levbag,auc,0,24,run pending or not available
+grid,levbag,ece,0,24,run pending or not available
+grid,levbag,brier,0,24,run pending or not available
+grid,levbag,nll,0,24,run pending or not available
+grid,adwinbag,f1,0,24,run pending or not available
+grid,adwinbag,auc,0,24,run pending or not available
+grid,adwinbag,ece,0,24,run pending or not available
+grid,adwinbag,brier,0,24,run pending or not available
+grid,adwinbag,nll,0,24,run pending or not available
+grid,nse,f1,0,24,run pending or not available
+grid,nse,auc,0,24,run pending or not available
+grid,nse,ece,0,24,run pending or not available
+grid,nse,brier,0,24,run pending or not available
+grid,nse,nll,0,24,run pending or not available
+grid,mooe_rff2000_100_2_0.01,f1,0,24,run pending or not available
+grid,mooe_rff2000_100_2_0.01,auc,0,24,run pending or not available
+grid,mooe_rff2000_100_2_0.01,ece,0,24,MOOE has no probability (squared loss on linear outputs)
+grid,mooe_rff2000_100_2_0.01,brier,0,24,MOOE has no probability (squared loss on linear outputs)
+grid,mooe_rff2000_100_2_0.01,nll,0,24,MOOE has no probability (squared loss on linear outputs)
+grid,mooe_rff4000_100_2_0.01,f1,0,24,run pending or not available
+grid,mooe_rff4000_100_2_0.01,auc,0,24,run pending or not available
+grid,mooe_rff4000_100_2_0.01,ece,0,24,MOOE has no probability (squared loss on linear outputs)
+grid,mooe_rff4000_100_2_0.01,brier,0,24,MOOE has no probability (squared loss on linear outputs)
+grid,mooe_rff4000_100_2_0.01,nll,0,24,MOOE has no probability (squared loss on linear outputs)
+generator,mice_cp,acc,0,30,run pending or not available
+generator,mice_cp,f1,0,30,run pending or not available
+generator,mice_cp,auc,0,30,run pending or not available
+generator,mice_cp,ece,0,30,run pending or not available
+generator,mice_cp,brier,0,30,run pending or not available
+generator,mice_cp,nll,0,30,run pending or not available
+generator,ltm,f1,0,30,run pending or not available
+generator,ltm,auc,0,30,run pending or not available
+generator,ltm,ece,0,30,run pending or not available
+generator,ltm,brier,0,30,run pending or not available
+generator,ltm,nll,0,30,run pending or not available
+generator,ddm,f1,0,30,run pending or not available
+generator,ddm,auc,0,30,run pending or not available
+generator,ddm,ece,0,30,run pending or not available
+generator,ddm,brier,0,30,run pending or not available
+generator,ddm,nll,0,30,run pending or not available
+generator,arf,acc,0,30,run pending or not available
+generator,arf,f1,0,30,run pending or not available
+generator,arf,auc,0,30,run pending or not available
+generator,arf,ece,0,30,run pending or not available
+generator,arf,brier,0,30,run pending or not available
+generator,arf,nll,0,30,run pending or not available
+generator,srp,acc,0,30,run pending or not available
+generator,srp,f1,0,30,run pending or not available
+generator,srp,auc,0,30,run pending or not available
+generator,srp,ece,0,30,run pending or not available
+generator,srp,brier,0,30,run pending or not available
+generator,srp,nll,0,30,run pending or not available
+generator,hat,acc,0,30,run pending or not available
+generator,hat,f1,0,30,run pending or not available
+generator,hat,auc,0,30,run pending or not available
+generator,hat,ece,0,30,run pending or not available
+generator,hat,brier,0,30,run pending or not available
+generator,hat,nll,0,30,run pending or not available
+generator,levbag,acc,0,30,run pending or not available
+generator,levbag,f1,0,30,run pending or not available
+generator,levbag,auc,0,30,run pending or not available
+generator,levbag,ece,0,30,run pending or not available
+generator,levbag,brier,0,30,run pending or not available
+generator,levbag,nll,0,30,run pending or not available
+generator,adwinbag,acc,0,30,run pending or not available
+generator,adwinbag,f1,0,30,run pending or not available
+generator,adwinbag,auc,0,30,run pending or not available
+generator,adwinbag,ece,0,30,run pending or not available
+generator,adwinbag,brier,0,30,run pending or not available
+generator,adwinbag,nll,0,30,run pending or not available
+generator,nse,acc,0,30,run pending or not available
+generator,nse,f1,0,30,run pending or not available
+generator,nse,auc,0,30,run pending or not available
+generator,nse,ece,0,30,run pending or not available
+generator,nse,brier,0,30,run pending or not available
+generator,nse,nll,0,30,run pending or not available
+generator,mooe_rff2000_100_2_0.01,acc,0,30,run pending or not available
+generator,mooe_rff2000_100_2_0.01,f1,0,30,run pending or not available
+generator,mooe_rff2000_100_2_0.01,auc,0,30,run pending or not available
+generator,mooe_rff2000_100_2_0.01,ece,0,30,MOOE has no probability (squared loss on linear outputs)
+generator,mooe_rff2000_100_2_0.01,brier,0,30,MOOE has no probability (squared loss on linear outputs)
+generator,mooe_rff2000_100_2_0.01,nll,0,30,MOOE has no probability (squared loss on linear outputs)
+generator,mooe_rff4000_100_2_0.01,acc,0,30,run pending or not available
+generator,mooe_rff4000_100_2_0.01,f1,0,30,run pending or not available
+generator,mooe_rff4000_100_2_0.01,auc,0,30,run pending or not available
+generator,mooe_rff4000_100_2_0.01,ece,0,30,MOOE has no probability (squared loss on linear outputs)
+generator,mooe_rff4000_100_2_0.01,brier,0,30,MOOE has no probability (squared loss on linear outputs)
+generator,mooe_rff4000_100_2_0.01,nll,0,30,MOOE has no probability (squared loss on linear outputs)
+confirm,arf,f1,0,9,run pending or not available
+confirm,arf,auc,0,9,run pending or not available
+confirm,arf,ece,0,9,run pending or not available
+confirm,arf,brier,0,9,run pending or not available
+confirm,arf,nll,0,9,run pending or not available
+confirm,srp,f1,0,9,run pending or not available
+confirm,srp,auc,0,9,run pending or not available
+confirm,srp,ece,0,9,run pending or not available
+confirm,srp,brier,0,9,run pending or not available
+confirm,srp,nll,0,9,run pending or not available
+confirm,hat,acc,0,9,run pending or not available
+confirm,hat,f1,0,9,run pending or not available
+confirm,hat,auc,0,9,run pending or not available
+confirm,hat,ece,0,9,run pending or not available
+confirm,hat,brier,0,9,run pending or not available
+confirm,hat,nll,0,9,run pending or not available
+confirm,levbag,acc,0,9,run pending or not available
+confirm,levbag,f1,0,9,run pending or not available
+confirm,levbag,auc,0,9,run pending or not available
+confirm,levbag,ece,0,9,run pending or not available
+confirm,levbag,brier,0,9,run pending or not available
+confirm,levbag,nll,0,9,run pending or not available
+confirm,adwinbag,acc,0,9,run pending or not available
+confirm,adwinbag,f1,0,9,run pending or not available
+confirm,adwinbag,auc,0,9,run pending or not available
+confirm,adwinbag,ece,0,9,run pending or not available
+confirm,adwinbag,brier,0,9,run pending or not available
+confirm,adwinbag,nll,0,9,run pending or not available
+confirm,nse,acc,0,9,run pending or not available
+confirm,nse,f1,0,9,run pending or not available
+confirm,nse,auc,0,9,run pending or not available
+confirm,nse,ece,0,9,run pending or not available
+confirm,nse,brier,0,9,run pending or not available
+confirm,nse,nll,0,9,run pending or not available
+confirm,mooe_rff2000_100_2_0.01,acc,0,9,run pending or not available
+confirm,mooe_rff2000_100_2_0.01,f1,0,9,run pending or not available
+confirm,mooe_rff2000_100_2_0.01,auc,0,9,run pending or not available
+confirm,mooe_rff2000_100_2_0.01,ece,0,9,MOOE has no probability (squared loss on linear outputs)
+confirm,mooe_rff2000_100_2_0.01,brier,0,9,MOOE has no probability (squared loss on linear outputs)
+confirm,mooe_rff2000_100_2_0.01,nll,0,9,MOOE has no probability (squared loss on linear outputs)
+confirm,mooe_rff4000_100_2_0.01,acc,0,9,run pending or not available
+confirm,mooe_rff4000_100_2_0.01,f1,0,9,run pending or not available
+confirm,mooe_rff4000_100_2_0.01,auc,0,9,run pending or not available
+confirm,mooe_rff4000_100_2_0.01,ece,0,9,MOOE has no probability (squared loss on linear outputs)
+confirm,mooe_rff4000_100_2_0.01,brier,0,9,MOOE has no probability (squared loss on linear outputs)
+confirm,mooe_rff4000_100_2_0.01,nll,0,9,MOOE has no probability (squared loss on linear outputs)
