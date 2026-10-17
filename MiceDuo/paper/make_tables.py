@@ -98,12 +98,44 @@ def heldout_tables():
     (HERE / 'heldout_numbers.txt').write_text('\n'.join(notes) + '\n')
 
 
+def rand_table():
+    """Random and oracle selection controls (experiments/duo_rand_20261017); positive Delta = sel better."""
+    D = REPO / 'MiceDuo/results'
+    g = pd.read_csv(D / 'duo_rand_mech_levels.csv')
+    recur = {3: 'five', 5: 'three', 15: 'once'}
+    ci = lambda x, lo, hi, f: f'${x:+.{f}f}$ [{lo:+.{f}f}, {hi:+.{f}f}]'
+    rows = []
+    for _, r in g.iterrows():
+        rows.append(f"{recur[int(r.K)]}{'' if int(r.K) == 15 else ' times'} ($K={int(r.K)}$) & {r.sel_hit:.0f} & {r.rand_hit:.0f} & {r.orc_hit:.0f} & "
+                    f"{ci(r.Da_acc, r.Da_acc_lo, r.Da_acc_hi, 1)} & ${r.sel_d_acc - r.mice_acc:+.2f}$ & "
+                    f"${r.rand_d_acc - r.mice_acc:+.2f}$ & ${r.orc_d_acc - r.mice_acc:+.2f}$ & "
+                    f"{ci(r.Dd_acc, r.Dd_acc_lo, r.Dd_acc_hi, 2)} & {ci(r.Dd_ll, r.Dd_ll_lo, r.Dd_ll_hi, 3)} \\\\")
+    s = pd.read_csv(D / 'duo_rand_heldout_sources.csv').set_index('source')
+    p = pd.read_csv(D / 'duo_rand_heldout_pooled.csv').iloc[0]
+    sel, rnd = (s.sel_d_acc - s.mice_acc).mean(), (s.rand_d_acc - s.mice_acc).mean()
+    rows.append(r'\midrule')
+    rows.append(f"held-out, 4 sources & -- & -- & -- & ${s.Da_acc.mean():+.1f}$ & ${sel:+.2f}$ & ${rnd:+.2f}$ & -- & "
+                f"{ci(p.Dd_acc, p.Dd_acc_lo, p.Dd_acc_hi, 2)} & {ci(p.Dd_ll, p.Dd_ll_lo, p.Dd_ll_hi, 3)} \\\\")
+    (HERE / 'tab_rand_rows.tex').write_text('\n'.join(rows) + '\n')
+    notes = [f'heldout per source (sel-mice, rand-mice, Dd_acc, Da_acc):']
+    notes += [f'  {i}: {r.sel_d_acc - r.mice_acc:+.3f} {r.rand_d_acc - r.mice_acc:+.3f} {r.Dd_acc:+.3f} {r.Da_acc:+.2f}'
+              for i, r in s.iterrows()]
+    notes.append(f'pooled: Dd_acc {p.Dd_acc:+.3f} [{p.Dd_acc_lo:+.3f}, {p.Dd_acc_hi:+.3f}], Dd_ll {p.Dd_ll:+.4f} '
+                 f'[{p.Dd_ll_lo:+.4f}, {p.Dd_ll_hi:+.4f}], Da_acc {p.Da_acc:+.2f}, sources_pos {int(p.sources_pos)}, '
+                 f'selector_sd {p.selector_sd:.3f}, backbone_sd {p.backbone_sd:.3f}')
+    notes += [f'K={int(r.K)}: alone sel/rand/orc {r.sel_a_acc:.1f}/{r.rand_a_acc:.1f}/{r.orc_a_acc:.1f}, '
+              f'weight sel/rand/orc {r.sel_w:.3f}/{r.rand_w:.3f}/{r.orc_w:.3f}, Dd_acc_pos {int(r.Dd_acc_pos)}, '
+              f'Dd_ll_pos {int(r.Dd_ll_pos)}, Dd_acc_late {r.Dd_acc_late:+.2f}' for _, r in g.iterrows()]
+    (HERE / 'rand_numbers.txt').write_text('\n'.join(notes) + '\n')
+
+
 if __name__ == '__main__':
     dev_table()
     verdict_table()
     mech_table()
     anchor_table()
     heldout_tables()
+    rand_table()
     print((HERE / 'tab_heldout_rows.tex').read_text())
     print((HERE / 'tab_heldout_verdict_rows.tex').read_text())
     print((HERE / 'heldout_numbers.txt').read_text())
@@ -111,3 +143,5 @@ if __name__ == '__main__':
     print((HERE / 'mech_numbers.txt').read_text())
     print((HERE / 'tab_dev_rows.tex').read_text())
     print((HERE / 'tab_verdict_rows.tex').read_text())
+    print((HERE / 'tab_rand_rows.tex').read_text())
+    print((HERE / 'rand_numbers.txt').read_text())

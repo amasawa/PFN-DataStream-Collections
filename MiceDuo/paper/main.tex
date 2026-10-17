@@ -65,7 +65,12 @@ times, three times and once), is largest for concepts that are hard to learn, an
 any stream (rounded). A frozen evaluation on 22 held-out real-stream prefixes and three backbone seeds passes the
 same no-negative-effect criterion on every seed: \method{} is at most 0.141 points below \mice{} or FIFO on
 any stream and is $+0.05$ to $+0.08$ points above \mice{} on average, so its value on real streams is safety at a
-small gain.
+small gain. Random and oracle controls separate the ranking from the extra expert: ranking retrieves the recurring
+concept (92\% of the selected batches against 31\% at random) and, alone, is 34 to 38 points more accurate than a
+random context, but inside \mice{} this does not become an established gain over a random extra expert. On the
+synthetic streams the accuracy advantage ($+0.28$ to $+1.08$ points) is established jointly with log-loss at no
+level; on the held-out
+prefixes a random extra expert lifts \mice{} as much as the ranked one ($+0.13$ against $+0.07$ points).
 \end{abstract}
 
 % =====================================================================================================
@@ -117,7 +122,9 @@ window safeguard intact.
 pre-specified tolerance; on
 eighteen fresh streams with controlled recurrence its gain over \mice{} grows with recurrence and with the difficulty
 of the concept, and no stream loses more than about 0.01 points (\cref{sec:exp-mech}); on 22 held-out real-stream prefixes the
-frozen criterion holds on all three backbone seeds (\cref{sec:exp-heldout}).
+frozen criterion holds on all three backbone seeds (\cref{sec:exp-heldout}). Random and oracle controls show that the
+ranking retrieves the recurring concept, while the gain of \method{} over \mice{} is not shown to exceed that of a
+random extra expert (\cref{sec:exp-rand}).
 
 % =====================================================================================================
 \section{Setting and Background}
@@ -308,8 +315,8 @@ did not cancel the benefit of recurrence. The gain concentrates on hard concepts
 $+0.26$ and $+0.02$, with 30 centroids $+0.10$, $+0.04$ and $+0.01$. This matches the learning-curve account of
 \citet{mice2026}: recalling rows pays when a concept takes many rows to relearn. The anchor-300 selection, reported as
 a secondary variant, passes the same checks. The increment is small next to \mice{}'s own gain over FIFO on these
-streams (6.3 to 14.5 points). We do not measure whether the selected batches belong to the recurring concept, so the
-ordering is consistent with, but does not demonstrate, retrieval of matching concepts.
+streams (6.3 to 14.5 points). The hit rates of \cref{sec:exp-rand} show that the selected batches do belong to the
+recurring concept.
 
 \begin{table}[t]
   \centering
@@ -349,7 +356,7 @@ than 0.134 points below \mice{} or 0.140 below FIFO, five streams per seed are b
 and INSECTS ($+0.07$, $+0.06$); on Covertype \method{} is consistently but negligibly below \mice{} (between $-0.02$ and
 $-0.01$ on every seed). Averaged over sources, \method{} is $+0.07$ points above \mice{} and $+0.50$ to $+0.59$ above FIFO. These
 results confirm the development finding on unseen streams: selection as an expert does no measurable harm and adds a
-small gain; they do not show a large gain on real streams.
+small gain; a random extra expert adds as much (\cref{sec:exp-rand}).
 
 \textbf{Cost.} The selection expert adds 30\% to \mice{}'s logical TFM calls on average (12\% to 43\% across
 streams), with 571 fits and 2\,714 forward calls per stream on average. Its scoring call predicts up to $(H-a)B$ rows,
@@ -396,6 +403,63 @@ in new processes. Predictions are bit-identical across concurrency levels.
   \end{tabular}}
 \end{table}
 
+\subsection{Is the Gain from Ranking? Random and Oracle Contexts}
+\label{sec:exp-rand}
+
+Two controls replace the ranking of \cref{eq:score} and keep everything else: the same anchor, the same horizon
+$H$, the same $M/B$ batches passed in chronological order. \emph{Random} draws the non-anchor batches uniformly from
+the older candidates (three draws per stream and backbone seed). \emph{Oracle}, on the synthetic streams only, takes
+the most recent candidates of the query batch's concept and fills the remaining slots at random. Each control is
+evaluated alone and as the extra expert of \mice{}, combined by the same rule as $\sel$ (\cref{sec:method}). The hit
+rate is the share of selected non-anchor batches whose concept is that of the query batch. On the synthetic streams
+the intervals are paired $t$ intervals over the six streams of a level; on the held-out prefixes they are
+moving-block bootstrap intervals over batches (blocks of 17) conditional on the 22 prefixes, and the four sources do
+not support a population interval.
+
+\textbf{Ranking retrieves the recurring concept.} On the synthetic streams 92\%, 88\% and 71\% of the ranked batches
+belong to the query batch's concept for $K=3$, 5 and 15, against 31\%, 21\% and 14\% for random batches and 96\%,
+92\% and 71\% for the oracle (\cref{tab:rand}). Alone, the ranked context is 34 to 38 points more accurate than a
+random one, with lower log-loss on every stream, and 0.3 to 2.8 points less accurate than the oracle. This is the
+selection of low-discrepancy batches that motivates the rule (\cref{sec:duo}).
+
+\textbf{Inside \mice{}, synthetic streams.} With ranking, \mice{} is more accurate than with a random extra expert on
+all 18 streams, by $+0.32$, $+0.28$ and $+1.08$ points at $K=3$, 5 and 15; the interval excludes zero at $K=3$ and
+5 and reaches it at $K=15$. The log-loss difference is within $\pm0.006$ at $K=3$ and 5 with intervals that contain
+zero, and $+0.013$ at $K=15$. By the pre-specified reading, which requires both metrics, a deployed advantage at
+$K=3$ is not established. The fast level gives a random context little weight (0.02 to 0.05, against 0.19 to 0.31 for
+the ranked one), yet without recurrence it still costs \mice{} 1.07 points, and so does the oracle, which then has
+few same-concept candidates and is filled at random; the ranked context costs nothing there ($+0.01$).
+
+\textbf{Held-out real prefixes.} No advantage of ranking is established. Averaged over sources, a random extra expert
+lifts \mice{} by $+0.13$ points and the ranked one by $+0.07$; the difference is $-0.05$ $[-0.09,-0.01]$ points in
+accuracy and $-0.008$ $[-0.012,-0.006]$ in log-loss, positive on one source (INSECTS) and most negative on Poker
+($-0.24$). Alone, the ranked context is less accurate than a random one on Airlines, Covertype and Poker ($-11.8$
+points on Covertype) and more accurate on INSECTS ($+5.4$). The small real-stream gain of \method{} over \mice{}
+(\cref{sec:exp-heldout}) is therefore the gain of an extra context expert; on these prefixes it is not shown to come
+from ranking.
+
+\begin{table*}[t]
+  \centering
+  \caption{Ranked, random and oracle contexts. Hit: share (\%) of selected non-anchor batches from the query batch's
+  concept. Alone: accuracy of the ranked minus the random context (points). vs \mice{}: accuracy of \mice{} with the
+  extra expert minus \mice{}. Deployed: \mice{} with the ranked minus \mice{} with the random expert, accuracy (points)
+  and log-loss, mean and 95\% interval (synthetic: paired $t$ over six streams; held-out: conditional block
+  bootstrap, source averages for the other columns). Positive values favour ranking.}
+  \label{tab:rand}
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{lrrrcrrrcc}
+    \toprule
+    & \multicolumn{3}{c}{Hit} & Alone & \multicolumn{3}{c}{vs \mice{}} & \multicolumn{2}{c}{Deployed: ranked $-$ random} \\
+    \cmidrule(lr){2-4}\cmidrule(lr){6-8}\cmidrule(lr){9-10}
+    Concept appears & rank & rand & orc & $\Delta$acc & rank & rand & orc & $\Delta$acc & $\Delta$log-loss \\
+    \midrule
+    \rowinput{tab_rand_rows.tex}
+    \bottomrule
+  \end{tabular}}
+\end{table*}
+
 % =====================================================================================================
 \section{Related Work}
 \label{sec:related}
@@ -430,7 +494,8 @@ The safeguard is against the window, not against \mice{}; the small observed los
 an empirical tolerance criterion, not a guarantee of non-decreasing accuracy.
 Selection costs extra TFM calls per batch (30\% more calls and about twice the time per batch in our held-out
 run). On held-out real streams the gain over \mice{} is $+0.05$ to $+0.08$ points on average and slightly negative on
-one source (Covertype).
+one source (Covertype), and a random extra expert gains as much; the controls use one backbone seed on the synthetic
+streams and a single anchor ($a=1$).
 
 \section{Conclusion}
 
@@ -439,6 +504,8 @@ do not. As an expert of a mixture with a window safeguard, the first property is
 on these controlled streams the gain is larger for frequent recurrence and harder concepts, and is approximately
 zero on average without recurrence. Individual losses remain within the pre-specified tolerance.
 On 22 held-out real-stream prefixes this holds on every backbone seed: no measurable harm and a small gain.
+The ranking itself finds the recurring concept, close to an oracle, but \mice{}'s mixture does not turn this into an
+established gain over a random extra expert; on real streams the gain is that of one more context expert.
 
 \bibliography{refs}
 \bibliographystyle{icml2026}

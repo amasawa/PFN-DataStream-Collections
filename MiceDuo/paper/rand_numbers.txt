@@ -1,0 +1,9 @@
+heldout per source (sel-mice, rand-mice, Dd_acc, Da_acc):
+  airlines: +0.065 +0.071 -0.005 -0.80
+  covertype: -0.016 +0.007 -0.023 -11.76
+  insects: +0.065 +0.057 +0.007 +5.44
+  poker: +0.149 +0.391 -0.241 -3.12
+pooled: Dd_acc -0.047 [-0.088, -0.008], Dd_ll -0.0085 [-0.0117, -0.0063], Da_acc -1.16, sources_pos 1, selector_sd 0.048, backbone_sd 0.050
+K=3: alone sel/rand/orc 89.3/55.3/92.1, weight sel/rand/orc 0.307/0.023/0.330, Dd_acc_pos 6, Dd_ll_pos 3, Dd_acc_late +0.33
+K=5: alone sel/rand/orc 87.8/50.1/90.1, weight sel/rand/orc 0.289/0.025/0.309, Dd_acc_pos 6, Dd_ll_pos 3, Dd_acc_late +0.29
+K=15: alone sel/rand/orc 79.7/44.0/80.0, weight sel/rand/orc 0.186/0.049/0.212, Dd_acc_pos 6, Dd_ll_pos 6, Dd_acc_late +1.12
