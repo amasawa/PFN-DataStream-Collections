@@ -1,8 +1,9 @@
 """Table 1 fill (PLAN.md, item 1): the eight trained learners rerun with the same code paths as MICE/code/run_river.py
 and MICE/code/run_trained.py, recording per row what each learner can give besides its label. CPU only (stream venv).
 - river learners (arf, srp, hat, levbag, adwinbag): p = predict_proba_one(x) and the label max(p, key=p.get), which is
-  exactly river's Classifier.predict_one (none of the five overrides it), so the accuracy equals the original runs.
-  P[i, k] = p.get(k, 0) for the classes 0..C-1 of the stream.
+  river's Classifier.predict_one (none of the five overrides it), so the accuracy equals the original runs; when p is
+  empty (no prediction) predict_one returns None and pred = -1 here (both count as wrong) and the P row stays 0 (the
+  read-out sets such rows uniform). P[i, k] = p.get(k, 0) for the classes 0..C-1 of the stream.
 - nse: the weighted votes of Learn++.NSE (NSE._votes with its weights); P = votes / sum (uniform when the sum is 0);
   label = NSE.predict (arg max of the same votes).
 - mooe_*: no probability (squared loss on linear outputs). S = the linear outputs Z @ W_mix (the scores whose arg max is
@@ -59,8 +60,8 @@ def run(data, stream, method, B, out):
                     s = Z[q] @ m._mix(); P[r] = s; pred[r] = s.argmax(1)
                     assert (pred[r] == m.predict(Z[q])).all()
                 else:
-                    pred[r] = m.predict(Z[q])
                     V = m._votes(Z[q], m.w) if m.h else np.zeros((B, C)); sv = V.sum(1, keepdims=True)
+                    pred[r] = V.argmax(1)                         # = NSE.predict (the same votes, also when empty)
                     P[r] = np.where(sv > 0, V / np.where(sv > 0, sv, 1), 1.0 / C)
                 acc[t] = (pred[r] == y[q]).mean()
             m.learn(Z[q], y[q])

@@ -5,9 +5,10 @@ R=$HOME/pfn-runs/mice-table1-trained-probs; X=/mnt/c/Users/zhwu9808/Desktop/data
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 M="mooe_rff4000_100_2_0.01 levbag srp adwinbag mooe_rff2000_100_2_0.01 nse arf hat"   # slowest first
 mkdir -p $R/P $R/logs
+[ -z "$(cat $X/streams_main.txt $X/streams_confirm.txt | tr -d '\r' | sort | uniq -d)" ] || { echo "stream names repeat"; exit 1; }
 { for m in $M; do
-    while read -r s; do echo "$X/../../MICE/data $s $m"; done < $X/streams_main.txt
-    while read -r s; do echo "$HOME/pfn-runs/mice-confirm-cp-20261017/data $s $m"; done < $X/streams_confirm.txt
+    while read -r s; do echo "$X/../../MICE/data $s $m"; done < <(tr -d '\r' < $X/streams_main.txt)
+    while read -r s; do echo "$HOME/pfn-runs/mice-confirm-cp-20261017/data $s $m"; done < <(tr -d '\r' < $X/streams_confirm.txt)
   done; } > $R/tasks.txt
 echo "$(date '+%F %T') start $(wc -l < $R/tasks.txt) tasks" >> $R/progress.txt
 xargs -P 6 -L 1 bash -c '~/pfn-venvs/stream/bin/python '$X'/run_trained_probs.py --data $0 --out '$R'/P --streams $1 --methods $2 \
