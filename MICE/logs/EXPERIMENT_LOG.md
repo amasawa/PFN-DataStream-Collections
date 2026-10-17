@@ -1068,3 +1068,9 @@
 - GPU 已完成 16/66：cc_cic_wed、cc_cic_fri 六个任务全部完成，cc_cic_tue 完成 4 个（fifo、ltm 在跑）。全部第一次尝试成功，无 CUDA 故障。
 - cc_cic_fri 比 wed 快得多（MICE 两个任务约 25 分钟）。按当前速度剩余约 5–7 小时。
 - 资源：GPU 利用率 67%（此刻是两个较轻的 fifo/ltm 任务），显存 3.7 GB，可用内存 26 GB；保持 2 个 worker。
+
+### 2026-10-18 02:27 确认实验进度；加第 3 个 worker
+- GPU 已完成 26/66：CIC 四段（wed、fri、tue、thu）全部完成，cc_btc_2014 的两个 MICE 任务完成。26 个任务全部第一次尝试成功。
+- Bitcoin Heist 只有 6 个特征，任务轻（MICE 两个任务各约 10 分钟），2 个 worker 时 GPU 利用率降到 36%、显存 1.9 GB。
+- 按 PLAN.md 执行一节"2 workers, 3 if stable"和 env/EXPERIMENT_SCHEDULING.md（TabPFN 2–3 个并发最佳）：02:26 启动 worker 3
+  （同一 worker.sh，mkdir 认领，环境变量由 worker.sh 设定）。启动后利用率 70%、显存 2.4 GB。属运行操作，不改变任何任务的计算。
