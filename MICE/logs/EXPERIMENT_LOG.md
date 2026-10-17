@@ -1039,7 +1039,7 @@
 - 方案文字核对代码：用户方案写"段长 300–700 行"，代码是检测到变化时至少 300 行（LMIN）、未检测到变化时 500 行，PLAN 按代码写。
 - 审查：Fable（预注册方法学）、MiMo Pro high（analyse/run_task/make_streams 首次审计）同时在后台。
 
-## 2026-10-17 23:0x：确认实验预注册定稿（审查结论）
+## 2026-10-17 22:5x：确认实验预注册定稿（审查结论）
 - Fable（22:36–22:39，原文 `logs/confirm_cp/fable_prereg_review.md`）：
   - H2 把补充的 Poker 段也算进判定、H1 显示的平均也混入了补充段：属实，已改为只用 9 个主段。
   - Bitcoin 原文件把 41,413 行勒索地址全排在最前（核实属实），按 (year, day) 稳定排序会让每天的勒索行都在当天开头，
@@ -1049,3 +1049,7 @@
 - MiMo Pro high（22:36–22:52，原文 `logs/confirm_cp/mimo_code_audit.md`）：F1、F2 同上，已修；F3（相对路径）不成立——脚本在仓库根下两层，
   试运行已从该目录跑通。需运行确认的点（批次对齐、ARF/SRP 输出、ddm/ltm 概率对齐、FIFO 两处来源一致）在 covertype 试运行中通过（断言未触发，FIFO 94.785 两处相同）。
 - Sonnet 复查修改后的 diff（16 秒）：50 批敏感性用 default_rng(1) 而 PLAN 未写种子——已写进 PLAN；"key 列成为特征"不成立（特征列表固定 6 列）。
+
+## 2026-10-17 22:54：确认实验已提交登记（df475cc），等待资源启动
+- 22:54 GPU 被另一个项目占用（ComfyUI 与 t2v 的 TTS 任务；显存 19–28 GB，可用内存 1–3 GB，负载 13），按排程规则（可用内存 < 4 GB 不启动）不能开跑。
+- tmux `mice-confirm-cp` 运行 wait_and_launch.sh：显存 < 12 GB、利用率 < 30%、可用内存 > 8 GB 连续 5 分钟后启动 2 个 GPU worker（66 个任务）和 CPU 上的 ARF/SRP（22 个任务）。
