@@ -1,0 +1,72 @@
+# DRAFT (for expert review, not yet registered): new baselines for Table 1
+
+Request (user, 2026-10-18, merged): add Drift-Resilient TabPFN and six time-series drift methods, adapted to
+classification; every method on real (29), grid (24), generator (30), confirm (9); probabilities per row; descriptive.
+
+## Verified sources (2026-10-18)
+| name | paper | venue | code (shallow clone, commit) |
+|---|---|---|---|
+| drtabpfn | Helli et al., Drift-Resilient TabPFN | NeurIPS 2024 | automl/Drift-Resilient_TabPFN a6e75af (weights in repo: tabpfn_dist_model_1..3) |
+| dtmoe | Dynamic TMoE: A Drift-Aware Dynamic MoE for Non-Stationary TS Forecasting | ICML 2026 | andone-07/Dynamic-TMoE 3e41235 |
+| adaptz | Online time series prediction using feature adjustment (ADAPT-Z) | ICLR 2026 | xiannanhuang/ADAPT-Z f5b70e1 |
+| shifts | Tackling TS Forecasting Generalization via Mitigating Concept Drift (ShifTS) | ICLR 2026 | AdityaLab/ShifTS 0589ecb |
+| tot | Online Time Series Forecasting with Theoretical Guarantees (TOT) | NeurIPS 2025 | **no public code found** (paper, arXiv 2510.18281; plug-in on backbones LSTD/OneNet/... per its Tables A7-A11) |
+| onenet | OneNet: Enhancing TS Forecasting under Concept Drift by Online Ensembling | NeurIPS 2023 | yfzhang114/OneNet 65eed9d |
+| fsnet | Learning Fast and Slow for Online TS Forecasting | ICLR 2023 | salesforce/fsnet c776afc |
+
+Observed: dtmoe and shifts are offline forecasters (train/val/test with epochs and early stopping); fsnet, onenet,
+adaptz, tot are online (offline pre-training on a train split, then per-sample updates on the test part).
+
+## Common protocol (same as the paper and the trained learners)
+Prequential, B = 100, batch t predicted with the state after learning batches < t, then its labels are revealed and
+learned; batch 0 warm-up (learned, not scored); seed 0. Inputs standardised with the warm-up batch mean/std, clipped to
+[-10, 10] (as MOOE). Probabilities = softmax of a classification head (cross-entropy).
+
+## Drift-Resilient TabPFN (no training, no tuning)
+Official package (separate venv: torch 2.1, sklearn < 1.6), model tabpfn_dist_model_1 via get_best_tabpfn
+(task_type dist_shift_multiclass, model_type best_dist), default inference settings. Per batch t: context = the 1000
+most recent labelled rows, dist_shift_domain of a row = its batch index (so the test rows have domain t, the context
+t-10..t-1); one call per batch (like FIFO). Limits: max_classes 10, max_features 500, max_samples 10000: all streams
+are inside (max 10 classes, max 69 features).
+
+## Time-series methods: shared adaptation
+- Row context: the features of the L most recent rows up to and including the row being predicted (stream order;
+  features only, never labels), shape L x d. L is a tuned value. Methods whose encoder is per-row get L = 1 option.
+- Head: the method's output representation -> linear -> C logits (replaces the pred_len x channels regression head);
+  softmax + cross-entropy replaces MSE everywhere the method uses its forecasting loss.
+- Learning per revealed batch: n_steps Adam steps on the 100 rows (the online methods' per-sample updates become
+  per-batch updates, since labels arrive per batch); batch 0 gets the same steps. No offline pre-training split
+  (the stream has none): every model starts from its initialisation at batch 0.
+- Official modules imported from the clones where they exist; every change listed in the README.
+
+## Per method (mechanism kept)
+- fsnet: official TSEncoder with per-layer adapters (fast) + associative memory, backbone (slow); official gamma/tau
+  defaults. Input L x d.
+- onenet: two fsnet branches (time: L x d; cross-variable: d x L), online combination weight sigmoid(w) updated by
+  the loss of the combination + the decision-MLP bias, as exp_onenet_fsnet.py; combine the two branches' probabilities.
+- dtmoe: official TemporalDynamicMoELayer (patches over the L window per feature, RevIN, MMD drift detector, expert
+  add / prune via check_and_handle_drift in train mode, temporal memory router with anomaly repository); flatten ->
+  linear -> C. The router is not updated at prediction time. Drift expert pre-training epochs (official 10-20) set to
+  1 pass over its ref/cur data (cost).
+- shifts: RevIN over the window (temporal shift first), then the Soft Attention Mask over window positions per
+  feature (concept drift: invariant patterns), aggregated features -> backbone (MLP) -> C. In classification the
+  current row's features are observed, so the "horizon" exogenous part is the current row (no exogenous forecast).
+- adaptz: base encoder (MLP on the current row or fsnet on L x d) + adapter MLP producing a delta in z-space from the
+  current representation and the stored historical gradients (official pseudo-code). Official: base pre-trained
+  offline and frozen, only the adapter updated online. Here no pre-training split exists: QUESTION below.
+- tot: reproduced from the paper as a plug-in on onenet (official code exists): latent variables estimated from
+  minimal adjacent observations (temporal decoder matching observed-variable distribution + two independent noise
+  estimators), fed to the forecaster head. QUESTION below.
+
+## Tuning (as MOOE)
+Five development real streams (elec2, insects abrupt/gradual/incremental/reoccurring balanced; also in the 29-stream
+table, as for MOOE): grid lr in {1e-4, 1e-3, 1e-2} x n_steps in {1, 5} x L in {1, 16} (L = 1 only where the encoder
+allows), other hyper-parameters at official defaults; highest mean dev accuracy frozen; grid extended once if the best
+point lies on a boundary of lr or n_steps. Then one run per test stream.
+
+## Compute
+Small models; one process per (stream, method); CPU (the GPU shows CUDA fault storms when shared) or GPU with at most
+2 processes. Estimate per method: ~43k batches x (1 + n_steps) passes.
+
+## Order (user): drtabpfn; dtmoe, adaptz, tot; onenet, fsnet, shifts. Each: real + confirm first, then grid, generator.
+Timing: per-batch seconds and peak GPU memory on the three real prefixes of the MICE resource benchmark.
