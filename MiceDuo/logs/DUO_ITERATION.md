@@ -18,3 +18,8 @@
 - Sonnet 复查修正（round1_fix_sonnet.json）：第一次修正（孤儿接管）有竞态 → 改为上述原子认领；第二次复查（round1_fix2_sonnet.json）：不会两个 worker 跑同一任务；剩两个窄窗口（STOPPED 后遗留认领无输出；第三次尝试写出后死亡被误标 FAILED），由运行后核对 270 个输出和认领目录处理。
 - 跨任务确定性测试（~/pfn-runs/duo-rand-verify-20261017）：同一进程先跑另一任务再跑 h3_poker_b，与新进程单独跑的 P 和选择逐位相同。
 - 2026-10-17 09:42 运行：09:38 起 3 个常驻 worker（~/pfn-runs/duo-rand-20261017），每任务约 78 s；09:41 加第 4 个，1 分钟内 w3、w4 各一次 CUDA launch failure（GPU 上另有空闲的 ComfyUI 进程）→ 按 PID 停掉 w4，释放其未完成的认领（rand_mech_k15_c100_s31_s1_d2，无输出），保持 3 个。w3 由 worker.sh 自动重启续跑。
+
+- **2026-10-17 12:35 对照运行完成**：270/270 输出齐全。两项补跑：`rand_mech_k15_c100_s31_s1_d1`（w3 上 3 次 CUDA 故障后标记 FAILED）、
+  `rand_mech_k3_c100_s30_s1_d0`（w3 约 09:50 无声退出留下的孤立认领）；旧认领移入 `claims_old/`，由单独进程 w9 于 12:31–12:32 补跑成功。
+- **2026-10-17 12:35 计时基准**：bench.py 经 Sonnet 核对，发现 MICE 分支的类补丁无限递归（已删除，run.TFM 默认 seed 0）；预热批次不剔除（协议未规定），
+  同时记录中位数。提交 1e71b3f 并推送后启动，根目录 `~/pfn-runs/duo-rand-bench-20261017`，常驻空闲进程 ComfyUI（PID 2004630）已记入日志。
