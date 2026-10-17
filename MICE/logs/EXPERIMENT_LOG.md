@@ -1013,3 +1013,14 @@
 - 用户定：检测分段确认实验第 1 条改为整体检验；数据 CIC-IDS2017 与 Bitcoin Heist。Bitcoin Heist 已从 UCI 下载
   （`~/pfn-runs/raw-newdata-20261017/`，sha256 cdf3bb34…，2,916,697 行，29 个标签，勒索地址占 1.42%，各年 0.001%–4.1%）。
   CIC-IDS2017 官方下载要填个人信息表单，需用户本人下载。
+
+## 2026-10-17 22:27：MiMo 审计 export_main_table.py（Pro medium，22:12–22:20，原文 `logs/main_table/mimo_export_audit.md`）
+- F1–F3（流名重复导致重复计数、缓存按流名查找、核对按流名合并）：机制成立，但运行核实**未发生**——表内各组流名无重复
+  （重复的只有被排除的 tabicl 组），r14 两张表无重叠，核对表 53 条无重复。采纳为断言（重复即报错），输出不变。
+- F4（没有任何行的方法不出现在 coverage.csv）：成立，已改为按全部方法 × 指标列出。
+- F5（空选集时 .max() 为 NaN，断言误报）：成立，改为 `.le(tol).all()`。
+- F6（ddm/ltm 一行里准确率与其他指标来自两次运行）：不改——准确率以论文来源 all.csv 为准，两者最多差 0.045 点，
+  README 已注明。nll、brier 的平均乘了 100（不是百分数），已在注释和 README 说明。
+- 重新导出后 summary、streams_long、acc_* 与修改前逐字节相同；只有 coverage.csv 变化。
+- 用户 22:2x：Bitcoin Heist 按建议处理（二分类；6 个特征；2013–2017 每年前 10 万行，共 5 段）；CIC-IDS2017 的
+  MachineLearningCSV.zip 已由用户下载到桌面，md5 4f83860afbf29cac8163854095bf6cf7 与官方 .md5 一致。
