@@ -1,0 +1,3 @@
+stream,n,features,classes,labels,majority,counts,source,rows,days
+cc_poker_f,100000,10,8,0|1|2|3|4|5|6|7,0.53987,53987|40454|3894|1187|191|228|49|10,poker,rows 500000-600000,
+cc_poker_g,100000,10,9,0|1|2|3|4|5|6|7|8,0.52406,52406|41276|3848|1721|618|69|50|11|1,poker,rows 600000-700000,

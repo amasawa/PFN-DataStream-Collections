@@ -1024,3 +1024,28 @@
 - 重新导出后 summary、streams_long、acc_* 与修改前逐字节相同；只有 coverage.csv 变化。
 - 用户 22:2x：Bitcoin Heist 按建议处理（二分类；6 个特征；2013–2017 每年前 10 万行，共 5 段）；CIC-IDS2017 的
   MachineLearningCSV.zip 已由用户下载到桌面，md5 4f83860afbf29cac8163854095bf6cf7 与官方 .md5 一致。
+
+## 2026-10-17 22:36：检测分段真实流确认实验——数据构建与预注册草稿（未开跑）
+- 目录 `experiments/mice_confirm_cp_20261017/`：PLAN.md（预注册）、make_streams.py、run_task.py、worker.sh、analyse.py、
+  tasks.txt（66 个 GPU 任务）、checksums.txt、cc_manifest*.csv。运行根目录 `~/pfn-runs/mice-confirm-cp-20261017/`。
+- 数据（只看了标签计数和行的排列，没有运行任何方法）：
+  - Bitcoin Heist：按 (year, day) 稳定排序，二分类，6 个特征；2013–2017 每年前 10 万行，勒索占比 0.39/4.84/0.44/3.74/2.23%。
+  - CIC-IDS2017：周二至周五，每天取对齐的 10 万行块中 min(正常, 攻击) 最大的一块：周二块 0（Patator 7.9%）、周三块 0（DoS 35.7%）、
+    周四块 0（WebAttack 2.2%）、周五块 6（DDoS 51.6%）；15 种标签并成 9 类，69 个特征（去掉重复列和 8 个全数据常数列），inf/NaN→0。
+    分组后每段都是二分类。
+  - 补充：PokerHand [500k, 700k) 两段（全仓库 grep 确认此前没有脚本加载过这些行），只报告。
+- 假设 H1 按用户要求改为整体检验（9 段 mice_cp − mice 平均差，段内 20 批移动块自举，下界 > −0.2）。
+- 评估脚本在已有 covertype 结果上试运行（CC_TEST 模式，输出到 scratchpad）：各方法准确率与 all.csv 一致（MICE 95.05、cp 94.88、FIFO 94.79）。
+- 方案文字核对代码：用户方案写"段长 300–700 行"，代码是检测到变化时至少 300 行（LMIN）、未检测到变化时 500 行，PLAN 按代码写。
+- 审查：Fable（预注册方法学）、MiMo Pro high（analyse/run_task/make_streams 首次审计）同时在后台。
+
+## 2026-10-17 23:0x：确认实验预注册定稿（审查结论）
+- Fable（22:36–22:39，原文 `logs/confirm_cp/fable_prereg_review.md`）：
+  - H2 把补充的 Poker 段也算进判定、H1 显示的平均也混入了补充段：属实，已改为只用 9 个主段。
+  - Bitcoin 原文件把 41,413 行勒索地址全排在最前（核实属实），按 (year, day) 稳定排序会让每天的勒索行都在当天开头，
+    即标签决定的周期性模式：改为日内随机顺序（default_rng(0)），重建 5 段；CIC 4 段重建后逐字节相同。CIC 文件内标签交替上千次，是真实时间顺序。
+  - 补充披露：CIC 选段偏向检测类方法；9 段全是二分类；H1 只对这 9 段成立。加 50 批块的敏感性（描述性）。
+  - 平局规则：Fable 建议保留严格规则（平局算失败），未改，所以不需要用户批准。
+- MiMo Pro high（22:36–22:52，原文 `logs/confirm_cp/mimo_code_audit.md`）：F1、F2 同上，已修；F3（相对路径）不成立——脚本在仓库根下两层，
+  试运行已从该目录跑通。需运行确认的点（批次对齐、ARF/SRP 输出、ddm/ltm 概率对齐、FIFO 两处来源一致）在 covertype 试运行中通过（断言未触发，FIFO 94.785 两处相同）。
+- Sonnet 复查修改后的 diff（16 秒）：50 批敏感性用 default_rng(1) 而 PLAN 未写种子——已写进 PLAN；"key 列成为特征"不成立（特征列表固定 6 列）。

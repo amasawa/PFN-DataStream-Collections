@@ -1,0 +1,10 @@
+stream,n,features,classes,labels,majority,counts,source,rows,days
+cc_btc_2013,100000,6,2,0|1,0.99615,99615|385,bitcoinheist,"year 2013, first 100000 rows after the (year, day, random) sort",1-100
+cc_btc_2014,100000,6,2,0|1,0.95217,95217|4783,bitcoinheist,"year 2014, first 100000 rows after the (year, day, random) sort",1-96
+cc_btc_2015,100000,6,2,0|1,0.9956,99560|440,bitcoinheist,"year 2015, first 100000 rows after the (year, day, random) sort",1-100
+cc_btc_2016,100000,6,2,0|1,0.96304,96304|3696,bitcoinheist,"year 2016, first 100000 rows after the (year, day, random) sort",1-97
+cc_btc_2017,100000,6,2,0|1,0.97768,97768|2232,bitcoinheist,"year 2017, first 100000 rows after the (year, day, random) sort",1-98
+cc_cic_tue,100000,69,2,BENIGN|Patator,0.92079,92079|7921,cicids2017,"tue block 0 of 4 (rows 0-100000), mixed counts [np.int64(7921), np.int64(2188), np.int64(1195), np.int64(1759)]",tue
+cc_cic_wed,100000,69,2,BENIGN|DoS,0.64341,64341|35659,cicids2017,"wed block 0 of 6 (rows 0-100000), mixed counts [np.int64(35659), np.int64(5688), np.int64(7627), np.int64(21142), np.int64(6), np.int64(4398)]",wed
+cc_cic_thu,100000,69,2,BENIGN|WebAttack,0.9782,97820|2180,cicids2017,"thu block 0 of 4 (rows 0-100000), mixed counts [np.int64(2180), np.int64(0), np.int64(21), np.int64(15)]",thu
+cc_cic_fri,100000,69,2,BENIGN|DDoS,0.51632,48368|51632,cicids2017,"fri block 6 of 7 (rows 600000-700000), mixed counts [np.int64(442), np.int64(1531), np.int64(21348), np.int64(3136), np.int64(43149), np.int64(26043), np.int64(48368)]",fri
