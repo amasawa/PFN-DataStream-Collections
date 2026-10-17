@@ -1,0 +1,13 @@
+grid_c100_b2000_s10 micecp1000_500
+grid_c100_b2000_s11 micecp1000_500
+grid_c100_b500_s10 micecp1000_500
+grid_c100_b500_s11 micecp1000_500
+grid_c30_b2000_s10 micecp1000_500
+grid_c30_b2000_s11 micecp1000_500
+grid_c30_b500_s10 micecp1000_500
+grid_c30_b500_s11 micecp1000_500
+grid_c5_b2000_s10 micecp1000_500
+grid_c5_b2000_s11 micecp1000_500
+grid_c5_b500_s10 micecp1000_500
+grid_c5_b500_s11 micecp1000_500
+grid_c5_b500_s20 micecp1000_500
