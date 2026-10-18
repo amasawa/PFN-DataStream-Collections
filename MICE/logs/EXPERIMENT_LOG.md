@@ -1200,3 +1200,5 @@
 - 12:54 自查：登记写 dtmoe 开发在 CPU、GPU 最多 2 进程；12:40 改到 GPU 只记了日志、未登记，且 12:49 起了 3 个 GPU worker。
   已停掉 w3（释放任务 8），补 AMENDMENT_BASELINES_20261018b.md。CPU 与 GPU 同配置对比（3 条开发流）：不逐位一致，
   预测一致率 0.83–0.97、准确率差 ≤ 0.003 → dtmoe 开发与测试统一用 GPU。12:52–12:53 两个 worker 各有 1 次 CUDA 失败，维持 2 个观察。
+- 13:07 dtmoe 开发 GPU：12:54 起 2 个 worker 无失败，约 70 任务/小时，利用率约 80%，24/180 完成。按用户优先级（"先填其他格子，
+  dtmoe 和 tot 慢慢跑"）停掉 dtmoe w2（释放任务），GPU 第二个名额给生成器流 ddm/ltm 概率（resume_after_reboot.sh probs，1 个 worker）；GPU 仍 ≤ 2 进程。
