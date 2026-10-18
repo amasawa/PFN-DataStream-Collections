@@ -1,0 +1,24 @@
+Methodology adviser, read-only. Bounded decision on the TOT baseline (NeurIPS 2025, "Online Time Series Forecasting
+with Theoretical Guarantees") for MICE Table 1 (streaming classification, B = 100, predict-then-learn per batch, no
+pre-training prefix for any method, adaptations as for the other time-series baselines: L-row feature window, softmax
+head replacing the forecasting head, per-batch Adam steps, dev grid lr {1e-4,1e-3,1e-2} x n_steps {1,5} x L {16,32} x
+one mechanism parameter at 3 values, 5 dev streams, then frozen).
+Registered plan for tot (written when no code was known): "reproduced from the paper as a plug-in on OneNet; gate:
+reproduce one OneNet+TOT row of the paper within its spread, else skip".
+New fact: the NeurIPS proceedings supplementary zip (Supplemental-Conference.zip, sha256 a20ff154...) contains the
+authors' code, LSTD-TOT only (exp/exp_LSTD_TOT.py, net class; LSTD_TOT_config.py with per-dataset settings). The paper
+itself gives no values of alpha, beta, gamma, latent size or learning rate; the config does (e.g. ETTh2 pred_len 1:
+mode time, depth 9, hidden_dim 512, hidden_layers 1, tau 0.75, lr 0.003, x_dim 3, L1_weight 1e-3, L2_weight 1e-3,
+zd_kl_weight = zc_kl_weight 1e-5, sparsity_weight 1e-5, seq_len 60, lags 1, dropout 0; pred_len 1 uses mode "time" for
+all datasets in the config). Official training: offline epochs with model(x, is_training=True) (reparametrised latents,
+KL with a learned transition prior, Jacobian L1 sparsity via vmap(jacfwd), L1/L2 terms); official online phase:
+model.eval(), model(x, is_training=False) (posterior means, no KL / sparsity; loss = MSE(y) + MSE(x_rec, x) + L1/L2
+terms), n_inner 1, store_grad (fsnet-style encoder).
+Proposed amendment: tot = official LSTD-TOT net (mode time, ETTh2 pred_len-1 sizes), pred_len 1, head linear(d -> C)
+on the forecast y; loss CE + MSE(x_rec, x) + other_loss; prediction with is_training=False; learning steps with
+is_training=True (so the KL / sparsity identification terms that define TOT act, since there is no offline phase), and
+the fsnet store_grad after each step; mechanism parameter = KL weight beta (zd = zc) in {1e-6, 1e-5 (official), 1e-4};
+the native-task gate dropped (it was for a code-less reproduction); backbone LSTD instead of OneNet (the released code).
+Questions: (1) approve or correct this amendment; (2) is_training=True in the learning steps, or the official online
+False (then KL/sparsity never act)? (3) right mechanism parameter? (4) keep any gate? Answer: Decision / Supporting
+evidence / Alternative options / Key risks / Remaining uncertainty / Confidence / Requires user approval. <= 350 words.
