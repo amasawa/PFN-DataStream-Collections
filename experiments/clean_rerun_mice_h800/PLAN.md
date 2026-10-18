@@ -17,15 +17,24 @@ development runs included, so that no reported number depends on a choice of wha
 MICE/results_* (test, held-out, TabICL backbone, backbone seed 1; development: results_dev, results_grid_dev,
 results_dt_dev, results_delay_dev), the probabilities (results_probs), the run roots of rounds 13-14 and the
 confirmation sets, the TKDE control run, the pool-capacity, segment-origin and oracle-recall runs, the benchmarks (into
-new roots "<root>-h800"), and the Table 1 GPU baselines (Drift-Resilient TabPFN; dtmoe). 2664 tasks, each with its
-expected outputs; recorded original wall time 285 h on the RTX 5000 Ada (sets with a record), about 400 h in all.
+new roots "<root>-h800"), the reconstructed development runs (below), and the Table 1 GPU baselines (Drift-Resilient
+TabPFN; dtmoe). 2828 tasks, each with its expected outputs and their structure; recorded original wall time 291 h on
+the RTX 5000 Ada (sets with a record), about 400 h in all. Drift-Resilient TabPFN runs only on the cluster: it is not
+run on the local GPU (no local output exists; none would be merged).
 Development runs are recomputed for the numbers they report; no selection is reopened (the frozen choices below
 stay inputs). TOT (Table 1) is registered separately before it runs.
-Not rerun, with the reason (reported as original results in the appendix where the paper uses them):
-CPU-only results (river and trained learners; fsnet / onenet / adaptz / shifts; arf / srp), which were not exposed to
-the GPU; mice-r14-dev (its outputs span three code states of 2026-10-15 11:48-14:44, between commits 705e7c6 and
-e62ebce, so its computation cannot be reproduced from one commit) and mice-r14-devtrim (TRIM = 1 was run from
-uncommitted code; the paper cites no number from it); results_smoke. Derived replays ("mice", "mice2", ...) and every
+Not rerun, with the reason: CPU-only results (river and trained learners; fsnet / onenet / adaptz / shifts; arf / srp),
+which were not exposed to the GPU; results_smoke (not used by the paper).
+
+## Reconstructed runs (user decision 2026-10-18)
+Two development runs cited by the paper (main.tex, the TRIM comparison: TRIM = 0 +1.76/+2.09, TRIM = 1 -0.50/-1.24)
+cannot be replayed: mice-r14-dev spans three code states of 2026-10-15 11:48-14:44 (between commits 705e7c6 and
+e62ebce), and mice-r14-devtrim ran TRIM = 1 from uncommitted code minutes before commit 991a1f9 introduced
+CPSegments.TRIM. Both are recomputed on the registered commit: mice-r14-dev with experiments/mice_r14/run_task.py as it
+is, mice-r14-devtrim with run_task_trim1.py (the same run_task.py with the class attribute CPSegments.TRIM = 1). They
+are reconstructions, not replays: the paper labels them so, and their old-new differences are reported but not read as
+evidence of a computation fault. Their tasks without an original output (16 d_bvarr tasks of mice-r14-dev that never
+finished) are not added. Derived replays ("mice", "mice2", ...) and every
 CPU analysis that reads GPU outputs are recomputed from the new outputs by the existing scripts.
 
 ## What stays the same

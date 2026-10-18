@@ -1,0 +1,11 @@
+Third rebuttal review (read-only), one bounded question. Your second review: MICE/logs/table1_fill/codex_clean_rerun_rebuttal.md
+(three blocking items). Revised: experiments/clean_rerun_mice_h800/{PLAN.md, MANIFEST.md, HANDOFF.md, rerun.py, make_tasks.py,
+run_task_trim1.py, tasks.jsonl (2828 tasks)}. Changes since: (1) acceptance only with a recorded successful attempt
+(rc 0) plus structural validation of every expected output against the original (npz keys/shapes/dtypes except wall
+time; pkl type/keys; csv columns/rows; jsonl lines; never values); attempts persisted across workers; outputs without a
+successful attempt quarantined, never accepted; (2) as (1); (3) devtrim is cited (main.tex TRIM comparison): mice-r14-dev
+and mice-r14-devtrim are now RECONSTRUCTED on the registered commit (user decision), labelled as reconstructions, their
+differences not read as fault evidence (PLAN "Reconstructed runs"); development sets rerun; MANIFEST updated.
+Also: Drift-Resilient TabPFN runs only on the cluster (no local run). Does the revision clear your blocking items;
+anything still blocking execution? Answer: Decision / remaining blocking items (concrete) / Confidence / Requires user
+approval. Short.

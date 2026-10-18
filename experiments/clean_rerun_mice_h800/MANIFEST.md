@@ -14,15 +14,17 @@ new outputs (CPU), then the make_* scripts.
 | tab_pool_grid_rows, tab_pool_real_rows | make_pool_tables | check_pool_control, pool_control_grid_ci, pool_control_grid_resources, pool_control_real | results_grid_test3, results_test, results_heldout*, mice-tkde-control-20261009 (arch, snap, ctl, snapreal) |
 | tab_poolcap_rows | make_poolcap_table | experiments/mice_tkde_control/analyse_pools | mice-r13-acc, mice-r13-bench(-h800), mice-tkde-control-20261009, results_grid_test3, results_heldout2, results_heldout4, results_test |
 | tab_cost_rows, tab_fifo3000_rows | make_cost_tables | experiments/mice_tkde_control/analyse_bench, fifo_m_real | mice-tkde-bench-20261009(-h800), mice-tkde-control-20261009 (fifoM), results_test, results_heldout4 |
-| tab_oracle_rows, fig_recall.pdf | make_oracle_table, make_paper_fig | oracle_recall, check_identification (dev, not rerun) | mice_oracle_r11, results_grid_test |
+| tab_oracle_rows, fig_recall.pdf | make_oracle_table, make_paper_fig | oracle_recall, check_identification | mice_oracle_r11, results_grid_test, results_grid_dev |
 | tab_fresh_rows, tab_segsum_rows | make_r14_tables | experiments/mice_r14/analyse_test, analyse_confirm | mice-r14-test, mice-r14-exist, mice-r14-confirm, mice-tkde-control-20261009, results_* |
 | tab_cpres_rows | make_cpres_table | experiments/mice_r14/analyse_14b | mice-r14b-acc, mice-r14b-bench(-h800), mice-r14-confirm |
 | numbers in the text from check_heldout4 (seed and backbone robustness) | - | check_heldout4 | results_heldout3_seed1, results_heldout4_seed1, results_heldout3_tabicl, results_heldout4_tabicl, results_heldout4_tabicl_e |
 
 Not rerun (CPU, not exposed): results_river, results_trained, results_heldout34_trained, mice-main-trained-grid20,
 mice-table1-trained-probs, the CPU baselines of Table 1 (fsnet, onenet, adaptz, shifts: mice-table1-newbase/dev and
-their test runs), arf / srp of the confirmation sets. Not rerun (development; frozen choices are inputs):
-results_dev, results_grid_dev, results_dt_dev, results_delay_dev, results_trained_dev, mice-r14-dev, mice-r14-devtrim.
-Open items: TOT (Table 1) is not implemented yet; check_identification reads results_grid_dev (development) and
-stays on the original; every "numbers in the text" outside the row files must be traced again when the paper is
-regenerated (the coordinator checks every number against the new CSVs).
+their test runs), arf / srp of the confirmation sets; results_smoke (unused).
+Rerun as well (development; selections stay frozen inputs): results_dev, results_grid_dev (read by check_identification
+for the oracle table), results_dt_dev, results_delay_dev; reconstructed (PLAN.md, "Reconstructed runs"): mice-r14-dev,
+mice-r14-devtrim (the TRIM comparison in the text).
+Open items: TOT (Table 1) is registered separately before it runs; dtmoe test tasks are added after its development
+grid is frozen; every number in the text outside the row files is traced again when the paper is regenerated (the
+coordinator checks every number against the new CSVs).

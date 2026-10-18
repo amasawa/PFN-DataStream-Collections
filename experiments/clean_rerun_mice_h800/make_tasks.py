@@ -34,7 +34,8 @@ def schema(orig):
         return None
     if orig.endswith(".npz"):
         with np.load(orig, allow_pickle=True) as z:
-            return {"npz": {k: [list(z[k].shape), str(z[k].dtype)] for k in z.files if k not in ("wt", "peak_mem")}}
+            return {"npz": {k: [list(z[k].shape), "<U" if z[k].dtype.kind == "U" else str(z[k].dtype)]
+                            for k in z.files if k not in ("wt", "te", "peak_mem")}}
     if orig.endswith(".pkl"):
         o = pickle.load(open(orig, "rb"))
         return {"pkl": [type(o).__name__, sorted(map(str, o.keys())) if isinstance(o, dict) else len(o) if isinstance(o, (list, tuple)) else None]}
@@ -46,6 +47,21 @@ def schema(orig):
     if orig.endswith(".json"):
         return {"json": sorted(json.load(open(orig)))}
     return None
+
+
+def spec_schema(data, scalars=(), per_batch=(), config=False, B=100):
+    """Structure that run_drtabpfn.py / run_ts.py write for a stream (their docstrings): acc (T,) float64, pred
+    ((T-1)B,) int64, P ((T-1)B, C) float32, C and B scalars int64, the listed int64 scalars and per-batch int64
+    arrays, and a config string (any length) for run_ts.py; T = rows // B, C = max label + 1."""
+    with np.load(data) as z:
+        y = z["y"].astype(int)
+    T, C = len(y) // B, int(y.max()) + 1
+    sch = {"acc": [[T], "float64"], "pred": [[(T - 1) * B], "int64"], "P": [[(T - 1) * B, C], "float32"],
+           "C": [[], "int64"], "B": [[], "int64"]}
+    sch.update({k: [[], "int64"] for k in scalars}); sch.update({k: [[T], "int64"] for k in per_batch})
+    if config:
+        sch["config"] = [[], "<U"]
+    return {"npz": sch}
 
 
 def local(o):
@@ -160,6 +176,7 @@ for line in open(f"{RUNS}/mice-table1-newbase/q_drtabpfn/tasks.txt"):
         "--data", data, "--out", "{RUNS}/mice-table1-newbase/drtabpfn", "--streams", t["stream"]],
         {"OMP_NUM_THREADS": "1", "MKL_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1"},
         [f"{{RUNS}}/mice-table1-newbase/drtabpfn/{t['stream']}__drtabpfn.npz"], None)
+    tasks[-1]["schema"] = {tasks[-1]["outputs"][0]: spec_schema(f"{t['data']}/{t['stream']}.npz", ("n_single", "n_retry"))}
 
 # 8. dtmoe (gpu_verify AMENDMENT_20261018b): strict determinism on the H800; the development grid of PLAN_BASELINES.md
 #    (180 tasks) into dev_h800/P. Its test runs are added after the configuration is frozen from this grid.
@@ -177,6 +194,8 @@ for lr in ("1e-4", "1e-3", "1e-2"):
                         "--data", "{REPO}/MICE/data", "--out", "{RUNS}/mice-table1-newbase/dev_h800/P", "--streams", s,
                         "--method", "dtmoe", "--L", L, "--lr", lr, "--steps", st, "--mech", mech], dict(TSENV),
                         [f"{{RUNS}}/mice-table1-newbase/dev_h800/P/{s}__{tag}.npz"], None)
+                    tasks[-1]["schema"] = {tasks[-1]["outputs"][0]: spec_schema(f"{REPO}/MICE/data/{s}.npz", (),
+                                                                                    ("fires", "added", "pruned"), True)}
 
 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "tasks.jsonl"), "w") as f:
     for t in tasks:

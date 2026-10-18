@@ -24,8 +24,8 @@ on the cluster: several drivers use ~/pfn-runs), PY (MICE venv), PYDR (Drift-Res
       counts done / given up / claimed / left per set.
   python rerun.py release
       after the jobs of a worker ended (Slurm time limit, node failure): removes the claims of tasks that are neither
-      done nor given up, so the next workers take them (their drivers resume from their checkpoints). Run it only when
-      no worker is running.
+      done nor given up, so the next workers take them (from initialisation: their partial outputs are quarantined
+      first). Run it only when no worker is running.
 Records: $RUNS/_rerun/done/<id>.json (host, GPU, start, end, attempts, return codes), logs in $RUNS/_rerun/logs/."""
 import json, os, shutil, socket, subprocess, sys, time
 
@@ -74,24 +74,25 @@ def valid(o, sch):
         import numpy as np, pickle, csv
         if o.endswith(".npz"):
             with np.load(o, allow_pickle=True) as z:
-                got = {k: [list(z[k].shape), str(z[k].dtype)] for k in z.files if k not in ("wt", "peak_mem")}
-            return got == sch["npz"] if sch else ("acc" not in got or got["acc"][0] != [0])
+                got = {k: [list(z[k].shape), "<U" if z[k].dtype.kind == "U" else str(z[k].dtype)]
+                       for k in z.files if k not in ("wt", "te", "peak_mem")}
+            return bool(sch) and got == sch["npz"]          # every task registers its structure (tasks.jsonl)
         if o.endswith(".pkl"):
             x = pickle.load(open(o, "rb"))
             got = [type(x).__name__, sorted(map(str, x.keys())) if isinstance(x, dict) else len(x) if isinstance(x, (list, tuple)) else None]
-            return got == sch["pkl"] if sch else True
+            return bool(sch) and got == sch["pkl"]
         if o.endswith(".csv"):
             r = list(csv.reader(open(o)))
-            return [r[0], len(r) - 1] == sch["csv"] if sch else len(r) > 1
+            return bool(sch) and [r[0], len(r) - 1] == sch["csv"]
         if o.endswith(".jsonl"):
             n = 0
             for l in open(o):
                 if l.strip():
                     json.loads(l); n += 1
-            return n == sch["jsonl"] if sch else n > 0
+            return bool(sch) and n == sch["jsonl"]
         if o.endswith(".json"):
             x = json.load(open(o))
-            return sorted(x) == sch["json"] if sch else True
+            return bool(sch) and sorted(x) == sch["json"]
         return os.path.getsize(o) > 0
     except Exception:
         return False
@@ -101,7 +102,7 @@ def complete(t, env):
     outs = fill(t["outputs"], env)
     sch = t.get("schema", {})
     return bool(outs) and all(valid(o, sch.get(k)) for o, k in zip(outs, t["outputs"])) and not any(
-        os.path.exists(o[:-4] + ".ckpt") for o in outs if o.endswith(".npz"))
+        os.path.exists(o[:-4] + e) for o in outs if o.endswith(".npz") for e in (".ckpt", ".ckpt.npz"))
 
 
 def quarantine(t, env, base, attempt):
@@ -110,7 +111,8 @@ def quarantine(t, env, base, attempt):
     moved = []
     for o in fill(t["outputs"], env):
         stem = o[:-4] if o.endswith((".npz", ".pkl", ".csv")) else o
-        for cand in (o, stem + ".ckpt", stem + ".ckpt.tmp", stem + ".tmp.npz", o + ".tmp"):
+        for cand in (o, stem + ".ckpt", stem + ".ckpt.tmp", stem + ".ckpt.npz", stem + ".ckpt.tmp.npz", stem + ".tmp.npz",
+                     o + ".tmp"):
             if os.path.exists(cand):
                 os.makedirs(q, exist_ok=True); shutil.move(cand, f"{q}/{os.path.basename(cand)}"); moved.append(cand)
     return moved
@@ -161,10 +163,13 @@ def worker(slot, sets=None, gpu=None):
             # whatever exists now did not come from a successful attempt of this worker: quarantine, start fresh
             rec["quarantined"] += quarantine(t, env, base, attempt)
             rec["health"].append(health())
-            t0 = time.time(); rc = run_once(t, env, log); rec["rc"].append(rc)
+            t0 = time.time()
+            hist.append(dict(attempt=attempt, host=socket.gethostname(), start=t0, end=None, rc=None, accepted=False))
+            json.dump(hist, open(hist_f + ".tmp", "w")); os.replace(hist_f + ".tmp", hist_f)   # counted before it runs
+            rc = run_once(t, env, log); rec["rc"].append(rc)
             rec["health"].append(health())
             ok = rc == 0 and complete(t, env)
-            hist.append(dict(attempt=attempt, host=socket.gethostname(), start=t0, end=time.time(), rc=rc, accepted=ok))
+            hist[-1].update(end=time.time(), rc=rc, accepted=ok)
             json.dump(hist, open(hist_f + ".tmp", "w")); os.replace(hist_f + ".tmp", hist_f)
             if ok:
                 break
@@ -220,7 +225,7 @@ def qualify(task_id, d, against_production=False):
         if oa.endswith(".npz"):
             za, zb = np.load(oa, allow_pickle=True), np.load(ob, allow_pickle=True)
             for key in sorted(set(za.files) | set(zb.files)):
-                if key in ("wt", "peak_mem"):
+                if key in ("wt", "te", "peak_mem"):
                     continue
                 eq = key in za.files and key in zb.files and za[key].dtype == zb[key].dtype and \
                     za[key].shape == zb[key].shape and za[key].tobytes() == zb[key].tobytes()

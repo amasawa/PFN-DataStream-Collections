@@ -1273,3 +1273,6 @@
   （扩展网格不完整时拒绝选择、文件锁保证 12 进程上限、任务文件带时间戳、旧检查点无 te 的兼容、相对原网格的边界状态）。
 - 用户问能否交给 H800：Fable（fable_handoff.md，1.51 美元）同意 GPU 工作全部转 H800（含 DR、dtmoe 确定性开发网格），本机 GPU 不再跑 DR；
   交接前三项（PLAN/MANIFEST 与任务清单一致并加"重建的运行"一节、提交状态、本地 DR 处置）已改；Codex 第三轮复审进行中。
+- 23:34 H800 重跑草稿：Codex 第三轮（codex_clean_rerun_rebuttal2.md）3 条（尝试启动前记录、DR 检查点 .ckpt.npz 隔离、DR/dtmoe 结构规格）已修正并测试
+  （真实 DR/dtmoe/原始输出通过结构校验，空 npz 被拒绝）；Sonnet 核对（sonnet_rerun_check2.md）确认修好，所提新问题核实均已处理。**用户暂不批准**：保持草稿。
+  本机 CPU：扩展网格 450 运行 23:29 起 12 路进行中；本机 GPU 空闲（DR 不在本机跑，见补充登记 c 第 6 条）。

@@ -75,7 +75,7 @@ The other pipelines may go on. (The probe outputs are not results; keep them.)
 - Slurm: one job per GPU (or one 8-GPU job), each running N workers `python rerun.py worker <slot> --gpu shared`
   in parallel (start with N = 3; raise to 4-6 if 30 min pass without any failure and the GPU is not saturated). The
   workers take tasks in file order (the paper-critical sets come first). Time limit per job <= 24 h; after a job ends
-  with tasks left: `python rerun.py release`, then resubmit.
+  with tasks left: `python rerun.py release`, then resubmit (the released tasks start again from initialisation).
 - Exclusive tasks (benchmarks: timing) last: one job per task, one worker, `--gpu exclusive`, nothing else on that GPU.
 - `python rerun.py status` every ~10 min; log progress and failures; GAVE UP tasks: read their log, report, do not
   retry by hand without telling the coordinator. Quarantined partial outputs stay in $RUNS/_rerun/quarantine.
