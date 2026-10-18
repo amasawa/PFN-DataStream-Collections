@@ -1149,3 +1149,11 @@
   随后同一进程报 illegal memory access，GPU 本身正处于故障风暴（生成器流 mice_cp 最近 10 分钟 11 次失败），无法判断形状错误
   是否是 GPU 故障的连带症状。暂停 GPU 上的调试，等 GPU 空闲后单独复测。
 - MiMo Pro high 两组并行审计 run_ts.py（A：框架 + fsnet + onenet；B：dtmoe + adaptz + shifts），11:23 开始。
+
+### 2026-10-18 11:39 dtmoe 计算方案（用户："dtmoe 让 fable 决定，继续跑"）
+- Fable（11:36–11:37，0.33 美元，原文 MICE/logs/table1_fill/fable_dtmoe_decision.md）：保留登记的完整网格和官方模型大小，
+  不缩网格（B 会让唯一的强新基线调参不足）、不缩模型（C 会把输赢归因到模型大小）。开发网格现在在 CPU 上 10 个单线程进程并行
+  （约 300 核时，约 30 小时）；测试流在 GPU 连续数小时无故障后、加上逐流断点续跑再上 GPU，单独占 GPU；若开发结束时 GPU 仍不稳，
+  测试也在 CPU 上跑。记录每条流用的设备；CPU 与 GPU 结果先在一条流上核对一致。
+- 按它的提醒先做剖析：covertype 上每批 6.1 秒全部是实际计算（反向传播 42%、GRU 路由 14%、线性层 12%），没有低效的 Python 循环。
+- 不改登记，无需用户批准（Fable 判断）。dtmoe 开发网格等 MiMo 审计 B（含 dtmoe）结束后启动。

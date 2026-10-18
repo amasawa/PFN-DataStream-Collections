@@ -1,0 +1,23 @@
+You are the methodology adviser (read-only). One bounded decision about the Dynamic TMoE baseline (ICML 2026) adapted
+to streaming classification for MICE Table 1 (registered plan excerpt below). Decide and answer with: Decision /
+Supporting evidence / Alternative options / Key risks / Remaining uncertainty / Confidence / Requires user approval.
+<= 400 words.
+
+Registered grid (all methods): lr {1e-4,1e-3,1e-2} x n_steps {1,5} x L {16,32} x mechanism parameter (dtmoe:
+drift_k_sigma {1,2,3}) = 36 configurations x 5 development streams (2591 batches of 100 rows in total; elec2 8
+features, four INSECTS streams 33 features); extend once if best on an lr/n_steps boundary; then one run per test
+stream: 42.7k batches over 92 streams (mean ~23 features, up to 69).
+
+Measured (CPU, 1 thread, official model, channel independence, d_model 128, 2 MoE layers, 4+3 experts): dtmoe
+6.17 s/batch on a 54-feature stream with n_steps = 1 (fsnet 0.14, onenet 0.54, adaptz 0.31, shifts 0.01). Cost scales
+roughly with features x (1 + n_steps). Estimated dtmoe dev grid on CPU ~300 core-hours; test runs at n_steps = 5 ~
+150-200 core-hours. 20 CPU cores, about 10 free; one RTX 5000 Ada GPU that is currently in a CUDA fault storm
+(intermittent "unspecified launch failure"/"illegal memory access", ~1 failure/min with 2 TabPFN processes; earlier
+today and last night 0 failures for hours). The harness has no checkpoint for these methods (a crash restarts the
+stream from batch 0, deterministic). The other baselines' official sizes are kept.
+
+Options I see: (A) dtmoe on the GPU with the full grid, when the GPU is stable (add checkpointing); (B) CPU with a
+reduced, registered-before-run grid for dtmoe only (e.g. n_steps fixed at 1, L = 16, lr x k_sigma = 9 configs, ~30
+core-hours dev, ~40 core-hours test), disclosed as a compute restriction; (C) CPU with the full grid but a smaller
+model (d_model 64 / 1 MoE layer), which departs from the official sizes; (D) a mix: (B) now, (A) later as a check.
+Which, and with what exact grid / settings? Is any of them unfair to dtmoe relative to the other baselines?
