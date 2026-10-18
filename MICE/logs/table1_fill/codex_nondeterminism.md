@@ -1,0 +1,15 @@
+**Decision:** Recommend **B with a narrow, explicit exception**. Until approval and commitment of the amendment, A remains binding. Preserve the stop and all three outputs; classify this task as **“non-reproducible; unresolved by bit comparison.”** Defer unqualified dtmoe configurations to H800. Resume other verification branches only after fresh canaries, retaining existing monitoring and failure stops. Do **not** introduce a blanket “two disagreements → harmless nondeterminism → continue” exemption. Qualification should cover relevant configurations/shapes, not merely pipeline names.
+
+For H800, **yes: target strict deterministic execution**, qualified before selection: `torch.use_deterministic_algorithms(True, warn_only=False)`, fixed RNG seeds/environment, cuDNN benchmarking disabled, and version-appropriate `CUBLAS_WORKSPACE_CONFIG` set before CUDA initialization. Verify complete fresh-process duplicates; flags alone are insufficient. Rerun the **entire development grid and final evaluations** under the same frozen policy. See [PyTorch reproducibility](https://docs.pytorch.org/docs/stable/notes/randomness.html) and [cuBLAS reproducibility](https://docs.nvidia.com/cuda/cublas/index.html#results-reproducibility).
+
+**Supporting evidence:** I independently checked the three saved arrays: first differing blocks have maximum |dP| ≈1.01×10⁻⁶, subsequently reaching 0.604–0.861; accuracies and firing counts match your summary. The [progress log](/home/zhwu9808/pfn-runs/verify-20261018/progress.txt:6) confirms 14 identical L16 replays. This supports numerical nondeterminism as a hypothesis, without identifying its cause or clearing the hardware.
+
+**Alternative options:** Keep local verification stopped and move all remaining work to H800. If strict determinism is unavailable there, prospectively specify equal replication budgets, seeds, aggregation and tie-breaking across all development candidates.
+
+**Key risks:** Automatically exempting mismatches could conceal corruption. Two matching probes cannot establish universal determinism. Deterministic execution does not remove seed sensitivity; repeated identical runs are not independent scientific evidence. Do not derive a new tolerance from these observed discrepancies.
+
+**Remaining uncertainty:** The responsible operation, hardware contribution, and H800 reproducibility remain unknown. The ≈0.005 spread is not a reliable variance estimate. Read-only enforcement is confirmed; this session’s exact Astra/xhigh identity is **Unverified**.
+
+**Confidence:** High in preserving the original stop and separating reproducibility from integrity; moderate in guarded continuation of qualified branches.
+
+**Requires user approval:** **Yes**, for changing the [frozen stopping rule](/mnt/c/Users/zhwu9808/Desktop/dataStream/experiments/gpu_verify_20261018/PLAN.md:29) and determinism/selection procedures. Under your protocol: MiMo Pro High review, verified Astra xhigh assessment, explicit approval, then Claude records and commits the amendment before execution. The H800 recomputation itself is already authorized.

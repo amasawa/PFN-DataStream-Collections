@@ -2,7 +2,7 @@
 # Verification replays of GPU outputs exposed to the FECS fault periods (PLAN.md). One GPU process at a time, a fresh
 # process per task, outputs under ~/pfn-runs/verify-20261018 (never in the original run directories). Stops when
 # ~/pfn-runs/GPU_STOP exists (written by fecs_watch.sh) or a canary fails. Usage: verify_chain.sh <stage> ...
-#   stages, in this order by default: canary dtmoe confirm_cp r14_confirm probs_gen cp_gen
+#   stages, in this order by default: canary confirm_cp r14_confirm probs_gen cp_gen (dtmoe closed: AMENDMENT_20261018b.md)
 REPO=/mnt/c/Users/zhwu9808/Desktop/dataStream; X=$REPO/experiments/gpu_verify_20261018; V=$HOME/pfn-runs/verify-20261018
 NB=$HOME/pfn-runs/mice-table1-newbase; STOP=$HOME/pfn-runs/GPU_STOP; LOG=$V/progress.txt
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 CUDA_LAUNCH_BLOCKING=0 MICE_CKPT_EVERY=10 \
@@ -24,7 +24,8 @@ canary() {   # two DR canaries in fresh processes must be bit-identical to each 
 
 # one task of set <set>: remove any earlier replay output of <stem> (complete replay, no resumed checkpoint), run <cmd>
 # into <vdir>, compare the files of <stem> with <odir>; one fresh retry after a crash; a mismatch stops the chain
-clean() { rm -f $1/$2.npz $1/$2.pkl $1/$2.closes.pkl $1/$2__probs.npz $1/$2.ckpt*; }   # run.py: <dst>.ckpt(.tmp)
+clean() { grep -qx "$2" $V/MISMATCH.txt 2>/dev/null && halt "refusing to clean $2 (in MISMATCH.txt)"
+  rm -f $1/$2.npz $1/$2.pkl $1/$2.closes.pkl $1/$2__probs.npz $1/$2.ckpt*; }   # run.py: <dst>.ckpt(.tmp)
 task() { local set=$1 vdir=$2 odir=$3 stem=$4; shift 4
   gate; local t0=$(date +%T) lg=$V/logs/$set/$stem.log cm=$V/cmp/$set/$stem.txt; mkdir -p $V/logs/$set $V/cmp/$set
   clean $vdir $stem
@@ -76,11 +77,11 @@ mice_set() {   # <name> <original root> <run_task.py> <method order>: every task
 }
 
 mkdir -p $V/logs $V/cmp
-for st in ${@:-canary dtmoe confirm_cp r14_confirm probs_gen cp_gen}; do
+for st in ${@:-canary confirm_cp r14_confirm probs_gen cp_gen}; do
   gate; say "stage $st start"
   case $st in
     canary) canary ;;
-    dtmoe) canary; dtmoe ;;
+    dtmoe) halt "dtmoe stage closed (AMENDMENT_20261018b.md)" ;;
     confirm_cp) canary; mice_set confirm_cp $HOME/pfn-runs/mice-confirm-cp-20261017 $REPO/experiments/mice_confirm_cp_20261017/run_task.py \
                   "micecp1000_500 micev1000_500 fifo1000 ddm1000 ltm1000_75 winens1000" ;;
     r14_confirm) canary; mice_set r14_confirm $HOME/pfn-runs/mice-r14-confirm $REPO/experiments/mice_r14/run_task.py \

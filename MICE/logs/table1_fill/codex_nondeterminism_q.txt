@@ -1,0 +1,23 @@
+Integrity arbitration, one bounded question (read-only). Context: experiments/gpu_verify_20261018/PLAN.md (committed) and
+MICE/logs/table1_fill/codex_fecs_integrity.md (your earlier decision). The verification chain stopped by its rule
+"two new runs disagreeing -> stop GPU verification". Evidence (all on the local GPU, single process, fecs_watch shows no
+driver event since 14:22):
+- dtmoe dev task elec2 L32 lr1e-4 s1 m1: original (13:01-13:03, inside a FECS period), replay 1 (21:03), replay 2 (21:05).
+  All three differ. First differing batch: orig vs r1 at batch 22, orig vs r2 at 11, r1 vs r2 at 11, each with
+  max |dP| 1.0e-6 at the first difference, then growing through online training (overall max |dP| 0.60-0.86,
+  prediction agreement 0.972-0.983, mean accuracy 0.8760 / 0.8751 / 0.8711, drift firings 38 / 36 / 39).
+- Before it, 14 dtmoe tasks (all L = 16 configurations, incl. tasks computed during the FECS window and pre-reboot)
+  replayed bit-identical; two DR canaries bit-identical; the 12:48 dtmoe L16 rerun bit-identical.
+Interpretation: L = 32 dtmoe on this GPU is run-to-run nondeterministic (first divergence 1e-6, different batch per
+run), so bit identity cannot verify it; this is not evidence of corruption, and not of corruption-free either.
+
+Question: how should the verification proceed? Options I see: (A) keep the GPU stopped (rule as written); (B) amend
+PLAN.md: tasks shown nondeterministic by two clean replays are classed "unverifiable by bits" and the replay continues
+for the rest (the TabPFN sets have been deterministic: 60/60 and canaries), with a determinism probe (two clean replays)
+before relying on bit identity for any new pipeline; the dtmoe results are in any case to be recomputed on the
+H800 cluster for reporting (user decision 2026-10-18: clean rerun of all paper results on 8 H800, clean results
+become the reported version); (C) other. Also: should the H800 rerun of dtmoe force deterministic algorithms
+(torch.use_deterministic_algorithms / CUBLAS_WORKSPACE_CONFIG), given that its dev selection (argmax of mean dev
+accuracy) is sensitive to run-to-run noise of ~0.005?
+Answer: Decision / Supporting evidence / Alternative options / Key risks / Remaining uncertainty / Confidence /
+Requires user approval. Short.
