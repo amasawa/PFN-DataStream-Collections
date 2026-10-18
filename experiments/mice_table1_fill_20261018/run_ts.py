@@ -23,6 +23,11 @@ EXT = os.path.expanduser("~/ext-baselines")
 DEV = torch.device(os.environ.get("TS_DEVICE", "cpu"))     # cpu (default) or cuda (dtmoe, tot: AMENDMENT_BASELINES)
 if DEV.type == "cpu":
     torch.Tensor.cuda = lambda self, *a, **k: self      # official modules hard-code .cuda() on buffers
+if os.environ.get("TS_DETERMINISTIC") == "1":           # strict determinism (gpu_verify AMENDMENT_20261018b, H800 rerun)
+    assert os.environ.get("CUBLAS_WORKSPACE_CONFIG") in (":4096:8", ":16:8"), "set CUBLAS_WORKSPACE_CONFIG first"
+    torch.use_deterministic_algorithms(True, warn_only=False)
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
 
 
 def windows(Xs, idx, L):

@@ -1254,3 +1254,11 @@
   任务 15 的三份结果复制到只读目录 evidence_task15、补写取代条款、验证任务与记录。本地 dtmoe 开发结果全部保留、不使用。
 - 用户决定（2026-10-18）：论文用到的全部结果（MICE、MICE-DUO、ResetEval）在同济集群 8 块 H800 上干净重跑，干净结果作为报告版本，原结果保留；
   执行由 Mac mini 上的 Claude Code 通过 SSH 完成（本机连不上集群），本会话负责清单、登记、审计、对比。
+
+### 2026-10-18 23:14 H800 干净重跑：草稿；核实停止；用户新规则
+- H800 重跑材料（experiments/clean_rerun_mice_h800：PLAN 草稿、MANIFEST、HANDOFF、make_tasks.py → tasks.jsonl 2828 任务、rerun.py、make_bundle.sh、
+  run_task_trim1.py；run_ts.py 加 TS_DETERMINISTIC 开关）。审核：Codex xhigh 两轮（codex_clean_rerun.md、codex_clean_rerun_rebuttal.md）、MiMo Pro high
+  （8 条，5 条修正）、Sonnet（sonnet_rerun_check.md，3 条修正）；Codex 第二轮余项（完成判定、格式校验、devtrim 被引用）已改，未再复审。用户决定 devtrim 与
+  r14-dev 用已提交代码重建。**未批准、未登记**：用户 23:1x 决定先继续跑实验、不做核实，本周自己慢慢核实；PLAN 标为 DRAFT。
+- 本机核实链停止（用户决定）；停止前 confirm_cp 第 1 个任务逐位一致。现场保留在 ~/pfn-runs/verify-20261018（CHAIN_STOP 注明原因）。
+- 用户新规则（23:1x）：任何策略先问 Fable，再交 Sonnet 或 MiMo 审核，然后执行。

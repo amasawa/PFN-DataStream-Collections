@@ -1,0 +1,13 @@
+Rebuttal review (read-only), one bounded question. Your review of the draft is MICE/logs/table1_fill/codex_clean_rerun.md.
+The revised registration is experiments/clean_rerun_mice_h800/PLAN.md, with HANDOFF.md, MANIFEST.md, rerun.py,
+make_tasks.py and tasks.jsonl (2664 tasks). Changes: integrity-recovery framing; all reproducible MICE GPU directories
+incl. development (no reselection), with stated exclusions (mice-r14-dev: three code states; mice-r14-devtrim:
+uncommitted code, not cited); every task has expected outputs; attempts restart from initialisation with quarantine,
+acceptance = rc 0 + outputs present and loadable; unified pause rule for non-deterministic pipelines; per-set recheck
+under production concurrency and GPU health records; benchmarks into <root>-h800, k*/M* immutable, analysis
+adaptations registered before that analysis; identity checks (per-file SHA-256; TabICL checkpoint identity stated as
+not byte-checkable); reporting rule extended (figures, text numbers, uncertainties, abstract, labels). A MiMo Pro high
+audit of rerun.py/make_tasks.py found 8 issues; 5 fixed (sandbox HOME for hard-coded ~/pfn-runs drivers, filtered
+methods printed, .closes.pkl outputs, clean-clone assertion, environment whitelist), 3 already fixed or not valid.
+Question: does the revision answer your five findings; anything still blocking execution? Answer: Decision / remaining
+blocking items (if any, concrete edits) / Confidence / Requires user approval. Short.

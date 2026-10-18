@@ -1,0 +1,13 @@
+Integrity arbitration (read-only), one bounded question. Read experiments/clean_rerun_mice_h800/PLAN.md (draft
+registration), MANIFEST.md, HANDOFF.md; background: experiments/gpu_verify_20261018/PLAN.md and AMENDMENT_20261018b.md,
+MICE/logs/table1_fill/codex_fecs_integrity.md (your P0 decision).
+User decision (2026-10-18): recompute every GPU-computed MICE paper result on a different, clean GPU (Tongji cluster,
+8 H800, Slurm, native Linux) and report the clean results; keep all originals. Execution by a second Claude Code
+session on the user's Mac (the cluster cannot run Claude Code); this session registers, audits and analyses.
+Question: is PLAN.md a sound registration for this rerun - in particular (1) rerunning frozen confirmatory /
+held-out evaluations on new hardware with criteria, frozen choices (k*, M*, configurations) and code unchanged, and
+reporting the new results while the originals were seen; (2) keeping development runs and their selections as they
+were (not rerun); (3) CPU results kept; (4) the determinism probe and its consequences; (5) the reporting rule
+(appendix with old-vs-new per number and per criterion; a changed conclusion is reported as it is on the new results)?
+What must change or be added before execution? Answer: Decision / Supporting evidence / Alternative options /
+Key risks / Remaining uncertainty / Confidence / Requires user approval. Short; concrete edits.
