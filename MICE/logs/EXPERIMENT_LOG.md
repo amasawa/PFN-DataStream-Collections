@@ -1136,3 +1136,16 @@
 - Drift-Resilient TabPFN 冒烟测试：(1) 第 1 批的上下文只有一个时间段，模型删掉常数时间特征后报错 → 第 1 批用第 0 批前后两半
   作两个时间段（只影响每条流的第 1 批，README 写明）；(2) 第 21 批又出现 select_features 形状错误，单独复跑同一批成功，
   与集成子抽样的随机状态有关，排查中；调试时也遇到 CUDA 故障，GPU 稳定前暂停在 GPU 上调试。
+
+### 2026-10-18 11:28 表 1 新基线：实现进度
+- 5 个方法（fsnet、onenet、dtmoe、adaptz、shifts）在 run_ts.py 里实现，直接调用官方模块；单独的 CPU 版 torch 环境
+  ~/pfn-venvs/tsbase（pfn venv 是冻结环境，不往里装包）。冒烟测试全部跑通；fsnet/onenet 在两个环境里结果逐位相同。
+  fsnet 在 elec2 上记忆模块触发 110 次，dtmoe 在网格流 45 批里处理漂移 4 次：两个机制在表格流上会动作。
+- 实现中发现并处理：OneNet 的 fsnet_ 默认把缓冲区放在 cuda:0（构造时改成 CPU）；ADAPT-Z 仓库目录名拼错（uitls），
+  运行时做别名；ADAPT-Z 的 iTransformer 若 use_norm 会把类别分数按特征窗口均值方差反标准化，没有意义，关掉（写进 docstring）。
+- 计时（54 维 covertype，每批秒数，n_steps = 1）：dtmoe 6.17、onenet 0.54、adaptz 0.31、fsnet 0.14、shifts 0.01。
+  dtmoe 在 CPU 上按登记网格（36 配置 × 5 条开发流）约需 300 核时，做不完；需改到 GPU 或缩小网格，待定。
+- Drift-Resilient TabPFN：第 1、2 批（上下文只有 1–2 个时间段）在官方 select_features 处报形状错误，换种子重试仍失败；
+  随后同一进程报 illegal memory access，GPU 本身正处于故障风暴（生成器流 mice_cp 最近 10 分钟 11 次失败），无法判断形状错误
+  是否是 GPU 故障的连带症状。暂停 GPU 上的调试，等 GPU 空闲后单独复测。
+- MiMo Pro high 两组并行审计 run_ts.py（A：框架 + fsnet + onenet；B：dtmoe + adaptz + shifts），11:23 开始。
