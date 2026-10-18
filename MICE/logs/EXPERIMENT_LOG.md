@@ -1293,3 +1293,5 @@
 - 2026-10-19 01:41 例行检查：GPU_STOP 不存在，fecs_watch 心跳正常（01:41:05）。DR 单进程运行中，covertype 已到 451/1500 批（约 1 小时），按此速度 covertype 约 3.3 小时。CPU 扩展网格自 23:29 起完成 107/450（新 FAIL 0；progress.txt 中的 FAIL 均为 10-18 12:41 前的旧记录）。dtmoe 仍待用户决定。
 
 - 2026-10-19 02:42 例行检查与更正：上一条"扩展网格完成 107/450"计数有误（匹配到了扩展开始前的旧行），按扩展起始行（progress.txt 第 1161 行之后）重新计数为 19/450，新 FAIL 0。CPU 12 路满载（load 13.4），先跑的是最贵的 onenet L32/L16、n_steps 25。粗估每个任务约 1.5 小时（12 路），全部 450 个约 50–60 小时，远高于 amendment c 估计的约 21 小时；后面的 fsnet/shifts/adaptz 可能更快，跑完 onenet 后再估。DR covertype 901/1500 批，GPU_STOP 不存在，fecs_watch 心跳 02:41:32。
+
+- 2026-10-19 03:42 例行检查：DR covertype 1376/1500 批，无 GPU_STOP，fecs_watch 心跳正常；CPU 扩展 26/450，新 FAIL 0（约 7 个/小时）。
