@@ -1289,3 +1289,5 @@
   180 任务的网格估计 ≥150 GPU 小时。Fable（fable_probe_slow.md，0.43 美元）：留现场后中止验证、DR 立即开跑、dtmoe 交用户决定；
   Sonnet（sonnet_probe_slow_review.md）4 条接受（记为"中止"而非失败、执行链跳过网格是副作用、验证未重排、以后的 dtmoe 结果为未核实、数字为估计）。
 - 00:38 中止，现场在 dtmoe_local/probe_pre_aborted_evidence；执行链自动进入 DR（dr_chain.sh，先跑金丝雀）。补充登记 d 追加偏差记录。
+
+- 2026-10-19 01:41 例行检查：GPU_STOP 不存在，fecs_watch 心跳正常（01:41:05）。DR 单进程运行中，covertype 已到 451/1500 批（约 1 小时），按此速度 covertype 约 3.3 小时。CPU 扩展网格自 23:29 起完成 107/450（新 FAIL 0；progress.txt 中的 FAIL 均为 10-18 12:41 前的旧记录）。dtmoe 仍待用户决定。
