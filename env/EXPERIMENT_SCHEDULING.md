@@ -97,3 +97,5 @@
 - 2026-10-16 14:18-14:32（MICE 14.b C 部分）：7 个 worker 时 Windows 日志 nvlddmkm Xid 153 约每 27 秒一次，每次杀死一个进程
   （135 次/小时）；GPU 利用率在 3 个 worker 时已约 90%，显存只用 2–5 GB，显存不是瓶颈。退回 3 个，按每小时完成任务数
   决定是否加到 4。诊断见 env/MACHINE_LOG.md 第 1 条（2026-10-16 条目）。
+- 2026-10-18：本机 WSL 上 `CUDA_VISIBLE_DEVICES=""` 会让 torch 在 CPU 上的第一次卷积/矩阵运算就崩溃（"free(): double free
+  detected in tcache 2"，pfn venv 的 torch 2.14 与 torch 2.1 都会）。要在 CPU 上跑 torch，不隐藏 GPU，只把张量和模型留在 CPU。
