@@ -1226,3 +1226,19 @@
   逻辑用临时目录测试过（无检查点 1、检查点更新后清零、无更新累加）。原 pool_gpu.sh 未改（其间误改又还原：运行中的脚本不能编辑）。
 - 进度（18:33）：最近 1 小时 GPU 事件 0 条；dtmoe 开发 128/180（任务 31 于 13:37 被放弃，链式脚本会补跑）；训练式学习器差 3 个；
   开发网格 shifts/adaptz/fsnet 180/180、onenet 48/180。
+
+### 2026-10-18 18:54 P0：GPU 在 FECS 异常期间会静默算错；核实计划（experiments/gpu_verify_20261018/PLAN.md）
+- Fable（18:36–18:38，1.39 美元，MICE/logs/table1_fill/fable_overnight_plan.md）审夜间计划：采纳"故障期 dtmoe 开发任务全部重算而非抽查"、
+  "TOT 核对先于 DR"、DR 金丝雀与逐批时间戳；明早由用户决定是否让 dtmoe 测试抢占 DR。
+- 准备 DR 金丝雀时发现：14:16–14:17:18 的 DR GPU 重跑第 1–10 批与前一次 GPU 运行逐位相同，第 11 批 max|dP| 0.868、准确率 0.76→0.32，不报错；
+  第 11 批结束于 14:17:18，正是最后一条 FECS 事件的那一秒 → 确认 GPU 在 FECS 期间会静默算错。证据保存在
+  ~/pfn-runs/mice-table1-newbase/evidence_fecs_20261018；Windows 事件导出 env/gpu_events/nvlddmkm_20261018_1850.csv.gz（日志已满，最早 10-16 05:45）。
+  FECS 在保留期内几乎每个有多进程 GPU 工作的小时都有（10-16 全天、10-17、10-18 凌晨与上午）。
+- Codex gpt-6-astra xhigh（18:43–18:46，MICE/logs/table1_fill/codex_fecs_integrity.md）：P0；历史 FECS 期结果"可疑、未证错"，保持原样、核实前不用于新结论；
+  今晚可单进程继续，核实优先；顺序 canary → dtmoe 开发 1–38 → mice-confirm-cp 66 → mice-r14-confirm 216 → probs-gen 60 → cp-gen 30 → grid10 → 其余抽样；
+  任何新事件、金丝雀失败、不一致即停。替换已报告结果需用户批准。全部采纳。
+- 实施：fecs_watch.sh（每 60 秒读事件日志，有事件或读不到就写 ~/pfn-runs/GPU_STOP 并停掉所有 GPU 进程，不碰 CPU 任务）；verify_chain.sh、verify_compare.py
+  （逐字节比较，只输出相同/不同，不看分数）、canary_dr.py、run_overnight.sh（等 dtmoe 开发结束 → 补跑放弃的任务 → 核实链）。
+  Sonnet 两轮检查（MICE/logs/table1_fill/sonnet_verify_check.md）：第一轮 8 处、第二轮 7 处，全部核实后修正（分集合记录、缺文件报错、锚定文件名、
+  完整重跑不续检查点、标准输入隔离、数据复制并逐字节核对、任务数核对、守护存活检查、不一致的任务不会被当成已完成）。
+- DR 正式运行推迟到核实之后。

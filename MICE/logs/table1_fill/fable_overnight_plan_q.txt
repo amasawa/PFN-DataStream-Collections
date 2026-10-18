@@ -1,0 +1,33 @@
+You are the senior expert / decision maker for the MICE Table 1 fill (read-only; you may read
+experiments/mice_table1_fill_20261018/{PLAN.md,PLAN_BASELINES.md,AMENDMENT_20261018.md,AMENDMENT_BASELINES_20261018.md,AMENDMENT_BASELINES_20261018b.md}
+and MICE/logs/EXPERIMENT_LOG.md tail if needed). One bounded question: is the overnight plan below sound, and what should change?
+
+Context (2026-10-18 18:40). Machine: one RTX 5000 Ada under WSL2 with driver faults. Evidence today: after a Windows reboot one GPU
+process ran clean; with 2-3 GPU processes, from 12:52 Windows logged "Graphics FECS Exception" 30-50/min for ~1.5 h, processes
+crashed, and Drift-Resilient TabPFN (drtabpfn) once raised a shape error in the official select_features that is arithmetically
+impossible (a 2-column target filled by a cat of width 0); on CPU the same 12 batches ran clean, and a clean GPU run matched CPU
+predictions exactly (max |dP| 4.7e-3). With one GPU process since ~14:30: 0 driver events in 4 h. Checks done: 60/60 ddm/ltm
+probability reruns bit-identical to the existing accuracy files; one dtmoe GPU rerun after reboot bit-identical; CPU vs GPU dtmoe
+differ (prediction agreement 0.83-0.97), hence amendment b: dtmoe dev and test both on GPU, never mixed.
+User decisions (14:30): only 1 GPU process; drtabpfn on all 92 registered streams (~42,700 batches x 7.4 s = ~83 h single process).
+User is asleep and told me to iterate alone.
+
+Overnight plan:
+1. GPU queue (one process): finish dtmoe dev grid (52/180 left, ~1 h; one task given up after 6 crashes gets a second pass),
+   then drtabpfn on all 92 streams (~83 h), with a worker loop that resets the crash count when the checkpoint advances.
+2. CPU: onenet dev grid (132/180 left, ~3-4 h); trained learners nearly done.
+3. When all dev grids are done: freeze configs per PLAN_BASELINES (highest mean dev accuracy, ties first in sorted order, one
+   boundary extension of lr or n_steps), commit the frozen configs and a Sonnet check before any test run; then CPU test runs for
+   fsnet/onenet/adaptz/shifts.
+4. dtmoe test runs and the TOT reproduction gate also need the GPU (~10-15 h). Planned order on the GPU: drtabpfn first (started
+   automatically after dtmoe dev), dtmoe test and TOT afterwards, or preempting drtabpfn (it checkpoints every 25 batches).
+5. Integrity: spot-rerun a few GPU outputs in a fresh process and require bit-identity; outputs produced during a FECS period
+   are re-verified (dtmoe dev tasks computed 12:52-14:17 by a process that kept running through the FECS events: verification
+   attempt crashed, not yet done).
+
+Specific sub-questions: (a) GPU order: drtabpfn (83 h) before dtmoe test + TOT, or dtmoe test + TOT first? (b) Are the dtmoe dev
+outputs from the FECS period (about tasks 6-37) usable after spot checks, or should they be recomputed (~1 h)? (c) Anything
+missing for integrity (e.g., how many drtabpfn outputs to spot-check, given a run takes up to ~1 h per stream)?
+
+Answer as: Decision / Supporting evidence / Alternative options / Key risks / Remaining uncertainty / Confidence /
+Requires user approval. Short; no essay.

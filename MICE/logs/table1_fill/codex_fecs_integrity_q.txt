@@ -1,0 +1,38 @@
+Integrity arbitration (read-only; answer from the evidence below; you may read env/EXPERIMENT_SCHEDULING.md and
+MICE/logs/EXPERIMENT_LOG.md tail). One bounded question: given evidence that this GPU silently corrupts outputs during
+"Graphics FECS Exception" periods, what is the severity for past results, and what verification should be done (which
+runs, how many tasks, in which order), and may single-process GPU work continue tonight? The user is asleep; I may run
+read/verify jobs but not change any reported result without user approval.
+
+Machine: RTX 5000 Ada, WSL2. Windows System log, provider nvlddmkm, exported to env/gpu_events/nvlddmkm_20261018_1850.csv.gz
+(53,911 events; the log is full, the oldest retained is 2026-10-16 05:45). Event 13 "Graphics FECS Exception: Logging
+error 0x2" occurs in every hour that has GPU work and multiple processes; per hour: 10-16 05-19h 600-5,900/h; 10-17 09-12h
+~160-400/h, 21h-01h 120-230/h; 10-18 02-04h 2,000-4,200/h; 10-18 10-14h 540-1,800/h. Event 153 "Error occurred on GPUID"
+(coincides with process-killing CUDA errors) much rarer. After a reboot today: one GPU process 8 min, 0 events; 2-3
+processes from 12:52 -> FECS 30-50/min until 14:17:18 and 14:21-14:22; single process since ~14:30 -> 0 events in 4 h.
+
+Evidence of silent corruption (2026-10-18): Drift-Resilient TabPFN, elec2 first 12 batches (one process, stateless per batch):
+CPU run, GPU run 1 (14:14, during FECS) and GPU run 2 (14:16-14:17:18, during FECS). GPU run 1 vs CPU: max |dP| 4.7e-3,
+identical predictions in all 11 batches. GPU run 2: batches 1-10 bit-identical to GPU run 1; batch 11 (finished 14:17:18,
+the second of the last FECS event) max |dP| 0.868, accuracy 0.32 vs 0.76, no error raised. Another GPU run of the same code
+during FECS raised an arithmetically impossible shape error (a 2-column target filled by a width-0 cat) in the official
+select_features; a TOT run before the reboot raised "leading minor of order 1053509713 is not positive-definite".
+Evidence of no corruption: 60 ddm/ltm TabPFN-v2 reruns (240 batches each, 14,400 TabPFN calls) run 13:08-14:12 during FECS
+reproduced the per-batch accuracy of results from 2026-10-04 bit for bit (60/60); a dtmoe GPU rerun at 12:48 (no FECS)
+was bit-identical to its 12:3x result; earlier documented: resumed MICE runs bit-identical (2026-10-09).
+GPU outputs of this pipeline are bit-deterministic across processes (DR batches 1-10, dtmoe, the 60 reruns), so a
+bit-identity rerun is a valid test.
+
+Runs with GPU output during the retained FECS window (~/pfn-runs, file-mtime hours): mice-r14-exist (10-16 05-08h),
+mice-r14-confirm (10-16 09-12h; frozen confirmation), mice-r14b-acc (10-16 12-19h), duo-rand-20261017 + duo-rand-verify
+(10-17 09-12h), mice-main-cp-grid10 (10-17 21h), mice-confirm-cp-20261017 (10-17 22h - 10-18 04h; feeds MICE Table 1
+confirmation set), mice-table1-cp-gen (10-18 10-12h), mice-table1-probs-gen (10-18 13-14h: already verified 60/60 on accuracy;
+probabilities not independently verified), dtmoe dev grid tasks 6-37 (12:52-14:22). Earlier runs (before 10-16 05:45) have no
+retained event record.
+
+Tonight's GPU budget: one process; queued: dtmoe dev (1 h), recompute dtmoe dev tasks of the FECS window (1 h), TOT gate,
+then Drift-Resilient TabPFN (83 h) with a 12-batch canary at each process start and per-batch timestamps for FECS matching.
+
+Answer: Decision / Supporting evidence / Alternative options / Key risks / Remaining uncertainty / Confidence /
+Requires user approval. Concrete: list the verification jobs in priority order with sample sizes and a stopping rule.
+No essay.
