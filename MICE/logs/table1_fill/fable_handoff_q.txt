@@ -1,0 +1,17 @@
+Senior expert (read-only), one bounded question. The user asks: "the code is fixed now - can I hand the work to the
+H800 cluster?" Context: experiments/clean_rerun_mice_h800/ (PLAN.md marked DRAFT, HANDOFF.md, tasks.jsonl 2828 tasks:
+all reproducible MICE GPU outputs incl. development, reconstructed mice-r14-dev and mice-r14-devtrim (user decision),
+Drift-Resilient TabPFN 92 streams, dtmoe development grid 180 tasks in strict deterministic mode); reviews: Codex
+xhigh x2 (MICE/logs/table1_fill/codex_clean_rerun*.md; its last 3 blocking items have since been addressed: acceptance
+only with a successful attempt + structural schema validation of every output vs the original; devtrim/r14-dev now
+reconstructed), MiMo Pro high, Sonnet. Your earlier plan tonight (MICE/logs/table1_fill/fable_continue.md) put DR on the
+local GPU (83 h, single process) and kept dtmoe waiting for the H800; the user then chose the full grid extension (A)
+for the four CPU baselines (~255 CPU-h, running locally now) and freezing even if n_steps 25 wins. The user postponed
+verification and will verify this week.
+Proposed: (1) move all GPU work to the H800: the clean rerun of existing results (as reported version, user decision
+earlier today), DR (92 streams) and the dtmoe deterministic dev grid; the local GPU stays idle (or only canaries);
+(2) the four CPU baselines' extension, freezing, tests and the TOT adapter + gate stay on the local CPU; (3) dtmoe test
+tasks and TOT GPU work (if any) are added to the cluster later by a registered addendum; (4) finalise: a third Codex
+xhigh rebuttal on the revised PLAN, user approval, commit, OneDrive bundle, Mac prompt.
+Is this the right split and order; anything to change or that blocks the handoff? Answer: Decision / Supporting
+evidence / Alternative options / Key risks / Remaining uncertainty / Confidence / Requires user approval. Short.

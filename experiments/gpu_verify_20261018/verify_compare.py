@@ -9,7 +9,7 @@ Usage: python verify_compare.py <verify P dir> <original P dir> [<stem>]"""
 import os, pickle, sys
 import numpy as np
 
-SKIP = {"wt", "peak_mem"}
+SKIP = {"wt", "te", "peak_mem"}
 
 
 def same(a, b):

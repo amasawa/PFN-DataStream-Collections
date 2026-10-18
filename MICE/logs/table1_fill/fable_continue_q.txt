@@ -1,0 +1,29 @@
+You are the senior expert / decision maker for the MICE Table 1 fill (read-only). Bounded question: what should run
+next, in which order, and how, now that the user has decided (2026-10-18 23:1x) to "continue the experiments, no
+verification now (the user verifies this week)"? The clean H800 rerun is postponed (draft only).
+Read if needed: experiments/mice_table1_fill_20261018/{PLAN.md, PLAN_BASELINES.md, AMENDMENT_20261018.md,
+AMENDMENT_BASELINES_20261018.md, AMENDMENT_BASELINES_20261018b.md}, experiments/gpu_verify_20261018/{PLAN.md,
+AMENDMENT_20261018b.md}, MICE/logs/table1_fill/codex_fecs_integrity.md, codex_nondeterminism.md, tail of
+MICE/logs/EXPERIMENT_LOG.md.
+
+State (23:15):
+- Done: trained learners' probabilities 736/736 (CPU); ddm/ltm probabilities on 30 generator streams 60/60 (GPU, bit-
+  identical accuracy vs the 2026-10-04 originals); mice_cp on generator streams 30/30 (GPU, pre-reboot); development grids
+  of shifts, adaptz, fsnet, onenet 180/180 each (CPU); dtmoe dev grid 180/180 on the local GPU, but gpu_verify
+  AMENDMENT_20261018b says no local dtmoe development result is used (L32 is run-to-run nondeterministic on this GPU)
+  and dtmoe is to be rerun in strict deterministic mode on the H800 (now postponed).
+- Not started: frozen-config selection + test runs (92 test streams + grid + generator) of the four CPU baselines;
+  Drift-Resilient TabPFN on 92 streams (GPU, ~83 h single process, ~7.4 s/batch); TOT (official LSTD-TOT code found;
+  gate (a) reproduce ETTh2 pred_len 1 paper number, (b) lambda=0 vs official differ; the classification adapter is not
+  implemented yet); dtmoe test runs; export_table1_fill readout of the finished items.
+- Machine: local GPU limited to ONE process (user decision; multi-process triggers FECS faults and silent corruption);
+  fecs_watch.sh guard running (stops GPU jobs on any nvlddmkm event). CPU: 20 cores free.
+- New user rule: every strategy goes to you first, then a Sonnet or MiMo review, then execution.
+
+Sub-questions: (1) Order of CPU and GPU work tonight. (2) dtmoe: with the H800 postponed, run its dev grid + test locally
+in strict deterministic mode (TS_DETERMINISTIC=1, qualified by two fresh-process runs bit-identical on L16 and L32
+probes) as a registered amendment c, or wait for the H800? (3) Drift-Resilient TabPFN locally now (83 h, canary per
+process start, per-batch timestamps vs FECS log), or wait? (4) TOT: implement the adapter now (CPU dev, MiMo audit)
+and run the gate on the GPU between other jobs? (5) Anything to register before running.
+Answer: Decision / Supporting evidence / Alternative options / Key risks / Remaining uncertainty / Confidence /
+Requires user approval. Short.

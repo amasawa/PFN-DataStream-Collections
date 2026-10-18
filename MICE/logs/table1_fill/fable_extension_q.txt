@@ -1,0 +1,18 @@
+Senior expert (read-only), one bounded question on the registered tuning rule of experiments/mice_table1_fill_20261018/
+PLAN_BASELINES.md ("Tuning"): "Highest mean development accuracy frozen (ties: first in sorted order); if the best lies on
+the boundary of lr or n_steps, the grid is extended once (lr x 10 or / 10; n_steps 25) and re-selected."
+Result of the selection (MICE/results_paper/table1_fill/frozen/frozen_<method>.json; grid lr {1e-4,1e-3,1e-2} x
+n_steps {1,5} x L {16,32} (adaptz L {1,16}) x mech (3 values), 36 configs x 5 dev streams, all complete):
+- shifts best L16 lr1e-3 s5 m0.5 (0.6907) -> n_steps boundary
+- adaptz best L1 lr1e-4 s5 m1e-3 (0.6033) -> lr lower boundary AND n_steps boundary
+- fsnet best L32 lr1e-3 s5 m0.9 (0.7547) -> n_steps boundary
+- onenet best L32 lr1e-3 s5 m0.75 (0.7593) -> n_steps boundary
+Interpretations of "extended once": (A) full slice: the new value(s) crossed with every other grid value (n_steps 25:
+36/2 = 18 configs x 5 streams per method; adaptz also lr 1e-5 x {1,5} x L x mech, and the lr1e-5 x s25 corner?);
+CPU cost (estimated from dev wall times, n_steps 25 ~ 5x n_steps 5): shifts 2.5 h, adaptz 41.5 h (+~5 h lr slice),
+fsnet 61.6 h, onenet 129.7 h CPU-hours (~235 h total; ~20 h wall on 12 single-thread lanes). (B) local: only the best
+configuration with the boundary parameter moved (n_steps 25; adaptz also lr 1e-5, and both), 5 streams each: ~13 CPU-h
+(~1.5 h wall, onenet's longest ~1.5 h). (C) other. In both, re-selection over the original grid plus the added configs;
+no second extension. Which interpretation should be registered (amendment c, before any extension run), and does the
+adaptz corner (lr 1e-5 with n_steps 25) belong to "once"? Answer: Decision / Supporting evidence / Alternative options /
+Key risks / Remaining uncertainty / Confidence / Requires user approval. Short.

@@ -9,7 +9,8 @@ only, a single domain, which the model cannot use: it drops the constant domain 
 batch 0 as domains 0 and 1, test domain 2. Raw features (the package
 preprocesses them). Stateless across batches: a checkpoint of the probabilities is written every 25 batches
 (atomically) and a restarted process resumes from it, with identical results.
-Output <out>/<stream>__drtabpfn.npz: acc (per batch, NaN at 0), pred, P (float32, rows of batches 1..T-1), C, B, wt.
+Output <out>/<stream>__drtabpfn.npz: acc (per batch, NaN at 0), pred, P (float32, rows of batches 1..T-1), C, B, wt,
+te (absolute end time of every batch, for matching against the Windows driver-event log; amendment c).
 Usage: python run_drtabpfn.py --data <dir> --out <dir> --streams s1 s2 ..."""
 import argparse, os, time
 from importlib import resources
@@ -36,11 +37,13 @@ def run(model, data, stream, B, out):
         return
     z = np.load(f"{data}/{stream}.npz"); X, y = z["X"].astype(np.float32), z["y"].astype(int)
     C, T = int(y.max()) + 1, len(y) // B
-    acc, wt = np.full(T, np.nan), np.zeros(T)
+    acc, wt, te = np.full(T, np.nan), np.zeros(T), np.zeros(T)   # te: absolute end time of each batch (FECS matching)
     P = np.zeros(((T - 1) * B, C), np.float32); n_single = 0; n_retry = 0; t0_ = 1
     ck = f"{out}/{stream}__drtabpfn.ckpt.npz"
     if os.path.exists(ck):
         c = np.load(ck); t0_ = int(c["t"]); P[:len(c["P"])] = c["P"]; acc[:t0_] = c["acc"][:t0_]; wt[:t0_] = c["wt"][:t0_]
+        if "te" in c.files:                              # checkpoints written before amendment c have no te
+            te[:t0_] = c["te"][:t0_]
         n_single, n_retry = int(c["n_single"]), int(c["n_retry"]); print(stream, "drtabpfn resumed at batch", t0_, flush=True)
     for t in range(t0_, T):
         ts = time.time(); lo = max(0, t * B - M)
@@ -66,12 +69,12 @@ def run(model, data, stream, B, out):
             cls = np.asarray(model.classes_).astype(int)
             assert p.shape == (B, len(cls)), (p.shape, cls)
             Q = np.zeros((B, C), np.float32); Q[:, cls] = p; P[r] = Q
-        acc[t] = (P[r].argmax(1) == y[t * B:(t + 1) * B]).mean(); wt[t] = time.time() - ts
+        acc[t] = (P[r].argmax(1) == y[t * B:(t + 1) * B]).mean(); wt[t] = time.time() - ts; te[t] = time.time()
         if t % CKPT == 0 and t < T - 1:
             tmp = ck[:-4] + ".tmp.npz"
-            np.savez(tmp, t=t + 1, P=P[:t * B], acc=acc, wt=wt, n_single=n_single, n_retry=n_retry); os.replace(tmp, ck)
+            np.savez(tmp, t=t + 1, P=P[:t * B], acc=acc, wt=wt, te=te, n_single=n_single, n_retry=n_retry); os.replace(tmp, ck)
     tmp = dst[:-4] + ".tmp.npz"
-    np.savez_compressed(tmp, acc=acc, pred=P.argmax(1), P=P, C=C, B=B, wt=wt, n_single=n_single, n_retry=n_retry,
+    np.savez_compressed(tmp, acc=acc, pred=P.argmax(1), P=P, C=C, B=B, wt=wt, te=te, n_single=n_single, n_retry=n_retry,
                         peak_mem=torch.cuda.max_memory_allocated() if torch.cuda.is_available() else 0)
     os.replace(tmp, dst)
     if os.path.exists(ck):

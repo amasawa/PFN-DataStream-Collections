@@ -1262,3 +1262,14 @@
   r14-dev 用已提交代码重建。**未批准、未登记**：用户 23:1x 决定先继续跑实验、不做核实，本周自己慢慢核实；PLAN 标为 DRAFT。
 - 本机核实链停止（用户决定）；停止前 confirm_cp 第 1 个任务逐位一致。现场保留在 ~/pfn-runs/verify-20261018（CHAIN_STOP 注明原因）。
 - 用户新规则（23:1x）：任何策略先问 Fable，再交 Sonnet 或 MiMo 审核，然后执行。
+
+### 2026-10-18 23:29 表 1 CPU 基线：开发选择 → 全网格扩展（补充登记 c）；GPU 工作全部转到 H800
+- Fable（fable_continue.md，1.72 美元）定今晚顺序；Sonnet 审（sonnet_continue_review.md）7 条全部接受（不做 dtmoe 冒烟测试；TOT 12 小时上限 → "待定"；
+  gate (b) 单列；计时延后；每个方法单独提交冻结配置；CPU ≤12 路，依据 14:30–18:37 12 路 CPU + 1 GPU 无事件）。
+- 开发选择（select_frozen.py，不读测试流）：shifts L16 lr1e-3 s5 m0.5（0.6907）、adaptz L1 lr1e-4 s5 m1e-3（0.6033）、fsnet L32 lr1e-3 s5 m0.9（0.7547）、
+  onenet L32 lr1e-3 s5 m0.75（0.7593），全部落在 n_steps=5 边界（adaptz 还在 lr=1e-4 边界）。
+- 扩展方式：Fable（fable_extension.md）建议有界扩展 C，Sonnet（sonnet_extension_review.md）补规格；**用户选 A 完整扩展**（450 运行、约 255 CPU 小时），
+  并接受 n_steps 25 胜出时照规则冻结。补充登记 AMENDMENT_BASELINES_20261018c.md；Sonnet 核对（sonnet_amendment_c_check.md）5 条全部修正
+  （扩展网格不完整时拒绝选择、文件锁保证 12 进程上限、任务文件带时间戳、旧检查点无 te 的兼容、相对原网格的边界状态）。
+- 用户问能否交给 H800：Fable（fable_handoff.md，1.51 美元）同意 GPU 工作全部转 H800（含 DR、dtmoe 确定性开发网格），本机 GPU 不再跑 DR；
+  交接前三项（PLAN/MANIFEST 与任务清单一致并加"重建的运行"一节、提交状态、本地 DR 处置）已改；Codex 第三轮复审进行中。
