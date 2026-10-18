@@ -1,0 +1,16 @@
+Senior expert (read-only), one bounded question. New user decision (2026-10-18 23:3x): "Do not use the H800 for now;
+finish the experiments yourself" (on the local machine). This reverses AMENDMENT_BASELINES_20261018c.md item 6 (GPU
+work to the H800) and, for dtmoe, the closure of the local stage in experiments/gpu_verify_20261018/AMENDMENT_20261018b.md
+(dtmoe was to run in strict deterministic mode on the H800). The clean rerun of the existing MICE results stays a draft.
+Local constraints: one GPU process (user), fecs_watch.sh guard (any nvlddmkm event stops GPU jobs), no driver event
+since 14:22 under one GPU process + 12 CPU processes; CPU: 12 lanes running the full grid extension (450 runs, ~21 h).
+Remaining GPU work: Drift-Resilient TabPFN 92 streams (~83 h; dr_chain.sh ready: canary per process start, per-batch
+end times, quarantine + restart from batch 1 after a death, no restart after GPU_STOP); dtmoe development grid 180 tasks
+(~5 h at ~100 s each, more if deterministic mode is slower) then test runs (~10-15 h); TOT is on the CPU (amendment c).
+Questions: (1) GPU order: DR first or dtmoe first (dtmoe test needs its dev grid frozen)? (2) dtmoe locally: strict
+deterministic mode (TS_DETERMINISTIC=1, CUBLAS_WORKSPACE_CONFIG) qualified by two fresh-process bit-identical runs of
+the three registered probes (elec2 L16 lr1e-4 s1 m1, elec2 L32 lr1e-4 s1 m1, insects_abrupt L32 lr1e-3 s5 m3) on the
+local GPU, then the full dev grid fresh (the earlier local non-deterministic grid stays unused), then tests; what if a
+probe is not bit-identical locally? (3) What must amendment d contain, and what needs explicit user approval (is
+"finish the experiments yourself" enough to reopen the local dtmoe stage)? Answer: Decision / Supporting evidence /
+Alternative options / Key risks / Remaining uncertainty / Confidence / Requires user approval. Short.

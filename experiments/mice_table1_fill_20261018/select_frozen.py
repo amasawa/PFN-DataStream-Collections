@@ -14,6 +14,9 @@ import numpy as np
 DEV = ["elec2", "insects_abrupt_balanced", "insects_gradual_balanced", "insects_incremental_balanced",
        "insects_incremental_reoccurring_balanced"]
 P, method, out = sys.argv[1:4]; final = "--final" in sys.argv
+flags = glob.glob(f"{P}/UNVERIFIED*") + glob.glob(f"{P}/../UNVERIFIED*") + glob.glob(f"{P}/../../UNVERIFIED*")
+if flags:                                                # amendment d item 7: nothing is selected from flagged outputs
+    sys.exit(f"{method}: outputs flagged unverified ({flags}): not selecting")
 GRID = {"lr": (1e-4, 1e-3, 1e-2), "steps": (1, 5)}         # the registered grid (L and mech: all their values)
 pat = re.compile(rf"^(?P<s>.+)__{method}_L(?P<L>\d+)_lr(?P<lr>[0-9.e-]+)_s(?P<st>\d+)(_m(?P<m>[0-9.e-]+))?\.npz$")
 acc = {}
@@ -28,8 +31,13 @@ if not final:
     acc = {c: d for c, d in acc.items() if not added(c)}
 rows = sorted(((cfg, d) for cfg, d in acc.items()), key=lambda r: (added(r[0]), r[0]))
 eligible = [(cfg, float(np.mean([d[s] for s in DEV]))) for cfg, d in rows if all(s in d for s in DEV)]
-if final:   # amendment c: the extended grid must be complete (36 original + 18, adaptz + 36), nothing missing
-    want = 72 if method == "adaptz" else 54
+if not final and (len(eligible) != 36 or len(rows) != 36):   # the registered grid must be complete
+    sys.exit(f"{method}: {len(eligible)} complete of {len(rows)} configurations, 36 expected: not selecting")
+if final:   # amendment c: the extended grid must be complete, nothing missing; expected count from the extension
+    e = json.load(open(f"{out}/frozen_{method}.json"))["boundary_extension_needed"]
+    n_cfg = 2 * 3                                       # registered L (2 values) x mech (3 values), every method
+    nl, ns = len(GRID["lr"]) + ("lr" in e), len(GRID["steps"]) + ("steps" in e)
+    want = nl * ns * n_cfg
     if len(eligible) != want or len(eligible) != len(rows):
         sys.exit(f"{method}: {len(eligible)} complete of {len(rows)} configurations, {want} expected: not selecting")
 best = max(eligible, key=lambda r: r[1])          # max keeps the first of equal values: the order above breaks ties

@@ -12,20 +12,36 @@ mkdir -p $Q/logs $Q/fails $NB/dr_canary $NB/drtabpfn_quarantine
 say() { echo "$(date '+%F %T') $*" >> $Q/progress.txt; }
 while true; do
   [ -e $HOME/pfn-runs/GPU_STOP ] && { say "GPU_STOP present: chain exits (restart by hand after 30 quiet minutes)"; exit 1; }
+  [ $(( $(date +%s) - $(stat -c %Y $HOME/pfn-runs/fecs_watch.log.last 2>/dev/null || echo 0) )) -lt 150 ] || { say "fecs_watch not alive: chain exits"; exit 1; }
   c=$NB/dr_canary/$(date +%m%d_%H%M%S)
   for k in a b; do $PYDR $X/gpu_verify_20261018/canary_dr.py $c/$k >> $c.log 2>&1 || { say "canary $k crashed ($c)"; exit 1; }; done
   $CMP $c/a $c/b elec2__drtabpfn > $c.ab.txt && $CMP $c/a $NB/evidence_fecs_20261018/drgpu elec2__drtabpfn > $c.ref.txt \
     || { say "CANARY FAILED ($c): chain stops"; exit 1; }
   say "canary ok ($c)"
-  $PYDR $X/mice_table1_fill_20261018/pool_gpu.py $Q 1 >> $Q/logs/w1.log 2>&1 && { say "finished"; exit 0; }
+  if $PYDR $X/mice_table1_fill_20261018/pool_gpu.py $Q 1 >> $Q/logs/w1.log 2>&1; then
+    miss=$($HOME/pfn-venvs/tsbase/bin/python -c "
+import json, numpy as np
+def ok(f):
+    try:
+        z = np.load(f); [z[k] for k in z.files]; return True
+    except Exception:
+        return False
+print(' '.join(t['stream'] for t in map(json.loads, filter(str.strip, open('$Q/tasks.txt'))) if not ok('$NB/drtabpfn/' + t['stream'] + '__drtabpfn.npz')))")
+    cp $HOME/pfn-runs/fecs_watch.log $NB/drtabpfn/fecs_watch.log.$(date +%m%d_%H%M%S) 2>/dev/null
+    [ -n "$miss" ] && { echo "$miss" > $NB/drtabpfn/DR_INCOMPLETE; say "finished with streams missing (given up): $miss"; exit 0; }
+    rm -f $NB/drtabpfn/DR_INCOMPLETE; say "finished (all streams)"; exit 0
+  fi
   i=$(cat $Q/running_1 2>/dev/null); rm -f $Q/running_1
+  if [ -e $HOME/pfn-runs/GPU_STOP ]; then   # a death caused by the guard is not counted against the stream
+    [ -n "$i" ] && rmdir $Q/claims/$i 2>/dev/null; say "process stopped by the guard in task ${i:-?}: chain exits"; exit 1
+  fi
   if [ -n "$i" ]; then
     s=$(sed -n "$((i + 1))p" $Q/tasks.txt | python3 -c 'import json, sys; print(json.load(sys.stdin)["stream"])')
     ck=$NB/drtabpfn/${s}__drtabpfn.ckpt.npz
     [ -e $ck ] && mv $ck $NB/drtabpfn_quarantine/${s}__drtabpfn.ckpt.$(date +%m%d_%H%M%S).npz
     echo x >> $Q/fails/$i; n=$(wc -l < $Q/fails/$i)
     say "process died in task $i ($s), death $n; its checkpoint quarantined (restart from batch 1)"
-    [ "$n" -lt 3 ] && rmdir $Q/claims/$i || say "GAVE UP task $i ($s)"
+    if [ "$n" -lt 3 ]; then rmdir $Q/claims/$i 2>/dev/null || say "claim of task $i missing"; else say "GAVE UP task $i ($s)"; fi
   else
     say "process died outside a task"
   fi

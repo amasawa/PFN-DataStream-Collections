@@ -1276,3 +1276,10 @@
 - 23:34 H800 重跑草稿：Codex 第三轮（codex_clean_rerun_rebuttal2.md）3 条（尝试启动前记录、DR 检查点 .ckpt.npz 隔离、DR/dtmoe 结构规格）已修正并测试
   （真实 DR/dtmoe/原始输出通过结构校验，空 npz 被拒绝）；Sonnet 核对（sonnet_rerun_check2.md）确认修好，所提新问题核实均已处理。**用户暂不批准**：保持草稿。
   本机 CPU：扩展网格 450 运行 23:29 起 12 路进行中；本机 GPU 空闲（DR 不在本机跑，见补充登记 c 第 6 条）。
+
+### 2026-10-18 23:44 用户：暂不用 H800、本机跑完；补充登记 d（本机 GPU：验证 → DR → dtmoe）
+- Fable（fable_local.md，0.74 美元）建议 dtmoe 先于 DR；Sonnet（sonnet_local_review.md）6 条，其中 4 条交用户：用户确认 dtmoe 在本机按补充登记 b 的协议跑（只换设备），
+  顺序"验证 → DR → dtmoe"，dtmoe 也做一次完整扩展，首尾验证要做、对不上标为未核实。
+- AMENDMENT_BASELINES_20261018d.md；gpu_local.sh、dtmoe_local.sh、dr_chain.sh、select_frozen.py 修改。Sonnet 两轮核对（sonnet_amendment_d_check.md）
+  共 13 条，全部核实修正（第三次分类运行、未通过的首尾验证写 UNVERIFIED 标记且选择脚本拒绝、守护心跳检查、守护日志随阶段保存、半成品隔离、
+  守护造成的死亡不计次、DR_INCOMPLETE 标记、选择时网格完整性检查）。H800 草稿保持暂停（未取消）。
