@@ -1191,3 +1191,9 @@
   dtmoe 4/180（GPU）；Drift-Resilient TabPFN 未开始（select_features 形状错误未解决）；TOT 核对未完成。
 - 重启后：resume_after_reboot.sh cpu 恢复 CPU 任务；先查 Windows 事件日志并逐位复验一条已知 GPU 结果，再 resume_after_reboot.sh gpu 3 起步、
   逐级加并发，看利用率与故障数。
+
+### 2026-10-18 12:51 重启后恢复
+- Windows 12:43:57 开机；开机后 nvlddmkm 事件 0 条。12:47 resume_after_reboot.sh cpu 恢复 CPU 任务（训练式学习器 2+4 路、
+  shifts/adaptz/fsnet/onenet 开发网格 6 路），已有输出跳过。
+- GPU 复验：单独在 GPU 上重跑 elec2 dtmoe L16 lr1e-4 s1 m1（重启前 GPU 结果），P、acc、pred、fires、added、pruned 逐位相同（71 秒）。
+- 12:51 resume_after_reboot.sh gpu 3：3 个常驻 dtmoe 开发 worker，错开 60 秒；按调度规则每级观察 15 分钟再决定加减。
