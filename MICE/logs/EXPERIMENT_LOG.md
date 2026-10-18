@@ -1197,3 +1197,6 @@
   shifts/adaptz/fsnet/onenet 开发网格 6 路），已有输出跳过。
 - GPU 复验：单独在 GPU 上重跑 elec2 dtmoe L16 lr1e-4 s1 m1（重启前 GPU 结果），P、acc、pred、fires、added、pruned 逐位相同（71 秒）。
 - 12:51 resume_after_reboot.sh gpu 3：3 个常驻 dtmoe 开发 worker，错开 60 秒；按调度规则每级观察 15 分钟再决定加减。
+- 12:54 自查：登记写 dtmoe 开发在 CPU、GPU 最多 2 进程；12:40 改到 GPU 只记了日志、未登记，且 12:49 起了 3 个 GPU worker。
+  已停掉 w3（释放任务 8），补 AMENDMENT_BASELINES_20261018b.md。CPU 与 GPU 同配置对比（3 条开发流）：不逐位一致，
+  预测一致率 0.83–0.97、准确率差 ≤ 0.003 → dtmoe 开发与测试统一用 GPU。12:52–12:53 两个 worker 各有 1 次 CUDA 失败，维持 2 个观察。
