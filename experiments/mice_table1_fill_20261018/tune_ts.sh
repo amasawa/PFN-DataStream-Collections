@@ -17,6 +17,6 @@ for m in $1; do
     echo "$m $L $lr $st $mech $s"; done; done; done; done; done
 done > $R/tasks_$(echo $1 | tr ' ' _).txt
 echo "$(date '+%F %T') start $1: $(wc -l < $R/tasks_$(echo $1 | tr ' ' _).txt) tasks, P=$2" >> $R/progress.txt
-xargs -P $2 -L 1 bash -c '~/pfn-venvs/tsbase/bin/python '$X'/run_ts.py --data '$DATA' --out '$R'/P --streams $5 --method $0 --L $1 --lr $2 --steps $3 --mech $4 \
-  >> '$R'/logs/$5__$0_$1_$2_$3_$4.log 2>&1 && echo "$(date +%T) ok $*" >> '$R'/progress.txt || echo "$(date +%T) FAIL $0 $*" >> '$R'/progress.txt' < $R/tasks_$(echo $1 | tr ' ' _).txt
+nice_=$([ "$1" = dtmoe ] && echo 19 || echo 0); nice -n $nice_ xargs -P $2 -L 1 bash -c '~/pfn-venvs/tsbase/bin/python '$X'/run_ts.py --data '$DATA' --out '$R'/P --streams $5 --method $0 --L $1 --lr $2 --steps $3 --mech $4 \
+  >> '$R'/logs/$5__$0_$1_$2_$3_$4.log 2>&1 && echo "$(date +%T) ok $0 $*" >> '$R'/progress.txt || echo "$(date +%T) FAIL $0 $*" >> '$R'/progress.txt' < $R/tasks_$(echo $1 | tr ' ' _).txt
 echo "$(date '+%F %T') done $1" >> $R/progress.txt

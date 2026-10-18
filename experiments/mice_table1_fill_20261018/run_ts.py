@@ -20,7 +20,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 EXT = os.path.expanduser("~/ext-baselines")
-torch.Tensor.cuda = lambda self, *a, **k: self          # official modules hard-code .cuda() on buffers
+DEV = torch.device(os.environ.get("TS_DEVICE", "cpu"))     # cpu (default) or cuda (dtmoe, tot: AMENDMENT_BASELINES)
+if DEV.type == "cpu":
+    torch.Tensor.cuda = lambda self, *a, **k: self      # official modules hard-code .cuda() on buffers
 
 
 def windows(Xs, idx, L):
@@ -137,7 +139,7 @@ class OneNetCls(Method):
         from models.ts2vec import fsnet_
         for cls in (fsnet_.SamePadConv, fsnet_.ConvBlock, fsnet_.DilatedConvEncoder):   # their device defaults to cuda:0
             if not getattr(cls, "_cpu", False):
-                cls.__init__ = (lambda f: lambda self, *a, device=None, **k: f(self, *a, device=torch.device("cpu"), **k))(cls.__init__)
+                cls.__init__ = (lambda f: lambda self, *a, device=None, **k: f(self, *a, device=DEV, **k))(cls.__init__)
                 cls._cpu = True
         from models.ts2vec.fsnet import TSEncoder
         self.enc_time = TSEncoder(input_dims=L, output_dims=320, hidden_dims=64, depth=10)
@@ -227,7 +229,7 @@ class DTMoECls(Method):
         m = self.m; B, S, N = x.shape
         x_norm, _, _ = m.revin_layer.normalize(x)
         enc_out, _ = m.patch_embedding(x_norm.permute(0, 2, 1))
-        pci = torch.zeros(B, dtype=torch.long)
+        pci = torch.zeros(B, dtype=torch.long, device=x.device)
         start = m.global_patch_counter.item(); BN, P = enc_out.shape[:2]
         for layer in m.temporal_moe_layers:
             enc_out, _ = layer(enc_out, hidden_state=None, batch_start_patch_idx=start, patch_cycle_indices=pci)
@@ -311,7 +313,7 @@ class AdaptZCls(Method):
         self.m = Model(cfg, L); self.z_loc = 1; self.d = d
         self.adapter = _Adapter(d, 128)
         self.zp = nn.Parameter(torch.zeros(100, d, 128))
-        self.his = torch.zeros(d, 128); self.adapter_lr = 1e-3 if mech is None else float(mech)
+        self.register_buffer("his", torch.zeros(d, 128)); self.adapter_lr = 1e-3 if mech is None else float(mech)
 
     def logits(self, out):
         return out["pred"].mean(-1)                                   # [B, C, N] -> [B, C]
@@ -322,7 +324,7 @@ class AdaptZCls(Method):
 
     def predict(self, x):
         with torch.no_grad():
-            feat = self.m(x, z=torch.zeros(x.shape[0], self.d, 128), z_loc=self.z_loc)["feature"]
+            feat = self.m(x, z=torch.zeros(x.shape[0], self.d, 128, device=x.device), z_loc=self.z_loc)["feature"]
             self._feat, self._his = feat.detach(), self.his.clone()
             return F.softmax(self.logits(self.m(x, z=self.adapter(feat, self.his), z_loc=self.z_loc)), -1)
 
@@ -396,7 +398,7 @@ def run(data, out, stream, method, L, lr, steps, mech, B=100):
     C, T = int(y.max()) + 1, len(y) // B
     mu, sd = X[:B].mean(0), X[:B].std(0) + 1e-6
     Xs = np.clip((X[:T * B] - mu) / sd, -10, 10).astype(np.float32)
-    model = METHODS[method](X.shape[1], C, L, mech)
+    model = METHODS[method](X.shape[1], C, L, mech).to(DEV)
     model.eval()                                     # see FSNetCls: the stream is the online phase
     model.setup(lr)
     acc, wt, fires = np.full(T, np.nan), np.zeros(T), np.zeros(T, int)
@@ -404,9 +406,9 @@ def run(data, out, stream, method, L, lr, steps, mech, B=100):
     P = np.zeros(((T - 1) * B, C), np.float32)
     for t in range(T):
         ts = time.time(); idx = np.arange(t * B, (t + 1) * B)
-        xw = torch.from_numpy(windows(Xs, idx, L)); yt = torch.from_numpy(y[idx])
+        xw = torch.from_numpy(windows(Xs, idx, L)).to(DEV); yt = torch.from_numpy(y[idx]).to(DEV)
         if t > 0:
-            p = model.predict(xw).numpy()
+            p = model.predict(xw).cpu().numpy()
             P[(t - 1) * B:t * B] = p; acc[t] = (p.argmax(1) == y[idx]).mean()
         f0, a0, p0 = model.fires(), getattr(model, "added", 0), getattr(model, "pruned", 0)
         model.learn(xw, yt, steps)
@@ -414,7 +416,7 @@ def run(data, out, stream, method, L, lr, steps, mech, B=100):
         added[t], pruned[t] = getattr(model, "added", 0) - a0, getattr(model, "pruned", 0) - p0
     tmp = dst[:-4] + ".tmp.npz"
     np.savez_compressed(tmp, acc=acc, pred=P.argmax(1), P=P, C=C, B=B, wt=wt, fires=fires, added=added, pruned=pruned,
-                        config=json.dumps(dict(method=method, L=L, lr=lr, steps=steps, mech=mech)))
+                        config=json.dumps(dict(method=method, L=L, lr=lr, steps=steps, mech=mech, device=DEV.type)))
     os.replace(tmp, dst)
     print(stream, tag, f"acc={np.nanmean(acc):.4f}", f"time={wt.sum():.0f}s", f"fires={fires.sum()}", flush=True)
 

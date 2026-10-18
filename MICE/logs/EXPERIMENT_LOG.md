@@ -1178,3 +1178,16 @@
   核对关改为原样跑官方代码复现 ETTh2 pred_len 1 的论文数字，并检查 λ=0 与官方 λ 预测不同。Fable 标为"需用户批准"
   （改了登记），按用户"让 Fable 审核再跑"的安排执行，README 单列给用户。
 - 生成器流 mice_cp：28/30 完成；放弃的 rbf_s12、sea_s11 从检查点续跑（1 个 worker，11:56）。
+
+### 2026-10-18 12:40 GPU 故障加重；准备重启 Windows（用户同意）
+- 12:2x 起 GPU 几乎不可用：Windows 系统日志近 30 分钟 nvlddmkm Xid 153 33 次、Xid 13 1018 次。2–3 个进程（不论每任务新进程
+  还是常驻进程）都在 30–60 秒内相继崩溃；单个常驻进程稳定（dtmoe 开发任务 4 个连续完成，每个 39–89 秒），但利用率约 30%。
+  TOT 核对运行报 "leading minor of order 1053509713 is not positive-definite"（明显是被破坏的数值）：GPU 可能产生错误数值。
+- 用户要求 GPU 利用率 ≥ 90%（12:2x）；按 MACHINE_LOG 的结论（致命故障主要由进程/上下文创建触发）改用常驻 worker
+  （pool_gpu.py / pool_gpu.sh），但今天的故障率下仍无法多进程。建议并经用户同意：重启 Windows 以重置驱动（wsl --shutdown 不够，Xid 在 Windows 侧）。
+- dtmoe 开发网格从 CPU 改到 GPU（GPU 上 grid_c5_b500_s20 一条 50 秒，CPU 232 秒；开发和测试同在 GPU，避免 CPU/GPU 差异）；
+  CPU 上已完成的 3 个 dtmoe 结果移到 P_cpu_dtmoe，不使用。dtmoe 与 tot 低优先级（用户："先填其他格子，dtmoe 和 tot 慢慢跑"）。
+- 重启前状态（12:39）：生成器流 mice_cp 30/30；ddm/ltm 概率 1/60；训练式学习器 38/736；开发网格 shifts 180/180、adaptz 52/180、
+  dtmoe 4/180（GPU）；Drift-Resilient TabPFN 未开始（select_features 形状错误未解决）；TOT 核对未完成。
+- 重启后：resume_after_reboot.sh cpu 恢复 CPU 任务；先查 Windows 事件日志并逐位复验一条已知 GPU 结果，再 resume_after_reboot.sh gpu 3 起步、
+  逐级加并发，看利用率与故障数。
