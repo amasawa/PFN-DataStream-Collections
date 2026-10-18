@@ -1129,7 +1129,7 @@
 
 ### 2026-10-18 11:05 GPU 故障风暴（表 1 补齐运行）
 - 生成器流 mice_cp（2 个 worker）10:38 起持续出现 CUDA "unspecified launch failure"：10:38–11:05 约 30 次重试，
-  rbf_s12 在 batch 81 连续 3 次没推进而放弃；其余任务检查点在推进，19/30 已完成。ddm 概率 worker（无检查点）放弃 agrawal_s10，已停。
+  rbf_s12 在 batch 81 连续 3 次没推进而放弃；其余任务检查点在推进，12/30 已完成。ddm 概率 worker（无检查点）放弃 agrawal_s10，已停。
 - 对照：10:46:47 暂停全部 CPU 进程，5 分钟内 0 次故障；10:51 起又开始故障（CPU 仍暂停）。所以 CPU 负载不是必要条件。
   10:52 恢复 3 个 CPU 进程（另 3 个保持暂停，直到 GPU 运行结束）。ComfyUI 已退出，GPU 上只有本项目进程。
 - 按 env/EXPERIMENT_SCHEDULING.md 降级规则最少保留 2 个 worker，维持 2 个；放弃的任务在 GPU 稳定后重跑。
