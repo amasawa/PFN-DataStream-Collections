@@ -99,3 +99,7 @@
   决定是否加到 4。诊断见 env/MACHINE_LOG.md 第 1 条（2026-10-16 条目）。
 - 2026-10-18：本机 WSL 上 `CUDA_VISIBLE_DEVICES=""` 会让 torch 在 CPU 上的第一次卷积/矩阵运算就崩溃（"free(): double free
   detected in tcache 2"，pfn venv 的 torch 2.14 与 torch 2.1 都会）。要在 CPU 上跑 torch，不隐藏 GPU，只把张量和模型留在 CPU。
+- 2026-10-18（重启 Windows 后）：单个 GPU 进程 8 分钟无事件；12:52 起 2–3 个 GPU 进程（dtmoe 常驻 worker + TabPFN）后，Windows 日志
+  "Graphics FECS Exception" 每分钟 30–50 条，持续约 1.5 小时，期间进程陆续崩溃；Drift-Resilient TabPFN 在此期间报出算术上不可能的形状错误
+  （GPU 算错数值的迹象）。14:3x 起按用户决定**只用 1 个 GPU 进程**：之后 4 小时 0 条事件。本机目前的 GPU 上限就是 1 个进程。
+  另：不要编辑正在运行的 bash 脚本（bash 边读边执行），改成新文件。
