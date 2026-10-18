@@ -1,0 +1,13 @@
+Senior expert (read-only), one bounded operational question under AMENDMENT_BASELINES_20261018d.md (experiments/
+mice_table1_fill_20261018/; order: dtmoe probes -> DR -> dtmoe grid). Observation (2026-10-19 00:36): the first strict-
+deterministic dtmoe probe (elec2 L16 lr1e-4 s1 m1, TS_DETERMINISTIC=1, CUBLAS_WORKSPACE_CONFIG=:4096:8) has run 51 min
+in one process (82% CPU, GPU utilisation ~36%, 1.6 GB GPU memory, no output yet: run_ts.py prints only at the end, no
+error). The same task in non-deterministic mode on this GPU took 71-75 s (12:48 and 21:0x runs). So strict mode is at
+least ~40x slower here (likely deterministic fallbacks of scatter/index ops in the MoE routing). Six probe runs are
+registered before DR; at >= 1 h each they delay DR (~83 h) by >= 6 h, and the 180-task grid would need >= 180 GPU-hours.
+No driver event; CPU 12 lanes busy with the extension (~21 h).
+Options: (A) let the probes finish as registered, then DR; (B) stop the probe now (keep it as evidence), run DR now,
+and decide dtmoe after DR (e.g. measure strict-mode speed precisely, consider the registered fallback); (C) let only
+this first probe finish to measure the slowdown exactly, then DR; (D) other. Which, and what to record? Answer:
+Decision / Supporting evidence / Alternative options / Key risks / Remaining uncertainty / Confidence / Requires user
+approval. Short.

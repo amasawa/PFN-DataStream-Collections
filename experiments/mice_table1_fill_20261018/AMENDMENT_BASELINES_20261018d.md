@@ -35,3 +35,13 @@ fable_local.md); review: Sonnet (sonnet_local_review.md).
 8. **Provenance flags** (amendment c item 8): "GPU local, guarded" = fecs_watch active from start to end with no
    nvlddmkm event in that window, canaries and bookends passed, strict mode for dtmoe; otherwise "GPU local,
    unverified". Timing and peak memory of the GPU methods (amendment c item 7) are measured on the local GPU.
+
+## Deviation record, 2026-10-19 00:38 (operational; Fable fable_probe_slow.md, Sonnet sonnet_probe_slow_review.md)
+The first strict-mode probe (elec2 L16 lr1e-4 s1 m1) ran 53.6 min without finishing (82% CPU, GPU ~36%, no error;
+non-deterministic reference on this GPU 71-75 s, at 12:48 with about 12 CPU processes running as now, at 21:05 with
+6): an estimated slowdown of at least ~40x, so the 180-task grid would need an estimated >= 150 GPU-hours. A process
+snapshot is kept in dtmoe_local/probe_pre_aborted_evidence/. The coordinator aborted the probe: it neither passed nor
+failed. As a side effect, gpu_local.sh went on to Drift-Resilient TabPFN (00:38) and will skip the dtmoe grid; this is
+not a verdict on dtmoe. probe_pre is incomplete, so item 7 cannot be met for dtmoe until the probes are run; any later
+dtmoe output is "GPU local, unverified" under item 8 unless the probes are completed. The probes are not rescheduled:
+the dtmoe path (strict mode as registered, a fallback, another device, or no dtmoe in Table 1) is the user's decision.

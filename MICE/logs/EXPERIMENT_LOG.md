@@ -1283,3 +1283,9 @@
 - AMENDMENT_BASELINES_20261018d.md；gpu_local.sh、dtmoe_local.sh、dr_chain.sh、select_frozen.py 修改。Sonnet 两轮核对（sonnet_amendment_d_check.md）
   共 13 条，全部核实修正（第三次分类运行、未通过的首尾验证写 UNVERIFIED 标记且选择脚本拒绝、守护心跳检查、守护日志随阶段保存、半成品隔离、
   守护造成的死亡不计次、DR_INCOMPLETE 标记、选择时网格完整性检查）。H800 草稿保持暂停（未取消）。
+
+### 2026-10-19 00:38 dtmoe 严格确定性模式太慢：验证中止，DR 开跑
+- 第一个验证（elec2 L16 lr1e-4 s1 m1）跑了 53.6 分钟没跑完（CPU 82%、GPU 约 36%、无报错）；普通模式下同一任务 71–75 秒 → 估计至少慢约 40 倍，
+  180 任务的网格估计 ≥150 GPU 小时。Fable（fable_probe_slow.md，0.43 美元）：留现场后中止验证、DR 立即开跑、dtmoe 交用户决定；
+  Sonnet（sonnet_probe_slow_review.md）4 条接受（记为"中止"而非失败、执行链跳过网格是副作用、验证未重排、以后的 dtmoe 结果为未核实、数字为估计）。
+- 00:38 中止，现场在 dtmoe_local/probe_pre_aborted_evidence；执行链自动进入 DR（dr_chain.sh，先跑金丝雀）。补充登记 d 追加偏差记录。
