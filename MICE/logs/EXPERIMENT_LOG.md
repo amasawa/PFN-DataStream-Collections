@@ -1206,3 +1206,6 @@
   elec2 289 秒、单独时约 75–97 秒）；CPU 开发网格 shifts 180、adaptz 118、fsnet/onenet 未开始；训练式学习器 146/736。
   开发网格 progress 里的 194 个 FAIL 全在 12:41 前后（Windows 关机时 /mnt/c 的 I/O 错误）及 11:51 停掉的 CPU dtmoe，重启后 0 个；重跑时自动补上。
   GPU 利用率 63%（瞬时），显存 3.7 GB，内存可用 16 GB。
+- 14:04 生成器流 ddm/ltm 概率 51/60；复现核对（AMENDMENT_20261018 第 1 条）：51 个重跑的逐批准确率与 MICE/results_test 原结果逐位相同。
+  Drift-Resilient TabPFN 形状错误排查：在 CPU 上跑 elec2 前 12 批（含原报错的第 1、2 批）无错误、retry=0（284 秒，acc 0.7845）→
+  原错误很可能是重启前 GPU 故障风暴的连带症状；概率跑完后在 GPU 上复测同样 12 批并与 CPU 对比。dtmoe 开发与 TabPFN 共用 GPU 时每条 270–500 秒（单独时 40–170 秒）。
