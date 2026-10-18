@@ -7,8 +7,11 @@ is warm-up (learned, not scored). Inputs: standardised with the warm-up batch me
 context: the features of the L most recent rows up to and including the row (stream order; rows before the first are
 the first row repeated). Seed 0. CPU (torch.set_num_threads(1)); the official modules call .cuda() on buffers, which
 is mapped to the CPU here (Tensor.cuda -> identity) without changing their arithmetic.
-Output <out>/<stream>__<method>.npz: acc, pred, P (float32, rows of batches 1..T-1), C, B, wt, fires (per-batch fire
-counts of the method's drift mechanism), config.
+Output <out>/<stream>__<method>_L<L>_lr<lr>_s<steps>[_m<mech>].npz: acc, pred, P (float32, rows of batches 1..T-1),
+C, B, wt, fires (per batch: memory triggers for fsnet / onenet, drifts handled for dtmoe), added / pruned (dtmoe: experts
+enabled / disabled per batch), config. C = the number of classes of the stream (labels are re-indexed per stream when the
+streams are built; a property of the data set, as for every method of Table 1). No calendar marks: the official
+encoders take enc_in + 7 channels (x_mark concatenated); here only the d features.
 Usage: python run_ts.py --data <dir> --out <dir> --streams s1 .. --method fsnet --L 16 --lr 1e-3 --steps 1 [--mech v]"""
 import argparse, json, os, sys, time
 import numpy as np
@@ -62,6 +65,8 @@ class FSNetCls(Method):
         self.enc = TSEncoder(input_dims=d, output_dims=320, hidden_dims=64, depth=10)
         self.head = nn.Linear(320, C)
         self.convs = [m for m in self.enc.modules() if "PadConv" in type(m).__name__]
+        from models.ts2vec import fsnet_
+        assert self.convs and all(type(m) is fsnet_.SamePadConv for m in self.convs) and fsnet_.SamePadConv._counted
         if mech is not None:
             for m in self.convs:
                 m.tau = float(mech)
@@ -87,6 +92,7 @@ def _count_triggers():
         if self.trigger == 1 and before == 0:
             self._n_trig = getattr(self, "_n_trig", 0) + 1
     fsnet_.SamePadConv.store_grad = store_grad
+    fsnet_.SamePadConv._counted = True
 
 
 # --------------------------------------------------------------------------------------------------------- onenet
@@ -118,7 +124,10 @@ class OneNetCls(Method):
     over time (input_dims = d), last step -> linear -> C. Online step per revealed batch, as the official _ol_one_batch:
     (i) both branches by l1 + l2 (cross-entropy each) with the model optimiser, store_grad; (ii) decision MLP on
     [g p1, (1-g) p2, onehot(y)] gives the bias, g = sigmoid(w + bias), loss_bias = NLL of g p1 + (1-g) p2 (opt_bias);
-    (iii) loss_w = NLL of sigmoid(w) p1 + (1 - sigmoid(w)) p2 (opt_w). Prediction: g = sigmoid(w + bias) with the bias
+    (iii) loss_w = NLL of sigmoid(w) p1 + (1 - sigmoid(w)) p2 (opt_w). As the official code, w is not detached in (ii)
+    and opt_w.zero_grad() runs only after opt_w.step(), so the step of w uses the gradients of loss_bias and loss_w; the
+    decision MLP is not part of the official model, so it stays in train mode (dropout 0.1 active) while the encoders are
+    in eval mode (official online phase: model.eval()). Prediction: g = sigmoid(w + bias) with the bias
     of the last learned batch (its mean over the batch; the official online batch has one row). Probabilities replace
     the forecasts in every combination. lr_w = lr_bias = 1e-3 (official defaults). mech = tau of both encoders."""
     REPO = "OneNet"
@@ -139,6 +148,7 @@ class OneNetCls(Method):
         self.weight = nn.Parameter(torch.zeros(1)); self.C = C
         self.register_buffer("bias", torch.zeros(1))
         self.convs = [m for m in self.modules() if "PadConv" in type(m).__name__]
+        assert self.convs and all(type(m) is fsnet_.SamePadConv for m in self.convs) and fsnet_.SamePadConv._counted
         if mech is not None:
             for m in self.convs:
                 m.tau = float(mech)
@@ -162,18 +172,19 @@ class OneNetCls(Method):
     def learn(self, x, y, steps):
         nll = lambda p: F.nll_loss(torch.log(p.clamp_min(1e-8)), y)
         Y = F.one_hot(y, self.C).float()
+        self.decision.train()
         for _ in range(steps):
             p1, p2 = self.branches(x)
             loss = F.nll_loss(torch.log(p1.clamp_min(1e-8)), y) + F.nll_loss(torch.log(p2.clamp_min(1e-8)), y)
             self.opt.zero_grad(); loss.backward(); self.opt.step(); self.after_step(); self.opt.zero_grad()
             p1w, p2w = p1.detach(), p2.detach()
-            g = torch.sigmoid(self.weight).detach()
+            g = torch.sigmoid(self.weight)
             b = self.decision(torch.cat([g * p1w, (1 - g) * p2w, Y], 1))
-            g = torch.sigmoid(self.weight.detach() + b)
-            self.opt_bias.zero_grad(); nll(g * p1w + (1 - g) * p2w).backward(); self.opt_bias.step()
+            g = torch.sigmoid(self.weight + b)
+            nll(g * p1w + (1 - g) * p2w).backward(); self.opt_bias.step(); self.opt_bias.zero_grad()
             self.bias = b.detach().mean().view(1)
             g = torch.sigmoid(self.weight)
-            self.opt_w.zero_grad(); nll(g * p1w + (1 - g) * p2w).backward(); self.opt_w.step()
+            nll(g * p1w + (1 - g) * p2w).backward(); self.opt_w.step(); self.opt_w.zero_grad()
 
     def after_step(self):
         for m in self.convs:
@@ -193,7 +204,8 @@ class DTMoECls(Method):
     96 / 48 / 12 ratios). No timestamps: patch_cycle_indices = 0 (the official fallback when x_mark is None). Learning
     phase in train mode: before each step, if the layer-0 detector is full, model.check_and_handle_drift(train_mode =
     True) (MMD test, drift expert added and pre-trained, redundant experts pruned), exactly as the official train loop;
-    drift-expert pre-training epochs = 1 (official train_epochs). Prediction in eval mode (router not updated).
+    drift-expert pre-training: one pass over its ref / cur data, as registered (official default train_epochs 10).
+    The drift handling runs under torch.no_grad(), as the official train loop. Prediction in eval mode (router not updated).
     mech = drift_k_sigma. fires = drifts handled (sum over layers)."""
     REPO = "Dynamic-TMoE"
 
@@ -209,6 +221,7 @@ class DTMoECls(Method):
         self.m.enable_drift_detection(window_size=self.m.drift_window_size, history_size=self.m.drift_history_size,
                                       k_sigma=self.m.drift_k_sigma)
         self.head = nn.Linear(d * self.m.head_input_dim, C)
+        self.added = self.pruned = 0
 
     def forward(self, x):
         m = self.m; B, S, N = x.shape
@@ -227,13 +240,20 @@ class DTMoECls(Method):
         for _ in range(steps):
             det = self.m.temporal_moe_layers[0].drift_detector
             if det is not None and det.should_check_drift():
-                self.m.check_and_handle_drift(train_mode=True)
+                e0 = self.enabled()
+                with torch.no_grad():                            # (the expert pre-training re-enables grad inside)
+                    self.m.check_and_handle_drift(train_mode=True)
+                e1 = self.enabled()
+                self.added += sum(len(n - o) for o, n in zip(e0, e1)); self.pruned += sum(len(o - n) for o, n in zip(e0, e1))
                 self.opt = _extend_adam(self.opt, self)          # parameters of newly enabled experts
             self.opt.zero_grad(); F.cross_entropy(self(x), y).backward(); self.opt.step()
         self.eval()
 
     def fires(self):
         return int(sum(int(l.drift_handled_count) for l in self.m.temporal_moe_layers))
+
+    def enabled(self):
+        return [set(int(i) for i in l.expert_pool.get_enabled_expert_indices()) for l in self.m.temporal_moe_layers]
 
 
 def _extend_adam(opt, model):
@@ -263,14 +283,17 @@ class _Adapter(nn.Module):
 class AdaptZCls(Method):
     """ADAPT-Z (ICLR 2026), adapt_z.py online(): base = the official iTransformer_z (configs/model/iTransformer.yaml,
     ETTh sizes: e_layers 2, d_model 128, d_ff 128, n_heads 8, dropout 0, factor 1, gelu; z added after encoder layer
-    z_loc = e_layers - 1 as the official iTransformer setting); variates = the d features, series = the L-row window;
+    z_loc = e_layers - 1 as the official iTransformer setting); variates = the d features, series = the L-row window
+    (the same iTransformer for every L, also L = 1);
     use_norm false (official true): with use_norm the official forecast() also de-normalises the output by each
     variate's window mean and std, which has no meaning for class scores, and for L = 1 it makes the series 0; the
     inputs are already standardised (warm-up batch statistics).
     projector: d_model -> C per variate, logits = mean over variates. Prediction: feature = model(x, z = 0)['feature'],
-    z = adapter(feature, his_grad), logits = model(x, z). After the labels: (a) his_grad = batch mean of the gradient of the
-    loss with respect to z (z = zeros parameter), as the official update; (b) n_steps steps on the loss of model(x,
-    adapter(stored feature, his_grad used at prediction)), updating the adapter (Adam, adapter_lr = mech, official 1e-3)
+    z = adapter(feature, his_grad), logits = model(x, z). After the labels: (a) his_grad = mean over the z batch dimension
+    of z.grad, where z is a zeros parameter and, as in the official online(), z.grad is never cleared (it accumulates
+    over batches); (b) n_steps steps on the loss of model(x,
+    adapter(stored feature, his_grad used at prediction)), updating the adapter (Adam, adapter_lr = mech; the official
+    online phase uses adp_online_lr = 3e-4 for iTransformer, adapter_lr = 1e-3 in its pre-training)
     and the base (Adam, lr): the official online phase updates only the projector of a pre-trained base; here the base
     is trained online (no pre-training split, PLAN_BASELINES.md)."""
     REPO = "ADAPT-Z"
@@ -307,9 +330,8 @@ class AdaptZCls(Method):
         if not hasattr(self, "_feat") or self._feat.shape[0] != x.shape[0]:   # batch 0: nothing predicted yet
             self.predict(x)
         feat, his_used = self._feat, self._his
-        self.zp.grad = None
         F.cross_entropy(self.logits(self.m(x, z=self.zp[:x.shape[0]], z_loc=self.z_loc)), y).backward()
-        self.his = self.zp.grad[:x.shape[0]].mean(0).detach()
+        self.his = self.zp.grad.mean(0).detach().clone()
         for _ in range(steps):
             self.opt.zero_grad(); self.opt_a.zero_grad()
             F.cross_entropy(self.logits(self.m(x, z=self.adapter(feat, his_used), z_loc=self.z_loc)), y).backward()
@@ -324,8 +346,11 @@ class ShifTSCls(Method):
     revin1 -> h; (2) concept drift: the official Soft Attention Mask, a learnable (L x d) score softmax-ed over the window
     positions, kept where above its per-feature mean and renormalised, gives s = sum_positions mask * window (the
     invariant pattern; in forecasting the window spans lookback + horizon, here the window ends at the observed current
-    row); loss = cross-entropy(head(h), y) + mech * MSE(s, h) (official: forecast loss + MSE(x_pred_sel, x_enc_pred), weight
-    1); head = the official target head Linear(d, 512) - ReLU - Linear(512, C) (official output 1, the target)."""
+    row); loss = cross-entropy(head(h_norm), y) + mech * MSE(s, h) (official: forecast loss + MSE(x_pred_sel, x_out of the
+    exogenous features), weight 1); head = the official target head Linear(d, 512) - ReLU - Linear(512, C) applied to the
+    normalised forecast h_norm (h = revin1 de-normalisation of h_norm), as official. Differences forced by the task: the
+    label is not an input channel, so the official mask's fixed one-hot column for the target, the target-column
+    exclusion and the residual "+ target forecast" of the head have no counterpart; mask (L x d) over the d features."""
     REPO = "ShifTS"
 
     def __init__(self, d, C, L, mech=None):
@@ -345,8 +370,9 @@ class ShifTSCls(Method):
         m = torch.softmax(self.mask, 0)
         m = m * ((m - m.mean(0)) > 0); m = m / m.sum(0)
         s = (x * m).sum(1)
-        h = self.revin(self.backbone(self.revin(x, "norm")).unsqueeze(1), "denorm")[:, 0]
-        return self.head(h), s, h
+        hn = self.backbone(self.revin(x, "norm")).unsqueeze(1)
+        h = self.revin(hn, "denorm")[:, 0]
+        return self.head(hn[:, 0]), s, h
 
     def forward(self, x):
         return self.parts(x)[0]
@@ -374,6 +400,7 @@ def run(data, out, stream, method, L, lr, steps, mech, B=100):
     model.eval()                                     # see FSNetCls: the stream is the online phase
     model.setup(lr)
     acc, wt, fires = np.full(T, np.nan), np.zeros(T), np.zeros(T, int)
+    added, pruned = np.zeros(T, int), np.zeros(T, int)
     P = np.zeros(((T - 1) * B, C), np.float32)
     for t in range(T):
         ts = time.time(); idx = np.arange(t * B, (t + 1) * B)
@@ -381,11 +408,12 @@ def run(data, out, stream, method, L, lr, steps, mech, B=100):
         if t > 0:
             p = model.predict(xw).numpy()
             P[(t - 1) * B:t * B] = p; acc[t] = (p.argmax(1) == y[idx]).mean()
-        f0 = model.fires()
+        f0, a0, p0 = model.fires(), getattr(model, "added", 0), getattr(model, "pruned", 0)
         model.learn(xw, yt, steps)
         fires[t] = model.fires() - f0; wt[t] = time.time() - ts
+        added[t], pruned[t] = getattr(model, "added", 0) - a0, getattr(model, "pruned", 0) - p0
     tmp = dst[:-4] + ".tmp.npz"
-    np.savez_compressed(tmp, acc=acc, pred=P.argmax(1), P=P, C=C, B=B, wt=wt, fires=fires,
+    np.savez_compressed(tmp, acc=acc, pred=P.argmax(1), P=P, C=C, B=B, wt=wt, fires=fires, added=added, pruned=pruned,
                         config=json.dumps(dict(method=method, L=L, lr=lr, steps=steps, mech=mech)))
     os.replace(tmp, dst)
     print(stream, tag, f"acc={np.nanmean(acc):.4f}", f"time={wt.sum():.0f}s", f"fires={fires.sum()}", flush=True)
