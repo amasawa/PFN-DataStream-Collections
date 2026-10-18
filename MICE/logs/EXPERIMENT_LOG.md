@@ -1202,3 +1202,7 @@
   预测一致率 0.83–0.97、准确率差 ≤ 0.003 → dtmoe 开发与测试统一用 GPU。12:52–12:53 两个 worker 各有 1 次 CUDA 失败，维持 2 个观察。
 - 13:07 dtmoe 开发 GPU：12:54 起 2 个 worker 无失败，约 70 任务/小时，利用率约 80%，24/180 完成。按用户优先级（"先填其他格子，
   dtmoe 和 tot 慢慢跑"）停掉 dtmoe w2（释放任务），GPU 第二个名额给生成器流 ddm/ltm 概率（resume_after_reboot.sh probs，1 个 worker）；GPU 仍 ≤ 2 进程。
+- 13:33 进度：生成器流 ddm/ltm 概率 24/60（13:08 起每个约 1 分钟，无失败）；dtmoe 开发 31/180（与 TabPFN 共用 GPU 后每条变慢，
+  elec2 289 秒、单独时约 75–97 秒）；CPU 开发网格 shifts 180、adaptz 118、fsnet/onenet 未开始；训练式学习器 146/736。
+  开发网格 progress 里的 194 个 FAIL 全在 12:41 前后（Windows 关机时 /mnt/c 的 I/O 错误）及 11:51 停掉的 CPU dtmoe，重启后 0 个；重跑时自动补上。
+  GPU 利用率 63%（瞬时），显存 3.7 GB，内存可用 16 GB。
