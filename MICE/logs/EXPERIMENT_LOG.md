@@ -1368,3 +1368,5 @@
   - CURE 用公开默认参数，不调参，每个结果都报告。
 
   同时更新了 PLAN.md 第一行和 HANDOFF.md 的传输步骤。审查：Fable 要求 6 处修改，全部采纳；Sonnet 提出 6 点，采纳 1–5，第 6 点不采纳（理由见 table1_fill/fable_activation_review.md）。
+
+- 2026-10-20 00:00 P1 输入包已生成：C:\Users\zhwu9808\Desktop\mice_h800_bundle（1.2 GB，make_bundle.sh，耗时约 50 s）。重新计算 SHA256SUMS 全部通过。包里有 Drift-Resilient TabPFN 的 7 个 model_cache 权重和 TabPFN v2 检查点（tabpfn-v2-classifier-finetuned-zk73skhh.ckpt）。P2–P4 需要的额外输入（CPU 基线代码、新骨干模型的权重、CURE 代码）在各自登记时另行打包。
