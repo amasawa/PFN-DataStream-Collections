@@ -1385,3 +1385,6 @@
     - 第 5 点不采纳：dtmoe 属于 P1 的 dtmoe_dev。
 
     修复的 diff 交 MiMo Flash low 复查（00:18–00:22），结果 none。记录见 table1_fill/p2_reviews.md。
+
+## 2026-10-20 09:14 Sonnet 复审 P2
+用户要求让 Sonnet 审查已做的 P2。两条 P2 级意见（RUNS 未设时 worker 不报错；HANDOFF 缺少放弃任务的处理）均成立，已修正，复查 none。详见 table1_fill/p2_reviews.md。

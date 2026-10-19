@@ -107,5 +107,7 @@ The other pipelines may go on. (The probe outputs are not results; keep them.)
 - **Production.** `python rerun.py worker <slot> --gpu cpu --tasks tasks_p2.jsonl`, many workers per node (the tasks
   are single-threaded or 2-threaded). Check progress with `python rerun.py status --tasks tasks_p2.jsonl`. Record time
   and memory per job.
-- **Stop point.** When ts_dev shows 720 done and 0 given up, stop and push. The coordinator registers P2b (selection,
+- **Stop point.** The other P2 sets run until `status` shows none left. When ts_dev shows 720 done and 0 given up,
+  push. If any ts_dev task is given up, push and report it; the coordinator registers its disposition before any
+  selection. The coordinator registers P2b (selection,
   extension and tests of fsnet, onenet, adaptz and shifts) from those outputs. Do not select anything yourself.

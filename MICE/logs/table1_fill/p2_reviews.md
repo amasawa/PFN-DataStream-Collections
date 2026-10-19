@@ -81,3 +81,24 @@ Tue Oct 20 00:17:40 AEDT 2026
 Disposition: 1 rejected (all four drivers makedirs; dev_cluster/P absent in the sandbox and the probe passed); 2, 3 fixed; 4 added to the registration; 5 rejected (dtmoe is P1, set dtmoe_dev). Execution points: id intersection 0; SKIPPED list printed (GPU methods and replays only).
 
 ## MiMo Flash low re-check of the fix (00:18-00:22): none
+
+## Sonnet 复审 P2（2026-10-20 09:14，用户要求“之前做过的让sonet 审查一下”）
+
+材料：登记、make_tasks_p2.py、rerun.py diff、HANDOFF diff、原脚本线程设置、每组一个任务样例。耗时 32.5 秒，0.13 美元。原文：
+
+> **Defect 1**
+> - **Severity:** P2
+> - **Location:** `rerun.py` `worker()`, the first lines after the diff change.
+> - **Evidence:** `env = {v: os.environ.get(v, "") for v in VARS}` is followed by `base = f"{env['RUNS']}/_rerun"`, and `check_vars(...)` only comes after that line.
+> - **Why it matters:** `RUNS` used to raise a `KeyError` when unset. Now it silently becomes `""`, so `base` is `/_rerun`. `results_river`, `results_heldout` and the other `results_*` sets use only `{REPO}` in their commands. For these, `check_vars` never flags a missing `RUNS`. The worker then creates claims, done records and quarantine directories under `/_rerun` (or fails there), away from the run root.
+> - **Correction:** Check `RUNS` first and stop if it is empty, for example `if not env["RUNS"]: raise SystemExit("RUNS not set")`. Do this before computing `base`, and in `qualify` too.
+> 
+> **Defect 2**
+> - **Severity:** P2
+> - **Location:** `HANDOFF.md` P2 "Stop point" against `REGISTRATION_P2` "When P2b selection may run".
+> - **Evidence:** HANDOFF says "When ts_dev shows 720 done and 0 given up, stop and push." The registration says "A given-up task stops the selection of its method until its disposition is registered."
+> - **Why it matters:** The handoff has no case for a ts_dev task that is given up. A cluster operator could wait forever, or push without saying that selection is blocked. The handoff also never says that the other nine sets keep running until the task list is empty. Read literally, the stop condition could be taken to cover only ts_dev.
+> - **Correction:** Add this to HANDOFF: "If any ts_dev task is given up, stop and report it. Do not select. The coordinator registers the disposition. All other P2 sets run until `status` shows no task left."
+> 
+> Everything else you asked about matched. I found no mismatches for item 1, the count and name checks in item 2, the `--tasks` parsing in item 3, or the integrity question in item 4.
+处理：两条都核实成立并修正。1）check_vars 总是要求 RUNS，并移到 base 计算之前（worker、qualify 都经过它）；实测未设 RUNS 时 worker 报错退出、rc=1。2）HANDOFF 停止点写明其他 P2 组跑到 status 为空，ts_dev 有放弃任务时推送并报告，由协调者先登记处置。修正 diff 交 Sonnet 复查，结果 none。

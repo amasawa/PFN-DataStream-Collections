@@ -59,7 +59,7 @@ def fill(x, env):
 
 def check_vars(tasks, env):
     """Stop before anything is claimed or run if a selected task uses a placeholder whose variable is unset."""
-    used = {v for t in tasks for v in VARS if "{" + v + "}" in json.dumps(t)}
+    used = {"RUNS"} | {v for t in tasks for v in VARS if "{" + v + "}" in json.dumps(t)}   # RUNS holds _rerun
     missing = sorted(v for v in used if not env.get(v))
     if missing:
         raise SystemExit(f"environment variables not set for the selected tasks: {missing}")
@@ -158,8 +158,8 @@ def run_once(t, env, log, home=None):
 
 def worker(slot, sets=None, gpu=None):
     env = {v: os.environ.get(v, "") for v in VARS}
-    base = f"{env['RUNS']}/_rerun"
     check_vars([t for t in TASKS if not ((sets and t["set"] not in sets) or (gpu and t["gpu"] != gpu))], env)
+    base = f"{env['RUNS']}/_rerun"
     for d in ("claims", "done", "gaveup", "logs"):
         os.makedirs(f"{base}/{d}", exist_ok=True)
     for t in TASKS:
