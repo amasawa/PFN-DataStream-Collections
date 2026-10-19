@@ -37,3 +37,42 @@
 
 ## 复查
 Sonnet 复查新发现：SIGTERM 不触发异常，任务进程会残留。成立，已加 SIGTERM 处理（转为 SystemExit），实测无残留进程。
+# MiMo Flash medium 审计 rerun.py（AMENDMENT_20261020 第 3、4、9 项），09:39:40–09:49:29
+
+## Findings
+
+**1. P1 · Missing information — the reference may not actually be "default mode"**
+- **Location:** `rerun.py:247-249`, `rerun.py:262-263`; AMENDMENT item 3.
+- **Evidence:** `ref` removes exactly two variables. Whether the three dtmoe probe tasks *register* these two in their `env`, and — more importantly — whether they register any *other* strict-mode variable (e.g. `PYTHONHASHSEED` or a project flag), cannot be checked: `tasks.jsonl` is not attached to the audit package (Glob over the copy returns no `.jsonl`).
+- **Why it matters:** if strictness comes only from these two vars, the cap is sound; if the tasks register a third strict-mode var, or register neither of these two, `ref` runs in the same mode as the strict probe, `ref wall ≈ strict wall`, the 10× timeout never binds, and the item-3 cap check on `dtmoe_dev` cannot fail — a toothless control right before an unfrozen set starts.
+- **Correction:** attach the dtmoe lines of `tasks.jsonl` (or the full file) for re-review; additionally confirm on the MICE side (code reading `TS_DETERMINISTIC`, not attached) that no other variable forces determinism.
+
+**2. P2 · Confirmed — `--exclude-sets` / `--sets` names are unvalidated, so a typo fails open**
+- **Location:** `rerun.py:176` (`skip = lambda t: … or t["set"] in exclude`), `rerun.py:327-328`.
+- **Evidence:** neither `exclude` nor `sets` is checked against `{t["set"] for t in TASKS}`; a misspelled excluded name matches no task, so `skip` never filters it.
+- **Why it matters:** the amendment makes `--exclude-sets dtmoe_dev` the guard that keeps a paused set from starting before the cap verdict and the user's decision; on a typo the worker silently *runs* it and its outputs would be accepted as ordinary production `done` results. (The symmetric typo in `--sets` silently runs nothing and exits 0, which is only a wasted job.)
+- **Correction:** before the loop, `known = {t["set"] for t in TASKS}`; `raise SystemExit(f"unknown set(s) {sorted(set(excl) - known)}")` (and likewise for `--sets`), so both directions fail loudly.
+
+**3. P2 · Confirmed — `ref` exits 0 when the reference run fails**
+- **Location:** `rerun.py:259-261`.
+- **Evidence:** on `rc != 0` the code prints `"REFERENCE FAILED …"` and `return`s; `__main__` then ends normally → exit status 0, identical to a successful `ref` (which also exits 0 after writing `ref.json`).
+- **Why it matters:** the printed message is the only difference; any scripted sequence (`ref` → compute 10× → `qualify --timeout`) that gates on the exit status proceeds as if the reference succeeded, and only fails later when `ref.json` is missing (loud, but at the wrong step and after the strict probe may already have been launched with a wrong limit).
+- **Correction:** after the message, `raise SystemExit(1)` (keep `ref.json` absent as the marker).
+
+**4. P2 · Confirmed — unknown-mode error message omits the new `ref` mode**
+- **Location:** `rerun.py:340`.
+- **Evidence:** `raise SystemExit(f"unknown mode {a[0]!r} (worker, qualify, recheck, status, release)")`, while `ref` is implemented at `rerun.py:331-332` and documented in the docstring (`rerun.py:26-29`).
+- **Why it matters:** a mistyped mode prints a list from which `ref` is absent, suggesting the mode does not exist; the docstring is the only place that knows it.
+- **Correction:** extend the tuple to `(worker, qualify, ref, recheck, status, release)`.
+
+## Confirmable only by running
+
+- **No orphaned GPU work on timeout/SIGTERM** — the group-kill structure is correct, but that the real task command lines (`bash -c`-style with GPU children) all sit in the child's new session can only be seen live: run one probe with a small `--timeout`, then check `nvidia-smi`/`ps` after the kill; repeat while sending SIGTERM (scancel) mid-run and confirm exit code 143 with the group gone.
+- **numpy-missing stop behaviour (item 9)** — needs a Python without numpy: expect one traceback at the first `rc == 0` task, not per-task `GAVE UP` records; also observe the leftover state (attempt persisted with `end=None, rc=None`, claim held → `release` needed), which is code-derivable but only exercised in that run.
+- **The dtmoe cap itself** — `ref` wall vs strict wall and whether 10× binds: only observable by running `ref` then `qualify --timeout` on the three probe tasks (depends on finding 1).
+
+## 处置（09:50）
+- 1 不成立：run_ts.py 第 26–30 行只以 TS_DETERMINISTIC=1 切换严格模式（并要求 CUBLAS_WORKSPACE_CONFIG）；dtmoe 任务两者都登记了，ref 去掉的正是这两个。
+- 2 采纳：--sets/--exclude-sets 中未知组名报错退出（实测；同时修正了自己引入的运算符优先级错误）。
+- 3 采纳：参照跑失败时 SystemExit，退出码非 0。
+- 4 采纳：错误提示加入 ref。

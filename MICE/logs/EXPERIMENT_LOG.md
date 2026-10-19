@@ -1405,3 +1405,11 @@
 - 测试时自己发现：rerun.py 用无 numpy 的 python 运行会把所有任务记为放弃 → import 移出 try，HANDOFF 规定用 $PY 运行。
 - Sonnet 两轮核对（sonnet_amendment_20261020.md）：采纳 7 条、驳回 4 条（附理由）；复查发现 SIGTERM 会留下残留任务进程 → 加 SIGTERM 处理，实测无残留。
 - 修改：AMENDMENT_20261020.md（新）、rerun.py、HANDOFF.md、make_bundle.sh。**桌面上的 mice_h800_bundle 已更新（两个 bench-h800 tar、CONTENTS.txt、SHA256SUMS）**：如果用户已经拷过旧包，需要重新拷这几个文件。
+
+## 2026-10-20 10:06 登记 P3（7 个新骨干）和 P4 第一阶段（CURE 开发流），推送
+- 用户决定（09:2x）：CURE 的 tau 在 5 条开发流上从 {0.1,0.2,0.3,0.4} 选一个、92 条流统一用；附录不加公开 tau 的敏感性结果。替换 ACTIVATION "CURE" 中 "no tuning" 一句（REGISTRATION_P3_P4_20261020.md 原文记录）。
+- 代码：MICE/code/run_backbone.py（替换 run.TFM，run.py 不动）；experiments/mice_table1_fill_20261018/run_cure.py（导入 CURE 原策略 f7c6b2f，不改）。
+- 本地检查（不计算任何流的准确率）：7 个骨干玩具可分问题全对；跨进程逐位相同；Mitra 权重不随 fit 变化；冒烟：相对 TabPFN v2 每次调用 1.7×（v2.5/v2.6）、3.1×（v3）、7.2×（v3.5）、0.9×（TabDPT）、6.7×（Mitra）、3.8×（LimiX-2），显存均 < 2.5 GB。CURE：断点续跑逐位相同、单类上下文路径、计数恒等式。
+- MiMo Pro high：P3 8 条（采纳 7，驳回 1：调用计数与 run.TFM 相同）；其中查出原生 Mitra 不确定（全局 RNG 未设种子），改为每次调用设种子并恢复。P4 首次审计输出为无关内容，作废重审：4 条 P2 全部采纳。MiMo Flash 审 rerun.py：采纳 3、驳回 1。Sonnet 封闭核对登记包：none。
+- 任务：tasks_p3.jsonl 296 个（280 生产 + 16 冒烟，冒烟先跑、按登记规则排除）；tasks_p4.jsonl 20 个。tasks.jsonl、tasks_p2.jsonl 哈希不变。
+- 数据包：桌面 mice_h800_bundle_p3（3.2 GB：权重、LimiX、CURE 代码）。HANDOFF 加 P3/P4 一节。

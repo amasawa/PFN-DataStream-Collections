@@ -4,7 +4,8 @@ what happened. It never changes a computation.
 
 Placeholders, from the environment: REPO (repository clone at the registered commit), RUNS (run roots, = $HOME/pfn-runs
 on the cluster: several drivers use ~/pfn-runs), PY (MICE venv), PYDR (Drift-Resilient TabPFN venv), PYTOT (dtmoe/TOT),
-PYST (river / trained learners, P2), PYTS (CPU baselines of Table 1, P2). A variable may be unset when no task of the
+PYST (river / trained learners, P2), PYTS (CPU baselines of Table 1, P2), PYDPT, PYMITRA, PYLIMIX (venvs of TabDPT, Mitra,
+LimiX, P3), W3 (directory of the P3 weights). A variable may be unset when no task of the
 list uses it; a task that uses an unset one stops with an error.
 Task list: tasks.jsonl (P1), or the file given by "--tasks <file>" (e.g. tasks_p2.jsonl), in every mode below.
 CPU tasks (gpu = "cpu", P2) are taken by "worker <slot> --gpu cpu".
@@ -48,7 +49,7 @@ if "--tasks" in sys.argv:                                   # removed from argv 
 else:
     TASK_FILE = "tasks.jsonl"
 TASKS = [json.loads(l) for l in open(os.path.join(HERE, TASK_FILE)) if l.strip()]
-VARS = ("REPO", "RUNS", "PY", "PYDR", "PYTOT", "PYST", "PYTS")
+VARS = ("REPO", "RUNS", "PY", "PYDR", "PYTOT", "PYST", "PYTS", "PYDPT", "PYMITRA", "PYLIMIX", "W3")
 
 
 def fill(x, env):
@@ -257,8 +258,7 @@ def qualify(task_id, d, against_production=False, timeout=None, ref=False):
         print(k, "rc", rc, f"wall {wall:.0f} s", flush=True)
         if ref:
             if rc != 0:
-                print("REFERENCE FAILED (rc", rc, "): no ref.json written; report it")
-                return
+                raise SystemExit(f"REFERENCE FAILED (rc {rc}): no ref.json written; report it")
             json.dump(dict(task=task_id, rc=rc, wall_s=wall, host=socket.gethostname(), gpu=gpu_name(),
                            removed=["TS_DETERMINISTIC", "CUBLAS_WORKSPACE_CONFIG"]), open(f"{d}/ref.json", "w"))
             print("REFERENCE wall time", f"{wall:.0f} s", "(rc", rc, ")")
@@ -325,6 +325,9 @@ if __name__ == "__main__":
         sets = a[a.index("--sets") + 1].split(",") if "--sets" in a else None
         gpu = a[a.index("--gpu") + 1] if "--gpu" in a else None
         excl = a[a.index("--exclude-sets") + 1].split(",") if "--exclude-sets" in a else ()
+        unknown = sorted((set(sets or ()) | set(excl)) - {t["set"] for t in TASKS})   # a typo must not fail open
+        if unknown:
+            raise SystemExit(f"unknown set(s) {unknown} in {TASK_FILE}")
         worker(a[1], sets, gpu, excl)
     elif a[0] == "qualify":
         qualify(a[1], a[2], timeout=float(a[a.index("--timeout") + 1]) if "--timeout" in a else None)
@@ -337,4 +340,4 @@ if __name__ == "__main__":
     elif a[0] == "release":
         release()
     else:
-        raise SystemExit(f"unknown mode {a[0]!r} (worker, qualify, recheck, status, release)")
+        raise SystemExit(f"unknown mode {a[0]!r} (worker, qualify, ref, recheck, status, release)")

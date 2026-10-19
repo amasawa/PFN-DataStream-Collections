@@ -130,3 +130,30 @@ The other pipelines may go on. (The probe outputs are not results; keep them.)
   push. If any ts_dev task is given up, push and report it; the coordinator registers its disposition before any
   selection. The coordinator registers P2b (selection,
   extension and tests of fsnet, onenet, adaptz and shifts) from those outputs. Do not select anything yourself.
+
+## Phases P3 (extra backbones) and P4 stage 1 (CURE development runs) (REGISTRATION_P3_P4_20261020.md)
+- **Inputs.** Copy `C:\Users\zhwu9808\Desktop\mice_h800_bundle_p3\` (3.2 GB) over RDP, check SHA256SUMS. Untar
+  `p3_weights.tar` into `$WORK/home/` (gives `$WORK/home/mice-p3-weights`), and `ext-baselines-p3.tar` into
+  `$WORK/home/ext-baselines/` (LimiX, CURE-ICML-FMSD). Check both `*.files.sha256` there.
+- **Environments.** Three more Python 3.12 venvs from env_lock:
+  - `tabdpt.txt` (set PYDPT);
+  - `mitra.txt` (torch 2.13.0+cu126; set PYMITRA);
+  - `limix.txt` (torch 2.9.1+cu126; set PYLIMIX). Replace its `-e file:///...LimiX` line with
+    `-e $WORK/home/ext-baselines/LimiX`.
+
+  Record their `pip freeze`; any difference stops P3. Set W3=$WORK/home/mice-p3-weights.
+- **P3 order.**
+  1. Smoke test: `python rerun.py worker 0 --gpu exclusive --sets p3_smoke --tasks tasks_p3.jsonl` in one job, alone on
+     one H800. It writes `$RUNS/mice-p3-smoke/*.json` (time and memory, no accuracy).
+  2. Apply the registered exclusion rule to those files and log it, per backbone: the error if any, and the ratio of
+     its median time per call to TabPFN v2's on each segment. Push before anything else of P3 runs.
+  3. Probe: `python rerun.py qualify "results_heldout4_<tag>:h4_airlines_d__fifo1000" $WORK/qualify_p3/<tag>
+     --tasks tasks_p3.jsonl`, for each backbone not excluded. Report QUALIFIED / NOT QUALIFIED; a NOT QUALIFIED
+     backbone is paused (`--exclude-sets` of its three sets).
+  4. Production: `python rerun.py worker <slot> --gpu shared --tasks tasks_p3.jsonl --exclude-sets
+     <sets of excluded or paused backbones>`. It may run after P1, or alongside it on free GPUs.
+- **P4 stage 1.** Probe `cure_dev:elec2__cure_tau0.3` with qualify (`--tasks tasks_p4.jsonl`). Then run
+  `python rerun.py worker <slot> --gpu shared --tasks tasks_p4.jsonl`. When status shows 20 done, push and stop.
+  The coordinator selects tau and registers stage 2; do not select anything.
+- **Return.** As in step 5: `MICE/results_heldout*_<tag>*`, `$RUNS/mice-p3-smoke`, and
+  `$RUNS/mice-table1-newbase/cure_dev`.
