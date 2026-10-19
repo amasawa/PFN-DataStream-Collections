@@ -1420,3 +1420,8 @@
 - Sonnet（sonnet_p5p6.md）5 条全部采纳：取消 2σ–3σ 缓冲带；扩展取值表；各步环境；成本上限现在写定；论文出处。
 - 论文目标：arXiv 2510.18281v1 表 A14/A16，LSTD+TOT、ETTh2、步长 1：MSE 0.374 ± 0.0031；阈值 |MSE−0.374| ≤ 0.0062。
 - 登记 REGISTRATION_P6_GATE_A_20261020.md、tot_gate_a.sh、env_lock/tot.txt（单线程，12 小时墙钟 = 12 CPU 小时）。先推送，再跑本地可行性运行。
+
+## 2026-10-20 10:44 TOT gate (a) 改在 H800（用户决定）；登记阶段 2（P2b、P5、TOT）
+- 本地可行性运行 3 秒退出：官方 main.py 用 torch.device(0) 并 assert CUDA 可用，原样代码只能在 GPU 上跑；没有产生 MSE。登记中"CUDA 为空则 use_gpu=False"的说法是我们写错。
+- Fable（fable_tot_device_a.md，0.31 美元）选 A；用户选"gate (a) 用 H800"。gate (a) 只在集群跑一次（独占 H800、单线程、12 小时、±2σ 判据不变），本地不跑；其余 TOT 步骤仍在 CPU。venv-tot 改为 torch 2.3.1+cu121（含 sm_90）。tasks_p6.jsonl：p6_gate_a 1 个任务；rerun.py 加占位符 PYTOTA。
+- 阶段 2（REGISTRATION_STAGE2_20261020.md、make_tasks_stage2.py）：选择 → 扩展清单 → 再选择 → 92 条流测试清单，全部由提交的选择文件机械生成（manifest 记录哈希与期望数），合成夹具自测通过（6 种边界情形，含角点；设备路由；测试清单顺序）。Sonnet 核对 11 点，采纳 7、驳回 4（sonnet_stage2.md）。

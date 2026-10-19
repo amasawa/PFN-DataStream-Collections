@@ -157,3 +157,18 @@ The other pipelines may go on. (The probe outputs are not results; keep them.)
   The coordinator selects tau and registers stage 2; do not select anything.
 - **Return.** As in step 5: `MICE/results_heldout*_<tag>*`, `$RUNS/mice-p3-smoke`, and
   `$RUNS/mice-table1-newbase/cure_dev`.
+
+## Phase P6, gate (a) of TOT (REGISTRATION_P6_GATE_A_20261020.md, amended: H800)
+- **Environment.** Create venv-tot (Python 3.11) from `env_lock/tot.txt` (torch 2.3.1+cu121), record its pip
+  freeze, and set PYTOTA to its python. The code comes from the P1 bundle (`$WORK/home/ext-baselines/TOT_neurips_supp`).
+- **Run.** Once, alone on one H800: `python rerun.py worker 0 --gpu exclusive --sets p6_gate_a --tasks tasks_p6.jsonl`.
+  It writes `$RUNS/mice-tot-gate-a/gate_a.json`, which holds the MSE and the verdict of the registered rule. Log the
+  verdict and push. Never repeat it.
+
+## Stage 2 of the tuned baselines (REGISTRATION_STAGE2_20261020.md)
+The coordinator commits the generated lists (tasks_stage2_<method>_ext.jsonl, then _test.jsonl) after the selections.
+Run each one when its commit arrives, with the worker command of its device:
+- CPU: `--gpu cpu`;
+- dtmoe: `--gpu shared` on the H800.
+
+Use `--tasks <list>` in both cases.

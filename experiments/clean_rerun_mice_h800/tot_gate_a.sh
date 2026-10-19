@@ -1,7 +1,7 @@
 #!/bin/bash
 # Gate (a) of TOT (REGISTRATION_P6_GATE_A_20261020.md): the released LSTD-TOT code, unchanged, on ETTh2 pred_len 1,
-# seed 2023 (run_LSTD_TOT.py's default), on the CPU (CUDA_VISIBLE_DEVICES empty: main.py then sets use_gpu False),
-# 1 thread, 12 h wall-clock limit (= 12 CPU-hours). The code is copied into <out>/code first (it writes checkpoints and results next to
+# seed 2023 (run_LSTD_TOT.py's default), on one GPU (the released code requires CUDA: main.py asserts it; amendment
+# below), 1 CPU thread, 12 h wall-clock limit. The code is copied into <out>/code first (it writes checkpoints and results next to
 # itself). Writes <out>/gate_a.json with the final online MSE and the verdict of the registered rule.
 # Usage: tot_gate_a.sh <python of venv-tot> <out dir>
 set -u
@@ -11,7 +11,7 @@ cp -r $SRC $OUT/code && rm -rf $OUT/code/checkpoints/* $OUT/code/__pycache__
 CFG=$(cd $OUT/code && $PYT -c "import importlib.util as u; s=u.spec_from_file_location('c','LSTD_TOT_config.py'); m=u.module_from_spec(s); s.loader.exec_module(m); print(m.d['ETTh2'][1])")
 cd $OUT/code
 start=$(date +%s)
-env CUDA_VISIBLE_DEVICES= OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 WANDB_MODE=disabled \
+env OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 WANDB_MODE=disabled \
   timeout 43200 bash -c "$PYT ./main.py $CFG --seed 2023 --gpu 0" > $OUT/log.txt 2>&1
 rc=$?; wall=$(( $(date +%s) - start ))
 $PYT - "$OUT" "$rc" "$wall" <<'PY'

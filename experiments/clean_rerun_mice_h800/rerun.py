@@ -5,7 +5,7 @@ what happened. It never changes a computation.
 Placeholders, from the environment: REPO (repository clone at the registered commit), RUNS (run roots, = $HOME/pfn-runs
 on the cluster: several drivers use ~/pfn-runs), PY (MICE venv), PYDR (Drift-Resilient TabPFN venv), PYTOT (dtmoe/TOT),
 PYST (river / trained learners, P2), PYTS (CPU baselines of Table 1, P2), PYDPT, PYMITRA, PYLIMIX (venvs of TabDPT, Mitra,
-LimiX, P3), W3 (directory of the P3 weights). A variable may be unset when no task of the
+LimiX, P3), W3 (directory of the P3 weights), PYTOTA (venv-tot: TOT gate (a), P6). A variable may be unset when no task of the
 list uses it; a task that uses an unset one stops with an error.
 Task list: tasks.jsonl (P1), or the file given by "--tasks <file>" (e.g. tasks_p2.jsonl), in every mode below.
 CPU tasks (gpu = "cpu", P2) are taken by "worker <slot> --gpu cpu".
@@ -49,7 +49,7 @@ if "--tasks" in sys.argv:                                   # removed from argv 
 else:
     TASK_FILE = "tasks.jsonl"
 TASKS = [json.loads(l) for l in open(os.path.join(HERE, TASK_FILE)) if l.strip()]
-VARS = ("REPO", "RUNS", "PY", "PYDR", "PYTOT", "PYST", "PYTS", "PYDPT", "PYMITRA", "PYLIMIX", "W3")
+VARS = ("REPO", "RUNS", "PY", "PYDR", "PYTOT", "PYST", "PYTS", "PYDPT", "PYMITRA", "PYLIMIX", "W3", "PYTOTA")
 
 
 def fill(x, env):
