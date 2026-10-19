@@ -3,9 +3,13 @@ of its original run; this runner only resolves the placeholders, runs the comman
 what happened. It never changes a computation.
 
 Placeholders, from the environment: REPO (repository clone at the registered commit), RUNS (run roots, = $HOME/pfn-runs
-on the cluster: several drivers use ~/pfn-runs), PY (MICE venv), PYDR (Drift-Resilient TabPFN venv), PYTOT (dtmoe/TOT).
+on the cluster: several drivers use ~/pfn-runs), PY (MICE venv), PYDR (Drift-Resilient TabPFN venv), PYTOT (dtmoe/TOT),
+PYST (river / trained learners, P2), PYTS (CPU baselines of Table 1, P2). A variable may be unset when no task of the
+list uses it; a task that uses an unset one stops with an error.
+Task list: tasks.jsonl (P1), or the file given by "--tasks <file>" (e.g. tasks_p2.jsonl), in every mode below.
+CPU tasks (gpu = "cpu", P2) are taken by "worker <slot> --gpu cpu".
 
-  python rerun.py worker <slot> [--sets s1,s2] [--gpu shared|exclusive]
+  python rerun.py worker <slot> [--sets s1,s2] [--gpu shared|exclusive|cpu] [--tasks <file>]
       claims tasks one at a time (atomic mkdir in $RUNS/_rerun/claims) and runs them until none is left. Before the
       first attempt and after every failed attempt, any partial output or checkpoint of the task is moved to
       $RUNS/_rerun/quarantine/<task>/<attempt>/, so every attempt starts from initialisation (no resumed state).
@@ -30,8 +34,15 @@ Records: $RUNS/_rerun/done/<id>.json (host, GPU, start, end, attempts, return co
 import json, os, shutil, socket, subprocess, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-TASKS = [json.loads(l) for l in open(os.path.join(HERE, "tasks.jsonl")) if l.strip()]
-VARS = ("REPO", "RUNS", "PY", "PYDR", "PYTOT")
+if "--tasks" in sys.argv:                                   # removed from argv before the mode is read
+    _i = sys.argv.index("--tasks")
+    if _i + 1 >= len(sys.argv):
+        raise SystemExit("--tasks needs a file name")
+    TASK_FILE = sys.argv[_i + 1]; del sys.argv[_i:_i + 2]
+else:
+    TASK_FILE = "tasks.jsonl"
+TASKS = [json.loads(l) for l in open(os.path.join(HERE, TASK_FILE)) if l.strip()]
+VARS = ("REPO", "RUNS", "PY", "PYDR", "PYTOT", "PYST", "PYTS")
 
 
 def fill(x, env):
@@ -40,8 +51,18 @@ def fill(x, env):
     if isinstance(x, dict):
         return {k: fill(v, env) for k, v in x.items()}
     for v in VARS:
-        x = x.replace("{" + v + "}", env[v])
+        if "{" + v + "}" in x and not env.get(v):
+            raise SystemExit(f"placeholder {{{v}}} used but the environment variable {v} is not set")
+        x = x.replace("{" + v + "}", env.get(v, ""))
     return x
+
+
+def check_vars(tasks, env):
+    """Stop before anything is claimed or run if a selected task uses a placeholder whose variable is unset."""
+    used = {v for t in tasks for v in VARS if "{" + v + "}" in json.dumps(t)}
+    missing = sorted(v for v in used if not env.get(v))
+    if missing:
+        raise SystemExit(f"environment variables not set for the selected tasks: {missing}")
 
 
 def safe(task_id):
@@ -136,8 +157,9 @@ def run_once(t, env, log, home=None):
 
 
 def worker(slot, sets=None, gpu=None):
-    env = {v: os.environ[v] for v in VARS}
+    env = {v: os.environ.get(v, "") for v in VARS}
     base = f"{env['RUNS']}/_rerun"
+    check_vars([t for t in TASKS if not ((sets and t["set"] not in sets) or (gpu and t["gpu"] != gpu))], env)
     for d in ("claims", "done", "gaveup", "logs"):
         os.makedirs(f"{base}/{d}", exist_ok=True)
     for t in TASKS:
@@ -188,7 +210,8 @@ def qualify(task_id, d, against_production=False):
     links to its inputs only (drivers with hard-coded ~/pfn-runs paths therefore write into the sandbox too), and
     ~/ext-baselines links to the real one."""
     t = next(x for x in TASKS if x["id"] == task_id)
-    env0 = {v: os.environ[v] for v in VARS}
+    env0 = {v: os.environ.get(v, "") for v in VARS}
+    check_vars([t], env0)
     sets = []
     for k in (("a",) if against_production else ("a", "b")):
         home = os.path.join(d, k); runs = f"{home}/pfn-runs"
@@ -264,6 +287,8 @@ def release():
 
 if __name__ == "__main__":
     a = sys.argv[1:]
+    if not a:
+        raise SystemExit("usage: see the docstring")
     if a[0] == "worker":
         sets = a[a.index("--sets") + 1].split(",") if "--sets" in a else None
         gpu = a[a.index("--gpu") + 1] if "--gpu" in a else None
@@ -276,3 +301,5 @@ if __name__ == "__main__":
         status()
     elif a[0] == "release":
         release()
+    else:
+        raise SystemExit(f"unknown mode {a[0]!r} (worker, qualify, recheck, status, release)")

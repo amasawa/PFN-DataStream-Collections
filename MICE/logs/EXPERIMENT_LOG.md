@@ -1370,3 +1370,18 @@
   同时更新了 PLAN.md 第一行和 HANDOFF.md 的传输步骤。审查：Fable 要求 6 处修改，全部采纳；Sonnet 提出 6 点，采纳 1–5，第 6 点不采纳（理由见 table1_fill/fable_activation_review.md）。
 
 - 2026-10-20 00:00 P1 输入包已生成：C:\Users\zhwu9808\Desktop\mice_h800_bundle（1.2 GB，make_bundle.sh，耗时约 50 s）。重新计算 SHA256SUMS 全部通过。包里有 Drift-Resilient TabPFN 的 7 个 model_cache 权重和 TabPFN v2 检查点（tabpfn-v2-classifier-finetuned-zk73skhh.ckpt）。P2–P4 需要的额外输入（CPU 基线代码、新骨干模型的权重、CURE 代码）在各自登记时另行打包。
+
+- 2026-10-20 00:21 **P2 登记（CPU 结果迁到集群重跑）**：experiments/clean_rerun_mice_h800/REGISTRATION_P2_20261020.md。
+  - 任务清单 tasks_p2.jsonl 由 make_tasks_p2.py 生成，共 2358 个任务，原耗时约 125 CPU-h，分 10 组，各组数量与原始输出逐一对应。生成前后 P1 清单 tasks.jsonl 的 sha256 不变。
+  - 环境版本锁：env_lock/stream.txt、env_lock/tsbase.txt。
+  - 补充数据包在桌面 mice_h800_bundle_p2（4 个 CPU 基线的代码，附 commit 号和每个文件的 SHA-256）。
+  - rerun.py：加了 --tasks 参数和 PYST、PYTS 两个占位变量，gpu 字段可为 "cpu"。
+  - 本地确定性探针（00:08–00:2x，nice 10，与扩展网格并行）：7 个任务都 QUALIFIED（两次运行逐字节相同），并且与本地原始输出逐键相同（wt 除外）。这 7 个任务是 results_river:elec2__hat、results_trained_dev:elec2__mooe_lin_50_0.1_0.01、mice-main-trained-grid20:grid_c5_b500_s20__nse、mice-table1-trained-probs:h2_phishing__levbag、mice-confirm-cp-20261017-cpu:cc_btc_2013__arf、ts_dev:elec2__adaptz_L1_lr0.001_s1_m0.001、results_heldout34_trained:h3_poker_b__mooe_rff2000_100_2_0.01。其中 10 月 4 日的 river 结果，用今天的 stream 环境也完全复现。
+  - Fable 审查（00:09–00:12，约 1.74 美元）要求改 5 处，全部采纳。核实时发现 stream 环境的 dist-info 都是 10 月 7 日的，已如实写进登记。
+  - MiMo Flash medium 审计（00:09–00:17）：
+    - 第 1 点不采纳：4 个驱动都自己 makedirs，沙箱里的 dev_cluster/P 原本不存在，任务照样通过；
+    - 第 2、3 点采纳并修复：--tasks 先从 argv 中去掉，未知模式报错；worker 和 qualify 在占用任务前检查占位变量；
+    - 第 4 点采纳：哪些环境变量有记录、哪些是假设，写进登记；
+    - 第 5 点不采纳：dtmoe 属于 P1 的 dtmoe_dev。
+
+    修复的 diff 交 MiMo Flash low 复查（00:18–00:22），结果 none。记录见 table1_fill/p2_reviews.md。
