@@ -92,3 +92,20 @@ The other pipelines may go on. (The probe outputs are not results; keep them.)
   write SHA256SUMS. Log the totals (tasks, GPU hours, failures) and push.
 - dtmoe: after its development grid is back, the coordinator freezes the configuration and adds its test tasks
   (a second handoff note); TOT likewise once implemented and gated.
+
+## Phase P2: CPU results (REGISTRATION_P2_20261020.md; may run on CPU nodes alongside P1)
+- **Inputs.** Copy the supplement bundle `C:\Users\zhwu9808\Desktop\mice_h800_bundle_p2\` over RDP, as for P1. Check
+  SHA256SUMS on the Mac, then untar `ext-baselines-p2.tar` into `$WORK/home/ext-baselines/` and check
+  `ext-baselines-p2.tar.files.sha256` there.
+- **Environments.** Create two more Python 3.12 venvs from `env_lock/stream.txt` (river; set PYST to its python) and
+  `env_lock/tsbase.txt` (torch 2.14.1+cpu; set PYTS). Record `pip freeze` into `cluster/env_freeze_stream.txt` and
+  `cluster/env_freeze_tsbase.txt`; any difference from env_lock stops P2.
+- **Node type.** Choose one CPU node type for all of P2 and record it (model, cores, memory) in the log before the
+  first job. Give every worker a fixed core count (e.g. `--cpus-per-task=2`) and record it.
+- **Probe first.** In one CPU job, run `python rerun.py qualify "<id>" $WORK/qualify_p2/<n> --tasks tasks_p2.jsonl`
+  for the seven task ids listed in the registration ("Local evidence"). Report QUALIFIED / NOT QUALIFIED.
+- **Production.** `python rerun.py worker <slot> --gpu cpu --tasks tasks_p2.jsonl`, many workers per node (the tasks
+  are single-threaded or 2-threaded). Check progress with `python rerun.py status --tasks tasks_p2.jsonl`. Record time
+  and memory per job.
+- **Stop point.** When ts_dev shows 720 done and 0 given up, stop and push. The coordinator registers P2b (selection,
+  extension and tests of fsnet, onenet, adaptz and shifts) from those outputs. Do not select anything yourself.
