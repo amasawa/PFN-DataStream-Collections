@@ -1413,3 +1413,10 @@
 - MiMo Pro high：P3 8 条（采纳 7，驳回 1：调用计数与 run.TFM 相同）；其中查出原生 Mitra 不确定（全局 RNG 未设种子），改为每次调用设种子并恢复。P4 首次审计输出为无关内容，作废重审：4 条 P2 全部采纳。MiMo Flash 审 rerun.py：采纳 3、驳回 1。Sonnet 封闭核对登记包：none。
 - 任务：tasks_p3.jsonl 296 个（280 生产 + 16 冒烟，冒烟先跑、按登记规则排除）；tasks_p4.jsonl 20 个。tasks.jsonl、tasks_p2.jsonl 哈希不变。
 - 数据包：桌面 mice_h800_bundle_p3（3.2 GB：权重、LimiX、CURE 代码）。HANDOFF 加 P3/P4 一节。
+
+## 2026-10-20 10:25 P5/P6 方案 → Fable → Sonnet；登记 TOT gate (a)
+- 用户要求继续 P5 和 P6。现状：dtmoe 测试（P5）与四个 CPU 基线测试（P2b）要等集群开发网格返回；TOT 适配器未写，gate (a) 从未完成（10-18 的 GPU 尝试数值损坏）。本地 totgpu 环境 pandas 与 numpy 2.4.6 二进制不兼容（dtmoe 不用 pandas，不受影响），TOT 另建 venv-tot（补充材料的 requirements）。
+- Fable（fable_p5p6_a.md，1.09 美元）：阶段 2 用一个生成器一次登记（附哈希与期望任务数，合成夹具自测）；gate (a) 本地可行性 + 集群约束性；通过判据 ±2σ；TOT 生产环境 = P2 环境 + einops。Fable 指出的 x_dim 矛盾核实为草案笔误（x_dim 是潜变量维度，登记原文正确）。
+- Sonnet（sonnet_p5p6.md）5 条全部采纳：取消 2σ–3σ 缓冲带；扩展取值表；各步环境；成本上限现在写定；论文出处。
+- 论文目标：arXiv 2510.18281v1 表 A14/A16，LSTD+TOT、ETTh2、步长 1：MSE 0.374 ± 0.0031；阈值 |MSE−0.374| ≤ 0.0062。
+- 登记 REGISTRATION_P6_GATE_A_20261020.md、tot_gate_a.sh、env_lock/tot.txt（单线程，12 小时墙钟 = 12 CPU 小时）。先推送，再跑本地可行性运行。
