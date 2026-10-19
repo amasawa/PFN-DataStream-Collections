@@ -14,8 +14,8 @@ for r in $ROOTS; do   # inputs: data dirs, held-out lists, code snapshots, task 
   tar -C $RUNS/$r -chf $S/runs/$r.tar $inc
   echo "$r: $inc" >> $S/runs/CONTENTS.txt
 done
-for r in mice-r13-bench mice-r14b-bench mice-tkde-bench-20261009; do   # benchmark reruns: data only, fresh selections
-  inc=$(cd $RUNS/$r && ls -d data* 2>/dev/null)
+for r in mice-r13-bench mice-r14b-bench mice-tkde-bench-20261009; do   # benchmark reruns (measurements only, PLAN.md
+  inc=$(cd $RUNS/$r && ls -d data* kstar.json 2>/dev/null)           # "Benchmarks"): data and the frozen k* (a2 reads it)
   tar -C $RUNS/$r -chf $S/runs/$r-h800.tar --transform "s,^,$r-h800/," $inc
   echo "$r-h800: $inc (into <root>-h800)" >> $S/runs/CONTENTS.txt
 done

@@ -9,7 +9,7 @@ list uses it; a task that uses an unset one stops with an error.
 Task list: tasks.jsonl (P1), or the file given by "--tasks <file>" (e.g. tasks_p2.jsonl), in every mode below.
 CPU tasks (gpu = "cpu", P2) are taken by "worker <slot> --gpu cpu".
 
-  python rerun.py worker <slot> [--sets s1,s2] [--gpu shared|exclusive|cpu] [--tasks <file>]
+  python rerun.py worker <slot> [--sets s1,s2] [--exclude-sets s1,s2] [--gpu shared|exclusive|cpu] [--tasks <file>]
       claims tasks one at a time (atomic mkdir in $RUNS/_rerun/claims) and runs them until none is left. Before the
       first attempt and after every failed attempt, any partial output or checkpoint of the task is moved to
       $RUNS/_rerun/quarantine/<task>/<attempt>/, so every attempt starts from initialisation (no resumed state).
@@ -18,9 +18,15 @@ CPU tasks (gpu = "cpu", P2) are taken by "worker <slot> --gpu cpu".
       output parses and has the structure of the original output (keys, shapes, dtypes; pkl type and keys; csv
       columns and rows; jsonl lines; never values). Outputs found without such an attempt are quarantined, never
       accepted. GPU health (ECC errors, throttling) is recorded before and after every attempt.
-  python rerun.py qualify <task id> <dir>
+      --exclude-sets: sets that are paused (not started), e.g. dtmoe_dev until its probe and the user's decision.
+  python rerun.py qualify <task id> <dir> [--timeout <s>]
       runs one task twice in fresh processes with RUNS redirected to <dir>/a and <dir>/b (inputs linked) and compares
-      the two output sets byte for byte (determinism probe, PLAN.md checks 1).
+      the two output sets byte for byte (determinism probe, PLAN.md checks 1). With --timeout, a run that exceeds <s>
+      seconds is killed and the result is "TOO SLOW" (no determinism verdict; ACTIVATION item 2).
+  python rerun.py ref <task id> <dir>
+      default-mode reference of a strict-mode task (ACTIVATION item 2): one run in the sandbox <dir>/a with
+      TS_DETERMINISTIC and CUBLAS_WORKSPACE_CONFIG removed from the task's variables; writes <dir>/ref.json with the
+      wall time (the only value read; its outputs are never used).
   python rerun.py recheck <task id> <dir>
       during production (PLAN.md, checks 2): runs one finished task once more into <dir>/a (as qualify) and compares
       it byte for byte with its production outputs.
@@ -89,10 +95,10 @@ def health():
 
 def valid(o, sch):
     """Parse the output and compare its structure with that of the original (tasks.jsonl "schema"; never values)."""
+    import numpy as np, pickle, csv                       # outside the try: a missing numpy must stop, not fail every task
     if not os.path.exists(o):
         return False
     try:
-        import numpy as np, pickle, csv
         if o.endswith(".npz"):
             with np.load(o, allow_pickle=True) as z:
                 got = {k: [list(z[k].shape), "<U" if z[k].dtype.kind == "U" else str(z[k].dtype)]
@@ -143,7 +149,7 @@ KEEP = ("PATH", "HOME", "USER", "LOGNAME", "LANG", "LC_ALL", "TMPDIR", "LD_LIBRA
         "TABPFN_MODEL_CACHE_DIR", "HF_HOME", "HF_HUB_OFFLINE", "TABPFN_DISABLE_TELEMETRY")
 
 
-def run_once(t, env, log, home=None):
+def run_once(t, env, log, home=None, timeout=None):
     """The child environment is a whitelist (KEEP, SLURM_*) plus the task's registered variables, so no variable of
     the job (MICE_BACKBONE, MICE_SEED, OMP_NUM_THREADS, ...) leaks into a task that does not set it."""
     e = {k: v for k, v in os.environ.items() if k in KEEP or k.startswith("SLURM_")}
@@ -152,18 +158,28 @@ def run_once(t, env, log, home=None):
         e["HOME"] = home
     with open(log, "a") as f:
         f.write(f"\n=== {time.strftime('%F %T')} {socket.gethostname()} {' '.join(fill(t['cmd'], env))}\n"); f.flush()
-        return subprocess.run(fill(t["cmd"], env), cwd=fill(t["cwd"], env), env=e, stdout=f, stderr=subprocess.STDOUT,
-                              stdin=subprocess.DEVNULL).returncode
+        p = subprocess.Popen(fill(t["cmd"], env), cwd=fill(t["cwd"], env), env=e, stdout=f, stderr=subprocess.STDOUT,
+                             stdin=subprocess.DEVNULL, start_new_session=True)
+        try:
+            return p.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:                  # kill the whole process group (no orphaned GPU work)
+            os.killpg(p.pid, 9); p.wait()
+            f.write(f"\n=== killed after the timeout of {timeout} s\n")
+            return "timeout"
+        except BaseException:                              # worker interrupted (Ctrl-C, SIGTERM): the task's own
+            os.killpg(p.pid, 9); p.wait()                  # session would survive it otherwise
+            raise
 
 
-def worker(slot, sets=None, gpu=None):
+def worker(slot, sets=None, gpu=None, exclude=()):
     env = {v: os.environ.get(v, "") for v in VARS}
-    check_vars([t for t in TASKS if not ((sets and t["set"] not in sets) or (gpu and t["gpu"] != gpu))], env)
+    skip = lambda t: (sets and t["set"] not in sets) or (gpu and t["gpu"] != gpu) or t["set"] in exclude
+    check_vars([t for t in TASKS if not skip(t)], env)
     base = f"{env['RUNS']}/_rerun"
     for d in ("claims", "done", "gaveup", "logs"):
         os.makedirs(f"{base}/{d}", exist_ok=True)
     for t in TASKS:
-        if (sets and t["set"] not in sets) or (gpu and t["gpu"] != gpu):
+        if skip(t):
             continue
         sid = safe(t["id"])
         if os.path.exists(f"{base}/done/{sid}.json") or os.path.exists(f"{base}/gaveup/{sid}.json"):
@@ -205,7 +221,7 @@ def worker(slot, sets=None, gpu=None):
 INPUTS = ("data", "held", "source", "controller", "tasks", "kstar", "m_star")
 
 
-def qualify(task_id, d, against_production=False):
+def qualify(task_id, d, against_production=False, timeout=None, ref=False):
     """Fresh run(s) of one task in a sandbox: HOME = <d>/<k>, RUNS = <d>/<k>/pfn-runs, where every run root holds
     links to its inputs only (drivers with hard-coded ~/pfn-runs paths therefore write into the sandbox too), and
     ~/ext-baselines links to the real one."""
@@ -213,7 +229,7 @@ def qualify(task_id, d, against_production=False):
     env0 = {v: os.environ.get(v, "") for v in VARS}
     check_vars([t], env0)
     sets = []
-    for k in (("a",) if against_production else ("a", "b")):
+    for k in (("a",) if against_production or ref else ("a", "b")):
         home = os.path.join(d, k); runs = f"{home}/pfn-runs"
         os.makedirs(runs, exist_ok=False)
         for name in os.listdir(env0["RUNS"]):
@@ -228,14 +244,28 @@ def qualify(task_id, d, against_production=False):
             os.symlink(os.path.expanduser("~/ext-baselines"), f"{home}/ext-baselines")
         env = dict(env0, RUNS=runs)
         t2 = json.loads(json.dumps(t))
+        if ref:
+            for v in ("TS_DETERMINISTIC", "CUBLAS_WORKSPACE_CONFIG"):
+                t2["env"].pop(v, None)
         if "{REPO}/MICE/results" in json.dumps(t2):       # run.py family: redirect --out to the probe directory
             out = f"{home}/out"; os.makedirs(out)
             t2["cmd"] = [out if c.startswith("../results") else c for c in t2["cmd"]]
             t2["outputs"] = [o.replace(o[:o.rfind("/")], out) for o in t2["outputs"]]
         log = f"{home}/log.txt"
-        rc = run_once(t2, env, log, home=home)
+        t0 = time.time(); rc = run_once(t2, env, log, home=home, timeout=timeout); wall = time.time() - t0
         sets.append((rc, fill(t2["outputs"], env)))
-        print(k, "rc", rc, flush=True)
+        print(k, "rc", rc, f"wall {wall:.0f} s", flush=True)
+        if ref:
+            if rc != 0:
+                print("REFERENCE FAILED (rc", rc, "): no ref.json written; report it")
+                return
+            json.dump(dict(task=task_id, rc=rc, wall_s=wall, host=socket.gethostname(), gpu=gpu_name(),
+                           removed=["TS_DETERMINISTIC", "CUBLAS_WORKSPACE_CONFIG"]), open(f"{d}/ref.json", "w"))
+            print("REFERENCE wall time", f"{wall:.0f} s", "(rc", rc, ")")
+            return
+        if rc == "timeout":
+            print(f"TOO SLOW (killed after {timeout} s; no determinism verdict)")
+            return
     import numpy as np
     if against_production:
         sets.append((0, fill(t["outputs"], env0)))
@@ -286,15 +316,20 @@ def release():
 
 
 if __name__ == "__main__":
+    import signal                                          # Slurm sends SIGTERM (scancel, time limit): raise, so that
+    signal.signal(signal.SIGTERM, lambda *_: sys.exit(143))   # run_once kills the task's process group
     a = sys.argv[1:]
     if not a:
         raise SystemExit("usage: see the docstring")
     if a[0] == "worker":
         sets = a[a.index("--sets") + 1].split(",") if "--sets" in a else None
         gpu = a[a.index("--gpu") + 1] if "--gpu" in a else None
-        worker(a[1], sets, gpu)
+        excl = a[a.index("--exclude-sets") + 1].split(",") if "--exclude-sets" in a else ()
+        worker(a[1], sets, gpu, excl)
     elif a[0] == "qualify":
-        qualify(a[1], a[2])
+        qualify(a[1], a[2], timeout=float(a[a.index("--timeout") + 1]) if "--timeout" in a else None)
+    elif a[0] == "ref":
+        qualify(a[1], a[2], ref=True)
     elif a[0] == "recheck":
         qualify(a[1], a[2], against_production=True)
     elif a[0] == "status":

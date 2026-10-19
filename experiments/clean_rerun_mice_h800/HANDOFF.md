@@ -4,7 +4,8 @@ You are Claude Code on the user's Mac mini, the **executor on the cluster**. The
 Windows machine (the coordinator) wrote this file; it keeps the registration, the audits (MiMo, Codex, Sonnet) and the
 analysis. Communication: git (this repository) and the user. Reply to the user in Chinese; code, commits in English.
 
-Read first, in this order: `ACTIVATION_20261019.md` (it holds where it differs from PLAN.md or this file; the phases
+Read first, in this order: `ACTIVATION_20261019.md` and `AMENDMENT_20261020.md` (they hold where they differ from
+PLAN.md or this file; the phases
 P2-P6 come with their own registrations later), `bundle/claude_rules/global_CLAUDE.md` (the user's team rules; they apply to you, except
 that MiMo and Codex run on the Windows side: ask the coordinator for audits), this file, `PLAN.md` (the registration:
 what is rerun and what must stay the same), `MANIFEST.md`, `tasks.jsonl`, `rerun.py`.
@@ -40,7 +41,10 @@ what is rerun and what must stay the same), `MANIFEST.md`, `tasks.jsonl`, `rerun
   - `$WORK/repo`: the repository at the registered commit (git clone on the Mac, then rsync; or `git bundle`).
     Put the MICE data at `$WORK/repo/MICE/data` (tar MICE_data.tar).
   - `$WORK/home/pfn-runs/<root>/`: untar every `runs/<root>.tar` (inputs only; outputs are created by the runs).
-  - `$WORK/home/ext-baselines/`: untar ext-baselines.tar. `$WORK/cache/tabpfn`: untar tabpfn_cache.tar.
+  - `$WORK/home/ext-baselines/`: untar ext-baselines.tar. Check that its files.sha256 lists
+    `Drift-Resilient_TabPFN/tabpfn/model_cache/tabpfn_dist_model_1.cpkt`.
+  - `$WORK/home/pfn-venvs/cache/tabpfn`: untar tabpfn_cache.tar into `$WORK/home/pfn-venvs/cache/` (the benchmark
+    scripts set this path themselves; AMENDMENT_20261020 item 2). Check that the TabPFN v2 checkpoint is there.
 - TabICL checkpoint `tabicl-classifier-v2-20260212.ckpt` (Hugging Face repo jingang/TabICL, used by tabicl 2.2.0) is
   not in the bundle: download it once (on the Mac, or on the login node with HF_ENDPOINT=https://hf-mirror.com) into
   the HF cache that the jobs use (HF_HOME=$WORK/hf), then run with HF_HUB_OFFLINE=1. Record its sha256.
@@ -53,7 +57,7 @@ what is rerun and what must stay the same), `MANIFEST.md`, `tasks.jsonl`, `rerun
 - Check in a GPU job: `torch.cuda.get_arch_list()` contains sm_90 and a small matmul runs. Record `pip freeze` of each
   environment on the cluster into `cluster/env_freeze_*.txt`; any version that differs from env_lock is a stop.
 - Job environment: REPO, RUNS=$WORK/home/pfn-runs, PY, PYDR, PYTOT (paths of the three pythons), HOME=$WORK/home,
-  TABPFN_MODEL_CACHE_DIR=$WORK/cache/tabpfn, HF_HOME=$WORK/hf, HF_HUB_OFFLINE=1, TABPFN_DISABLE_TELEMETRY=1.
+  TABPFN_MODEL_CACHE_DIR=$WORK/home/pfn-venvs/cache/tabpfn, HF_HOME=$WORK/hf, HF_HUB_OFFLINE=1, TABPFN_DISABLE_TELEMETRY=1.
   rerun.py passes only a whitelist of these (plus SLURM_*, PATH, CUDA_VISIBLE_DEVICES, ...) and each task's
   registered variables to the task, so nothing else from the job leaks in. If a driver needs another variable
   (e.g. a library path), report it: it is added to the whitelist by the coordinator.
@@ -62,7 +66,8 @@ Before the probe: `find $WORK/repo/MICE -path "*results_*" \( -name "*.npz" -o -
 (the clone holds no result file; the run.py-family tasks write their outputs there, as the original commands did).
 
 ## Step 3. Determinism probe (PLAN.md, checks 1) - before any production job
-Run in one GPU job, sequentially, `python rerun.py qualify "<task id>" $WORK/qualify/<n>` for these task ids:
+Always run rerun.py with `$PY` (the MICE venv; written `python rerun.py` below), never with the system python.
+Run in one GPU job, sequentially, `$PY rerun.py qualify "<task id>" $WORK/qualify/<n>` for these task ids:
 `results_heldout3:h3_airlines_b__micev1000_500`, `results_test:agrawal_s10__fifo1000`,
 `results_heldout_tabicl:covertype__ddm1000`, `results_probs:covertype__ddm1000`,
 `mice-r14-test:t_b2000_c100_s40_o0__micecp1000_500`, `mice-r14b-acc:c_b2000_c100_s50_o0__snap1000_500.k2`,
@@ -73,13 +78,25 @@ Report each QUALIFIED / NOT QUALIFIED in the log and push. Any NOT QUALIFIED (or
 deterministic implementation"): pause that pipeline (its tasks are not started), keep the evidence, report the
 differing arrays, and wait: the coordinator diagnoses and registers its disposition with the arbiter and the user.
 The other pipelines may go on. (The probe outputs are not results; keep them.)
+- **dtmoe probe with its cap (ACTIVATION item 2, AMENDMENT_20261020 item 3).** For each of the three dtmoe ids,
+  first `python rerun.py ref "<id>" $WORK/qualify/ref_<n>` (default mode; prints and writes only the wall time
+  R), then `python rerun.py qualify "<id>" $WORK/qualify/<n> --timeout <10 R in seconds>`. One TOO SLOW stops the
+  dtmoe path: log it with the times, push, and wait for the coordinator (the user decides the dtmoe path).
 
 ## Step 4. Production
-- Slurm: one job per GPU (or one 8-GPU job), each running N workers `python rerun.py worker <slot> --gpu shared`
+- Slurm: one job per GPU (or one 8-GPU job), each running N workers
+  `python rerun.py worker <slot> --gpu shared --exclude-sets dtmoe_dev,drtabpfn,mice_oracle_r11,results_delay_dev[,<every NOT QUALIFIED set>]`
+  (dtmoe_dev starts only on a committed instruction of the coordinator; AMENDMENT_20261020 item 4). Request at least
+  4 CPU cores per worker (`--cpus-per-task` >= 4N; item 8) and log it.
   in parallel (start with N = 3; raise to 4-6 if 30 min pass without any failure and the GPU is not saturated). The
   workers take tasks in file order (the paper-critical sets come first). Time limit per job <= 24 h; after a job ends
-  with tasks left: `python rerun.py release`, then resubmit (the released tasks start again from initialisation).
+  with tasks left: `python rerun.py release`, then resubmit (the released tasks start again from initialisation; a
+  kill counts as an attempt; a released benchmark is given up, see below).
+- Tasks without a time estimate (the 5 benchmarks, mice_oracle_r11:all, results_delay_dev, drtabpfn, dtmoe_dev) run
+  in their own jobs with the partition's maximum time limit (use `--sets`). A task killed by the time limit: report
+  it, `release`, and wait for the coordinator's commit on its attempt counter before it runs again (item 7).
 - Exclusive tasks (benchmarks: timing) last: one job per task, one worker, `--gpu exclusive`, nothing else on that GPU.
+  Before the first one, check in that job that `$WORK/home/pfn-venvs/cache/tabpfn` holds the TabPFN v2 checkpoint.
 - `python rerun.py status` every ~10 min; log progress and failures; GAVE UP tasks: read their log, report, do not
   retry by hand without telling the coordinator. Quarantined partial outputs stay in $RUNS/_rerun/quarantine.
 - Once per set, when its first tasks are done and while the other workers run: `python rerun.py recheck <a done task
@@ -87,8 +104,10 @@ The other pipelines may go on. (The probe outputs are not results; keep them.)
 - Benchmarks are never retried (rerun.py makes one attempt): a failed benchmark is reported.
 
 ## Step 5. Return
-- Copy back (rsync to the Mac; the user then copies `mice_h800_results/` over RDP to the Windows desktop): `$WORK/home/pfn-runs/` without the input
-  files, `$WORK/repo/MICE/results_*` (new outputs), `$WORK/home/pfn-runs/_rerun/` (records and logs), the env freezes;
+- Where the results go on the Windows machine is fixed by AMENDMENT_20261020 item 5 (`~/h800/`, never ~/pfn-runs or
+  the working repository); the coordinator places them.
+- Copy back (rsync to the Mac; the user then copies `mice_h800_results/` over RDP to the Windows desktop): the whole
+  `$WORK/home/pfn-runs/` (inputs included; AMENDMENT_20261020 item 5), `$WORK/repo/MICE/results_*` (new outputs), `$WORK/home/pfn-runs/_rerun/` (records and logs), the env freezes;
   write SHA256SUMS. Log the totals (tasks, GPU hours, failures) and push.
 - dtmoe: after its development grid is back, the coordinator freezes the configuration and adds its test tasks
   (a second handoff note); TOT likewise once implemented and gated.

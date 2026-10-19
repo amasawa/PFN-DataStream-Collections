@@ -1388,3 +1388,20 @@
 
 ## 2026-10-20 09:14 Sonnet 复审 P2
 用户要求让 Sonnet 审查已做的 P2。两条 P2 级意见（RUNS 未设时 worker 不报错；HANDOFF 缺少放弃任务的处理）均成立，已修正，复查 none。详见 table1_fill/p2_reviews.md。
+
+## 2026-10-20 09:24 P3/P4 方案（草稿）→ Fable → Sonnet → Fable 追问
+- 用户要求"做的时候先出方案，让fable想一下"。草稿 experiments/clean_rerun_mice_h800/PLAN_P3_P4_draft.md（未登记）。
+- 核实的事实：tabpfn 9.0.0 的 v2.5/v2.6/v3/v3.5 权重在 HF 公开可下载；TabDPT 1.3.1 已有 venv；Mitra-v2 = autogluon/mitra-classifier-2（默认每次 fit 微调 50 步）；LimiX-2（400M，torch 2.9.1）；CURE 代码 f7c6b2f 全读，骨干 TabICL（1 个估计器）、逐行即时标签、tau 按数据集调（0.1–0.4），无通用默认。
+- Fable（fable_p3p4_a.md）：TabPFN 各版本 n_estimators=4、用 v3.5；Mitra fine_tune=False；LimiX-2 无检索配置；CURE 批到达映射忠实，熵按上下文类数计算；tau 选开发流选择（需用户批准）。
+- Sonnet（sonnet_p3p4.md）6 条：1 成立（开发流选 tau 要两阶段登记）；2 成立且重要（主表 7 条流来自 CURE 调过 tau 的数据集：h2_weather=NOAA、h2_rialto、5 条 PokerHand）；3 不成立（warm_fill_ratio=1.0，_meta_score 只用熵）；4 成立（P 先截到上下文类再算熵）；5 不成立（P3 的 10 段最多 9 类）；6 成立（信号最多陈旧一批，记录长库入库率并写明）。
+- Fable 追问（fable_p3p4_a2.md）：全部 92 条流用一个 tau，开发流（elec2 + 4 条 INSECTS）上从 {0.1,0.2,0.3,0.4} 按平均准确率选，平局取 0.3，两阶段登记；公开 tau 不用（是在 TabICL、逐行协议、很可能同一数据上调的）。需用户批准改 ACTIVATION 的 "no tuning" 一句。
+- P3 权重开始下载到 ~/mice-p3-weights（URL 固定到 HF commit）。
+
+## 2026-10-20 09:39 Fable 审查前期工作（P1 全路径），AMENDMENT_20261020
+- 用户要求"之前任务也让AI审一下""之前任务也让fable审核一下"。Fable（fable_prior_review_a.md，3.05 美元，6 分钟）8 条：2 条 P0、4 条 P1、2 条 P2，结论"修复后可交接"。逐条核实，全部成立。
+- P0：基准 a2 读 <root>/kstar.json，但 -h800 根只打包了 data → 已把原 kstar.json（哈希一致）加入 mice-r13-bench-h800、mice-r14b-bench-h800 两个 tar，桌面包重算 SHA256SUMS 并验证；基准脚本写死 TabPFN 缓存 ~/pfn-venvs/cache/tabpfn → HANDOFF 改为解压到 $WORK/home/pfn-venvs/cache/tabpfn。
+- P1：rerun.py 加 ref 模式（dtmoe 默认模式参照，只记录用时）、qualify --timeout（10 倍上限，超时为 TOO SLOW）、worker --exclude-sets（dtmoe_dev 等暂停组）；结果回传后放在 ~/h800/，不进 ~/pfn-runs 和工作仓库；Table 1 的计时只取自之后单独登记的独占计时任务，共享 GPU 上的 wt 不作为计时报告。
+- P2：无时间估计的任务单独作业、用分区最长时限；每个 GPU worker 至少 4 核。
+- 测试时自己发现：rerun.py 用无 numpy 的 python 运行会把所有任务记为放弃 → import 移出 try，HANDOFF 规定用 $PY 运行。
+- Sonnet 两轮核对（sonnet_amendment_20261020.md）：采纳 7 条、驳回 4 条（附理由）；复查发现 SIGTERM 会留下残留任务进程 → 加 SIGTERM 处理，实测无残留。
+- 修改：AMENDMENT_20261020.md（新）、rerun.py、HANDOFF.md、make_bundle.sh。**桌面上的 mice_h800_bundle 已更新（两个 bench-h800 tar、CONTENTS.txt、SHA256SUMS）**：如果用户已经拷过旧包，需要重新拷这几个文件。
