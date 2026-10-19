@@ -1323,3 +1323,5 @@
 - 2026-10-19 15:08 例行检查：DR 9/92，第 10 个流运行中；无 GPU_STOP。CPU 扩展 107/450，新 FAIL 0。dtmoe 探针 insects_abrupt L32 s5 两次仍在运行（已约 2 小时 15 分）；load 11.4。
 
 - 2026-10-19 16:08 例行检查：DR h3_airlines_c 于 15:14:47 完成（7000 秒），10/92；无 GPU_STOP。CPU 扩展 118/450，新 FAIL 0。dtmoe 探针 insects_abrupt L32 s5 运行 a 于 15:59:29 完成（约 3 小时 8 分，CPU 单线程），运行 b 仍在跑。
+
+- 2026-10-19 16:16 **dtmoe CPU 确定性探针通过**（16:15:29）：三条探针（elec2 L16 s1、elec2 L32 s1、insects_abrupt L32 s5）两次新进程逐数组字节一致（wt 除外），PROBE_PRE_PASSED 写入；开发网格 16:15:51 自动启动（4 路，守卫在线）。实测 CPU 时间：elec2 s1 约 650 秒，insects_abrupt L32 s5 约 11300 秒。预算投影（amendment e 第 3 条）：s5/s1 约 6.9 倍，每个 (L, lr, mech) 的两档 steps × 5 流约 5.7 万秒，网格 18 组约 285 核时；4 路约 71 小时，扩展网格结束后改 6 路，预计 10-22 晚冻结。若最优落在 n_steps 边界，n_steps 25 扩展约 90 个任务 × 约 5 倍 s5 时间，可能上千核时，届时先报用户。
