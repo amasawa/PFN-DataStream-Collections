@@ -1311,3 +1311,5 @@
 - 2026-10-19 10:45 例行检查：DR h2_rialto 于 10:33:13 完成（6083 秒），6/92 完成，h2_spam 运行中；无 GPU_STOP，心跳正常。CPU 扩展 71/450，新 FAIL 0。
 
 - 2026-10-19 11:45 例行检查：DR h2_spam（10:54:28，1276 秒）、h2_weather（11:13:50，1162 秒）完成，8/92 完成，h3_airlines_b 运行中；无 GPU_STOP，心跳正常。CPU 扩展 78/450，新 FAIL 0。
+
+- 2026-10-19 12:35 dtmoe 改在 CPU：用户选 1（CPU 上跑，开发和测试），并批准 CPU 进程上限 12 → 16 附守卫。Fable 5.1 给出方案（MICE/logs/table1_fill/fable_dtmoe_cpu.md，1.77 美元）：dtmoe 专用 4 路 nice 19、守卫、三条确定性探针（运行 a 进网格目录、运行 b 对照）、旧的 3 个 P_cpu_dtmoe 不复用只做信息比对、独立目录 dtmoe_cpu/、首尾核对。写成 AMENDMENT_BASELINES_20261018e.md、dtmoe_cpu.sh、dtmoe_guard.sh；Sonnet 两轮审核（第 1 轮 7 条、第 2 轮 4 条，全部采纳并修正，MICE/logs/table1_fill/sonnet_dtmoe_cpu.md）。提交并推送后先跑探针。
