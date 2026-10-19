@@ -4,7 +4,8 @@ You are Claude Code on the user's Mac mini, the **executor on the cluster**. The
 Windows machine (the coordinator) wrote this file; it keeps the registration, the audits (MiMo, Codex, Sonnet) and the
 analysis. Communication: git (this repository) and the user. Reply to the user in Chinese; code, commits in English.
 
-Read first, in this order: `bundle/claude_rules/global_CLAUDE.md` (the user's team rules; they apply to you, except
+Read first, in this order: `ACTIVATION_20261019.md` (it holds where it differs from PLAN.md or this file; the phases
+P2-P6 come with their own registrations later), `bundle/claude_rules/global_CLAUDE.md` (the user's team rules; they apply to you, except
 that MiMo and Codex run on the Windows side: ask the coordinator for audits), this file, `PLAN.md` (the registration:
 what is rerun and what must stay the same), `MANIFEST.md`, `tasks.jsonl`, `rerun.py`.
 
@@ -28,8 +29,10 @@ what is rerun and what must stay the same), `MANIFEST.md`, `tasks.jsonl`, `rerun
   short GPU job).
 
 ## Step 1. Inputs
-- The bundle is in the user's OneDrive (University of Sydney, Staff) folder `mice_h800_bundle/` (SHA256SUMS inside).
-  Copy it to the cluster: `rsync -az -e "ssh -p 10022" <OneDrive>/mice_h800_bundle/ <account>@<login>:/ssdfs/datahome/<account>/mice_rerun/bundle/`
+- The bundle is on the Windows machine's desktop, `C:\Users\zhwu9808\Desktop\mice_h800_bundle\` (SHA256SUMS
+  inside). The user copies it to the Mac mini over RDP (for example to `~/mice_h800_bundle/`). On the Mac, check
+  `shasum -a 256 -c SHA256SUMS` first, then copy it to the cluster:
+  `rsync -az -e "ssh -p 10022" ~/mice_h800_bundle/ <account>@<login>:/ssdfs/datahome/<account>/mice_rerun/bundle/`
   and check `sha256sum -c SHA256SUMS` on the cluster; after untarring, check every `<tar>.files.sha256` (per-file
   hashes of the inputs) in the directory where that tar was extracted. Any mismatch stops the set it belongs to.
 - Layout (WORK = /ssdfs/datahome/<account>/mice_rerun; HOME of every job = $WORK/home, because drivers use ~/pfn-runs
@@ -84,7 +87,7 @@ The other pipelines may go on. (The probe outputs are not results; keep them.)
 - Benchmarks are never retried (rerun.py makes one attempt): a failed benchmark is reported.
 
 ## Step 5. Return
-- Copy back (rsync to the Mac, then into OneDrive `mice_h800_results/`): `$WORK/home/pfn-runs/` without the input
+- Copy back (rsync to the Mac; the user then copies `mice_h800_results/` over RDP to the Windows desktop): `$WORK/home/pfn-runs/` without the input
   files, `$WORK/repo/MICE/results_*` (new outputs), `$WORK/home/pfn-runs/_rerun/` (records and logs), the env freezes;
   write SHA256SUMS. Log the totals (tasks, GPU hours, failures) and push.
 - dtmoe: after its development grid is back, the coordinator freezes the configuration and adds its test tasks

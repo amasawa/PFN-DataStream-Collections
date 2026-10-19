@@ -1,4 +1,4 @@
-# DRAFT (not approved, not registered; user postponed the clean rerun on 2026-10-18 23:1x) - Clean rerun of the MICE results on the H800 cluster
+# Registered by ACTIVATION_20261019.md (this note holds on conflict); originally a DRAFT postponed on 2026-10-18 23:1x - Clean rerun of the MICE results on the H800 cluster
 
 An integrity-recovery amendment made after the original results were seen: recomputing the fixed confirmatory and
 held-out evaluations with unchanged criteria corrects possible computation faults; it is not new held-out evidence
