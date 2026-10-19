@@ -43,3 +43,23 @@ amendment c is raised from 12 to 16 with a guard ("提到 16，附守卫"). Fabl
    footnote: dtmoe evaluated on the CPU because the CPU and GPU runs of the same configuration differ (amendment b:
    prediction agreement 0.83-0.97) and the GPU strict deterministic mode was too slow on the local GPU. Timing and
    peak memory measured on the local CPU (amendment c item 7).
+
+## Deviation 1 (2026-10-19 12:4x, before any dtmoe output under this amendment)
+The probe of item 3 started at 12:35:47 with 16 running CPU processes. The guard tripped at 12:41:59 as registered:
+Drift-Resilient TabPFN stream h3_airlines_b, median batch time 7.35 s over 659 batches before dtmoe started (last 50:
+7.69 s) against 10.60 s over 31 batches after, +44%; 1-minute load 13.4 to 16.7. The four dtmoe processes were killed;
+their partial outputs are in quarantine as "stop"; no death was recorded (dtmoe_cpu/deaths/ empty). The "probe pre
+FAILED" line that dtmoe_cpu.sh then logged is an artifact of the missing outputs, not a determinism result (a note
+says so in progress.txt); probe_pre/ and its comparison files were moved to probe_pre_stopped_20261019_1241/ and
+nothing of them is used. dtmoe_cpu.sh now logs "probe pre STOPPED" and exits before comparing when STOP exists (the
+commit of this deviation). Likely cause (a hypothesis, not measured separately): the machine has 10 physical cores
+(20 logical); nice 19 did not keep the DR process from slowing down. From now on at most 12 running CPU processes
+plus the GPU process: four processes of the running extension were suspended with SIGSTOP at 12:46:27 (pids and
+tasks in dev/suspended_20261019.txt); their outputs will carry invalid wall-time arrays, which are not used anywhere
+(select_frozen.py reads only acc; timing and peak memory are measured under amendment c item 7). The extension
+continues on 8 lanes, dtmoe on 4. The four are resumed (SIGCONT) when the dtmoe path ends or stops, or when the
+extension's queue is empty, whichever comes first; lanes then follow item 1, scaled to at most 12 running CPU processes (dtmoe 6, other tests 6).
+The guard is unchanged. A second trip on the DR criterion with 12 running processes means the cause is not the
+process count; dtmoe then waits for the end of the extension. Fable 5.1 (MICE/logs/table1_fill/fable_dtmoe_trip.md)
+proposed this; Sonnet reviewed it (4 findings, accepted: no watchdog in the extension, checked - xargs without
+timeout, CPU only; wt marked invalid; evidence moved, not deleted; a manual DR check about 15 min after the restart).

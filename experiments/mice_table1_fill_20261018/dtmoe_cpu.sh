@@ -45,6 +45,7 @@ case $1 in
     say "probe pre start, P=$3"
     { echo "$PROBES" | sed "s|^|$D/dev/P |"; echo "$PROBES" | sed "s|^|$D/probe_pre/b |"; } |
       xargs -P $3 -L 1 bash -c 'task "$@"' _
+    [ -e $D/STOP ] && { say "probe pre STOPPED (guard; no determinism verdict)"; exit 2; }
     ok=1
     while read s L lr st m; do t=$(tag $s $L $lr $st $m)
       $CMP $D/probe_pre/b $D/dev/P $t > $D/probe_pre.$t.txt || { ok=0; say "probe pre $t DIFFERENT or MISSING"; }
