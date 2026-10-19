@@ -1321,3 +1321,5 @@
 - 2026-10-19 14:07 例行检查：DR h3_airlines_b 于 13:18:08 完成（7458 秒），9/92 完成；无 GPU_STOP。CPU 扩展 98/450（8 路运行 + 4 路挂起），新 FAIL 0。dtmoe 探针：elec2 L16、L32 两次都完成，insects_abrupt L32 s5 两次运行中；load 11.3。
 
 - 2026-10-19 15:08 例行检查：DR 9/92，第 10 个流运行中；无 GPU_STOP。CPU 扩展 107/450，新 FAIL 0。dtmoe 探针 insects_abrupt L32 s5 两次仍在运行（已约 2 小时 15 分）；load 11.4。
+
+- 2026-10-19 16:08 例行检查：DR h3_airlines_c 于 15:14:47 完成（7000 秒），10/92；无 GPU_STOP。CPU 扩展 118/450，新 FAIL 0。dtmoe 探针 insects_abrupt L32 s5 运行 a 于 15:59:29 完成（约 3 小时 8 分，CPU 单线程），运行 b 仍在跑。
