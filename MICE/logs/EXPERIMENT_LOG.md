@@ -1327,3 +1327,5 @@
 - 2026-10-19 16:16 **dtmoe CPU 确定性探针通过**（16:15:29）：三条探针（elec2 L16 s1、elec2 L32 s1、insects_abrupt L32 s5）两次新进程逐数组字节一致（wt 除外），PROBE_PRE_PASSED 写入；开发网格 16:15:51 自动启动（4 路，守卫在线）。实测 CPU 时间：elec2 s1 约 650 秒，insects_abrupt L32 s5 约 11300 秒。预算投影（amendment e 第 3 条）：s5/s1 约 6.9 倍，每个 (L, lr, mech) 的两档 steps × 5 流约 5.7 万秒，网格 18 组约 285 核时；4 路约 71 小时，扩展网格结束后改 6 路，预计 10-22 晚冻结。若最优落在 n_steps 边界，n_steps 25 扩展约 90 个任务 × 约 5 倍 s5 时间，可能上千核时，届时先报用户。
 
 - 2026-10-19 17:11 dtmoe 网格 16:15:51 启动后 16:26:34 守卫第二次触发（DR h3_covertype_b 8.49 vs 6.98 秒，+22%；参考批次是在 10 个 CPU 进程下跑的）。4 个网格进程被停，无 death。按 deviation 1 登记的规则：17:08 恢复 4 个挂起的扩展进程（12 路扩展），dtmoe 等扩展结束后再启动，守卫不变（amendment e Event 2）。Fable 建议等 DR 结束，Sonnet 指出那是新规则，暂不采纳（MICE/logs/table1_fill/fable_trip2.md）。
+
+- 2026-10-19 18:12 例行检查：DR h3_covertype_b 于 17:12:45 完成（7078 秒），11/92；无 GPU_STOP。CPU 扩展 148/450（12 路），新 FAIL 0。Fable 要的测量：12 路扩展下 DR h3_covertype_c 每批中位数 8.39 秒（426 批），与 dtmoe 4 路 + 扩展 8 路时触发守卫的 8.49 秒几乎相同 → 第二次触发主要是参考基线（10 个进程）造成的，dtmoe 本身没有额外拖慢 DR。dtmoe 仍按登记规则等扩展结束。
