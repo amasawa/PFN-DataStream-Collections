@@ -1329,3 +1329,5 @@
 - 2026-10-19 17:11 dtmoe 网格 16:15:51 启动后 16:26:34 守卫第二次触发（DR h3_covertype_b 8.49 vs 6.98 秒，+22%；参考批次是在 10 个 CPU 进程下跑的）。4 个网格进程被停，无 death。按 deviation 1 登记的规则：17:08 恢复 4 个挂起的扩展进程（12 路扩展），dtmoe 等扩展结束后再启动，守卫不变（amendment e Event 2）。Fable 建议等 DR 结束，Sonnet 指出那是新规则，暂不采纳（MICE/logs/table1_fill/fable_trip2.md）。
 
 - 2026-10-19 18:12 例行检查：DR h3_covertype_b 于 17:12:45 完成（7078 秒），11/92；无 GPU_STOP。CPU 扩展 148/450（12 路），新 FAIL 0。Fable 要的测量：12 路扩展下 DR h3_covertype_c 每批中位数 8.39 秒（426 批），与 dtmoe 4 路 + 扩展 8 路时触发守卫的 8.49 秒几乎相同 → 第二次触发主要是参考基线（10 个进程）造成的，dtmoe 本身没有额外拖慢 DR。dtmoe 仍按登记规则等扩展结束。
+
+- 2026-10-19 19:12 例行检查：DR 11/92，h3_covertype_c 运行中；无 GPU_STOP。CPU 扩展 164/450（12 路），新 FAIL 0。
