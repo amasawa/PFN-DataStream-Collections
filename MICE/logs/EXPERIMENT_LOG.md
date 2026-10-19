@@ -1315,3 +1315,5 @@
 - 2026-10-19 12:35 dtmoe 改在 CPU：用户选 1（CPU 上跑，开发和测试），并批准 CPU 进程上限 12 → 16 附守卫。Fable 5.1 给出方案（MICE/logs/table1_fill/fable_dtmoe_cpu.md，1.77 美元）：dtmoe 专用 4 路 nice 19、守卫、三条确定性探针（运行 a 进网格目录、运行 b 对照）、旧的 3 个 P_cpu_dtmoe 不复用只做信息比对、独立目录 dtmoe_cpu/、首尾核对。写成 AMENDMENT_BASELINES_20261018e.md、dtmoe_cpu.sh、dtmoe_guard.sh；Sonnet 两轮审核（第 1 轮 7 条、第 2 轮 4 条，全部采纳并修正，MICE/logs/table1_fill/sonnet_dtmoe_cpu.md）。提交并推送后先跑探针。
 
 - 2026-10-19 12:46 dtmoe 探针被守卫停下：12:35:47 起 16 个 CPU 进程，12:41:59 守卫触发（DR h3_airlines_b 每批中位数 7.35 → 10.60 秒，+44%），4 个 dtmoe 进程被杀、部分输出隔离为 stop、无 death；"probe pre FAILED"是缺输出造成的假象，不是确定性结论。本机 10 个物理核，nice 19 护不住 DR。Fable：总运行 CPU 进程回到 12（扩展 4 个进程 12:46:27 SIGSTOP 挂起，dtmoe 用这 4 个位置）；Sonnet 审 4 条全采纳。deviation 1 写入 amendment e，dtmoe_cpu.sh 加 STOP 后不比对。提交推送后重启探针，15 分钟后人工查 DR。
+
+- 2026-10-19 13:07 dtmoe 探针 12:50:51 重启（12 个运行 CPU 进程）。15 分钟人工检查：DR h3_airlines_b 重启后 120 批中位数 7.76 秒，之前 7.38 秒（+5%，在 20% 以内）；load 12.3。探针：elec2 L16 s1 两次各约 10.7 分钟完成，elec2 L32 s1 一次完成。
