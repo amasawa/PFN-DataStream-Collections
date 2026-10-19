@@ -1,0 +1,17 @@
+You are the senior expert / decision adviser (read-only). Answer in English with: Decision / Supporting evidence / Alternative options / Key risks / Remaining uncertainty / Confidence / Requires user approval. Be concise (<= 500 words).
+
+## Context
+- Repository: current directory. The H800 clean rerun DRAFT is experiments/clean_rerun_mice_h800/ (PLAN.md, HANDOFF.md, MANIFEST.md, make_bundle.sh, tasks.jsonl with 2828 tasks incl. sets drtabpfn (92) and dtmoe_dev (180)). It was suspended by the user on 2026-10-18 23:3x; experiments/mice_table1_fill_20261018/AMENDMENT_BASELINES_20261018d.md item 1 superseded "GPU work to the H800" with the local GPU, and AMENDMENT_BASELINES_20261018e.md moved dtmoe to the local CPU.
+- State now (2026-10-19 ~23:30): local Drift-Resilient TabPFN (DR) 13/92 streams done on the local RTX 5000 Ada (the GPU with the silent-corruption incident), ~70 h left. Local CPU: extension grid of fsnet/onenet/adaptz/shifts 250/450 (CPU, not in the rerun). CPU dtmoe: determinism probe passed, development grid not started (STOP; waits for the end of the extension).
+- NEW user decision (2026-10-19, verbatim): "选A 整个mice 重新跑，数据和权重都要在macmini下好" = whole MICE rerun on the 8 H800 (Tongji cluster); the Sydney machine cannot reach the cluster; the user's Mac mini can (and has internet + Claude Code). Transport chosen by the user: code via GitHub (the repo is PUBLIC, so no data/weights there), data + weights bundle (~1.2 GB: MICE data, run inputs, ext-baselines incl. DR model_cache weights, TabPFN v2 cache) via the user's University OneDrive share link, downloaded on the Mac mini, then rsync to the cluster. TabICL checkpoint and pip wheels downloaded on the Mac mini (cluster may lack internet).
+- No code under the rerun changed since the draft commit 959aae3 (git log empty for run_drtabpfn.py, run_ts.py, pool_gpu.py, MICE/code).
+
+## Question (one bounded decision)
+How should the draft be reactivated and reconciled with amendments d/e? My proposal:
+P1. Reactivate the draft as registered by a short ACTIVATION note (dated 2026-10-19) committed+pushed before any cluster run: user approval quote; transport = OneDrive (as in the draft) + Mac-mini downloads for TabICL ckpt and wheels; scope unchanged (all GPU-computed MICE results; CPU-only results not rerun).
+P2. DR: the H800 run is the reported one (as the draft says). The local DR run continues only until the H800 DR set passes its determinism probe, then it is stopped; its outputs are kept but never merged or used (registered now, before any H800 output exists, so no choice is made after seeing scores). If the H800 DR set cannot run (probe failure with no registered fix), the disposition goes to the user.
+P3. dtmoe: back to the draft (H800, strict deterministic mode per gpu_verify AMENDMENT_20261018b, whole dev grid then tests). The CPU dtmoe of amendment e is cancelled before its grid starts (no CPU dtmoe grid output exists; probe outputs kept).
+P4. The fsnet/onenet/adaptz/shifts CPU runs continue locally unchanged. TOT stays "registered separately".
+P5. Amendment d item 1 and e item 1 supersessions are reversed by the activation note for DR and dtmoe only.
+
+Is P1-P5 sound for integrity (no post-hoc selection between local and H800 runs, frozen criteria untouched)? What must change? Any blocker I am missing (e.g. whether "选A 整个mice 重新跑" suffices as the user approval the draft required, or whether the CPU baselines should also move)?
