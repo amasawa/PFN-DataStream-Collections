@@ -63,3 +63,14 @@ The guard is unchanged. A second trip on the DR criterion with 12 running proces
 process count; dtmoe then waits for the end of the extension. Fable 5.1 (MICE/logs/table1_fill/fable_dtmoe_trip.md)
 proposed this; Sonnet reviewed it (4 findings, accepted: no watchdog in the extension, checked - xargs without
 timeout, CPU only; wt marked invalid; evidence moved, not deleted; a manual DR check about 15 min after the restart).
+
+## Event 2 (2026-10-19 16:26; the rule of deviation 1 applied, no new rule)
+The probe passed at 16:15:29 (three probes byte identical except wall time; PROBE_PRE_PASSED). The grid started at
+16:15:51 with 4 dtmoe lanes and 8 running extension lanes. The guard tripped at 16:26:34 on the DR criterion
+(h3_covertype_b: recent median 8.49 s against 6.98 s from earlier batches, which ran with 10 CPU processes); the four
+grid processes were stopped (no deaths; dev/P holds only the three probe outputs). As registered in deviation 1: the
+four suspended extension processes were resumed at 17:08 (12 extension lanes again) and dtmoe waits for the end of the
+extension; the guard is unchanged. Fable 5.1 advised waiting until DR ends instead; Sonnet noted that this would be a
+new rule and that the evidence for a dtmoe-specific slowdown rests on one stream pair; the coordinator keeps the
+registered rule. At the end of the extension dtmoe restarts within 12 running CPU processes; if the guard trips again
+on the DR criterion, dtmoe waits for the end of DR (reported to the user before it is applied).
