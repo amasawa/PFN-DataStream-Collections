@@ -1,0 +1,10 @@
+{
+ "list": "tasks_stage2_adaptz_test.jsonl",
+ "method": "adaptz",
+ "kind": "test",
+ "selection_file": "MICE/results_paper/table1_fill/frozen_cluster/frozen_adaptz_final.json",
+ "selection_sha256": "8fd443714c6ec9c8933d2cc979a1987fc831ff7f4791a8e79fa74974a66a50bf",
+ "expected": 92,
+ "tasks": 92,
+ "generator_sha256": "caea58fb40653c96b0488295334b3179e3429e60571bcb92a2e2c98543aa8ce5"
+}
