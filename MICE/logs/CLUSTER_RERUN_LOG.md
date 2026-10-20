@@ -242,3 +242,9 @@
 - P2 CPU 节点型号：AMD EPYC 9654（partition amd，192 核、772 GB/节点），全部 P2 任务都用该型号；首个作业里用 lscpu 记录实际型号。
 - P2 探针：3049609（probe_p2.sbatch，amd，14 核，7 个 qualify 并行，`--tasks tasks_p2.jsonl`，输出 $WORK/qualify_p2/1..7），排队中。
   任务清单 tasks_p2.jsonl：2358 个 CPU 任务，估计 132 CPU 小时（ts_dev 720 个 64 h，mice-table1-trained-probs 736 个 37 h）。
+- 21:40–21:45 CST P2 探针 3049609（cpua228，lscpu：AMD EPYC 9654 96-Core Processor）：7 个全部 **QUALIFIED (bit-identical)**：
+  results_river:elec2__hat、results_trained_dev:elec2__mooe_lin_50_0.1_0.01、mice-main-trained-grid20:grid_c5_b500_s20__nse、
+  mice-table1-trained-probs:h2_phishing__levbag、mice-confirm-cp-20261017-cpu:cc_btc_2013__arf、ts_dev:elec2__adaptz_L1_lr0.001_s1_m0.001、
+  results_heldout34_trained:h3_poker_b__mooe_rff2000_100_2_0.01。另核对 7 个探针输出均符合 tasks_p2.jsonl 的 schema（P1 的 cuts/closes 问题不出现在 P2）。
+- 21:47 CST P2 生产：8 个作业 3049649–3049656（amd，各 48 核、24 个 worker、每 worker 2 核，共 384 核；`--gpu cpu --tasks tasks_p2.jsonl`），
+  节点 cpua258、cpua016、cpua037、cpua279、cpua068，全部立即开始。核数合计 384 + P1 56 = 440 ≤ 500。
