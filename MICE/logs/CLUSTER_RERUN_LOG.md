@@ -437,3 +437,13 @@ stage2_ext_onenet                  done=83 claimed=7 gaveup=0 left=0
 - 3050085（AMD 9654）：[10] elec2 L32 lr1e-4 s1 m2、[9] elec2 L16 lr1e-4 s1 m2（22:51 CST）、[11] insects_abrupt_balanced L32 lr1e-3 s5 m2
   （04:24:47 CST，两次共约 5.9 h）均 **QUALIFIED (bit-identical)**。按用户第 4 项决定运行 tasks_dtmoe_cpu.jsonl（60 个，输出 dtmoe_cpu/dev/P）：
   3 个 prod_p2 作业（TASKS=tasks_dtmoe_cpu.jsonl，各 48 核、24 worker、每 worker 2 核）。
+
+## 2026-10-21 07:48 AEDT P1 旧代码作业全部结束；误判任务重置；补跑作业排队
+
+- 8 个 P1 作业（3048892–8、3049189）已全部结束，8 张卡都在跑 results_*（3050502–9，新代码）。此时没有任何旧代码 worker。
+- 重置（与 results_grid_test 同法，记录移入 _rerun/reset_20261021b/）：逐个用补丁后的 valid() 检查最后一次隔离输出，**仅对有效者**重置：
+  mice-r14-dev 104、mice-r13-acc 91、mice_seg_origin_r12 15（共 210，均为旧代码 worker 的 cuts/closes 误判）。
+  未重置（其他原因，等用户）：mice-r14-exist 18、mice-r14-confirm 2、mice-r14-devtrim 2（行数类）、mice-tkde-control 1（显存上限）。
+- 释放 P1 子集中被作业结束打断的 claim（只限 mice-* 组，不用 `rerun.py release`）：mice-r13-acc 9、mice-r14-test 3、mice_seg_origin_r12 1。
+- 待跑：mice-r14-test 3、mice-r14-dev 104、mice-r13-acc 100、mice_seg_origin_r12 16。补跑作业 3053914–3053920（NW=6，新代码），
+  各 afterany 于 results_* 作业 3050503–3050509；drtabpfn 3050510 afterany 于 3050502。
