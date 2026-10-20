@@ -379,3 +379,8 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
 - P2b：fsnet 扩展 87/90，onenet 42/90，adaptz 测试 81/92；dtmoe CPU 探针 [11]（insects）自 22:32 CST 运行中。
 - P2b fsnet：扩展 90/90 done、0 gaveup。`--final`：54/54，最终配置不变 L32 lr1e-3 s5 m0.9（steps 25 没有更好）。在 fsnet 测试任务之前提交。
   另：cp1000（cuts/closes 行数）类 GAVE UP 增至 10 个。
+- 04:05 AEDT 全部 P1 GAVE UP 按原因分类（用补丁后的 valid() 检查各任务最后一次隔离输出）：
+  - 103 个 mice-r14-dev：补丁后有效（旧代码 worker 误判，cuts/closes 不在 schema 中）。
+  - 15 个行数类（全是 micecp1000_500 / archcp1000_500）：mice-r14-exist 11（8 个只 cuts 差一行；h3_covertype_c、h2_poker 的 micecp 与 archcp
+    三项 cuts/closes/.closes.pkl 都差）、mice-r14-confirm 2（closes 与 .closes.pkl）、mice-r14-devtrim 2（d_b500_o250_c100_s0 的 micecp/archcp，closes 与 .closes.pkl）。
+  没有其他原因的 GAVE UP。
