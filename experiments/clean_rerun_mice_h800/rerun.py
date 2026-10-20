@@ -101,9 +101,12 @@ def valid(o, sch):
         return False
     try:
         if o.endswith(".npz"):
+            # cuts / closes: provenance records that run.py writes since e62ebce (no effect on predictions), absent from
+            # the schemas of the older results_* outputs; compared only where the schema has them (user 2026-10-21)
+            rec = {"cuts", "closes"} - set((sch or {}).get("npz", {}))
             with np.load(o, allow_pickle=True) as z:
                 got = {k: [list(z[k].shape), "<U" if z[k].dtype.kind == "U" else str(z[k].dtype)]
-                       for k in z.files if k not in ("wt", "te", "peak_mem")}
+                       for k in z.files if k not in ("wt", "te", "peak_mem") and k not in rec}
             return bool(sch) and got == sch["npz"]          # every task registers its structure (tasks.jsonl)
         if o.endswith(".pkl"):
             x = pickle.load(open(o, "rb"))
