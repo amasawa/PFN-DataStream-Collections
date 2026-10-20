@@ -450,3 +450,10 @@ stage2_ext_onenet                  done=83 claimed=7 gaveup=0 left=0
 
 ### 2026-10-21 09:55 AEDT (06:52 CST) progress
 VPN back at 09:51 AEDT; all jobs kept running. results_* (3050502-509, running 2:09-3:19): 445 done, 24 claimed, 427 left, 0 gave up. dtmoe_cpu_dev (3053868-870): 42/60 done, 18 claimed, 0 gave up. Pending: drtabpfn 3050510, P1 rest 3053914-920 (afterany on results_*).
+
+### 2026-10-21 10:15 AEDT P3 inputs and smoke job
+P3 weights copied from $WORK/p3_download/{tabpfn,tabdpt} to $W3=$WORK/home/mice-p3-weights (layout as run_backbone.py
+expects); sha256 -c OK for tabpfn-v3.5-20260909.safetensors, tabdpt1_3.safetensors, config.json. ext-baselines-p3
+(LimiX, CURE) not unpacked: unused after AMENDMENT_20261020d. Smoke job 3054183 (cluster/p3_smoke.sbatch, p3_smoke,
+--gpu exclusive, tasks_p3b.jsonl) submitted; pending on the 8-GPU QOS limit. GPU use, mean of the last 30 samples per
+results_* job: util 37-78%, memory 2.3-5.1 GB of 80 GB. Cluster cannot reach github.com:22; scripts are copied by scp.
