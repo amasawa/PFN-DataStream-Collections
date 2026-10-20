@@ -328,3 +328,12 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
 - 22:51 CST dtmoe CPU 探针：[10] elec2 L32 **QUALIFIED**、[9] elec2 L16 **QUALIFIED**（bit-identical）；[11] insects 仍在运行。
 - P2b shifts：扩展 90/90 done、0 gaveup。`select_frozen.py … shifts … --final`：54/54 个配置可选，最终配置不变
   L16 lr1e-3 s5 m0.5（扩展的 steps 25 没有更好）。frozen_shifts_final.json 在任何 shifts 测试任务之前提交。
+
+## 2026-10-21 02:04 AEDT 进度与估计
+
+- GPU（22:58 CST，最近 15 分钟）：8 卡利用率 95–99%，显存 5–8 GB / 80 GB。
+- 22:58 CST 登录节点 logini04 上的 tmux 服务已不在（会话全部消失，原因不明）；但 27 个追加 worker 的 Slurm 作业步骤仍在运行
+  （squeue -s 可见，抽查 3048892/3/4 的 18 个 worker 全在）。此后用作业步骤数而不是 tmux 会话数检查它们。
+- P1 子集：690/1646 done（r14-test 357+3 待重跑、r14-exist 101 done + 4 个 cuts 行数类 GAVE UP、r14b-acc 232/276）。
+  按最近 60–120 分钟的完成量（26–37 个估计秒/秒），子集剩余约 142 估计小时，约 4–5.5 小时；之后 results_*（约 82 估计小时）、drtabpfn、P3。
+- P2b：shifts 已冻结、测试 2 个作业运行中；fsnet、onenet、adaptz 扩展约 250/450。dtmoe CPU 探针 2/3 QUALIFIED。
