@@ -33,6 +33,11 @@ what is rerun and what must stay the same), `MANIFEST.md`, `tasks.jsonl`, `rerun
   short GPU job).
 
 ## Step 1. Inputs
+- **Single archive (2026-10-20).** The user may instead copy one file, `C:\Users\zhwu9808\Desktop\mice_cluster_all.tar`,
+  to the Mac mini desktop and untar it there (`tar xf mice_cluster_all.tar`). It contains `START_HERE.md`, the three
+  bundles unchanged (`mice_h800_bundle/`, `mice_h800_bundle_p2/`, `mice_h800_bundle_p3/`, each with its SHA256SUMS),
+  and `repo.bundle` (a `git bundle` of main, a fallback if `git clone` from GitHub fails). Wherever this file says
+  "copy the bundle over RDP", use the untarred directory instead.
 - The bundle is on the Windows machine's desktop, `C:\Users\zhwu9808\Desktop\mice_h800_bundle\` (SHA256SUMS
   inside). The user copies it to the Mac mini over RDP (for example to `~/mice_h800_bundle/`). On the Mac, check
   `shasum -a 256 -c SHA256SUMS` first, then copy it to the cluster:
