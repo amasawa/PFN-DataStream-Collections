@@ -377,3 +377,5 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
 - P1：r14b-acc 276、table1-cp-gen 30、main-cp-grid10 13、table1-probs-gen 60 完成；confirm-cp-20261017 62/66；r14-exist 104 done、11 在跑；
   mice-r14-dev 2 done、83 GAVE UP（旧代码 worker，见上一节）、33 在跑、26 待跑。
 - P2b：fsnet 扩展 87/90，onenet 42/90，adaptz 测试 81/92；dtmoe CPU 探针 [11]（insects）自 22:32 CST 运行中。
+- P2b fsnet：扩展 90/90 done、0 gaveup。`--final`：54/54，最终配置不变 L32 lr1e-3 s5 m0.9（steps 25 没有更好）。在 fsnet 测试任务之前提交。
+  另：cp1000（cuts/closes 行数）类 GAVE UP 增至 10 个。
