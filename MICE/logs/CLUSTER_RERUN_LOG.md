@@ -386,3 +386,22 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
   没有其他原因的 GAVE UP。
 - 04:15 AEDT fsnet 测试 stage2_test_fsnet 92/92 done、0 gaveup：**fsnet 的 P2b 完成**。
 - 04:30 AEDT adaptz 测试 stage2_test_adaptz 92/92 done、0 gaveup：**adaptz 的 P2b 完成**。剩 onenet（扩展中）。
+
+## 2026-10-21 05:05 AEDT（02:05 CST）进度
+
+```
+mice-r14-exist                     done=104 claimed=4 gaveup=14 left=0
+mice-r14b-acc                      done=276 claimed=0 gaveup=0 left=0
+mice-r14-confirm                   done=214 claimed=0 gaveup=2 left=0
+mice-table1-cp-gen                 done=30 claimed=0 gaveup=0 left=0
+mice-main-cp-grid10                done=13 claimed=0 gaveup=0 left=0
+mice-confirm-cp-20261017           done=66 claimed=0 gaveup=0 left=0
+mice-table1-probs-gen              done=60 claimed=0 gaveup=0 left=0
+mice-r14-dev                       done=40 claimed=0 gaveup=104 left=0
+mice-r14-devtrim                   done=18 claimed=0 gaveup=2 left=0
+mice-tkde-control-20261009         done=157 claimed=44 gaveup=0 left=22
+stage2_ext_onenet                  done=83 claimed=7 gaveup=0 left=0
+```
+- r14-exist GAVE UP 增至 14（新增 3 个待分类，预计同属行数类）；mice-r14-dev 104 GAVE UP（旧代码误判，40 个不写 cuts/closes 的方法正常 done）。
+- 接下来 P1 子集还剩 tkde-control 66、mice-r13-acc 100、mice_seg_origin_r12 16；GPU 利用率抽查 76–86%（tkde-control 阶段）。
+- P2b：shifts、fsnet、adaptz 完成；onenet 扩展 83/90。dtmoe CPU 探针 [11] 仍在运行（自 22:32 CST）。
