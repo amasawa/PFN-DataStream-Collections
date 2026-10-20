@@ -339,3 +339,14 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
 - P2b：shifts 已冻结、测试 2 个作业运行中；fsnet、onenet、adaptz 扩展约 250/450。dtmoe CPU 探针 2/3 QUALIFIED。
 - 22:54–22:55 CST shifts 测试（3050236/7，各约 50 s）：stage2_test_shifts 92/92 done、0 gaveup（shifts 很快，例：agrawal_s10 4 s），
   输出 mice-table1-newbase/test_cluster/P。**shifts 的 P2b 完成**（选择 → 扩展 90 → --final → 测试 92）。
+
+## 2026-10-21 02:28 AEDT 预先提交 GPU 后续作业（防 VPN 断开时卡空闲）
+
+- 用户担心夜间 VPN 断开。Slurm 作业不依赖 VPN；但执行者断线时无法提交后续作业。因此按已批准的计划（决定第 2、3、6 项）预先提交：
+  - results_* 全部 17 组（含 TabICL 4 组；不含 results_delay_dev），每卡 NW=3（OMP_NUM_THREADS=4），8 个单卡作业，
+    各自 `--dependency=afterany` 于一个 P1 作业：3048892→3050502、3048893→3050503、3048894→3050504、3048895→3050505、
+    3049189→3050506、3048896→3050507、3048897→3050508、3048898→3050509；`--exclude-sets` 为其余 20 组。新作业使用已打补丁的 rerun.py。
+  - drtabpfn：dr.sbatch（NW=6，7 天）作业 3050510，afterany 于 3050502。
+- 已知副作用：P1 作业的批处理脚本只等待 w1–w3；作业结束时，用 srun --overlap 追加的 w4–w6 若仍在跑最后一个任务会被一起结束
+  （每卡最多 3 个；记 1 次尝试，claim 保留）。待所有 worker 都停时用 `rerun.py release` 释放后重跑（连同 mice-r14-test 的 3 个）。
+- P2b（选择/冻结需先 git 提交）与 dtmoe CPU 网格（需 [11] 的探针结论）仍需执行者在线处理。
