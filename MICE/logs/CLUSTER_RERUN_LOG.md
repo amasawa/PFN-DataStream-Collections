@@ -428,3 +428,6 @@ stage2_ext_onenet                  done=83 claimed=7 gaveup=0 left=0
   table1-cp-gen 30、main-cp-grid10 13、confirm-cp 66、table1-probs-gen 60、r14-dev 40 done / 104 旧代码误判、devtrim 18+2、
   tkde-control 219 done / 3 在跑 / 1 OOM、r13-acc 0 done / 79 误判 / 21 在跑、seg_origin 0 done / 8 误判 / 8 在跑。
 - P2b：onenet 测试运行中；shifts、fsnet、adaptz 完成。
+- 07:17 AEDT onenet 测试 stage2_test_onenet 92/92 done、0 gaveup。**P2b 全部完成**：4 个方法的最终配置（frozen_cluster/frozen_<m>_final.json）
+  shifts L16 lr1e-3 s5 m0.5、fsnet L32 lr1e-3 s5 m0.9、onenet L32 lr1e-3 s5 m0.75、adaptz L1 lr1e-4 s25 m0.001；各 92 条测试流输出在
+  mice-table1-newbase/test_cluster/P。每一步的选择文件、任务清单都在运行前提交（4ef2307、5c3f553、4d7766d、841781f、f490b27、06d426c、b49c81d、63620b0、c4c766f、99641db）。
