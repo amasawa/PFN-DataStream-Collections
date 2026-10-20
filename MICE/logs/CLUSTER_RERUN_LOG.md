@@ -324,3 +324,7 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
   closes (90,4) 与 schema 一致，.pkl / .closes.pkl 一致，三次结构相同。即重算比原始少一个切点。至此 3 个 r14-exist 任务属这一类，等用户决定。
   注：每个这类任务会用满 3 次尝试（约 3×30 min GPU）才被放弃；用户决定前执行者不改判定。
 - 01:46 AEDT P2b 扩展 9 个作业（3050172–3050180：adaptz 3、fsnet 2、onenet 2、shifts 2，各 48 核/24 worker）开始运行。
+- 22:50:17 CST 第四个同类 GAVE UP：mice-r14-exist:elec2__micecp1000_500：cuts (43,2) 对 (44,2)，其余一致。
+- 22:51 CST dtmoe CPU 探针：[10] elec2 L32 **QUALIFIED**、[9] elec2 L16 **QUALIFIED**（bit-identical）；[11] insects 仍在运行。
+- P2b shifts：扩展 90/90 done、0 gaveup。`select_frozen.py … shifts … --final`：54/54 个配置可选，最终配置不变
+  L16 lr1e-3 s5 m0.5（扩展的 steps 25 没有更好）。frozen_shifts_final.json 在任何 shifts 测试任务之前提交。
