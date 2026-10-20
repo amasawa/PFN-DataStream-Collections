@@ -353,4 +353,4 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
 - 23:32 CST 同类 GAVE UP 第 5、6 个：mice-r14-confirm:c_bvar_c100_s52_o2__micecp1000_500 与 …_o0__micecp1000_500（三次 rc 0）：
   这次是 closes (27,4) 对 schema (28,4)，.closes.pkl 长度相应少 1；cuts 与 .pkl 一致。共 6 个任务（全是 micecp / archcp 的
   cuts/closes 行数差一行），等用户决定。
-- 注：监控里 results_grid_test 的 4 条 GAVE UP 是 20:07 的旧日志行，那 4 个任务已于 01:2x AEDT 重置。
+- 注：监控里 results_grid_test 的 4 条 GAVE UP 是 20:07 的旧日志行，那 4 个任务已按用户第 2 项决定重置（见上文“执行用户决定”一节）。
