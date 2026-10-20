@@ -368,3 +368,12 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
 - 后果：旧 worker 会把 mice-r14-dev（144）、mice-r14-devtrim（20）以及可能的同类组每个任务跑 3 次后放弃（估计浪费约 30 卡时）；
   输出本身有效，结果不丢。P1 作业结束后需要：重置这些任务的尝试记录（同 results_grid_test 的做法），并用新代码的 worker 补跑。
   注意：不能用 `rerun.py release`（它会释放所有任务清单的 claim，包括 P2b 正在运行的 CPU 任务），只释放 P1 任务的 claim。
+
+## 2026-10-21 03:34 AEDT 进度；cuts/closes 行数差一行的任务增至 9 个
+
+- 00:34 CST 新增同类 GAVE UP（三次 rc 0、三次结构相同）：mice-r14-exist 的 insects_incremental_abrupt_balanced__micecp1000_500 与 __archcp1000_500
+  （cuts 16 对 17）、h2_rialto__archcp1000_500（cuts 65 对 66）。至此：r14-exist 7 个、r14-confirm 2 个，共 9 个，都是 micecp/archcp，
+  cuts 或 closes 与原始差一行，其余结构一致。等用户决定。
+- P1：r14b-acc 276、table1-cp-gen 30、main-cp-grid10 13、table1-probs-gen 60 完成；confirm-cp-20261017 62/66；r14-exist 104 done、11 在跑；
+  mice-r14-dev 2 done、83 GAVE UP（旧代码 worker，见上一节）、33 在跑、26 待跑。
+- P2b：fsnet 扩展 87/90，onenet 42/90，adaptz 测试 81/92；dtmoe CPU 探针 [11]（insects）自 22:32 CST 运行中。
