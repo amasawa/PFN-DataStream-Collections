@@ -337,3 +337,5 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
 - P1 子集：690/1646 done（r14-test 357+3 待重跑、r14-exist 101 done + 4 个 cuts 行数类 GAVE UP、r14b-acc 232/276）。
   按最近 60–120 分钟的完成量（26–37 个估计秒/秒），子集剩余约 142 估计小时，约 4–5.5 小时；之后 results_*（约 82 估计小时）、drtabpfn、P3。
 - P2b：shifts 已冻结、测试 2 个作业运行中；fsnet、onenet、adaptz 扩展约 250/450。dtmoe CPU 探针 2/3 QUALIFIED。
+- 22:54–22:55 CST shifts 测试（3050236/7，各约 50 s）：stage2_test_shifts 92/92 done、0 gaveup（shifts 很快，例：agrawal_s10 4 s），
+  输出 mice-table1-newbase/test_cluster/P。**shifts 的 P2b 完成**（选择 → 扩展 90 → --final → 测试 92）。
