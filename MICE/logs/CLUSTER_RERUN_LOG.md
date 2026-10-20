@@ -271,3 +271,19 @@ mice-confirm-cp-20261017-cpu       done=22 claimed=0 gaveup=0 left=0
 ts_dev                             done=320 claimed=185 gaveup=0 left=215
 ```
 - results_grid_test 的 6 claimed / 4 gaveup 是 20:04–20:08 两次取消留下的（见上），等处置。mice-r14-test 的 3 claimed 是 20:44 被回收的 worker 留下的。
+
+## 2026-10-21 01:29 AEDT 用户（协调者）决定：6 项全部按执行者推荐
+
+用户原话："全部按推荐"。执行者的推荐（同一条消息中逐项列出）：
+1. **P2b**：ts_dev 720 done、0 gaveup 后，由执行者在集群上按 REGISTRATION_STAGE2_20261020 的流程执行
+   （select_frozen.py → 提交 frozen_cluster/frozen_<m>.json → make_tasks_stage2.py ext → 提交并运行 → --final 重选并提交 →
+   make_tasks_stage2.py test → 提交并运行）。与登记的唯一差别：选择在集群上读同一批开发输出，而不是返回 Windows 的 ~/h800 后再读。
+   任何 GAVE UP 都停止该方法并等用户。
+2. **run.py 的 cuts / closes**：e62ebce 只把 _merge_or_add 包进 _close 以记录每个存储上下文的行来源（注释："no effect on
+   predictions"），并多写 closes 数组和 .closes.pkl。决定：rerun.py valid() 把 cuts、closes 与 wt、te、peak_mem 一样排除在结构
+   比较之外；results_* 各组恢复运行；4 个 GAVE UP 任务（results_grid_test）重置尝试记录（旧记录移入 _rerun/reset_20261021/，不删除）。
+3. **TabICL**（[3] 只有 ll 有约 1e-7 相对差，acc/预测逐位一致）：照常运行 4 个 TabICL 组，论文如实写明“预测逐位一致，概率有浮点级差异”。
+4. **dtmoe 改 CPU**：执行者生成 CPU 任务清单（去掉 TS_DEVICE、TS_DETERMINISTIC、CUBLAS_WORKSPACE_CONFIG，tsbase 环境，新输出目录，
+   AMD 9654 节点），先 qualify 三个 m2 探针 id，全部逐位一致后再跑 60 个开发任务；随后按第 1 项流程做 dtmoe 的阶段 2。
+5. **确认既成事实**：每卡 6 worker（OMP=1 组）；不用 MPS（6 worker 下 GPU 约 95%）；P3 权重由集群经 hf-mirror 下载并按 sha256 核对。
+6. **P1 子集结束后**：release 被打断的 claim 并重跑；随后 drtabpfn（dr.sbatch）和 P3。
