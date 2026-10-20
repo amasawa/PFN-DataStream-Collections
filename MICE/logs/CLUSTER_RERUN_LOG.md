@@ -320,3 +320,7 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
   4 个方法各 36/36 个配置可选。最优配置及所需扩展：fsnet L32 lr1e-3 s5 m0.9 → steps 25；onenet L32 lr1e-3 s5 m0.75 → steps 25；
   adaptz L1 lr1e-4 s5 m0.01 → lr 1e-5、steps 25；shifts L16 lr1e-3 s5 m0.5 → steps 25。选择文件 commit 4ef2307（扩展任务存在之前）。
 - `make_tasks_stage2.py ext <m>`：fsnet 90、onenet 90、adaptz 180、shifts 90（各 manifest 的 expected = tasks），共 450 个，输出到 dev_cluster/P。
+- 22:48:58 CST 第三个同类 GAVE UP：mice-r14-exist:elec2__archcp1000_500（gpu8017，三次 rc 0，约 1823 s/次）：cuts (43,2) 对 schema (44,2)，
+  closes (90,4) 与 schema 一致，.pkl / .closes.pkl 一致，三次结构相同。即重算比原始少一个切点。至此 3 个 r14-exist 任务属这一类，等用户决定。
+  注：每个这类任务会用满 3 次尝试（约 3×30 min GPU）才被放弃；用户决定前执行者不改判定。
+- 01:46 AEDT P2b 扩展 9 个作业（3050172–3050180：adaptz 3、fsnet 2、onenet 2、shifts 2，各 48 核/24 worker）开始运行。
