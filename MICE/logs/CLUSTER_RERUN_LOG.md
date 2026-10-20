@@ -299,3 +299,13 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
   {PYTOT}→{PYTS}；去掉 TS_DEVICE/TS_DETERMINISTIC/CUBLAS_WORKSPACE_CONFIG；CUDA_VISIBLE_DEVICES=""；输出 mice-table1-newbase/dtmoe_cpu/dev/P），
   commit a404635。探针 3050085（probe_dtmoe_cpu.sbatch，amd，6 核）：三个 m2 id 各 qualify 一次，已开始。
 - P2 ts_dev 695/720（25 在跑，0 GAVE UP）；P2b 在 720 done 后开始。prod_p2.sbatch 增加 TASKS 变量（默认 tasks_p2.jsonl），供 P2b 和 dtmoe CPU 清单使用。
+
+## 2026-10-21 01:43 AEDT P1 GAVE UP：mice-r14-exist:h4_covertype_d__micecp1000_500（等用户处置）
+
+- 3 次尝试都在 gpu8011（slot 3048895_g0_w2），21:12:55–22:40:37 CST，rc 均为 0，墙钟 1815 / 1764 / 1643 s；三次都写出 .npz、.pkl、.closes.pkl。
+- 判失败的原因：npz 的 `cuts` 为 (164, 2)，tasks.jsonl 的 schema（取自原始输出）为 (163, 2)；其余键（acc、ll、B、concept、calls、
+  n_experts、closes (209,4)）与 schema 一致，.pkl 与 .closes.pkl（list 209）也一致。三次尝试的结构相同（运行是确定的）。
+- 含义：在 A800 上重算时，这条流的 micecp 比原始运行多一个切点（cuts 行数取决于计算结果）。这是重算与原始输出之间的一处真实差异，
+  不是运行器或节点故障。按 HANDOFF，执行者不手动重试、不改判定。三次输出在 _rerun/quarantine/mice-r14-exist__h4_covertype_d__micecp1000_500/{0,1,2}。
+- **请用户（协调者）决定：** 执行者建议 valid() 对 cuts / closes 只比较列数和 dtype（行数取决于数据，类似数值），把行数与原始不同的任务
+  单独列表报告；改后对此任务登记一次尝试重置。其他已完成的 r14 任务行数都与原始一致（否则也会失败）。
