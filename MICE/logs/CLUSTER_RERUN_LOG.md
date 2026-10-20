@@ -136,3 +136,35 @@
   用户原话："cpu 跑呗"。决定时没有任何 dtmoe 分数（集群上没有 dtmoe 输出被读取；参考运行只读墙钟时间）。
 - **请协调者：** 按 Fable 协议写成 dated amendment 并生成 CPU 任务清单（单线程、TS_DEVICE 不设、TS_DETERMINISTIC 不设、
   CPU 版 torch 环境、新输出目录、固定 CPU 节点型号，run-twice 探针先行），提交后执行者再运行。dtmoe_dev 在此之前不启动。
+
+## 2026-10-20 20:01–20:06 CST（23:01–23:06 AEDT）探针收尾；生产首次提交传参错误，已取消并重交
+
+- [2] results_test:agrawal_s10__fifo1000 QUALIFIED（19:58:37）；[1] results_heldout3:h3_airlines_b__micev1000_500 QUALIFIED（19:56:50）；
+  [6] mice-r14b-acc:…snap1000_500.k2 QUALIFIED（19:47:51）；[4] results_probs:covertype__ddm1000 QUALIFIED（19:41:12）；
+  [7] mice-tkde-control-20261009:mis_micev_mis_b700_c30_s30 QUALIFIED（20:01:30）。[8] drtabpfn:elec2 仍在运行（drtabpfn 组本就不进共享生产）。
+  汇总：6 QUALIFIED（[1][2][4][5][6][7]），1 NOT QUALIFIED（[3] TabICL），dtmoe 3 个 TOO SLOW/取消，[8] 待定。
+- 20:02 提交 3048761（NW=3，4 卡）、3048762（NW=2，3 卡）；第 8 张卡仍被探针占用。
+- **错误：** `sbatch --export=ALL,NW=..,EXCL=a,b,c` 中逗号被当作变量分隔符，EXCL 只剩 `dtmoe_dev`。3048762 在 gpu8012 上运行 39 s
+  （20:04:39–20:05:18）后由执行者 scancel；3048761 未开始即取消。期间 worker 按文件顺序只领取了 6 个 results_grid_test 任务
+  （grid_c100_b2000_s10 的 ddm1000、fifo1000、micev1000_500、oracle1000、winens1000，s11 的 ddm1000），没有任何暂停组的任务启动。
+  这 6 个任务各记 1 次被杀的尝试（attempt 0，rc 未写入），`rerun.py release` 释放 6 个 claim；下次运行前其部分输出由 rerun.py 自动隔离。
+- 20:05 改为先 `export EXCL=…` 再 `sbatch --export=ALL` 重交：3048786（NW=3，4 卡）、3048787（NW=2，3 卡），排队中。
+
+## 2026-10-20 20:07–20:12 CST（23:07–23:12 AEDT）生产停止：run.py 家族输出多出 cuts / closes，结构检查失败
+
+- 3048787（NW=2，gpu8012，20:06:09 起；排除列表完整）运行约 2 分钟，20:07:50–52 四个任务 GAVE UP：results_grid_test 的
+  grid_c100_b2000_s10__ddm1000 / __fifo1000 / __oracle1000、grid_c100_b2000_s11__ddm1000（各 2 次尝试 rc 0，加上 20:04 被杀的
+  1 次，3 次用完）。执行者 20:08:19 scancel 3048787，3048786 未开始即取消。done=0，gaveup=4，claims=10（未释放，见下）。
+- **原因：** rerun.py `valid()` 要求 npz 的键与 tasks.jsonl 的 schema（取自原始输出）完全一致（只忽略 wt、te、peak_mem）。
+  当前 MICE/code/run.py 的 `np.savez_compressed` 多写两个键：`cuts`（(0,2) int64）和 `closes`（(0,4) int64），
+  由 e62ebce（2026-10-15 14:15，round 14 "stored-context provenance"）加入；原始 results_* 输出早于此，schema 中没有这两个键。
+  任务本身每次 rc 0、写出完整 npz（acc、ll、wt、B、concept、calls、n_experts 结构都与 schema 一致），只是被判为不完整。
+- **影响范围：** run.py 家族的全部 results_* 组：生产中 843 个任务（不含已暂停的 TabICL 4 组），估计 60 GPU 进程小时。
+  用探针输出核对 schema：[1] heldout3、[2] results_test、[4] results_probs 的主 npz 均 schema-invalid（同一原因）；
+  其他驱动的 [5] mice-r14-test、[6] mice-r14b-acc、[7] mice-tkde-control 的全部输出 schema-valid。
+  不受影响的共享生产任务：1646 个，估计 209 GPU 进程小时。
+- **请协调者（HANDOFF 规则 1，执行者不改代码）：**
+  1. 判断当前 run.py 与原始 results_* 运行的计算是否相同（e62ebce 只加了记录，还是也改了计算），并登记处置；
+     最小的操作性修正是 `valid()` 的忽略键加上 cuts、closes（与 wt 同类的记录键），或按当前输出更新 schema。
+  2. 提交 4 个 GAVE UP 任务的尝试记录重置（它们的 3 次尝试中 1 次被执行者传参错误时 scancel，2 次被本问题判失败）。
+  3. 10 个 claim 未释放、4 个 gaveup 记录和 MICE/results_grid_test 下现有输出（含 1 个 .ckpt）保持原样，等处置。
