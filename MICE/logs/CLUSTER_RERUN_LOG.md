@@ -106,7 +106,33 @@
 - [10] dtmoe_dev:elec2__dtmoe_L32_lr0.0001_s1_m2：R = 123.0 s；严格模式 1231 s 被终止：**TOO SLOW**。
 - [11] dtmoe_dev:insects_abrupt_balanced__dtmoe_L32_lr0.001_s5_m2：R = 1385.7 s（rc 0）；严格模式 19:31:37 开始（上限 13858 s）。
   按 ACTIVATION 第 2 条（"one TOO SLOW stops the dtmoe path"），dtmoe 路径已停止，[11] 的结论不再影响决定，
-  继续运行要占 1 张 A800 约 7.7 小时；22:33 AEDT 执行 `scancel 3048480`（运行 23:40，CANCELLED）。[11] 记为“未完成，已取消”。
+  继续运行要占 1 张 A800 约 7.7 小时；执行 `scancel 3048480`，作业于 19:32:11 CST 取消（运行 23:40）。[11] 记为“未完成，已取消”。
 - 三个参考运行均在 gpu8012、MPS、卡上 3 个进程下运行（与生产配置一致）。证据：$WORK/qualify/ref_9..11、9.out、10.out、11/a。
 - **待用户决定 dtmoe 路径**（ACTIVATION 第 2 条：退路方案、CPU 或不跑 dtmoe；决定不依赖任何 dtmoe 分数）。
   dtmoe_dev 继续不启动（生产 `--exclude-sets dtmoe_dev`）。
+- 22:34 AEDT 用户要求问 Fable dtmoe 怎么处理。Fable 5.1（60 s，1.16 美元）建议 **A：dtmoe 全部在集群 CPU 节点单线程跑**
+  （探针 run-twice 先行；固定一种 CPU 节点型号，建议与 P2 相同的 EPYC 9654；新目录、不混设备；网格、扩展、测试后各做 bookend；
+  论文 dtmoe 行标 "CPU" 并加脚注）。不选 B（默认模式 GPU，MPS 下 MoE 路由几乎必然不逐位一致，需为一个方法改完整性规则）、
+  C（严格模式估计 ≥600 GPU-h）、D（隐藏最接近的基线，只作 CPU 探针失败后的兜底）。成本粗估 350–800 CPU-h，墙钟 1–2 天（±50%）。
+  需用户批准，并由协调者写成 amendment 提交后执行。执行者补充：现登记的 dtmoe 任务行带 TS_DEVICE=cuda、TS_DETERMINISTIC=1、
+  {PYTOT}（totgpu，torch 2.3.1+cu121），CPU 方案需要新的任务清单（协调者生成并登记），执行者不改任务。
+
+## 2026-10-20 19:40 CST（22:40 AEDT）MPS 实际未生效；用户决定先不开 MPS 跑 30 分钟
+
+- 在探针作业 3048479 内（`srun --jobid --overlap`）查看：卡上 3 个任务进程的类型均为 `C`，不是 MPS 客户端的 `M+C`；
+  MPS 控制进程在 /tmp/mps_pipe_3048479 正常运行。原因：rerun.py 的子进程环境白名单 KEEP 不含
+  CUDA_MPS_PIPE_DIRECTORY / CUDA_MPS_LOG_DIRECTORY，任务进程找不到本作业的 MPS，退回普通 CUDA 上下文。
+  因此到目前为止的探针都在“无 MPS、卡上 3 个进程”的配置下运行。
+  同时观测：3 个进程合计显存 2.9 GB / 80 GB，GPU 利用率 87%（单次采样）。
+- 不把 MPS 放到默认 /tmp/nvidia-mps：节点与其他用户共用，可能影响他人作业。
+- **请协调者：** 若要 MPS 生效，最小改动是把 CUDA_MPS_PIPE_DIRECTORY、CUDA_MPS_LOG_DIRECTORY 加入 rerun.py 的 KEEP；
+  改后 MPS 配置需重做探针（修正 b 第 2 条：探针与生产同配置）。
+- **用户决定（22:41 AEDT，选项 1）：“选1，先不开MPS跑30分钟”**。生产先在与探针相同的配置下运行（无 MPS，作业不启动 MPS 守护进程），
+  头 30 分钟比较每卡 3 个与 2 个 worker 的吞吐，并记录 8 张卡的显存、GPU 利用率和内存。
+
+## 2026-10-20 22:59 AEDT 用户决定 dtmoe 路径：CPU
+
+- 选项（执行者转述 Fable 建议后提出）：A 集群 CPU 单线程（推荐）/ B GPU 默认模式 / C GPU 严格模式加预算 / D 不跑 dtmoe。
+  用户原话："cpu 跑呗"。决定时没有任何 dtmoe 分数（集群上没有 dtmoe 输出被读取；参考运行只读墙钟时间）。
+- **请协调者：** 按 Fable 协议写成 dated amendment 并生成 CPU 任务清单（单线程、TS_DEVICE 不设、TS_DETERMINISTIC 不设、
+  CPU 版 torch 环境、新输出目录、固定 CPU 节点型号，run-twice 探针先行），提交后执行者再运行。dtmoe_dev 在此之前不启动。
