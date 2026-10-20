@@ -248,3 +248,26 @@
   results_heldout34_trained:h3_poker_b__mooe_rff2000_100_2_0.01。另核对 7 个探针输出均符合 tasks_p2.jsonl 的 schema（P1 的 cuts/closes 问题不出现在 P2）。
 - 21:47 CST P2 生产：8 个作业 3049649–3049656（amd，各 48 核、24 个 worker、每 worker 2 核，共 384 核；`--gpu cpu --tasks tasks_p2.jsonl`），
   节点 cpua258、cpua016、cpua037、cpua279、cpua068，全部立即开始。核数合计 384 + P1 56 = 440 ≤ 500。
+
+## 2026-10-20 22:17 CST（2026-10-21 01:17 AEDT）进度
+
+- P1（8×A800，每卡 6 worker）与 P2（384 核）均无 GAVE UP、无报错。`rerun.py status`（只列有进展的组）：
+```
+P1
+results_grid_test                  done=0 claimed=6 gaveup=4 left=50
+mice-r14-test                      done=357 claimed=3 gaveup=0 left=0
+mice-r14-exist                     done=86 claimed=36 gaveup=0 left=0
+mice-r14b-acc                      done=73 claimed=12 gaveup=0 left=191
+P2
+results_river                      done=51 claimed=0 gaveup=0 left=0
+results_heldout                    done=12 claimed=0 gaveup=0 left=0
+results_trained_dev                done=435 claimed=0 gaveup=0 left=0
+results_trained                    done=125 claimed=1 gaveup=0 left=0
+results_heldout2                   done=48 claimed=0 gaveup=0 left=0
+results_heldout34_trained          done=112 claimed=0 gaveup=0 left=0
+mice-main-trained-grid20           done=96 claimed=0 gaveup=0 left=0
+mice-table1-trained-probs          done=730 claimed=6 gaveup=0 left=0
+mice-confirm-cp-20261017-cpu       done=22 claimed=0 gaveup=0 left=0
+ts_dev                             done=320 claimed=185 gaveup=0 left=215
+```
+- results_grid_test 的 6 claimed / 4 gaveup 是 20:04–20:08 两次取消留下的（见上），等处置。mice-r14-test 的 3 claimed 是 20:44 被回收的 worker 留下的。
