@@ -405,3 +405,14 @@ stage2_ext_onenet                  done=83 claimed=7 gaveup=0 left=0
 - r14-exist GAVE UP 增至 14（新增 3 个待分类，预计同属行数类）；mice-r14-dev 104 GAVE UP（旧代码误判，40 个不写 cuts/closes 的方法正常 done）。
 - 接下来 P1 子集还剩 tkde-control 66、mice-r13-acc 100、mice_seg_origin_r12 16；GPU 利用率抽查 76–86%（tkde-control 阶段）。
 - P2b：shifts、fsnet、adaptz 完成；onenet 扩展 83/90。dtmoe CPU 探针 [11] 仍在运行（自 22:32 CST）。
+
+## 2026-10-21 05:32 AEDT 新类型 GAVE UP：tkde-control 显存上限漏登记（等用户决定）
+
+- 02:29:13 CST mice-tkde-control-20261009:fifoM_h2_spam GAVE UP（gpu8017，三次 rc 1，约 1 min/次）：
+  `TabPFNCUDAOutOfMemoryError … 1,400 train / 100 test samples, 499 features … 1.75 GiB allowed`（卡上 70.7 GiB 空闲）。
+- 原因：tkde-control 的 controller/worker.py:116 用 `torch.cuda.set_per_process_memory_fraction(MICE_ALLOC_MIB …)`，默认 1792 MiB；
+  原始运行由 controller/supervisor.py:97 设 `MICE_ALLOC_MIB='4096'`。tasks.jsonl 中该组任务的 env 没有 MICE_ALLOC_MIB
+  （rerun.py 的白名单也不传它），所以重算用的是 1792 MiB 上限。这是任务登记时漏掉的原始运行参数，不是节点故障。
+- **请用户决定：** (a) 给 mice-tkde-control-20261009 的任务 env 加 MICE_ALLOC_MIB=4096（与原始一致），重置该任务的尝试后重跑；
+  (b) 已在 1792 MiB 下完成的该组任务（02:05 CST 时 157 个）是否重跑——若 TabPFN 的分批与可用显存有关，数值可能与原始设置不同；
+  执行者未核实 TabPFN 是否如此。执行者不改任务；同组后续大特征数任务可能同样 OOM。
