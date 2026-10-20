@@ -231,3 +231,14 @@
 - 21:10–21:20 CST NW=5 下 GPU 利用率 79–97%（均值约 90%），显存 5.7–17 GB / 80 GB（当前为 mice-r14-exist，任务比 r14-test 重）。
 - 用户："那应该6个workder"。8 个作业各追加 w6（同样 `srun --overlap` 前台、tmux），抽查每卡 6 个 GPU 进程；追加会话共 27 个。
   仍是 OMP_NUM_THREADS=1 的组、每卡 7 核。请协调者在补登记中写为 NW=6。
+
+## 2026-10-21 00:40 AEDT（21:40 CST）用户：自己就是协调者；P2 开始；drtabpfn 暂缓
+
+- 用户："好，先跑drtabpfn和P2 不用等协调者了，我就是协调者"；随后："drtabpfn 暂时不用了吧，等跑完吧"。
+  因此 drtabpfn 等 P1 生产跑完再提交（cluster/dr.sbatch 已写好：1×A800、7 天、NW=6、`--sets drtabpfn`，未提交）。
+  账号 8 卡上限已被 P1 的 8 个作业占满，drtabpfn 本来也要等卡。
+- P2 输入：`unpack_inputs.sh p2`：bundle_p2 SHA256SUMS OK；ext-baselines-p2.tar → $WORK/home/ext-baselines，files.sha256 OK。
+  环境 stream、tsbase 已于 20 日建好并与 env_lock 一致。
+- P2 CPU 节点型号：AMD EPYC 9654（partition amd，192 核、772 GB/节点），全部 P2 任务都用该型号；首个作业里用 lscpu 记录实际型号。
+- P2 探针：3049609（probe_p2.sbatch，amd，14 核，7 个 qualify 并行，`--tasks tasks_p2.jsonl`，输出 $WORK/qualify_p2/1..7），排队中。
+  任务清单 tasks_p2.jsonl：2358 个 CPU 任务，估计 132 CPU 小时（ts_dev 720 个 64 h，mice-table1-trained-probs 736 个 37 h）。
