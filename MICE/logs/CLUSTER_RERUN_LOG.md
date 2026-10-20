@@ -385,3 +385,4 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
     三项 cuts/closes/.closes.pkl 都差）、mice-r14-confirm 2（closes 与 .closes.pkl）、mice-r14-devtrim 2（d_b500_o250_c100_s0 的 micecp/archcp，closes 与 .closes.pkl）。
   没有其他原因的 GAVE UP。
 - 04:15 AEDT fsnet 测试 stage2_test_fsnet 92/92 done、0 gaveup：**fsnet 的 P2b 完成**。
+- 04:30 AEDT adaptz 测试 stage2_test_adaptz 92/92 done、0 gaveup：**adaptz 的 P2b 完成**。剩 onenet（扩展中）。
