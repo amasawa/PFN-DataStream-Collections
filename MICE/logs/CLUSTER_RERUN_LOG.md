@@ -447,3 +447,6 @@ stage2_ext_onenet                  done=83 claimed=7 gaveup=0 left=0
 - 释放 P1 子集中被作业结束打断的 claim（只限 mice-* 组，不用 `rerun.py release`）：mice-r13-acc 9、mice-r14-test 3、mice_seg_origin_r12 1。
 - 待跑：mice-r14-test 3、mice-r14-dev 104、mice-r13-acc 100、mice_seg_origin_r12 16。补跑作业 3053914–3053920（NW=6，新代码），
   各 afterany 于 results_* 作业 3050503–3050509；drtabpfn 3050510 afterany 于 3050502。
+
+### 2026-10-21 09:55 AEDT (06:52 CST) progress
+VPN back at 09:51 AEDT; all jobs kept running. results_* (3050502-509, running 2:09-3:19): 445 done, 24 claimed, 427 left, 0 gave up. dtmoe_cpu_dev (3053868-870): 42/60 done, 18 claimed, 0 gave up. Pending: drtabpfn 3050510, P1 rest 3053914-920 (afterany on results_*).
