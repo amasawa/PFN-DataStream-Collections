@@ -197,3 +197,16 @@
   作业结束后 `rerun.py release` 再跑（各记 1 次被杀的尝试）。此法不再使用；NW=2 作业继续以 2 个 worker 运行。
 - 20:45 提交 3049189（NW=3）用第 8 张卡，排队中。
 - 生产状态：mice-r14-test done=127（20:44），其余 1646 子集任务按文件顺序待跑。
+
+## 2026-10-20 23:49 AEDT 用户决定：单线程组每卡 5 个 worker（请协调者登记）
+
+- 证据（20:5x CST，gpu8017 上 3 个 NW=3 作业，共 21 核）：本用户进程 CPU 合计约 870–890%（约 9 核，43%），
+  9 个任务进程各 100%（mice-r14-test，OMP_NUM_THREADS=1，每个 worker 只占 1 核）；GPU 利用率 NW=3 约 65%，显存 ≤ 2.9 GB。
+  即 CPU 和显存都有余量，GPU 未饱和。
+- 线程数按组完全分开：当前运行的 1646 任务子集（mice-r14-*、mice-r13-acc、mice-tkde-control-20261009、mice-*-cp-*、
+  mice-table1-probs-gen、mice_seg_origin_r12）全部 OMP_NUM_THREADS=1；results_* 各组全部 OMP_NUM_THREADS=4。
+- 用户说"那看利用率每张卡5个worker比较合适"；执行者说明修正 b 只允许 2 或 3、探针须与生产同配置后，用户："好，按这个办"。
+- **请协调者登记（修正 b 第 2 条的变更）：** OMP_NUM_THREADS=1 的组每卡 5 个 worker（7 核/卡不变）；OMP_NUM_THREADS=4 的组
+  （results_*）保持每卡 3 个。登记后执行者先在每卡 5 个进程下重跑 OMP=1 组的探针（[5] mice-r14-test、[6] mice-r14b-acc、
+  [7] mice-tkde-control 各 qualify 一次，5 个进程同卡并发），全部 QUALIFIED 再把生产换成 NW=5；30 分钟后与 NW=3 比较吞吐并记录。
+  在此之前生产保持 NW=3。
