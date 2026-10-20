@@ -225,3 +225,9 @@
   比较两者逐字节一致性；结果出来后记录。
 - recheck（5 worker 负载下）mice-r14-test:t_b2000_c100_s40_o0__ddm1000：**QUALIFIED (bit-identical)**，与其 NW=3 下的生产输出逐字节一致。
   追加的 19 个 worker 会话全部存活。
+
+## 2026-10-21 00:21 AEDT（21:21 CST）每卡 6 个 worker（用户指示）
+
+- 21:10–21:20 CST NW=5 下 GPU 利用率 79–97%（均值约 90%），显存 5.7–17 GB / 80 GB（当前为 mice-r14-exist，任务比 r14-test 重）。
+- 用户："那应该6个workder"。8 个作业各追加 w6（同样 `srun --overlap` 前台、tmux），抽查每卡 6 个 GPU 进程；追加会话共 27 个。
+  仍是 OMP_NUM_THREADS=1 的组、每卡 7 核。请协调者在补登记中写为 NW=6。
