@@ -1,0 +1,10 @@
+{
+ "list": "tasks_stage2_fsnet_ext.jsonl",
+ "method": "fsnet",
+ "kind": "ext",
+ "selection_file": "MICE/results_paper/table1_fill/frozen_cluster/frozen_fsnet.json",
+ "selection_sha256": "271016d1b78a32377e15717c1382f10afa6517c3694ecb1b86f48833a9090efe",
+ "expected": 90,
+ "tasks": 90,
+ "generator_sha256": "caea58fb40653c96b0488295334b3179e3429e60571bcb92a2e2c98543aa8ce5"
+}

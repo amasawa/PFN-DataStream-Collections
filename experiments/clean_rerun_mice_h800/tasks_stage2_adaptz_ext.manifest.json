@@ -1,0 +1,10 @@
+{
+ "list": "tasks_stage2_adaptz_ext.jsonl",
+ "method": "adaptz",
+ "kind": "ext",
+ "selection_file": "MICE/results_paper/table1_fill/frozen_cluster/frozen_adaptz.json",
+ "selection_sha256": "35cb93cf2748ad43c595cd8ea754a664d34c76b1091d71a825b3d11f280ad800",
+ "expected": 180,
+ "tasks": 180,
+ "generator_sha256": "caea58fb40653c96b0488295334b3179e3429e60571bcb92a2e2c98543aa8ce5"
+}

@@ -1,0 +1,10 @@
+{
+ "list": "tasks_stage2_onenet_ext.jsonl",
+ "method": "onenet",
+ "kind": "ext",
+ "selection_file": "MICE/results_paper/table1_fill/frozen_cluster/frozen_onenet.json",
+ "selection_sha256": "1a5054fccdb6ebb8c31aaad6ccc9948f0ff9ca247de00250bb02f058e7d239a4",
+ "expected": 90,
+ "tasks": 90,
+ "generator_sha256": "caea58fb40653c96b0488295334b3179e3429e60571bcb92a2e2c98543aa8ce5"
+}

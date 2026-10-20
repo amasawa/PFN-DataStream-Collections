@@ -1,0 +1,10 @@
+{
+ "list": "tasks_stage2_shifts_ext.jsonl",
+ "method": "shifts",
+ "kind": "ext",
+ "selection_file": "MICE/results_paper/table1_fill/frozen_cluster/frozen_shifts.json",
+ "selection_sha256": "74c4f1d626e8a0dcc18065aad1cd2957a0e816d97e70a1644d243da251d73cc6",
+ "expected": 90,
+ "tasks": 90,
+ "generator_sha256": "caea58fb40653c96b0488295334b3179e3429e60571bcb92a2e2c98543aa8ce5"
+}

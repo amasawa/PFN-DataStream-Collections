@@ -309,3 +309,14 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
   不是运行器或节点故障。按 HANDOFF，执行者不手动重试、不改判定。三次输出在 _rerun/quarantine/mice-r14-exist__h4_covertype_d__micecp1000_500/{0,1,2}。
 - **请用户（协调者）决定：** 执行者建议 valid() 对 cuts / closes 只比较列数和 dtype（行数取决于数据，类似数值），把行数与原始不同的任务
   单独列表报告；改后对此任务登记一次尝试重置。其他已完成的 r14 任务行数都与原始一致（否则也会失败）。
+- 22:44:02 CST 第二个 GAVE UP：mice-r14-exist:h3_covertype_c__micecp1000_500，原因相同：三次 rc 0，cuts (181,2) 对 schema (180,2)，
+  closes (212,4) 对 (211,4)，其余键一致，三次结构相同。并入上一条，等用户决定。
+
+## 2026-10-20 22:44–22:50 CST（2026-10-21 01:44–01:50 AEDT）P2 完成；P2b 选择与扩展清单
+
+- P2 全部完成：`rerun.py status --tasks tasks_p2.jsonl` 10 组共 2358 done、0 gaveup（ts_dev 720/720，22:44:45）。
+- 重复开发对（REGISTRATION_P2 "Duplicate development pairs"）：results_trained 与 results_trained_dev 中同命令的 15 对输出，除 wt 外逐数组一致：15/15。
+- P2b 第 1 步（用户第 1 项决定）：在集群上 `select_frozen.py $RUNS/mice-table1-newbase/dev_cluster/P <m> MICE/results_paper/table1_fill/frozen_cluster`，
+  4 个方法各 36/36 个配置可选。最优配置及所需扩展：fsnet L32 lr1e-3 s5 m0.9 → steps 25；onenet L32 lr1e-3 s5 m0.75 → steps 25；
+  adaptz L1 lr1e-4 s5 m0.01 → lr 1e-5、steps 25；shifts L16 lr1e-3 s5 m0.5 → steps 25。选择文件 commit 4ef2307（扩展任务存在之前）。
+- `make_tasks_stage2.py ext <m>`：fsnet 90、onenet 90、adaptz 180、shifts 90（各 manifest 的 expected = tasks），共 450 个，输出到 dev_cluster/P。
