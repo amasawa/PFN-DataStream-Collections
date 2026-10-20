@@ -4,7 +4,8 @@ You are Claude Code on the user's Mac mini, the **executor on the cluster**. The
 Windows machine (the coordinator) wrote this file; it keeps the registration, the audits (MiMo, Codex, Sonnet) and the
 analysis. Communication: git (this repository) and the user. Reply to the user in Chinese; code, commits in English.
 
-Read first, in this order: `ACTIVATION_20261019.md` and `AMENDMENT_20261020.md` (they hold where they differ from
+Read first, in this order: `ACTIVATION_20261019.md`, `AMENDMENT_20261020.md` and `AMENDMENT_20261020b.md` (A800,
+7 cores per GPU, MPS, TOT on the A800, CURE cancelled; they hold where they differ from
 PLAN.md or this file; the phases
 P2-P6 come with their own registrations later), `bundle/claude_rules/global_CLAUDE.md` (the user's team rules; they apply to you, except
 that MiMo and Codex run on the Windows side: ask the coordinator for audits), this file, `PLAN.md` (the registration:
@@ -54,7 +55,7 @@ what is rerun and what must stay the same), `MANIFEST.md`, `tasks.jsonl`, `rerun
 - `drtabpfn` (Python 3.11): `env_lock/drtabpfn.txt`, with the `-e file:///...Drift-Resilient_TabPFN` line replaced by
   `-e $WORK/home/ext-baselines/Drift-Resilient_TabPFN` (torch 2.1.2+cu121).
 - `totgpu` (Python 3.11): `env_lock/totgpu.txt` (torch 2.3.1+cu121).
-- Check in a GPU job: `torch.cuda.get_arch_list()` contains sm_90 and a small matmul runs. Record `pip freeze` of each
+- Check in a GPU job: `torch.cuda.get_arch_list()` contains sm_80 (A800) and a small matmul runs. Record `pip freeze` of each
   environment on the cluster into `cluster/env_freeze_*.txt`; any version that differs from env_lock is a stop.
 - Job environment: REPO, RUNS=$WORK/home/pfn-runs, PY, PYDR, PYTOT (paths of the three pythons), HOME=$WORK/home,
   TABPFN_MODEL_CACHE_DIR=$WORK/home/pfn-venvs/cache/tabpfn, HF_HOME=$WORK/hf, HF_HUB_OFFLINE=1, TABPFN_DISABLE_TELEMETRY=1.
@@ -88,7 +89,9 @@ The other pipelines may go on. (The probe outputs are not results; keep them.)
   `python rerun.py worker <slot> --gpu shared --exclude-sets dtmoe_dev,drtabpfn,mice_oracle_r11,results_delay_dev[,<every NOT QUALIFIED set>]`
   (dtmoe_dev starts only on a committed instruction of the coordinator; AMENDMENT_20261020 item 4). Request at least
   4 CPU cores per worker (`--cpus-per-task` >= 4N; item 8) and log it.
-  in parallel (start with N = 3; raise to 4-6 if 30 min pass without any failure and the GPU is not saturated). The
+  in parallel (AMENDMENT_20261020b item 2: 7 cores per GPU; MPS daemon started in the job first; N = 3, kept if it
+  completes more tasks per hour than N = 2 after 30 min and resident memory stays under 80 % of the allocation,
+  otherwise N = 2; log the numbers; the probes of step 3 run under the same MPS / N configuration). The
   workers take tasks in file order (the paper-critical sets come first). Time limit per job <= 24 h; after a job ends
   with tasks left: `python rerun.py release`, then resubmit (the released tasks start again from initialisation; a
   kill counts as an attempt; a released benchmark is given up, see below).
@@ -152,11 +155,9 @@ The other pipelines may go on. (The probe outputs are not results; keep them.)
      backbone is paused (`--exclude-sets` of its three sets).
   4. Production: `python rerun.py worker <slot> --gpu shared --tasks tasks_p3.jsonl --exclude-sets
      <sets of excluded or paused backbones>`. It may run after P1, or alongside it on free GPUs.
-- **P4 stage 1.** Probe `cure_dev:elec2__cure_tau0.3` with qualify (`--tasks tasks_p4.jsonl`). Then run
-  `python rerun.py worker <slot> --gpu shared --tasks tasks_p4.jsonl`. When status shows 20 done, push and stop.
-  The coordinator selects tau and registers stage 2; do not select anything.
+- **P4 stage 1: CANCELLED (AMENDMENT_20261020b item 4, user decision). Never run tasks_p4.jsonl.**
 - **Return.** As in step 5: `MICE/results_heldout*_<tag>*`, `$RUNS/mice-p3-smoke`, and
-  `$RUNS/mice-table1-newbase/cure_dev`.
+  (no CURE outputs: P4 is cancelled).
 
 ## Phase P6, gate (a) of TOT (REGISTRATION_P6_GATE_A_20261020.md, amended: H800)
 - **Environment.** Create venv-tot (Python 3.11) from `env_lock/tot.txt` (torch 2.3.1+cu121), record its pip
@@ -172,3 +173,15 @@ Run each one when its commit arrives, with the worker command of its device:
 - dtmoe: `--gpu shared` on the H800.
 
 Use `--tasks <list>` in both cases.
+
+## P6 order (AMENDMENT_20261020b item 3)
+Run these in order, each alone on one A800, with the MPS configuration of production:
+1. `p6_gate_a` (gate (a); see above).
+2. If its verdict is "pass": `python rerun.py worker 0 --gpu exclusive --sets p6_tot_check --tasks tasks_p6.jsonl`.
+   It writes `$RUNS/mice-tot-check/tot_check.json` (timing, projection, gate (b), verdict).
+3. If that verdict is "proceed":
+   - qualify one task: `python rerun.py qualify "tot_dev:elec2__tot_L16_lr0.0001_s1_m1e-06" $WORK/qualify_p6/1
+     --tasks tasks_p6.jsonl`;
+   - if QUALIFIED, run the grid: `python rerun.py worker <slot> --gpu shared --sets tot_dev --tasks tasks_p6.jsonl`.
+
+Log and push after each step. Any other verdict stops TOT: report it.

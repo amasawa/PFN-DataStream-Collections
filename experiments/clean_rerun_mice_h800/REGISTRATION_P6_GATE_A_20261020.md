@@ -86,3 +86,32 @@ Records: PLAN_P5_P6_draft.md; Fable MICE/logs/table1_fill/fable_p5p6_a.md; Sonne
 - **Unchanged.** Every later TOT step (adapter, gate (b), timing, development grid, stage 2) stays on the CPU in the
   P2 environment. Gate (b) compares λ = 0 with the official λ within the adapter, on the CPU. It never compares with
   gate (a), so the device difference does not enter it.
+
+## P6 development grid (registered 2026-10-20 with AMENDMENT_20261020b, before any TOT run)
+- **Adapter.** experiments/mice_table1_fill_20261018/run_ts_tot.py adds METHODS["tot"] to run_ts.py without
+  changing it, following AMENDMENT_BASELINES_20261018 item 2:
+  - the official net (mode time) with the ETTh2 horizon-1 sizes; activation gelu and lags 1 are main.py's
+    defaults, since the configuration line does not set them;
+  - the head on z_pred, read at the input of net.regressor;
+  - is_training True in learning and False in prediction;
+  - loss CE + MSE(x_rec, x) + other_loss;
+  - the official AdamW with default hyperparameters (the other run_ts methods use Adam), applied to the net and the
+    head;
+  - backward, step, store_grad, zero_grad, in that order;
+  - λ = zd_kl = zc_kl = sparsity weight.
+
+  This is the registered adaptation, not the authors' online update verbatim, which uses is_training = False and no
+  identification terms. The paper describes it as such.
+- **Audit.** MiMo Pro high (MICE/logs/table1_fill/p6_tot_mimo.md): no P0 or P1. The P2 findings were resolved as
+  logged.
+- **Local checks** (no accuracy read):
+  - two runs bit-identical;
+  - λ = 0 and λ = 1e-5 give different predictions;
+  - the hook captures the regressor's first input.
+- **Tasks.** tasks_p6.jsonl, made by make_tasks_p6.py:
+  - p6_gate_a (1 task);
+  - p6_tot_check (1 task);
+  - tot_dev (180 tasks): lr {1e-4, 1e-3, 1e-2} × n_steps {1, 5} × L {16, 32} × λ {1e-6, 1e-5, 1e-4} × the 5
+    development streams, on the A800 in deterministic mode, venv-tot.
+- **Order and gates.** AMENDMENT_20261020b item 3.
+- **Selection, extension and tests.** REGISTRATION_STAGE2_20261020, with method tot (A800, dev_a800 / test_a800).

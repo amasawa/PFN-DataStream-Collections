@@ -24,7 +24,10 @@ AXES = {"fsnet": ("16 32", "0.5 0.75 0.9"), "onenet": ("16 32", "0.5 0.75 0.9"),
 THREADS = {"OMP_NUM_THREADS": "1", "MKL_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1"}
 DEVICE = {"dtmoe": dict(py="{PYTOT}", gpu="shared", env={**THREADS, "TS_DEVICE": "cuda", "TS_DETERMINISTIC": "1",
                                                         "CUBLAS_WORKSPACE_CONFIG": ":4096:8"},
-                        dev="dev_h800", test="test_h800")}
+                        dev="dev_h800", test="test_h800"),
+          "tot": dict(py="{PYTOTA}", gpu="shared", env={**THREADS, "TS_DEVICE": "cuda", "TS_DETERMINISTIC": "1",   # A800
+                                                       "CUBLAS_WORKSPACE_CONFIG": ":4096:8"},       # (AMENDMENT_20261020b)
+                      dev="dev_a800", test="test_a800")}
 CPU = dict(py="{PYTS}", gpu="cpu", env={**THREADS, "CUDA_VISIBLE_DEVICES": ""}, dev="dev_cluster", test="test_cluster")
 
 
@@ -46,7 +49,8 @@ def task(set_, method, s, data, data_dir, L, lr, st, mech, outdir):
            "C": [[], "int64"], "B": [[], "int64"], "fires": [[T], "int64"], "added": [[T], "int64"],
            "pruned": [[T], "int64"], "config": [[], "<U"]}
     return dict(id=f"{set_}:{s}__{tag}", set=set_, gpu=d["gpu"], cwd="{REPO}",
-                cmd=[d["py"], "{REPO}/experiments/mice_table1_fill_20261018/run_ts.py", "--data", data, "--out",
+                cmd=[d["py"], "{REPO}/experiments/mice_table1_fill_20261018/" + ("run_ts_tot.py" if method == "tot" else "run_ts.py"),
+                     "--data", data, "--out",
                      f"{{RUNS}}/mice-table1-newbase/{outdir}/P", "--streams", s, "--method", method, "--L", str(L),
                      "--lr", lr, "--steps", st, "--mech", mech],
                 env=dict(d["env"]), outputs=[out], est_s=None, schema={out: {"npz": sch}})
@@ -124,7 +128,10 @@ def selftest():
     t, _ = make_ext("dtmoe", fx("dtmoe", {"steps": 25}))
     assert all(x["gpu"] == "shared" and x["env"]["TS_DETERMINISTIC"] == "1" and "/dev_h800/" in x["outputs"][0] for x in t)
     t, _ = make_ext("tot", fx("tot", {"steps": 25}))
-    assert all(x["gpu"] == "cpu" and x["cmd"][0] == "{PYTS}" and "/dev_cluster/" in x["outputs"][0] for x in t)
+    assert all(x["gpu"] == "shared" and x["cmd"][0] == "{PYTOTA}" and x["cmd"][1].endswith("/run_ts_tot.py")
+               and x["env"]["TS_DETERMINISTIC"] == "1" and "/dev_a800/" in x["outputs"][0] for x in t)
+    t, _ = make_ext("dtmoe", fx("dtmoe", {"steps": 25}))
+    assert all(x["cmd"][1].endswith("/run_ts.py") for x in t)
     t, _ = make_ext("fsnet", fx("fsnet", {"steps": 25}))
     assert all(x["gpu"] == "cpu" and x["env"]["CUDA_VISIBLE_DEVICES"] == "" and "/dev_cluster/" in x["outputs"][0] for x in t)
     for bad in ({"lr": 0.5}, {"steps": 10}):

@@ -1425,3 +1425,11 @@
 - 本地可行性运行 3 秒退出：官方 main.py 用 torch.device(0) 并 assert CUDA 可用，原样代码只能在 GPU 上跑；没有产生 MSE。登记中"CUDA 为空则 use_gpu=False"的说法是我们写错。
 - Fable（fable_tot_device_a.md，0.31 美元）选 A；用户选"gate (a) 用 H800"。gate (a) 只在集群跑一次（独占 H800、单线程、12 小时、±2σ 判据不变），本地不跑；其余 TOT 步骤仍在 CPU。venv-tot 改为 torch 2.3.1+cu121（含 sm_90）。tasks_p6.jsonl：p6_gate_a 1 个任务；rerun.py 加占位符 PYTOTA。
 - 阶段 2（REGISTRATION_STAGE2_20261020.md、make_tasks_stage2.py）：选择 → 扩展清单 → 再选择 → 92 条流测试清单，全部由提交的选择文件机械生成（manifest 记录哈希与期望数），合成夹具自测通过（6 种边界情形，含角点；设备路由；测试清单顺序）。Sonnet 核对 11 点，采纳 7、驳回 4（sonnet_stage2.md）。
+
+## 2026-10-20 11:44 AMENDMENT_20261020b：A800、每卡 7 核、MPS；TOT 改到 A800；取消 CURE 实验
+- 用户在集群上核实：显卡是 A800（不是 H800），账号同时最多 8 卡、500 核，单作业最长 7 天；每卡最多 7 核（硬限制，多节点也不能多要），每核约 1.8 GB 内存；普通用户能起 CUDA MPS。所有 CUDA 环境都含 sm_80（已逐个核实）。
+- 吞吐：每卡 2–3 个 worker（按头 30 分钟每小时完成任务数与内存决定），作业内先起 MPS；qualify 在同样配置下做。本地实测 TabPFN worker 常驻内存约 1.8 GB。
+- TOT：CPU 上开发网格投影约 2180 CPU 小时（> 1500 上限）。Fable 建议改到 A800；用户选"改到 A800 跑"。本地 GPU 仅测时间：投影 192 卡时，加速 11.3 倍。新增 tot_check.py（集群上测时、gate (b)、投影，判据先写死）；tasks_p6.jsonl：gate (a) 1 + 检查 1 + 开发网格 180。TOT 适配器 run_ts_tot.py（不改 run_ts.py）经 MiMo Pro high 审计，无 P0/P1（p6_tot_mimo.md）。
+- tot_check 本地试跑暴露一个投影算错（4 个 (L, 步数) 组合用了平均而没求和，少乘 4 倍），已修正并加断言。
+- CURE：用户"还有一件事情你之前让我比对的一篇文章，2026年arxiv上的我觉得没有必要作实验比对，虽然他有代码但是，他没有被接受"→ P4 取消，仍作同期工作引用。
+- Sonnet 核对 3 点全部采纳。
