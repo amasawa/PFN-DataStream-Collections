@@ -431,3 +431,9 @@ stage2_ext_onenet                  done=83 claimed=7 gaveup=0 left=0
 - 07:17 AEDT onenet 测试 stage2_test_onenet 92/92 done、0 gaveup。**P2b 全部完成**：4 个方法的最终配置（frozen_cluster/frozen_<m>_final.json）
   shifts L16 lr1e-3 s5 m0.5、fsnet L32 lr1e-3 s5 m0.9、onenet L32 lr1e-3 s5 m0.75、adaptz L1 lr1e-4 s25 m0.001；各 92 条测试流输出在
   mice-table1-newbase/test_cluster/P。每一步的选择文件、任务清单都在运行前提交（4ef2307、5c3f553、4d7766d、841781f、f490b27、06d426c、b49c81d、63620b0、c4c766f、99641db）。
+
+## 2026-10-21 07:27 AEDT dtmoe CPU 探针全部 QUALIFIED；开发网格开始
+
+- 3050085（AMD 9654）：[10] elec2 L32 lr1e-4 s1 m2、[9] elec2 L16 lr1e-4 s1 m2（22:51 CST）、[11] insects_abrupt_balanced L32 lr1e-3 s5 m2
+  （04:24:47 CST，两次共约 5.9 h）均 **QUALIFIED (bit-identical)**。按用户第 4 项决定运行 tasks_dtmoe_cpu.jsonl（60 个，输出 dtmoe_cpu/dev/P）：
+  3 个 prod_p2 作业（TASKS=tasks_dtmoe_cpu.jsonl，各 48 核、24 worker、每 worker 2 核）。
