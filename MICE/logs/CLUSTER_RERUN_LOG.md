@@ -418,3 +418,13 @@ stage2_ext_onenet                  done=83 claimed=7 gaveup=0 left=0
   执行者未核实 TabPFN 是否如此。执行者不改任务；同组后续大特征数任务可能同样 OOM。
 - 05:41 AEDT mice-r13-acc 自 02:37 CST 起 GAVE UP（k2_18–k2_22 等，三次 rc 0，约 1 min/次）：用补丁后的 valid() 检查隔离输出均有效，与 mice-r14-dev 同属旧代码 worker 误判（schema 不含 cuts/closes）。预计 mice_seg_origin_r12 同样。P1 结束后与 r14-dev 一并重置、用新代码补跑。
 - P2b onenet：扩展 90/90 done、0 gaveup。`--final`：54/54，最终配置不变 L32 lr1e-3 s5 m0.75。在 onenet 测试任务之前提交。
+
+## 2026-10-21 06:37 AEDT P1 子集收尾；results_* 开始
+
+- 03:32:45 CST 3048898（gpu8012）的批处理 worker 用完任务后作业结束，追加的 srun 步骤 3048898.3/.4/.5/.7 随之 CANCELLED（预期的副作用）。
+  依赖作业 3050509（results_*，NW=3，新代码）03:32:46 开始：results_grid_test 前几个任务（含已重置的 s10 ddm/fifo/oracle/winens、s11 ddm）
+  全部 ok，cuts/closes 补丁生效。
+- 03:37 CST P1 子集：r14-test 357（3 claimed 待释放）、r14-exist 104 done / 17 GAVE UP（行数类，待复核新增 3 个）、r14b-acc 276、r14-confirm 214+2、
+  table1-cp-gen 30、main-cp-grid10 13、confirm-cp 66、table1-probs-gen 60、r14-dev 40 done / 104 旧代码误判、devtrim 18+2、
+  tkde-control 219 done / 3 在跑 / 1 OOM、r13-acc 0 done / 79 误判 / 21 在跑、seg_origin 0 done / 8 误判 / 8 在跑。
+- P2b：onenet 测试运行中；shifts、fsnet、adaptz 完成。
