@@ -1444,3 +1444,9 @@
 - 用户"骨干没必要跑那么多吧"；按 Fable 10-19 的原建议（fable_backbones.md）给出选项，用户选"TabPFN-3.5 + TabDPT"。替换 ACTIVATION 用户决定 6（"7 个全测"）。
 - tasks_p3b.jsonl（make_tasks_p3b.py）：从 tasks_p3.jsonl 原样抽出 80 个生产任务 + 6 个冒烟任务（含 TabPFN v2 参照）；tasks_p3.jsonl 哈希不变、不运行。Sonnet 核对：none。
 - 资源：P3 约 300 → 100 小时；整体约 760–960 单进程 GPU 小时，8 卡约 1.5–2 天计算。
+
+## 2026-10-20 13:11 是否去掉 P2 集群重跑和 5 个基准任务（Fable 评估 + Sonnet 核对；未改任何登记）
+- 用户："好，问 Fable 评估第 1、2 项"。提问与回答：MICE/logs/table1_fill/fable_cut_p2_bench_q.md、fable_cut_p2_bench_a.md（13:09:40–13:10:39，1.12 美元）。
+- Fable：两项都保留在集群。P2 不占 GPU，与 P1 并行跑在约 444 个非 GPU 核上，P2b 的往返与 dtmoe 第二阶段重合；去掉会让 Table 1 的 CPU 行在台式机、其余在 A800，并违背 ACTIVATION 第 3、4 项和用户决定 5。基准不只计时：analyse_bench.py 的 accuracy 阶段从基准运行的预测写 bench_accuracy_runs.csv，make_cost_tables.py 把它放进 tab_cost_rows.tex，这些预测是在有故障的 GPU 上算的；PLAN.md 也规定成本匹配要在新硬件上重新评估。
+- Sonnet 核对（MICE/logs/table1_fill/sonnet_cut_p2_bench.md，18.6 秒）：第 1、5 条（env_lock、analyse_pools/analyse_14b 不在证据包里）不成立，Fable 可读文件，二者确实在 REGISTRATION_P2 和 PLAN.md 中；第 2–4 条成立但不改结论：P2b 的往返只是与 dtmoe 重合才不加日历时间；"GPU 空闲间隙"是假设；19 h 是 RTX 5000 Ada 的时长，与 A800 进程小时数不能直接相除。
+- 结论：维持登记现状，不需要修正登记。
