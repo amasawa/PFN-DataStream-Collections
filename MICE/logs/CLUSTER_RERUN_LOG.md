@@ -223,3 +223,5 @@
 - 确定性：当前运行的组全部 OMP_NUM_THREADS=1。按 HANDOFF step 4 的 recheck，在 5 worker 负载下（3048892 内再加 1 个进程）
   `rerun.py recheck mice-r14-test:t_b2000_c100_s40_o0__ddm1000 $WORK/recheck/mice-r14-test`（该任务的生产输出产生于 NW=3），
   比较两者逐字节一致性；结果出来后记录。
+- recheck（5 worker 负载下）mice-r14-test:t_b2000_c100_s40_o0__ddm1000：**QUALIFIED (bit-identical)**，与其 NW=3 下的生产输出逐字节一致。
+  追加的 19 个 worker 会话全部存活。
