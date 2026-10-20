@@ -287,3 +287,15 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
    AMD 9654 节点），先 qualify 三个 m2 探针 id，全部逐位一致后再跑 60 个开发任务；随后按第 1 项流程做 dtmoe 的阶段 2。
 5. **确认既成事实**：每卡 6 worker（OMP=1 组）；不用 MPS（6 worker 下 GPU 约 95%）；P3 权重由集群经 hf-mirror 下载并按 sha256 核对。
 6. **P1 子集结束后**：release 被打断的 claim 并重跑；随后 drtabpfn（dr.sbatch）和 P3。
+
+## 2026-10-21 01:33 AEDT 执行用户决定（第 2、4 项）
+
+- **第 2 项**：rerun.py valid() 在 schema 不含 cuts / closes 时不比较这两个键（commit 83960cd；集群上 sha256 1e6fa9f6…，与 git 一致）。
+  用全部探针输出复核：P1 的 7 个 qualify 输出全部 schema-valid（其中 [5][6] 的 schema 本来含 cuts，仍逐键比较）；
+  先前被判失败的 results_grid_test:grid_c100_b2000_s10__ddm1000 现有输出 complete() = True。正在运行的 worker 仍用旧代码（它们不跑 results_*）。
+- results_grid_test 的 10 个任务（4 GAVE UP、6 被两次 scancel 打断，尝试数 1–3）的 attempts / gaveup 记录移入 _rerun/reset_20261021/，
+  claim 释放；其现有输出在下次尝试前由 rerun.py 自动隔离。原因都是执行者的传参错误和 cuts/closes 误判，不是任务本身。
+- **第 4 项**：cluster/make_tasks_dtmoe_cpu.py 由 tasks_dtmoe.jsonl 生成 tasks_dtmoe_cpu.jsonl（60 个；set dtmoe_cpu_dev；gpu cpu；
+  {PYTOT}→{PYTS}；去掉 TS_DEVICE/TS_DETERMINISTIC/CUBLAS_WORKSPACE_CONFIG；CUDA_VISIBLE_DEVICES=""；输出 mice-table1-newbase/dtmoe_cpu/dev/P），
+  commit a404635。探针 3050085（probe_dtmoe_cpu.sbatch，amd，6 核）：三个 m2 id 各 qualify 一次，已开始。
+- P2 ts_dev 695/720（25 在跑，0 GAVE UP）；P2b 在 720 done 后开始。prod_p2.sbatch 增加 TASKS 变量（默认 tasks_p2.jsonl），供 P2b 和 dtmoe CPU 清单使用。
