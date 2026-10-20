@@ -356,3 +356,15 @@ ts_dev                             done=320 claimed=185 gaveup=0 left=215
 - 注：监控里 results_grid_test 的 4 条 GAVE UP 是 20:07 的旧日志行，那 4 个任务已按用户第 2 项决定重置（见上文“执行用户决定”一节）。
 - P2b adaptz：扩展 180/180 done、0 gaveup。`--final`：72/72 个配置可选，最终配置 L1 lr1e-4 **s25** m0.001（来自扩展；
   按登记即使在边界上也冻结）。frozen_adaptz_final.json 在任何 adaptz 测试任务之前提交。
+
+## 2026-10-21 03:01 AEDT mice-r14-dev 被旧代码 worker 判失败（cuts/closes，已批准的第 2 项同类）
+
+- 23:58–23:59 CST 起 mice-r14-dev 的 ddm1000 任务接连 GAVE UP（每次约 50 s，三次 rc 0，acc 三次相同）。原因：mice-r14-dev 的 schema 不含
+  cuts/closes，输出含 closes（部分也含 cuts）；当前 8 个 P1 作业的 worker 在 rerun.py 打补丁（83960cd）之前启动，内存中仍是旧的 valid()。
+  用补丁后的 rerun.py 检查已放弃任务的隔离输出：9/9 有效（多出的键只有 cuts/closes）。schema 不含 cuts 的还有 mice-r13-acc、mice_seg_origin_r12、
+  mice-tkde-control-20261009（后者用自己的代码快照，探针输出有效）。
+- 执行者想取消 8 个 P1 作业和预先提交的 results_*/drtabpfn 链，换成新代码的作业（P1 子集每卡直接起 6 个 worker），
+  但该操作被 Claude Code 的自动权限检查拒绝。按规则不绕过，等用户决定。作业保持原样。
+- 后果：旧 worker 会把 mice-r14-dev（144）、mice-r14-devtrim（20）以及可能的同类组每个任务跑 3 次后放弃（估计浪费约 30 卡时）；
+  输出本身有效，结果不丢。P1 作业结束后需要：重置这些任务的尝试记录（同 results_grid_test 的做法），并用新代码的 worker 补跑。
+  注意：不能用 `rerun.py release`（它会释放所有任务清单的 claim，包括 P2b 正在运行的 CPU 任务），只释放 P1 任务的 claim。
