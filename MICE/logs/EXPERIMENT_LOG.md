@@ -1433,3 +1433,9 @@
 - tot_check 本地试跑暴露一个投影算错（4 个 (L, 步数) 组合用了平均而没求和，少乘 4 倍），已修正并加断言。
 - CURE：用户"还有一件事情你之前让我比对的一篇文章，2026年arxiv上的我觉得没有必要作实验比对，虽然他有代码但是，他没有被接受"→ P4 取消，仍作同期工作引用。
 - Sonnet 核对 3 点全部采纳。
+
+## 2026-10-20 12:09 AMENDMENT_20261020c：去掉 TOT；dtmoe 只用默认漂移阈值
+- 用户问是否有必要跑新基线，要求"问 Fable 评估去掉 dtmoe 和 TOT"。Fable：去 TOT、留 dtmoe（dtmoe 与 MICE 机制最近，单删它最像藏基线）。Sonnet 纠正 Fable 的事实错误（TOT 有官方代码；未跑门槛不等于按规则排除）。
+- 用户决定："去掉 TOT"；dtmoe "只用默认漂移阈值"。
+- 实施：tasks_p6.jsonl 不跑（HANDOFF 标为取消）；dtmoe 开发网格 60 个任务（tasks_dtmoe.jsonl，从冻结的 tasks.jsonl 原样抽出 m=2，tasks.jsonl 哈希不变）；探测改用对应的 _m2 任务；select_frozen.py 对 dtmoe 只取 m=2、期望 12 个配置（其他方法不变，合成数据实测）；阶段 2 生成器 dtmoe 机制轴只有 2。Sonnet 核对：none。
+- 资源：GPU 约 960–1160 单进程小时，8 卡约 2–2.5 天计算（待集群实测）。

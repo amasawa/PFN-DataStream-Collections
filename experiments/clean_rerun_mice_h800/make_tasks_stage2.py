@@ -18,9 +18,10 @@ REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 CONF = os.path.expanduser("~/pfn-runs/mice-confirm-cp-20261017/data")      # local copy, used only for array shapes
 DEV = ["elec2", "insects_abrupt_balanced", "insects_gradual_balanced", "insects_incremental_balanced",
        "insects_incremental_reoccurring_balanced"]
-LR, ST = ("1e-4", "1e-3", "1e-2"), ("1", "5")                                  # the registered grid
+LR, ST = ("1e-4", "1e-3", "1e-2"), ("1", "5")      # the registered grid (dtmoe mech: only 2, AMENDMENT_20261020c)
 AXES = {"fsnet": ("16 32", "0.5 0.75 0.9"), "onenet": ("16 32", "0.5 0.75 0.9"), "adaptz": ("1 16", "1e-4 1e-3 1e-2"),
-        "shifts": ("16 32", "0.5 1 2"), "dtmoe": ("16 32", "1 2 3"), "tot": ("16 32", "1e-6 1e-5 1e-4")}
+        "shifts": ("16 32", "0.5 1 2"), "dtmoe": ("16 32", "2"),
+        "tot": ("16 32", "1e-6 1e-5 1e-4")}
 THREADS = {"OMP_NUM_THREADS": "1", "MKL_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1"}
 DEVICE = {"dtmoe": dict(py="{PYTOT}", gpu="shared", env={**THREADS, "TS_DEVICE": "cuda", "TS_DETERMINISTIC": "1",
                                                         "CUBLAS_WORKSPACE_CONFIG": ":4096:8"},
@@ -118,7 +119,7 @@ def selftest():
     cases = [("fsnet", {}, 0), ("fsnet", {"steps": 25}, 3 * 2 * 3 * 5),                       # interior; upper steps
              ("shifts", {"lr": 0.1}, 1 * 2 * 2 * 3 * 5),                                         # upper lr
              ("adaptz", {"lr": 1e-5, "steps": 25}, (4 * 3 - 6) * 2 * 3 * 5),                     # lower lr + upper steps
-             ("dtmoe", {"steps": 25}, 3 * 2 * 3 * 5), ("tot", {"lr": 1e-5}, 2 * 2 * 3 * 5)]
+             ("dtmoe", {"steps": 25}, 3 * 2 * 1 * 5), ("tot", {"lr": 1e-5}, 2 * 2 * 3 * 5)]
     for m, e, n in cases:
         t, expect = make_ext(m, fx(m, e))
         assert len(t) == expect == n, (m, e, len(t), expect, n)

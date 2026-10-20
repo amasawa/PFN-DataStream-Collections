@@ -4,8 +4,9 @@ You are Claude Code on the user's Mac mini, the **executor on the cluster**. The
 Windows machine (the coordinator) wrote this file; it keeps the registration, the audits (MiMo, Codex, Sonnet) and the
 analysis. Communication: git (this repository) and the user. Reply to the user in Chinese; code, commits in English.
 
-Read first, in this order: `ACTIVATION_20261019.md`, `AMENDMENT_20261020.md` and `AMENDMENT_20261020b.md` (A800,
-7 cores per GPU, MPS, TOT on the A800, CURE cancelled; they hold where they differ from
+Read first, in this order: `ACTIVATION_20261019.md`, `AMENDMENT_20261020.md`, `AMENDMENT_20261020b.md` (A800,
+7 cores per GPU, MPS, CURE cancelled) and `AMENDMENT_20261020c.md` (TOT removed; dtmoe grid of 60 tasks from
+tasks_dtmoe.jsonl; dtmoe probe ids with _m2); they hold where they differ from
 PLAN.md or this file; the phases
 P2-P6 come with their own registrations later), `bundle/claude_rules/global_CLAUDE.md` (the user's team rules; they apply to you, except
 that MiMo and Codex run on the Windows side: ask the coordinator for audits), this file, `PLAN.md` (the registration:
@@ -73,8 +74,8 @@ Run in one GPU job, sequentially, `$PY rerun.py qualify "<task id>" $WORK/qualif
 `results_heldout_tabicl:covertype__ddm1000`, `results_probs:covertype__ddm1000`,
 `mice-r14-test:t_b2000_c100_s40_o0__micecp1000_500`, `mice-r14b-acc:c_b2000_c100_s50_o0__snap1000_500.k2`,
 `mice-tkde-control-20261009:mis_micev_mis_b700_c30_s30`, `drtabpfn:elec2`,
-`dtmoe_dev:elec2__dtmoe_L16_lr0.0001_s1_m1`, `dtmoe_dev:elec2__dtmoe_L32_lr0.0001_s1_m1`,
-`dtmoe_dev:insects_abrupt_balanced__dtmoe_L32_lr0.001_s5_m3`.
+`dtmoe_dev:elec2__dtmoe_L16_lr0.0001_s1_m2`, `dtmoe_dev:elec2__dtmoe_L32_lr0.0001_s1_m2`,
+`dtmoe_dev:insects_abrupt_balanced__dtmoe_L32_lr0.001_s5_m2` (AMENDMENT_20261020c: the _m2 counterparts).
 Report each QUALIFIED / NOT QUALIFIED in the log and push. Any NOT QUALIFIED (or a dtmoe error "does not have a
 deterministic implementation"): pause that pipeline (its tasks are not started), keep the evidence, report the
 differing arrays, and wait: the coordinator diagnoses and registers its disposition with the arbiter and the user.
@@ -159,7 +160,8 @@ The other pipelines may go on. (The probe outputs are not results; keep them.)
 - **Return.** As in step 5: `MICE/results_heldout*_<tag>*`, `$RUNS/mice-p3-smoke`, and
   (no CURE outputs: P4 is cancelled).
 
-## Phase P6, gate (a) of TOT (REGISTRATION_P6_GATE_A_20261020.md, amended: H800)
+## Phase P6, gate (a) of TOT: CANCELLED (AMENDMENT_20261020c: TOT removed). Never run tasks_p6.jsonl.
+(Former section, kept for the record:)
 - **Environment.** Create venv-tot (Python 3.11) from `env_lock/tot.txt` (torch 2.3.1+cu121), record its pip
   freeze, and set PYTOTA to its python. The code comes from the P1 bundle (`$WORK/home/ext-baselines/TOT_neurips_supp`).
 - **Run.** Once, alone on one H800: `python rerun.py worker 0 --gpu exclusive --sets p6_gate_a --tasks tasks_p6.jsonl`.
@@ -174,7 +176,7 @@ Run each one when its commit arrives, with the worker command of its device:
 
 Use `--tasks <list>` in both cases.
 
-## P6 order (AMENDMENT_20261020b item 3)
+## P6 order: CANCELLED (AMENDMENT_20261020c). (Former section, kept for the record:)
 Run these in order, each alone on one A800, with the MPS configuration of production:
 1. `p6_gate_a` (gate (a); see above).
 2. If its verdict is "pass": `python rerun.py worker 0 --gpu exclusive --sets p6_tot_check --tasks tasks_p6.jsonl`.
@@ -185,3 +187,8 @@ Run these in order, each alone on one A800, with the MPS configuration of produc
    - if QUALIFIED, run the grid: `python rerun.py worker <slot> --gpu shared --sets tot_dev --tasks tasks_p6.jsonl`.
 
 Log and push after each step. Any other verdict stops TOT: report it.
+
+## dtmoe development grid (AMENDMENT_20261020c)
+Only after the dtmoe probe cap verdict (step 3) and the user's decision, which the coordinator commits:
+`python rerun.py worker <slot> --gpu shared --tasks tasks_dtmoe.jsonl` (60 tasks; A800, strict mode). P1 production
+keeps `--exclude-sets dtmoe_dev`. Never run dtmoe_dev from tasks.jsonl.

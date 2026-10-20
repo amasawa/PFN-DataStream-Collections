@@ -26,16 +26,20 @@ for f in glob.glob(f"{P}/*__{method}_*.npz"):
         continue
     cfg = (int(g["L"]), float(g["lr"]), int(g["st"]), None if g["m"] is None else float(g["m"]))
     acc.setdefault(cfg, {})[g["s"]] = float(np.nanmean(np.load(f)["acc"]))
+MECH = {"dtmoe": (2.0,)}.get(method)   # AMENDMENT_20261020c (clean rerun): dtmoe only at its default drift_k_sigma 2
+if MECH is not None:
+    acc = {c: d for c, d in acc.items() if c[3] in MECH}
+N_CFG = 2 * (len(MECH) if MECH is not None else 3)   # registered L (2 values) x mech values
 added = lambda c: c[1] not in GRID["lr"] or c[2] not in GRID["steps"]
 if not final:
     acc = {c: d for c, d in acc.items() if not added(c)}
 rows = sorted(((cfg, d) for cfg, d in acc.items()), key=lambda r: (added(r[0]), r[0]))
 eligible = [(cfg, float(np.mean([d[s] for s in DEV]))) for cfg, d in rows if all(s in d for s in DEV)]
-if not final and (len(eligible) != 36 or len(rows) != 36):   # the registered grid must be complete
-    sys.exit(f"{method}: {len(eligible)} complete of {len(rows)} configurations, 36 expected: not selecting")
+if not final and (len(eligible) != 6 * N_CFG or len(rows) != 6 * N_CFG):   # the registered grid must be complete
+    sys.exit(f"{method}: {len(eligible)} complete of {len(rows)} configurations, {6 * N_CFG} expected: not selecting")
 if final:   # amendment c: the extended grid must be complete, nothing missing; expected count from the extension
     e = json.load(open(f"{out}/frozen_{method}.json"))["boundary_extension_needed"]
-    n_cfg = 2 * 3                                       # registered L (2 values) x mech (3 values), every method
+    n_cfg = N_CFG                                       # registered L (2 values) x mech values
     nl, ns = len(GRID["lr"]) + ("lr" in e), len(GRID["steps"]) + ("steps" in e)
     want = nl * ns * n_cfg
     if len(eligible) != want or len(eligible) != len(rows):
