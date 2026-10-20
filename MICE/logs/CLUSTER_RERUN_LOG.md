@@ -417,3 +417,4 @@ stage2_ext_onenet                  done=83 claimed=7 gaveup=0 left=0
   (b) 已在 1792 MiB 下完成的该组任务（02:05 CST 时 157 个）是否重跑——若 TabPFN 的分批与可用显存有关，数值可能与原始设置不同；
   执行者未核实 TabPFN 是否如此。执行者不改任务；同组后续大特征数任务可能同样 OOM。
 - 05:41 AEDT mice-r13-acc 自 02:37 CST 起 GAVE UP（k2_18–k2_22 等，三次 rc 0，约 1 min/次）：用补丁后的 valid() 检查隔离输出均有效，与 mice-r14-dev 同属旧代码 worker 误判（schema 不含 cuts/closes）。预计 mice_seg_origin_r12 同样。P1 结束后与 r14-dev 一并重置、用新代码补跑。
+- P2b onenet：扩展 90/90 done、0 gaveup。`--final`：54/54，最终配置不变 L32 lr1e-3 s5 m0.75。在 onenet 测试任务之前提交。
