@@ -1439,3 +1439,8 @@
 - 用户决定："去掉 TOT"；dtmoe "只用默认漂移阈值"。
 - 实施：tasks_p6.jsonl 不跑（HANDOFF 标为取消）；dtmoe 开发网格 60 个任务（tasks_dtmoe.jsonl，从冻结的 tasks.jsonl 原样抽出 m=2，tasks.jsonl 哈希不变）；探测改用对应的 _m2 任务；select_frozen.py 对 dtmoe 只取 m=2、期望 12 个配置（其他方法不变，合成数据实测）；阶段 2 生成器 dtmoe 机制轴只有 2。Sonnet 核对：none。
 - 资源：GPU 约 960–1160 单进程小时，8 卡约 2–2.5 天计算（待集群实测）。
+
+## 2026-10-20 12:12 AMENDMENT_20261020d：P3 只保留 TabPFN-3.5 和 TabDPT
+- 用户"骨干没必要跑那么多吧"；按 Fable 10-19 的原建议（fable_backbones.md）给出选项，用户选"TabPFN-3.5 + TabDPT"。替换 ACTIVATION 用户决定 6（"7 个全测"）。
+- tasks_p3b.jsonl（make_tasks_p3b.py）：从 tasks_p3.jsonl 原样抽出 80 个生产任务 + 6 个冒烟任务（含 TabPFN v2 参照）；tasks_p3.jsonl 哈希不变、不运行。Sonnet 核对：none。
+- 资源：P3 约 300 → 100 小时；整体约 760–960 单进程 GPU 小时，8 卡约 1.5–2 天计算。

@@ -6,7 +6,8 @@ analysis. Communication: git (this repository) and the user. Reply to the user i
 
 Read first, in this order: `ACTIVATION_20261019.md`, `AMENDMENT_20261020.md`, `AMENDMENT_20261020b.md` (A800,
 7 cores per GPU, MPS, CURE cancelled) and `AMENDMENT_20261020c.md` (TOT removed; dtmoe grid of 60 tasks from
-tasks_dtmoe.jsonl; dtmoe probe ids with _m2); they hold where they differ from
+tasks_dtmoe.jsonl; dtmoe probe ids with _m2) and `AMENDMENT_20261020d.md` (P3: TabPFN-3.5 and TabDPT only,
+tasks_p3b.jsonl); they hold where they differ from
 PLAN.md or this file; the phases
 P2-P6 come with their own registrations later), `bundle/claude_rules/global_CLAUDE.md` (the user's team rules; they apply to you, except
 that MiMo and Codex run on the Windows side: ask the coordinator for audits), this file, `PLAN.md` (the registration:
@@ -136,6 +137,9 @@ The other pipelines may go on. (The probe outputs are not results; keep them.)
   extension and tests of fsnet, onenet, adaptz and shifts) from those outputs. Do not select anything yourself.
 
 ## Phases P3 (extra backbones) and P4 stage 1 (CURE development runs) (REGISTRATION_P3_P4_20261020.md)
+**AMENDMENT_20261020d: P3 runs only tabpfn_v3.5 and tabdpt. Use `--tasks tasks_p3b.jsonl` wherever this section says
+`tasks_p3.jsonl`; never run tasks_p3.jsonl. Build only the tabdpt venv (not mitra, not limix); the probe of step 3 is
+needed for tags tabpfn35 and tabdpt only.**
 - **Inputs.** Copy `C:\Users\zhwu9808\Desktop\mice_h800_bundle_p3\` (3.2 GB) over RDP, check SHA256SUMS. Untar
   `p3_weights.tar` into `$WORK/home/` (gives `$WORK/home/mice-p3-weights`), and `ext-baselines-p3.tar` into
   `$WORK/home/ext-baselines/` (LimiX, CURE-ICML-FMSD). Check both `*.files.sha256` there.
