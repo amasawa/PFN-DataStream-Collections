@@ -524,3 +524,9 @@ Probe 3054337 (gpu8001): tabdpt QUALIFIED (bit-identical, 09:29:45-09:34:30 CST)
 09:29:45-10:29:37 CST). No backbone paused. Production: 3 jobs of cluster/prod_p3.sbatch (1 A800 each, NW 3,
 --tasks tasks_p3b.jsonl, --exclude-sets p3_smoke) on the GPUs left free by drtabpfn, the untimed job and the 3
 benchmarks. mice-r13-acc 100/100 and mice_seg_origin_r12 16/16 done (3054353 COMPLETED, 21:41).
+
+### 2026-10-21 14:50 AEDT (11:50 CST) progress
+Untimed job 3054319 COMPLETED (2:23:36): results_delay_dev 5/5 and mice_oracle_r11 1/1 done. Benchmarks: a1 of tkde,
+r13, r14b running (2:05). drtabpfn: 6 done (1268-9064 s each), 6 claimed, 80 left after 3 h on one GPU; a second
+drtabpfn job 3055420 (dr.sbatch, NW 6) submitted on the free eighth GPU. P3: results_heldout3_tabpfn35 7 done, 9
+claimed; 0 gave up. dtmoe extension: 14/60 done, 46 claimed, 0 gave up.
