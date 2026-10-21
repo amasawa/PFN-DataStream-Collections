@@ -608,3 +608,9 @@ _rerun/reset_20261021e/, claim released; job 3059748 (untimed.sbatch, TASKS=task
 When the extension is done and frozen_dtmoe_final.json is committed, the 92 test tasks run in 4 jobs of prod_p2.sbatch
 (48 cores, 24 workers each; 96 workers, 192 cores, under the 500-core limit), so that all start at once. Threads
 stay at 1 (registered).
+
+### 2026-10-21 23:00 AEDT tkde fifoM_h2_spam at 8192 MiB (user: "tkde 按推荐，提到 8192 重跑")
+tasks_tkde_alloc.jsonl now sets MICE_ALLOC_MIB=8192 (3ae04d6); the 4096 attempts moved to _rerun/reset_20261021f/;
+job 3061674 (untimed.sbatch, NW 1). The paper and the return notes state that this one task ran with a cap of 8192 MiB
+(original 4096, other tasks of the set 1792). Also checked: on the dtmoe CPU nodes (192 cores) each of our processes
+has 1 thread at 100 %; the node load of 103-145 includes other users' jobs.
