@@ -518,3 +518,9 @@ lr 1e-5, steps 25. frozen_dtmoe.json (sha256 2e91658e...) committed f6173a8 befo
 `make_tasks_stage2.py ext dtmoe` 60/60 (manifest expected = tasks), CPU copy by cluster/make_tasks_dtmoe_cpu.py
 (set stage2_ext_dtmoe_cpu, outputs to dtmoe_cpu/dev/P), committed 053ebc5. Jobs 3054397-399 (prod_p2.sbatch,
 TASKS=tasks_stage2_dtmoe_ext_cpu.jsonl, 48 cores, 24 workers each, 3-day limit since steps 25 runs longer).
+
+### 2026-10-21 13:32 AEDT P3 probe and production
+Probe 3054337 (gpu8001): tabdpt QUALIFIED (bit-identical, 09:29:45-09:34:30 CST), tabpfn35 QUALIFIED (bit-identical,
+09:29:45-10:29:37 CST). No backbone paused. Production: 3 jobs of cluster/prod_p3.sbatch (1 A800 each, NW 3,
+--tasks tasks_p3b.jsonl, --exclude-sets p3_smoke) on the GPUs left free by drtabpfn, the untimed job and the 3
+benchmarks. mice-r13-acc 100/100 and mice_seg_origin_r12 16/16 done (3054353 COMPLETED, 21:41).
