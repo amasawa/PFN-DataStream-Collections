@@ -24,7 +24,7 @@ date; hostname; echo "SETS=$SETS NW=$NW GPUs=$CUDA_VISIBLE_DEVICES"
     sleep 60; done ) > "$L/untimed_${SLURM_JOB_ID}_res.csv" 2>&1 &
 SAMPLER=$!
 for w in $(seq 1 "$NW"); do
-  "$PY" rerun.py worker "${SLURM_JOB_ID}_w${w}" --gpu shared --sets "$SETS" > "$L/untimed_${SLURM_JOB_ID}_w${w}.log" 2>&1 &
+  "$PY" rerun.py worker "${SLURM_JOB_ID}_w${w}" --gpu shared --sets "$SETS" --tasks "${TASKS:-tasks.jsonl}" > "$L/untimed_${SLURM_JOB_ID}_w${w}.log" 2>&1 &
 done
 wait $(jobs -p | grep -v "^$SAMPLER$")
 kill $SAMPLER
