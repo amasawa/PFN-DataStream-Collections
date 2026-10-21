@@ -633,3 +633,9 @@ cost tables keep the original-machine values. Cancelled job 3059721 (mice-r13-be
 Return to the Mac (user decision): result files only (task outputs, _rerun attempts/done/gaveup/logs, env freezes), no
 inputs; list $WORK/return_list.txt (26108 files, about 16 GB), checksums $WORK/return_SHA256SUMS. After P3 finishes,
 only the CPU dtmoe jobs remain.
+
+### 2026-10-22 09:55 AEDT (06:55 CST) progress
+The Mac lost the cluster from about 01:50 to 09:50 AEDT (campus VPN down: logini.tongji.edu.cn did not resolve); the
+jobs ran on. P3 complete: results_heldout4_tabpfn35_e 12/12, job 3054553 ended, no GPU job remains. dtmoe extension
+stage2_ext_dtmoe_cpu 52/60 (3054397-399, CPU only). Gave up: 0. Return rsync resumed (772 MB of about 16 GB before
+the outage).
