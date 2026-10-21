@@ -603,3 +603,8 @@ _rerun/reset_20261021e/, claim released; job 3059748 (untimed.sbatch, TASKS=task
   for the user.
 - Rerun jobs running: 3059720 rows-class (r14-exist 107 done, 6 claimed, 9 left; confirm and devtrim 2 left each),
   benchmarks 3059721 (r13 a1), 3059722 (r14b a2), 3059723 (tkde). P3 3 jobs; dtmoe extension 3 jobs.
+
+### 2026-10-21 22:50 AEDT dtmoe test layout (user: "好，就这么加速")
+When the extension is done and frozen_dtmoe_final.json is committed, the 92 test tasks run in 4 jobs of prod_p2.sbatch
+(48 cores, 24 workers each; 96 workers, 192 cores, under the 500-core limit), so that all start at once. Threads
+stay at 1 (registered).
