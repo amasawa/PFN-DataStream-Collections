@@ -585,3 +585,10 @@ GPU, last 5 min: drtabpfn 99% and 4 GB; P3 (tabpfn35, OMP 4 x 3 per GPU) 9-25% a
 - Jobs: 3059720 rows-class (untimed.sbatch, SETS r14-exist,r14-confirm,r14-devtrim, NW 6); benchmarks, one exclusive
   worker each: 3059721 r13 (a1 then a2, file order), 3059722 r14b (a2), 3059723 tkde. All pending (Priority), with
   drtabpfn 3059665-667. Gave up now: 1 (tkde-control fifoM_h2_spam, MICE_ALLOC_MIB question open).
+
+### 2026-10-21 20:35 AEDT tkde-control memory cap (user: "按推荐")
+Decision: only mice-tkde-control-20261009:fifoM_h2_spam (GAVE UP, out of memory under 1792 MiB) reruns, with
+MICE_ALLOC_MIB=4096 as the original controller/supervisor.py:97 set it; the set's other tasks stay as run, under the
+1792 MiB default of worker.py, which the paper / return notes state. tasks.jsonl unchanged: the task with the added
+variable is the one line of tasks_tkde_alloc.jsonl (5b3b80e). Its attempts and gaveup records moved to
+_rerun/reset_20261021e/, claim released; job 3059748 (untimed.sbatch, TASKS=tasks_tkde_alloc.jsonl, NW 1). Gave up: 0.
