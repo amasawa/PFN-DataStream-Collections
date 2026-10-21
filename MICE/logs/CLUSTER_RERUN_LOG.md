@@ -551,3 +551,37 @@ after a1. Both actions were refused by the session's permission classifier ("Mod
 rerun.py valid() edit and the copy of kstar.json to the benchmark root. Nothing was changed; waiting for the user.
 Not covered by the decision (no recommendation was given): tkde MICE_ALLOC_MIB=4096, scancel permission.
 GPU, last 5 min: drtabpfn 99% and 4 GB; P3 (tabpfn35, OMP 4 x 3 per GPU) 9-25% and 7 GB.
+
+### 2026-10-21 20:25 AEDT executing the user's decision (user: "允许改 rerun.py 和复制 kstar.json")
+- rerun.py valid() (a4ec53e, d7b9354; cluster sha256 4398e984..., same as git): cuts / closes compared on columns and
+  dtype; .closes.pkl on its type; a benchmark jsonl is accepted when it ends with its "done" record. Workers already
+  running (drtabpfn, P3) keep the old code; they run none of these sets.
+- Check of the 24 GAVE UP outputs under the new rule (outputs in place or last quarantined attempt): 24/24 valid.
+  Row / line differences, rerun against original:
+
+| task | difference |
+|---|---|
+| r14-confirm c_bvar_c100_s52_o0 / o2 micecp | closes 27 vs 28 |
+| r14-devtrim d_b500_o250_c100_s0 archcp / micecp | closes 7 vs 8 |
+| r14-exist covertype archcp / micecp | cuts 81 vs 83, closes 300 vs 301 |
+| r14-exist elec2 archcp / micecp | cuts 43 vs 44 |
+| r14-exist h2_poker archcp / micecp | cuts 127 vs 128, closes 209 vs 210 |
+| r14-exist h2_rialto archcp / micecp | cuts 65 vs 66 |
+| r14-exist h3_covertype_b archcp / micecp | cuts 47 vs 48 |
+| r14-exist h3_covertype_c archcp / micecp | cuts 181 vs 180, closes 212 vs 211 |
+| r14-exist h4_covertype_d archcp / micecp | cuts 164 vs 163 |
+| r14-exist h4_poker_e archcp / micecp | cuts 137 vs 138 |
+| r14-exist insects_incremental_abrupt_balanced archcp / micecp | cuts 16 vs 17 |
+| tkde-bench bench | 73 vs 75 lines (72 runs ok at attempt 0 + done) |
+| r13-bench a1 | 52 vs 55 lines (51 runs ok at attempt 0 + done) |
+
+  The benchmark drivers retry a run up to 5 times after an OOM and write one record per attempt (bench_pools.py), so
+  the original's extra lines are retry records.
+- Reset (reset_20261021d/): attempts and gaveup records of the 22 rows-class tasks, tkde-bench:bench, r13-bench a1 and
+  a2, r14b-bench a2; their claims released. The drivers skip a run whose .occ.json exists, so the benchmark run
+  directories $RUNS/mice-r13-bench-h800/a1 and $RUNS/mice-tkde-bench-20261009-h800/rep{0,1,2} moved to
+  reset_20261021d/bench_dirs/ (task outputs are quarantined by rerun.py itself). kstar.json copied from
+  $RUNS/<root>/<root>/ to $RUNS/<root>/ for r13 and r14b (sha256 a3709bf2..., 4c6f22ba..., identical to the bundled copy).
+- Jobs: 3059720 rows-class (untimed.sbatch, SETS r14-exist,r14-confirm,r14-devtrim, NW 6); benchmarks, one exclusive
+  worker each: 3059721 r13 (a1 then a2, file order), 3059722 r14b (a2), 3059723 tkde. All pending (Priority), with
+  drtabpfn 3059665-667. Gave up now: 1 (tkde-control fifoM_h2_spam, MICE_ALLOC_MIB question open).
