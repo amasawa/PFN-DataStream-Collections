@@ -464,3 +464,11 @@ gpu8001. results_*: all done except 6 claimed (heldout_tabicl 1, heldout4_seed1 
 left. P1 rest: mice-r14-dev 50 done, 18 claimed, 76 left; r13-acc, seg_origin, oracle and the benchmarks not started.
 dtmoe_cpu_dev 54/60 done, 6 claimed. Gave up: 23, unchanged (the 22 rows-class tasks and tkde fifoM_h2_spam, awaiting
 the user). Smoke 3054183 and drtabpfn 3050510 pending.
+
+### 2026-10-21 12:00 AEDT reset_20261021c (stale pre-patch attempts)
+Three mice-r13-acc tasks (k2_0, k2_2, k2_5) GAVE UP at once when P1 rest started: their 3 attempts were all from the
+old-code P1 workers on gpu8012 before the valid() patch (rc 0 not accepted, then the third interrupted when the job
+ended); reset_20261021b had missed tasks that were in flight at that time. Same class, same handling as reset_20261021b
+(user decision items 2 and 6): attempts records of the 10 unfinished tasks whose attempts all predate reset_20261021b
+moved to _rerun/reset_20261021c/ (r13-acc k2_0 k2_2 k2_5 k4_4 k4_7 k4_9 k4_11 k4_17 k4_46, seg_origin_r12 11; and the 3
+gaveup records). None was claimed. Gave up is back to 23 (the 22 rows-class tasks and tkde fifoM_h2_spam).
