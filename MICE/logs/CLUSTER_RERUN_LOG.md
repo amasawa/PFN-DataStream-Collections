@@ -502,3 +502,11 @@ SETS=mice-r13-acc, NW 3, 24 h) submitted. Benchmarks (last P1 sets; one exclusiv
 3054354 tkde-bench, 3054355 + 3054357 r13-bench (a1, a2), 3054356 + 3054358 r14b-bench (a1, a2). Untimed job 3054319:
 results_delay_dev 3 claimed. drtabpfn: 2 done, 6 claimed after 54 min. P3 probe 3054337: tabdpt QUALIFIED
 (bit-identical, 4:45); tabpfn35 still running.
+
+### 2026-10-21 12:55 AEDT benchmark a2 GAVE UP (executor's scheduling error)
+mice-r13-bench-h800:a2 (job 3054357) and mice-r14b-bench-h800:a2 (job 3054358) GAVE UP after 10 s, rc 1:
+FileNotFoundError on $RUNS/mice-r1{3,4b}-bench-h800/kstar.json, which stage a1 of the same benchmark writes. The
+executor gave a2 its own job so that each task had one job; a2 depends on a1 and must run after it (file order, one
+worker). Nothing was computed (attempt 0.3 s, no output). Benchmarks get one attempt, so the two tasks stay GAVE UP
+until the user decides. Proposed: when a1 is done, move the two a2 attempts/gaveup records and claim directories to
+_rerun/reset_20261021d/ and run a2 in a new exclusive job, alone on its GPU. a1 jobs 3054355 and 3054356 continue.
