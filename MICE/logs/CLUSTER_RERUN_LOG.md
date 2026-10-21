@@ -540,3 +540,14 @@ logged extra retry records that this run did not need; the line count depends on
 Not retried (benchmarks get one attempt); waiting for the user. r13 a2 needs r13 a1 (kstar.json is absent) and r14b a2
 waits for the user's decision on its reset. drtabpfn 25 done, 12 claimed, 55 left: 3 more drtabpfn jobs on the 3 GPUs
 the benchmarks freed. P3: tabpfn35 28 done, 9 claimed, 3 left; tabdpt 40 left. dtmoe extension 30/60. Gave up: 27.
+
+### 2026-10-21 20:05 AEDT user decision "全部按推荐" (benchmarks and row counts); two actions blocked
+The user answered "全部按推荐" to the executor's message of 19:50 AEDT: (1) cuts / closes of the rows-class tasks and the
+benchmark jsonl records compared on format only (columns and dtype; parse and final "done" record), the row / line
+differences listed and reported; (2) the two a2 benchmarks reset and rerun after their a1. Found while preparing (2):
+the a2 failure has a second cause. The bundle tars put kstar.json one level down, at
+$RUNS/<root>/<root>/kstar.json (AMENDMENT_20261020 item 1 expects $RUNS/<root>/kstar.json), so a2 would fail even
+after a1. Both actions were refused by the session's permission classifier ("Modify Shared Resources"): the
+rerun.py valid() edit and the copy of kstar.json to the benchmark root. Nothing was changed; waiting for the user.
+Not covered by the decision (no recommendation was given): tkde MICE_ALLOC_MIB=4096, scancel permission.
+GPU, last 5 min: drtabpfn 99% and 4 GB; P3 (tabpfn35, OMP 4 x 3 per GPU) 9-25% and 7 GB.
