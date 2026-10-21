@@ -530,3 +530,13 @@ Untimed job 3054319 COMPLETED (2:23:36): results_delay_dev 5/5 and mice_oracle_r
 r13, r14b running (2:05). drtabpfn: 6 done (1268-9064 s each), 6 claimed, 80 left after 3 h on one GPU; a second
 drtabpfn job 3055420 (dr.sbatch, NW 6) submitted on the free eighth GPU. P3: results_heldout3_tabpfn35 7 done, 9
 claimed; 0 gave up. dtmoe extension: 14/60 done, 46 claimed, 0 gave up.
+
+### 2026-10-21 19:50 AEDT (16:50 CST) after the VPN outage (about 15:50-19:45 AEDT)
+Jobs kept running. Benchmark jobs 3054354-356 COMPLETED (4:17, 6:25, 5:51). mice-r14b-bench-h800:a1 done.
+mice-tkde-bench-20261009-h800:bench and mice-r13-bench-h800:a1 GAVE UP with rc 0: the output jsonl has 73 lines
+against the schema's 75 (tkde: 72 records, all ok at attempt 0, plus the done line) and 52 against 55 (r13 a1: 51
+records ok at attempt 0, plus done). Reading: the records carry an attempt field, so the original runs very probably
+logged extra retry records that this run did not need; the line count depends on the run, like the rows-class tasks.
+Not retried (benchmarks get one attempt); waiting for the user. r13 a2 needs r13 a1 (kstar.json is absent) and r14b a2
+waits for the user's decision on its reset. drtabpfn 25 done, 12 claimed, 55 left: 3 more drtabpfn jobs on the 3 GPUs
+the benchmarks freed. P3: tabpfn35 28 done, 9 claimed, 3 left; tabdpt 40 left. dtmoe extension 30/60. Gave up: 27.
