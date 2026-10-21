@@ -116,6 +116,8 @@ def valid(o, sch):
         if o.endswith(".pkl"):
             x = pickle.load(open(o, "rb"))
             got = [type(x).__name__, sorted(map(str, x.keys())) if isinstance(x, dict) else len(x) if isinstance(x, (list, tuple)) else None]
+            if o.endswith(".closes.pkl") and sch:          # one entry per closed context, as the closes rows above
+                return got[0] == sch["pkl"][0]
             return bool(sch) and got == sch["pkl"]
         if o.endswith(".csv"):
             r = list(csv.reader(open(o)))
