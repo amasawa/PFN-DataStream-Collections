@@ -472,3 +472,10 @@ ended); reset_20261021b had missed tasks that were in flight at that time. Same 
 (user decision items 2 and 6): attempts records of the 10 unfinished tasks whose attempts all predate reset_20261021b
 moved to _rerun/reset_20261021c/ (r13-acc k2_0 k2_2 k2_5 k4_4 k4_7 k4_9 k4_11 k4_17 k4_46, seg_origin_r12 11; and the 3
 gaveup records). None was claimed. Gave up is back to 23 (the 22 rows-class tasks and tkde fifoM_h2_spam).
+
+### 2026-10-21 12:25 AEDT (09:25 CST) progress
+All results_* jobs COMPLETED (3050504 last, 4:47). P1 rest 3053915 and 3053916 COMPLETED (no task left for them);
+mice-r14-dev all done; mice-r13-acc 88 done, 12 claimed (the 10 of reset_20261021c rerunning). Left in P1: the untimed
+results_delay_dev (5) and mice_oracle_r11:all (1), submitted as their own job 3054319 (cluster/untimed.sbatch, 7-day
+limit, --sets, NW 3); the 5 benchmarks will run last, one exclusive job each (cluster/bench.sbatch). P3 smoke 3054183
+running on gpu8015; drtabpfn 3050510 running (6 claimed, 0 done after 31 min).
