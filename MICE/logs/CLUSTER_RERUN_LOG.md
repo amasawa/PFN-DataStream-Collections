@@ -592,3 +592,14 @@ MICE_ALLOC_MIB=4096 as the original controller/supervisor.py:97 set it; the set'
 1792 MiB default of worker.py, which the paper / return notes state. tasks.jsonl unchanged: the task with the added
 variable is the one line of tasks_tkde_alloc.jsonl (5b3b80e). Its attempts and gaveup records moved to
 _rerun/reset_20261021e/, claim released; job 3059748 (untimed.sbatch, TASKS=tasks_tkde_alloc.jsonl, NW 1). Gave up: 0.
+
+### 2026-10-21 22:10 AEDT (19:10 CST) drtabpfn complete; tkde fifoM_h2_spam still out of memory under 4096 MiB
+- drtabpfn 92/92 done, 0 gave up (jobs 3050510, 3055420, 3059665-667 all COMPLETED, exit 0).
+- Job 3059748 (MICE_ALLOC_MIB=4096, tasks_tkde_alloc.jsonl): 3 attempts on gpu8003, 19:03-19:07 CST, each rc 1 after
+  about 75 s: TabPFNCUDAOutOfMemoryError, "Tried to allocate 1.26 GiB ... this process has 3.30 GiB memory in use.
+  4.00 GiB allowed" (2,300 train / 100 test rows, 499 features). So the variable reached the task and the original cap
+  is not enough on this run. Why the original run passed under the same cap is not known from the cluster copy
+  (controller/supervisor.py sets 4096 for every worker; its event log is not in the bundle). GAVE UP again; waiting
+  for the user.
+- Rerun jobs running: 3059720 rows-class (r14-exist 107 done, 6 claimed, 9 left; confirm and devtrim 2 left each),
+  benchmarks 3059721 (r13 a1), 3059722 (r14b a2), 3059723 (tkde). P3 3 jobs; dtmoe extension 3 jobs.
