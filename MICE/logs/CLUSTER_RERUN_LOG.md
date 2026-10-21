@@ -614,3 +614,9 @@ tasks_tkde_alloc.jsonl now sets MICE_ALLOC_MIB=8192 (3ae04d6); the 4096 attempts
 job 3061674 (untimed.sbatch, NW 1). The paper and the return notes state that this one task ran with a cap of 8192 MiB
 (original 4096, other tasks of the set 1792). Also checked: on the dtmoe CPU nodes (192 cores) each of our processes
 has 1 thread at 100 %; the node load of 103-145 includes other users' jobs.
+
+### 2026-10-21 23:46 AEDT (20:46 CST) progress
+mice-tkde-control-20261009 223/223: fifoM_h2_spam done at MICE_ALLOC_MIB=8192 (job 3061674, 5:23). r14b-bench a2 done
+(3059722, 2:36): mice-r14b-bench-h800 2/2. Rows-class reruns: r14-exist 116 done + 6 claimed, r14-confirm and
+r14-devtrim 2 left each. Running: tkde-bench, r13-bench a1, P3 last job (tabpfn35 2 tasks), dtmoe extension 24.
+Gave up: 0. Sent the per-set status and paper-table mapping (MANIFEST.md) to the session mice-6e, without scores.
