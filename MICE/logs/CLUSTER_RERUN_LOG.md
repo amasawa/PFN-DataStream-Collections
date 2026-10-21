@@ -479,3 +479,17 @@ mice-r14-dev all done; mice-r13-acc 88 done, 12 claimed (the 10 of reset_2026102
 results_delay_dev (5) and mice_oracle_r11:all (1), submitted as their own job 3054319 (cluster/untimed.sbatch, 7-day
 limit, --sets, NW 3); the 5 benchmarks will run last, one exclusive job each (cluster/bench.sbatch). P3 smoke 3054183
 running on gpu8015; drtabpfn 3050510 running (6 claimed, 0 done after 31 min).
+
+### 2026-10-21 12:35 AEDT P3 smoke test and exclusion rule
+Job 3054183 (gpu8015, alone, --gpu exclusive, 1:58): 6/6 ok, $RUNS/mice-p3-smoke/*.json. Registered rule
+(REGISTRATION_P3_P4_20261020, smoke test and exclusions): excluded if an error is recorded, or if on either segment the
+median time per call (calls 2-20) is more than 20 times TabPFN v2's.
+
+| backbone | segment | error | median s/call | TabPFN v2 | ratio | peak GB |
+|---|---|---|---|---|---|---|
+| tabpfn_v3.5 | h3_covertype_b | none | 1.5845 | 0.2307 | 6.87 | 1.64 |
+| tabpfn_v3.5 | h3_poker_b | none | 1.5458 | 0.1834 | 8.43 | 1.64 |
+| tabdpt | h3_covertype_b | none | 0.1092 | 0.2307 | 0.47 | 0.47 |
+| tabdpt | h3_poker_b | none | 0.1080 | 0.1834 | 0.59 | 0.47 |
+
+Neither backbone is excluded. Next: the determinism probe of each, then production.
