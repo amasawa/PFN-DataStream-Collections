@@ -107,7 +107,12 @@ def valid(o, sch):
             with np.load(o, allow_pickle=True) as z:
                 got = {k: [list(z[k].shape), "<U" if z[k].dtype.kind == "U" else str(z[k].dtype)]
                        for k in z.files if k not in ("wt", "te", "peak_mem") and k not in rec}
-            return bool(sch) and got == sch["npz"]          # every task registers its structure (tasks.jsonl)
+            if not sch:
+                return False
+            # cuts / closes have one row per cut point / closed context, a number the computation decides: only their
+            # columns and dtype are compared (user 2026-10-21 "全部按推荐"; row differences are listed in the log)
+            rows = lambda d: {k: [v[0][1:], v[1]] if k in ("cuts", "closes") and v[0] else v for k, v in d.items()}
+            return rows(got) == rows(sch["npz"])           # every task registers its structure (tasks.jsonl)
         if o.endswith(".pkl"):
             x = pickle.load(open(o, "rb"))
             got = [type(x).__name__, sorted(map(str, x.keys())) if isinstance(x, dict) else len(x) if isinstance(x, (list, tuple)) else None]
@@ -116,11 +121,13 @@ def valid(o, sch):
             r = list(csv.reader(open(o)))
             return bool(sch) and [r[0], len(r) - 1] == sch["csv"]
         if o.endswith(".jsonl"):
-            n = 0
+            n, last = 0, None
             for l in open(o):
                 if l.strip():
-                    json.loads(l); n += 1
-            return bool(sch) and n == sch["jsonl"]
+                    last = json.loads(l); n += 1
+            # benchmark records: one per run attempt, so their number depends on the run; a finished run ends with its
+            # "done" record (user 2026-10-21 "全部按推荐"; count differences are listed in the log)
+            return bool(sch) and (n == sch["jsonl"] or (isinstance(last, dict) and last.get("done") is True))
         if o.endswith(".json"):
             x = json.load(open(o))
             return bool(sch) and sorted(x) == sch["json"]
