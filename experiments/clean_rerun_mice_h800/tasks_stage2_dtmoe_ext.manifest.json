@@ -1,0 +1,10 @@
+{
+ "list": "tasks_stage2_dtmoe_ext.jsonl",
+ "method": "dtmoe",
+ "kind": "ext",
+ "selection_file": "MICE/results_paper/table1_fill/frozen_cluster/frozen_dtmoe.json",
+ "selection_sha256": "2e91658e238a29eb566e0ff66ea62fa8366b346afa83faee7e13f4cae9fe1dda",
+ "expected": 60,
+ "tasks": 60,
+ "generator_sha256": "caea58fb40653c96b0488295334b3179e3429e60571bcb92a2e2c98543aa8ce5"
+}
