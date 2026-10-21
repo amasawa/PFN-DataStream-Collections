@@ -639,3 +639,12 @@ The Mac lost the cluster from about 01:50 to 09:50 AEDT (campus VPN down: logini
 jobs ran on. P3 complete: results_heldout4_tabpfn35_e 12/12, job 3054553 ended, no GPU job remains. dtmoe extension
 stage2_ext_dtmoe_cpu 52/60 (3054397-399, CPU only). Gave up: 0. Return rsync resumed (772 MB of about 16 GB before
 the outage).
+
+### 2026-10-22 10:20 AEDT (07:20 CST) dtmoe dropped (user decision); all cluster jobs ended
+User decision 2026-10-22 (option B): dtmoe is not run further and not tested; its Table 1 column stays empty (not
+run). Cancelled the extension jobs 3054397-399 at stage2_ext_dtmoe_cpu 52/60 (8 s25 tasks unfinished; their partial
+outputs stay in place, not used). No dtmoe test tasks were made or submitted. The cluster queue is empty: no GPU or CPU
+job runs. Gave up: 0.
+Return (results only, user decision): $WORK/return_list.txt rebuilt from the outputs of tasks recorded in done/ only
+(partial outputs of cancelled tasks excluded), plus _rerun attempts/done/gaveup/logs and env freezes: 26140 files,
+16.28 GB; checksums $WORK/return_SHA256SUMS; rsync to the Mac ~/Desktop/mice_h800_results/ in progress.
