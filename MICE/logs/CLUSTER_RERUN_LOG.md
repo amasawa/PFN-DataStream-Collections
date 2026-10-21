@@ -625,3 +625,11 @@ Gave up: 0. Sent the per-set status and paper-table mapping (MANIFEST.md) to the
 Rows-class reruns done (job 3059720, COMPLETED 3:53:00): mice-r14-exist 122/122, mice-r14-confirm 216/216,
 mice-r14-devtrim 20/20. Running: tkde-bench (3059723), r13-bench (3059721), P3 last job 3054553
 (results_heldout4_tabpfn35_e 11/12), dtmoe extension 3054397-399 (stage2_ext_dtmoe_cpu 36/60). Gave up: 0.
+
+### 2026-10-22 01:25 AEDT (22:25 CST) benchmarks cancelled (user decision)
+User decision 2026-10-22: the r13 and tkde benchmarks are not rerun on the cluster ("运行时间和内存不同服务器都不同"); the
+cost tables keep the original-machine values. Cancelled job 3059721 (mice-r13-bench-h800, a1 at 4:18) and 3059723
+(mice-tkde-bench-20261009-h800, at 3:47); their partial outputs stay in place, not used. mice-r14b-bench-h800 2/2 kept.
+Return to the Mac (user decision): result files only (task outputs, _rerun attempts/done/gaveup/logs, env freezes), no
+inputs; list $WORK/return_list.txt (26108 files, about 16 GB), checksums $WORK/return_SHA256SUMS. After P3 finishes,
+only the CPU dtmoe jobs remain.
