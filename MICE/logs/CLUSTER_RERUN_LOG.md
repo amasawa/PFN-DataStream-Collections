@@ -620,3 +620,8 @@ mice-tkde-control-20261009 223/223: fifoM_h2_spam done at MICE_ALLOC_MIB=8192 (j
 (3059722, 2:36): mice-r14b-bench-h800 2/2. Rows-class reruns: r14-exist 116 done + 6 claimed, r14-confirm and
 r14-devtrim 2 left each. Running: tkde-bench, r13-bench a1, P3 last job (tabpfn35 2 tasks), dtmoe extension 24.
 Gave up: 0. Sent the per-set status and paper-table mapping (MANIFEST.md) to the session mice-6e, without scores.
+
+### 2026-10-22 00:51 AEDT (21:51 CST) progress
+Rows-class reruns done (job 3059720, COMPLETED 3:53:00): mice-r14-exist 122/122, mice-r14-confirm 216/216,
+mice-r14-devtrim 20/20. Running: tkde-bench (3059723), r13-bench (3059721), P3 last job 3054553
+(results_heldout4_tabpfn35_e 11/12), dtmoe extension 3054397-399 (stage2_ext_dtmoe_cpu 36/60). Gave up: 0.
