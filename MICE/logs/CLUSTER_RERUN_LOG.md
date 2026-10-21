@@ -493,3 +493,12 @@ median time per call (calls 2-20) is more than 20 times TabPFN v2's.
 | tabdpt | h3_poker_b | none | 0.1080 | 0.1834 | 0.59 | 0.47 |
 
 Neither backbone is excluded. Next: the determinism probe of each, then production.
+
+### 2026-10-21 12:50 AEDT (09:50 CST) P1 shared sets finished; benchmarks; P3 probe
+P1 rest jobs 3053914-920 all COMPLETED (32-53 min, exit 0). mice-r13-acc 97/100: k2_0, k2_2, k2_5 kept their claim
+directories from the 08:53 GAVE UP (reset_20261021c moved only attempts and gaveup), so no worker took them: the 3
+empty claim directories removed (as rerun.py release does, for these 3 only) and job 3054353 (untimed.sbatch,
+SETS=mice-r13-acc, NW 3, 24 h) submitted. Benchmarks (last P1 sets; one exclusive worker per job, one attempt):
+3054354 tkde-bench, 3054355 + 3054357 r13-bench (a1, a2), 3054356 + 3054358 r14b-bench (a1, a2). Untimed job 3054319:
+results_delay_dev 3 claimed. drtabpfn: 2 done, 6 claimed after 54 min. P3 probe 3054337: tabdpt QUALIFIED
+(bit-identical, 4:45); tabpfn35 still running.
