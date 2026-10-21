@@ -457,3 +457,10 @@ expects); sha256 -c OK for tabpfn-v3.5-20260909.safetensors, tabdpt1_3.safetenso
 (LimiX, CURE) not unpacked: unused after AMENDMENT_20261020d. Smoke job 3054183 (cluster/p3_smoke.sbatch, p3_smoke,
 --gpu exclusive, tasks_p3b.jsonl) submitted; pending on the 8-GPU QOS limit. GPU use, mean of the last 30 samples per
 results_* job: util 37-78%, memory 2.3-5.1 GB of 80 GB. Cluster cannot reach github.com:22; scripts are copied by scp.
+
+### 2026-10-21 11:50 AEDT (08:46 CST) progress
+results_* jobs 3050503, 3050507, 3050509 COMPLETED (exit 0, 4:04-5:10); P1 rest 3053914, 3053918, 3053920 started on
+gpu8001. results_*: all done except 6 claimed (heldout_tabicl 1, heldout4_seed1 1, probs 4) and results_delay_dev 5
+left. P1 rest: mice-r14-dev 50 done, 18 claimed, 76 left; r13-acc, seg_origin, oracle and the benchmarks not started.
+dtmoe_cpu_dev 54/60 done, 6 claimed. Gave up: 23, unchanged (the 22 rows-class tasks and tkde fifoM_h2_spam, awaiting
+the user). Smoke 3054183 and drtabpfn 3050510 pending.
