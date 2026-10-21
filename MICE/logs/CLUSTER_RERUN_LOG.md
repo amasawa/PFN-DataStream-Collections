@@ -510,3 +510,11 @@ executor gave a2 its own job so that each task had one job; a2 depends on a1 and
 worker). Nothing was computed (attempt 0.3 s, no output). Benchmarks get one attempt, so the two tasks stay GAVE UP
 until the user decides. Proposed: when a1 is done, move the two a2 attempts/gaveup records and claim directories to
 _rerun/reset_20261021d/ and run a2 in a new exclusive job, alone on its GPU. a1 jobs 3054355 and 3054356 continue.
+
+### 2026-10-21 13:05 AEDT dtmoe (cluster CPU) grid done; stage 2 step 1 and extension
+dtmoe_cpu_dev 60/60 done, 0 gave up (jobs 3053868-870 COMPLETED, 4:53-5:26). `select_frozen.py
+$RUNS/mice-table1-newbase/dtmoe_cpu/dev/P dtmoe frozen_cluster` (12/12 eligible): best L32 lr1e-4 s5 m2 -> extension
+lr 1e-5, steps 25. frozen_dtmoe.json (sha256 2e91658e...) committed f6173a8 before any extension task.
+`make_tasks_stage2.py ext dtmoe` 60/60 (manifest expected = tasks), CPU copy by cluster/make_tasks_dtmoe_cpu.py
+(set stage2_ext_dtmoe_cpu, outputs to dtmoe_cpu/dev/P), committed 053ebc5. Jobs 3054397-399 (prod_p2.sbatch,
+TASKS=tasks_stage2_dtmoe_ext_cpu.jsonl, 48 cores, 24 workers each, 3-day limit since steps 25 runs longer).
