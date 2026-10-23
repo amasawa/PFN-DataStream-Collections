@@ -1,0 +1,8 @@
+results_heldout3_tabpfn35    n= 4 mean% {'mice': 86.23, 'fifo': 86.03, 'ltm': nan, 'ddm': 83.54, 'winens': 85.56} | MICE best on 3/4 | MICE-FIFO min -0.05
+results_heldout4_tabpfn35    n= 3 mean% {'mice': 86.18, 'fifo': 85.92, 'ltm': nan, 'ddm': 80.93, 'winens': 85.2} | MICE best on 3/3 | MICE-FIFO min +0.07
+results_heldout4_tabpfn35_e  n= 3 mean% {'mice': 86.03, 'fifo': 85.6, 'ltm': nan, 'ddm': 82.51, 'winens': 85.07} | MICE best on 3/3 | MICE-FIFO min +0.02
+results_heldout3_tabdpt      n= 4 mean% {'mice': 85.65, 'fifo': 85.47, 'ltm': nan, 'ddm': 82.67, 'winens': 85.09} | MICE best on 3/4 | MICE-FIFO min +0.00
+results_heldout4_tabdpt      n= 3 mean% {'mice': 85.43, 'fifo': 85.23, 'ltm': nan, 'ddm': 80.26, 'winens': 84.59} | MICE best on 2/3 | MICE-FIFO min -0.00
+results_heldout4_tabdpt_e    n= 3 mean% {'mice': 85.04, 'fifo': 84.77, 'ltm': nan, 'ddm': 80.9, 'winens': 84.35} | MICE best on 2/3 | MICE-FIFO min -0.02
+results_heldout3_tabicl      n= 4 mean% {'mice': 85.74, 'fifo': 85.25, 'ltm': nan, 'ddm': 82.8, 'winens': 85.01} | MICE best on 3/4 | MICE-FIFO min -0.02
+results_heldout4_tabicl      n= 3 mean% {'mice': 85.29, 'fifo': 84.98, 'ltm': nan, 'ddm': 81.07, 'winens': 84.42} | MICE best on 3/3 | MICE-FIFO min +0.04

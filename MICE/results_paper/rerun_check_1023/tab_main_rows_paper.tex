@@ -1,0 +1,26 @@
+\multicolumn{14}{l}{\emph{Trained stream learners}} \\
+ARF~\citep{gomes2017arf} & 73.4 & 58.4 & 85.4 & 6.0 & 18.7 & $-$37.5 & 67.7 & 65.6 & 83.8 & 11.2 & 22.9 & 88.0 & 98.39 \\
+SRP~\citep{gomes2019srp} & 76.6 & 62.3 & 87.5 & 6.0 & 16.7 & $-$19.8 & 69.5 & 68.1 & 84.7 & 8.8 & 21.6 & 86.4 & 98.57 \\
+HAT~\citep{bifet2009hat} & 64.3 & 51.1 & 79.1 & 16.5 & 27.4 & $-$49.6 & 51.4 & 49.4 & 74.5 & 13.3 & 32.1 & 79.2 & 97.93 \\
+Leveraging Bagging~\citep{bifet2010levbag} & 72.4 & 57.3 & 85.9 & 5.1 & 19.1 & $-$34.6 & 62.0 & 60.6 & 82.4 & 7.2 & 24.9 & 85.9 & 98.39 \\
+ADWIN Bagging~\citep{bifet2009new} & 65.1 & 51.5 & 81.4 & 7.8 & 24.0 & $-$50.1 & 51.2 & 49.2 & 76.1 & 9.4 & 30.8 & 77.0 & 97.91 \\
+Learn++.NSE~\citep{elwell2011nse} & 67.7 & 51.2 & 82.8 & 8.5 & 22.3 & $-$41.0 & 61.6 & 60.0 & 81.2 & 30.0 & 33.6 & 84.1 & 94.86 \\
+MOOE, 2000 features~\citep{zhao2025mooe} & 74.9 & 62.2 & 85.1 & -- & -- & $-$24.8 & 77.8 & 76.9 & 89.7 & -- & -- & 90.1 & 98.39 \\
+MOOE, 4000 features~\citep{zhao2025mooe} & 75.2 & 62.4 & 85.2 & -- & -- & $-$24.2 & 78.0 & 77.1 & 89.8 & -- & -- & 90.1 & 98.38 \\
+FSNet~\citep{pham2023fsnet} & 77.3 & 64.9 & 88.1 & 4.6 & 15.6 & $-$26.7 & 62.7 & 61.3 & 80.4 & 8.4 & 24.8 & 87.5 & 98.21 \\
+OneNet~\citep{zhang2023onenet} & 77.8 & 65.1 & 88.1 & 4.2 & 15.2 & $-$22.1 & 62.4 & 60.9 & 80.1 & \second{7.0} & 24.6 & 87.6 & 97.19 \\
+ShifTS~\citep{zhao2026shifts} & 73.4 & 59.9 & 84.6 & 3.5 & 17.7 & $-$30.4 & 51.1 & 47.0 & 71.7 & \first{6.0} & 29.3 & 76.4 & 97.72 \\
+ADAPT-Z~\citep{huang2026adaptz} & 65.6 & 50.7 & 80.1 & 5.6 & 22.3 & $-$52.3 & 50.1 & 46.2 & 70.7 & \first{6.0} & 30.0 & 78.1 & 97.43 \\
+\midrule
+\multicolumn{14}{l}{\emph{In-context policies, frozen TabPFN}} \\
+FIFO & \second{83.3} & 73.5 & 89.9 & 1.7 & \third{11.6} & -- & 61.9 & 60.9 & 83.7 & 16.7 & 25.1 & 87.6 & 98.57 \\
+LTM~\citep{lourenco2026streams} & 82.6 & 72.1 & \first{91.0} & 1.5 & 11.9 & $-$2.7 & 62.2 & 61.4 & 84.8 & 16.0 & 24.5 & 87.6 & 98.21 \\
+Reset (DDM)~\citep{gama2004ddm} & 81.5 & 71.3 & 88.5 & 2.6 & 12.9 & $-$9.6 & 84.1 & 83.8 & 91.4 & 7.3 & 13.1 & 94.8 & 98.49 \\
+Window ensemble & \third{83.0} & 73.0 & 89.5 & \second{1.2} & 11.7 & $-$1.4 & 81.6 & 81.0 & 90.8 & 8.7 & 14.9 & 94.6 & 98.44 \\
+Fast level only & \second{83.3} & 73.4 & 90.3 & 1.5 & \second{11.5} & $-$2.3 & \first{86.8} & \first{86.5} & \first{93.6} & \third{7.1} & \first{11.4} & \first{95.3} & 98.50 \\
+Drift-Resilient TabPFN~\citep{helli2024drift} & 81.7 & 68.7 & 88.4 & 3.0 & 12.9 & $-$4.2 & 76.4 & 75.6 & 87.4 & 9.8 & 17.9 & 93.7 & 98.37 \\
+\midrule
+\multicolumn{14}{l}{\emph{Ours}} \\
+\method{} (detected segments) & \first{83.8} & \first{74.4} & \second{90.7} & \third{1.3} & \first{11.2} & \second{$-$0.23} & \third{86.4} & \third{86.0} & \second{92.4} & 9.9 & \third{12.6} & \third{95.0} & \third{98.59} \\
+\method{}, fixed segments & \first{83.8} & \second{74.3} & \third{90.5} & \third{1.3} & \first{11.2} & \third{$-$0.25} & \third{86.4} & \third{86.0} & \third{92.3} & 10.1 & 12.7 & \third{95.0} & \second{98.60} \\
+\method{}, fixed segments, $\eta_2=10$ & \first{83.8} & \third{74.2} & \third{90.5} & \first{1.1} & \first{11.2} & \first{$-$0.08} & \second{86.6} & \second{86.3} & \first{93.6} & \second{7.0} & \second{11.5} & \second{95.2} & \first{98.61} \\
