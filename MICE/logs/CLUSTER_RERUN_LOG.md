@@ -648,3 +648,13 @@ job runs. Gave up: 0.
 Return (results only, user decision): $WORK/return_list.txt rebuilt from the outputs of tasks recorded in done/ only
 (partial outputs of cancelled tasks excluded), plus _rerun attempts/done/gaveup/logs and env freezes: 26140 files,
 16.28 GB; checksums $WORK/return_SHA256SUMS; rsync to the Mac ~/Desktop/mice_h800_results/ in progress.
+
+### 2026-10-23 23:50 AEDT return complete (Step 5, results only)
+Returned to the Mac ~/Desktop/mice_h800_results/ (layout repo/MICE/results_*, home/pfn-runs/<root>/..., home/pfn-runs/
+_rerun/{attempts,done,gaveup,logs}, envs/*.txt): 26140 files, 16.28 GB, list return_list.txt, checksums SHA256SUMS
+(computed on the cluster). shasum -a 256 -c: 26140 OK, 0 failed (one file left partial by an interrupted rsync failed
+at first and passed after a re-pull). One file outside the list, repo/MICE/results_delay_dev/eval_delay.csv (copied by
+the first whole-directory rsync, not a task output), set aside to ~/Desktop/mice_h800_results_extra/. The transfer
+took about 2 days over the campus VPN (repeated outages; a hung ssh control master; resumed with rsync --partial).
+Totals: 6019 tasks done, 0 gave up; 97 Slurm jobs, 192.1 GPU hours (A800), 6568 core hours. Not run (user
+decisions): dtmoe (extension stopped at 52/60, no test), r13 and tkde benchmarks (cancelled). Cluster queue empty.
